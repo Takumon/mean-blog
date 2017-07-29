@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - '3000:3000'
+    links:
+      - db:mongo
+    environment:
+      MONGO_URL: mongodb://mongo:27017/mean-sample
+  db:
+    image: mongo:3.5.10

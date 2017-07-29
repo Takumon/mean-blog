@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "preserveConstEnums": true,
+    "outDir": "../dist",
+    "mapRoot": "../dist",
+    "module": "commonjs"
+  } ,
+  "include": [
+    "**/*.spec.ts",
+    "./test.server.ts",
+    "./test.server.conf.ts"
+  ]
+}

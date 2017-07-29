@@ -1,0 +1,17 @@
+<div>
+  <div>
+    <h1>メッセージ一覧</h1>
+    <button id="getMessagesButton" (click)="getMessages()">メッセージ一覧を最新化</button>
+    <ul id="messageList">
+      <li *ngFor="let item of messages">
+        {{item.message}}
+      </li>
+    </ul>
+  </div>
+  <div>
+    <h1>メッセージ登録</h1>
+    <input type="text" id="registerMessage" [(ngModel)]="message" placeholder="登録するメッセージを入力してください。">
+    <button type="submit" id="registerMessageButton" (click)='registerMessage()'>登録</button>
+  </div>
+</div>
+
