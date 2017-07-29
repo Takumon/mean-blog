@@ -23,7 +23,6 @@ articleRouter.post('/', (req, res, next) => {
   const article = new Article({
     title: req.body.title,
     body: req.body.body,
-    author: req.body.author,
   });
 
   article.save((err, result) => {
