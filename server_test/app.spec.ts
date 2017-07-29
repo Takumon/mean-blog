@@ -25,7 +25,10 @@ describe('/api/articles', () => {
 
   // テスト前にDBのmessagesを初期化する
   beforeEach(() => {
-    Article.remove({}, () => {});
+    Article.remove({}, () => {
+      Article.resetCount(function(err, nextCount) {
+      });
+    });
   });
 
 
@@ -60,7 +63,7 @@ describe('/api/articles', () => {
           date:  moment('20150101 12:31:30', 'YYYYMMDD hh:mm:ss').toDate()
         }
       ];
-
+      // 複数同時登録した場合、登録順は保障されないためarticleIdは検証しない
       Article.create(testData, (erro , doc ) => {
         request.get(endpoint)
           .expect((res) => {
@@ -125,6 +128,7 @@ describe('/api/articles', () => {
 
         expect(res.body.message).toEqual('記事を登録しました。');
         expect(res.body.obj.title).toEqual('テスト用タイトル1');
+        expect(res.body.obj.articleId).toEqual(0);
       })
       .end(done);
     });
