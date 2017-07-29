@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import { AppComponent } from './app.component';
-import { MessageService } from './message/message.service';
+import { ArticleService } from './article/article.service';
 
 describe('AppComponent', () => {
   // テスト対象のComponent
@@ -13,21 +13,38 @@ describe('AppComponent', () => {
   // テスト対象のFixture
   let fixture: ComponentFixture<AppComponent>;
 
-  // MessageServiceのモック
-  class MessageServiceMock {
+  // ArticleServiceのモック
+  class ArticleServiceMock {
     getAll(): Observable<any> {
-      const response =  { messages : [
-        { message : 'テスト用メッセージ1' },
-        { message : 'テスト用メッセージ2' },
-        { message : 'テスト用メッセージ3' }
+      const response =  { articles : [
+          {
+            title: 'テスト用タイトル1',
+            body: 'テスト用ボティ1',
+            date:  '20150101 12:30:30'
+          },
+          {
+            title: 'テスト用タイトル2',
+            body: 'テスト用ボティ2',
+            date:  '20150101 12:34:30'
+          },
+          {
+            title: 'テスト用タイトル3',
+            body: 'テスト用ボティ3',
+            date:  '20150101 12:31:30'
+          }
       ]};
 
       return Observable.from([response]);
     }
 
-  regist(message: string): Observable<any> {
+  regist(title: string, body: string): Observable<any> {
       return Observable.from([{
-        message: 'テスト用メッセージ4'
+        message: '記事を登録しました。',
+        obj: {
+          title: title,
+          body: body,
+          date: '20150101 12:31:30'
+        }
       }]);
     }
   }
@@ -43,7 +60,7 @@ describe('AppComponent', () => {
     .overrideComponent(AppComponent, {
       set: {
         providers: [
-          { provide: MessageService, useClass: MessageServiceMock },
+          { provide: ArticleService, useClass: ArticleServiceMock },
         ]
       }
     })
@@ -61,22 +78,49 @@ describe('AppComponent', () => {
   }));
 
 
-  it('メッセージを３件保持しているか', async(() => {
-    expect(component.messages).toEqual([
-        { message : 'テスト用メッセージ1' },
-        { message : 'テスト用メッセージ2' },
-        { message : 'テスト用メッセージ3' }
+  it('記事を３件保持しているか', async(() => {
+    expect(component.articles).toEqual([
+      {
+        title: 'テスト用タイトル1',
+        body: 'テスト用ボティ1',
+        date:  '20150101 12:30:30'
+      },
+      {
+        title: 'テスト用タイトル2',
+        body: 'テスト用ボティ2',
+        date:  '20150101 12:34:30'
+      },
+      {
+        title: 'テスト用タイトル3',
+        body: 'テスト用ボティ3',
+        date:  '20150101 12:31:30'
+      }
     ]);
   }));
 
 
-  it('画面にメッセージが３件表示されているか', async(() => {
+  it('画面に記事が３件表示されているか', async(() => {
 
     const el = fixture.debugElement.nativeElement;
 
-    expect(el.querySelectorAll('li').length).toEqual(3);
-    expect(el.querySelectorAll('li')[0].textContent).toContain('テスト用メッセージ1');
-    expect(el.querySelectorAll('li')[1].textContent).toContain('テスト用メッセージ2');
-    expect(el.querySelectorAll('li')[2].textContent).toContain('テスト用メッセージ3');
+    const titles = el.querySelectorAll('.article-title');
+    expect(titles.length).toEqual(3);
+    expect(titles[0].textContent).toContain('テスト用タイトル1');
+    expect(titles[1].textContent).toContain('テスト用タイトル2');
+    expect(titles[2].textContent).toContain('テスト用タイトル3');
+
+    const bodies = el.querySelectorAll('.article-body');
+    expect(bodies.length).toEqual(3);
+    expect(bodies[0].textContent).toContain('テスト用ボティ1');
+    expect(bodies[1].textContent).toContain('テスト用ボティ2');
+    expect(bodies[2].textContent).toContain('テスト用ボティ3');
+
+    const dates = el.querySelectorAll('.article-date');
+    expect(dates.length).toEqual(3);
+    expect(dates[0].textContent).toContain('20150101 12:30:30');
+    expect(dates[1].textContent).toContain('20150101 12:34:30');
+    expect(dates[2].textContent).toContain('20150101 12:31:30');
+
+
   }));
 });

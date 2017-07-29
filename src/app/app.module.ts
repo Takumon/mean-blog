@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { MessageService } from './message/message.service';
+import { ArticleService } from './article/article.service';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,7 @@ import { MessageService } from './message/message.service';
     HttpModule,
     FormsModule
   ],
-  providers: [MessageService],
+  providers: [ArticleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

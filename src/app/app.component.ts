@@ -1,38 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from './message/message.service';
+import { ArticleService } from './article/article.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [ MessageService ]
+  providers: [ ArticleService ]
 })
 export class AppComponent {
-  messages: Array<any>;
-  message: string;
+  articles: Array<any>;
+  title: string;
+  body: string;
 
-  constructor(private messageService: MessageService) {
-    this.getMessages();
+  constructor(private articleService: ArticleService) {
+    this.getArticles();
   }
 
-  getMessages(): void {
-    this.messageService
+  getArticles(): void {
+    this.articleService
       .getAll()
       .subscribe((res: any) => {
-        this.messages = res.messages;
+        this.articles = res.articles;
       });
   }
 
-  registerMessage(): void {
-    if (!this.message) {
+  registerArticle(): void {
+    if (!this.title || !this.body) {
       return;
     }
 
-    this.messageService
-      .register(this.message)
+    this.articleService
+      .register(this.title, this.body)
       .subscribe((res: any) => {
-        this.message = '';
-        this.getMessages();
+        this.title = '';
+        this.body = '';
+        this.getArticles();
       });
   }
 }
