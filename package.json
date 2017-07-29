@@ -18,7 +18,7 @@
     "buildRun": "run-s build boot:server",
     "test": "run-p test:*",
     "test:client": "ng test",
-    "test:server": "npm-run-all -s build:server_test -p watch:server_test  boot:server_test",
+    "test:server": "MONGO_URL=mongodb://localhost:27018/test npm-run-all -s build:server_test -p watch:server_test  boot:server_test",
     "e2e": "npm-run-all -s  webdriver:update -p webdriver:start protractor",
     "webdriver:update": "webdriver-manager update",
     "webdriver:start": "webdriver-manager start",
@@ -39,6 +39,7 @@
     "body-parser": "^1.17.2",
     "core-js": "^2.4.1",
     "express": "^4.15.3",
+    "moment": "^2.18.1",
     "mongoose": "^4.11.3",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.12"
