@@ -64,13 +64,12 @@ describe('/api/articles', () => {
       Article.create(testData, (erro , doc ) => {
         request.get(endpoint)
           .expect((res) => {
+            const sorted = res.body.articles.sort(ascending('date'));
 
-            const sortedMessages = res.body.messages.sort(ascending('date'));
-
-            expect(sortedMessages.length).toEqual(3);
-            expect(sortedMessages[0].title).toEqual('テスト用メッセージ1');
-            expect(sortedMessages[1].title).toEqual('テスト用メッセージ3');
-            expect(sortedMessages[2].title).toEqual('テスト用メッセージ2');
+            expect(sorted.length).toEqual(3);
+            expect(sorted[0].title).toEqual('テスト用タイトル1');
+            expect(sorted[1].title).toEqual('テスト用タイトル3');
+            expect(sorted[2].title).toEqual('テスト用タイトル2');
           })
           .end(done);
       });

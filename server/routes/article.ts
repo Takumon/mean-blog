@@ -14,19 +14,19 @@ articleRouter.get('/', (req, res, next) => {
       });
     }
 
-    return res.status(200).json({blogs: doc});
+    return res.status(200).json({articles: doc});
   });
 });
 
 // メッセージを登録する
 articleRouter.post('/', (req, res, next) => {
-  const message = new Article({
+  const article = new Article({
     title: req.body.title,
     body: req.body.body,
     author: req.body.author,
   });
 
-  message.save((err, result) => {
+  article.save((err, result) => {
     if (err) {
       return res.status(500).json({
           title: 'エラーが発生しました。',
