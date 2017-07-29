@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 
-import { messageRouter } from './routes/message';
+import { articleRouter } from './routes/article';
 import { MONGO_URL } from './config';
 
 class App {
@@ -30,7 +30,7 @@ class App {
     // 静的資産へのルーティング
     this.express.use(express.static(path.join(__dirname, 'public')));
 
-    this.express.use('/api/messages', messageRouter);
+    this.express.use('/api/articles', articleRouter);
 
     // その他のリクエストはindexファイルにルーティング
     this.express.get('*', (req, res) => {
