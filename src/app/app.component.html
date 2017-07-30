@@ -1,17 +1,7 @@
 <div>
-    <div>
-    <h1>記事一覧</h1>
-    <div id="artile-list">
-      <div class="article" *ngFor="let item of articles">
-        <div class="article-title">{{item.title}}</div>
-        <div class="article-body">{{item.body}}</div>
-        <div class="article-date">{{item.date}}</div>
-      </div>
-    </div>
-  </div>
-  <div>
-    <h1>記事登録</h1>
-    <input type="text" id="register-article-title" [(ngModel)]="title" placeholder="タイトル" />
-    <textarea id="register-article-body" cols="100" rows="50" [(ngModel)]="body" placeholder="本文"></textarea>
-    <button type="submit" id="registe-article-btn" (click)='registerArticle()'>登録</button>  </div>
+  <nav>
+    <a routerLink="articles" routerLinkActive="active">記事一覧</a>
+    <a routerLink="drafts/new" routerLinkActive="active">投稿する</a>
+  </nav>
+  <router-outlet></router-outlet>
 </div>

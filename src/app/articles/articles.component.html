@@ -1,0 +1,10 @@
+<div>
+  <h1>記事一覧</h1>
+  <div id="artile-list">
+    <div class="article" *ngFor="let item of articles" [routerLink]="['/articles', item.articleId]" >
+      <div class="article-title">{{item.title}}</div>
+      <div class="article-body">{{item.body}}</div>
+      <div class="article-date">{{item.date}}</div>
+    </div>
+  </div>
+</div>

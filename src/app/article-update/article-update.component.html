@@ -1,0 +1,8 @@
+<div *ngIf="article">
+  <h2>記事編集</h2>
+  <div>
+    <input type="text" id="register-article-title" [(ngModel)]="article.title" placeholder="タイトル" />
+    <textarea id="register-article-body" cols="100" rows="50" [(ngModel)]="article.body" placeholder="本文"></textarea>
+    <button type="submit" id="registe-article-btn" (click)='updateArticle()'>登録</button> 
+  </div>
+</div>
