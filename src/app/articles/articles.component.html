@@ -1,10 +1,25 @@
-<div>
-  <h1>記事一覧</h1>
-  <div id="artile-list">
-    <div class="article" *ngFor="let item of articles" [routerLink]="['/articles', item.articleId]" >
-      <div class="article-title">{{item.title}}</div>
-      <div class="article-body">{{item.body}}</div>
-      <div class="article-date">{{item.date}}</div>
+<div class="articles-area">
+  <div class="sub-title">
+    <h1 class="chapter-title">記事一覧</h1>
+  </div>
+  <div *ngIf='articles'>
+    <div class="article-area">
+      <md-grid-list cols="3">
+        <md-grid-tile class="article-tile" *ngFor="let item of articles" [colspan]="1" >
+          <md-card class="article-card" 
+              [routerLink]="['/articles', item.articleId]"
+              routerLinkActive="active">
+            <md-card-header class="article-card-header">
+              <img md-card-avatar src="assets/images/logo.jpeg">
+              <md-card-title>{{item.title}}</md-card-title>
+              <md-card-subtitle>{{item.date}}</md-card-subtitle>
+            </md-card-header>
+            <md-card-content class="article-card-content">
+              <p>{{item.body}}</p>
+            </md-card-content>
+          </md-card>
+        </md-grid-tile>
+      </md-grid-list>
     </div>
   </div>
 </div>

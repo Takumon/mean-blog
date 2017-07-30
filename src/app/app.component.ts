@@ -9,8 +9,7 @@ import { ArticleService } from './services/article.service';
 })
 export class AppComponent {
   articles: Array<any>;
-  title: string;
-  body: string;
+  title = `Takumon's Blog!`;
 
   constructor(private articleService: ArticleService) {
     this.getArticles();

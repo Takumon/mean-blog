@@ -1,0 +1,32 @@
+.article-area {
+  width: 1114px;
+  margin: auto;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+}
+
+.article-title {
+  color: #3949ab;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 52px;
+  padding: 60px 24px;
+  margin: 0;
+}
+
+.article-metadata {
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  background: #e4e4e4;
+  border-bottom: #d2d2d2 solid 1px;
+  padding: 6px 24px;
+}
+
+.article-date {
+  padding-right: 24px;
+  font-size: 0.8em;
+}
+
+.article-body {
+  padding: 48px 24px;
+}

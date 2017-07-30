@@ -1,8 +1,12 @@
-<div>
-  <div>
-    <a [routerLink]="['/drafts', article.articleId, 'edit']">記事を編集する</a>
+<div class="article-area" *ngIf="article">
+  <h1 class="article-title">{{article.title}}</h1>
+  <div class="article-metadata">
+    <div class="article-date">{{article.date}}</div>
+    <div>
+      <a md-button [routerLink]="['/drafts', article.articleId, 'edit']"  routerLinkActive="active">
+        <i class="fa fa-pencil-square"></i><span> 編集する</span>
+      </a>
+    </div>
   </div>
-  <h2>{{article.title}}</h2>
-  <div>{{article.body}}</div>
-  <div>{{article.date}}</div>
+  <div class="article-body">{{article.body}}</div>
 </div>

@@ -1,9 +1,21 @@
-<div>
-  <h2>記事投稿</h2>
-  <div>
+<div class="editor" *ngIf="newArticle">
+  <div class="title">
     <input type="text" id="register-article-title" [(ngModel)]="newArticle.title" placeholder="タイトル" />
-    <textarea id="register-article-body" cols="100" rows="50" [(ngModel)]="newArticle.body" placeholder="本文"></textarea>
-    <button type="submit" id="registe-article-btn" (click)='registerArticle()'>登録</button> 
+  </div>
+  <div class="body">
+    <div class="body-row-text">
+      <textarea id="register-article-body" [(ngModel)]="newArticle.body" placeholder="本文"></textarea>
+    </div>
+    <div class="body-preview">
+    </div>
+  </div>
+  <div class="button-area">
+    <div class="spacer"></div>
+    <button 
+      md-raised-button
+      color="primary" 
+      type="submit" 
+      id="registe-article-btn" 
+      (click)='registerArticle()'><i class="fa fa-upload"></i> 投稿</button> 
   </div>
 </div>
-

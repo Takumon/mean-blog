@@ -8,8 +8,8 @@ import { ArticleUpdateComponent } from './article-update/article-update.componen
 
 const routes: Routes = [
   { path: '', redirectTo: 'articles', pathMatch: 'full' },
-  { path: 'articles',  component: ArticlesComponent },
-  { path: 'drafts/new',  component: ArticleEditComponent },
+  { path: 'articles',  pathMatch: 'full', component: ArticlesComponent },
+  { path: 'drafts/new',  pathMatch: 'full', component: ArticleEditComponent },
   { path: 'drafts/:id/edit',  component: ArticleUpdateComponent },
   { path: 'articles/:id',  component: ArticleDetailComponent },
 ];

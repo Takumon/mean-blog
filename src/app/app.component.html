@@ -1,7 +1,8 @@
-<div>
-  <nav>
-    <a routerLink="articles" routerLinkActive="active">記事一覧</a>
-    <a routerLink="drafts/new" routerLinkActive="active">投稿する</a>
-  </nav>
-  <router-outlet></router-outlet>
-</div>
+  <md-toolbar class="toolbar-fixed" color="primary">
+    <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{title}}</button>
+    <span class="toolbar-spacer"></span>
+    <button md-button routerLink="/drafts/new" routerLinkActive="active"><i class="fa fa-pencil-square"></i><span> 投稿する</span></button>  
+  </md-toolbar>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
