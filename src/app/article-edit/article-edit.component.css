@@ -54,7 +54,12 @@
 
 .body-preview {
   width: 50%;
-  background: gray;
+  background: white;
+  max-height: 100%;
+  overflow: scroll;
+  padding: 12px;
+  border-radius: 0 4px 4px 0;
+  border: 1px #afafaf solid;
 }
 
 .button-area {

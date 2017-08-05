@@ -25,13 +25,18 @@ export class ArticleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe( params => {
-      console.log(params);
       this.articleService.get(+params['id'])
        .subscribe(article => {
-         console.log(article);
          this.article = article;
       });
     });
+  }
+
+  deleteArticle(): void {
+    this.articleService.delete(this.article.articleId)
+      .subscribe(article => {
+        this.goBack();
+      });
   }
 
   goBack(): void {

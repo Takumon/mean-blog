@@ -58,4 +58,16 @@ export class ArticleService {
       })
       .catch((error: Response) => Observable.throw(error.json()));
   }
+
+  delete(id: number): Observable<any> {
+    const url = `${this.baseUrl}/${id}`;
+
+    return this.http
+        .delete(url)
+        .map((response: Response) => {
+          const result = response.json();
+          return result;
+        })
+      .catch((error: Response) => Observable.throw(error.json()));
+  }
 }

@@ -4,7 +4,10 @@
     <div class="article-date">{{article.date}}</div>
     <div>
       <a md-button [routerLink]="['/drafts', article.articleId, 'edit']"  routerLinkActive="active">
-        <i class="fa fa-pencil-square"></i><span> 編集する</span>
+        <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
+      </a>
+      <a md-button (click)="deleteArticle()">
+        <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
       </a>
     </div>
   </div>

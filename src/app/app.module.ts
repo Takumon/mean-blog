@@ -12,7 +12,6 @@ import { ArticlesComponent } from './articles/articles.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
-import { ArticleUpdateComponent } from './article-update/article-update.component';
 import 'hammerjs';
 
 @NgModule({
@@ -21,7 +20,6 @@ import 'hammerjs';
     ArticlesComponent,
     ArticleEditComponent,
     ArticleDetailComponent,
-    ArticleUpdateComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,13 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { ArticlesComponent } from './articles/articles.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
-import { ArticleUpdateComponent } from './article-update/article-update.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'articles', pathMatch: 'full' },
   { path: 'articles',  pathMatch: 'full', component: ArticlesComponent },
   { path: 'drafts/new',  pathMatch: 'full', component: ArticleEditComponent },
-  { path: 'drafts/:id/edit',  component: ArticleUpdateComponent },
+  { path: 'drafts/:id/edit',  component: ArticleEditComponent },
   { path: 'articles/:id',  component: ArticleDetailComponent },
 ];
 

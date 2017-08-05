@@ -1,21 +1,28 @@
-<div class="editor" *ngIf="newArticle">
+<div class="editor" *ngIf="article">
   <div class="title">
-    <input type="text" id="register-article-title" [(ngModel)]="newArticle.title" placeholder="タイトル" />
+    <input type="text" id="register-article-title" [(ngModel)]="article.title" placeholder="タイトル" />
   </div>
   <div class="body">
     <div class="body-row-text">
-      <textarea id="register-article-body" [(ngModel)]="newArticle.body" placeholder="本文"></textarea>
+      <textarea 
+        id="register-article-body" 
+        [(ngModel)]="article.body" 
+        (ngModelChange)="parseTextAreaToMarkdown()"
+        (scroll)="syncScroll($event)"
+        placeholder="本文"></textarea>
     </div>
-    <div class="body-preview">
+    <div class="body-preview markdown-body" #syncScrollTarget>
+      <p [innerHTML]="preview"></p>
     </div>
   </div>
   <div class="button-area">
     <div class="spacer"></div>
     <button 
       md-raised-button
-      color="primary" 
-      type="submit" 
-      id="registe-article-btn" 
-      (click)='registerArticle()'><i class="fa fa-upload"></i> 投稿</button> 
+      color="primary"
+      type="submit"
+      id="registe-article-btn"
+      (click)='upsertArticle()'><i class="fa fa-upload"></i>  {{action}}</button> 
   </div>
 </div>
+
