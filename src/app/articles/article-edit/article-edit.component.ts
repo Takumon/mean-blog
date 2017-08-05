@@ -6,8 +6,6 @@ import {
   HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
-import marked from 'marked';
-import hljs from 'highlight.js';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 
@@ -17,9 +15,8 @@ import { ArticleService } from '../shared/article.service';
   styleUrls: ['./article-edit.component.css'],
   providers: [ ArticleService ]
 })
-export class ArticleEditComponent implements OnInit {
+export class ArticleEditComponent {
   article: ArticleModel;
-  preview: String;
   action: String;
   @ViewChild('syncScrollTarget')
   scrollTarget: ElementRef;
@@ -38,7 +35,6 @@ export class ArticleEditComponent implements OnInit {
           .get(+params['id'])
           .subscribe(article => {
             this.article = article;
-            this.parseTextAreaToMarkdown();
           });
       } else {
         this.action = '投稿';
@@ -47,23 +43,8 @@ export class ArticleEditComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    marked.setOptions({
-      langPrefix: '',
-      highlight: function (code, langAndTitle, callback) {
-        const lang = langAndTitle ? langAndTitle.split(':')[0] : '';
-        return hljs.highlightAuto(code, [lang]).value;
-      }
-    });
-  }
-
   isNew() {
     return !this.article.articleId;
-  }
-
-
-  parseTextAreaToMarkdown(): void {
-    this.preview = marked(this.article.body);
   }
 
   @HostListener('scroll', ['$event'])

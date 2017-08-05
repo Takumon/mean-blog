@@ -15,10 +15,26 @@
   box-sizing: border-box;
   padding: 0;
 
-  -webkit-transition: 1s;
-  -moz-transition: 1s;
-  -o-transition: 1s;
-  transition: 1s;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+  overflow: hidden;
+  position: relative;
+}
+
+.article-card:after {
+  content  : "";
+  position : absolute;
+  z-index  : 1;
+  bottom   : 0;
+  left     : 0;
+  pointer-events   : none;
+  background-image : linear-gradient(to bottom, 
+                    rgba(255,255,255, 0), 
+                    rgba(255,255,255, 1) 90%);
+  width    : 100%;
+  height   : 5em;
 }
 
 .article-card-header {

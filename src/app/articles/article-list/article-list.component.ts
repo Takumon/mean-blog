@@ -6,12 +6,14 @@ import { ArticleService } from '../shared/article.service';
   selector: 'app-article-list',
   templateUrl: './article-list.component.html',
   styleUrls: ['./article-list.component.css'],
-  providers: [ ArticleService ]
+  providers: [ ArticleService ],
 })
 export class ArticleListComponent implements OnInit {
   articles: Array<any>;
 
-  constructor(private articleService: ArticleService) {
+  constructor(
+    private articleService: ArticleService,
+  ) {
   }
 
   ngOnInit() {

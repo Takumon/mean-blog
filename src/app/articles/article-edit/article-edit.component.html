@@ -6,13 +6,12 @@
     <div class="body-row-text">
       <textarea 
         id="register-article-body" 
-        [(ngModel)]="article.body" 
-        (ngModelChange)="parseTextAreaToMarkdown()"
+        [(ngModel)]="article.body"
         (scroll)="syncScroll($event)"
         placeholder="本文"></textarea>
     </div>
     <div class="body-preview markdown-body" #syncScrollTarget>
-      <p [innerHTML]="preview"></p>
+      <p [innerHTML]="article.body | toMarkdown"></p>
     </div>
   </div>
   <div class="button-area">

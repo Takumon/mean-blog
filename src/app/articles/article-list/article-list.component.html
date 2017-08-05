@@ -17,8 +17,8 @@
               <md-card-title>{{item.title}}</md-card-title>
               <md-card-subtitle>{{item.date}}</md-card-subtitle>
             </md-card-header>
-            <md-card-content class="article-card-content">
-              <p>{{item.body}}</p>
+            <md-card-content class="article-card-content markdown-body">
+              <p [innerHTML]="item.body | toMarkdown" ></p>
             </md-card-content>
           </md-card>
         </md-grid-tile>

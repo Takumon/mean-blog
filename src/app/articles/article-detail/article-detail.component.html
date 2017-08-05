@@ -11,5 +11,7 @@
       </a>
     </div>
   </div>
-  <div class="article-body">{{article.body}}</div>
+  <div class="article-body markdown-body">
+    <p [innerHTML]="article.body | toMarkdown" ></p>
+  </div>
 </div>
