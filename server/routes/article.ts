@@ -53,6 +53,7 @@ articleRouter.post('/', (req, res, next) => {
   });
 });
 
+// 記事を更新する
 articleRouter.put('/:id', (req, res, next) => {
   Article.update({
     articleId: req.params.id
@@ -68,6 +69,32 @@ articleRouter.put('/:id', (req, res, next) => {
     return res.status(200).json({
       message: '記事を更新しました。',
       obj: result
+    });
+  });
+});
+
+// 記事を削除する
+articleRouter.delete('/:id', (req, res, next) => {
+  Article.findOne({ articleId: req.params.id }, req.body, (err, model) => {
+
+    if (err) {
+      return res.status(500).json({
+        title: '削除しようとした記事(articleId=${req.params.id})は見つかりませんでした。',
+        error: err.message
+      });
+    }
+
+    model.remove(err2 => {
+      if (err2) {
+        return res.status(500).json({
+            title: 'エラーが発生しました。',
+            error: err.message
+        });
+      }
+
+      return res.status(200).json({
+        message: '記事を削除しました。',
+      });
     });
   });
 });
