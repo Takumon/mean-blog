@@ -5,7 +5,10 @@
   <div *ngIf='articles'>
     <div class="article-area">
       <md-grid-list cols="3">
-        <md-grid-tile class="article-tile" *ngFor="let item of articles" [colspan]="1" >
+        <md-grid-tile
+          class="article-tile"
+          *ngFor="let item of articles"
+          [colspan]="1" >
           <md-card class="article-card" 
               [routerLink]="['/articles', item.articleId]"
               routerLinkActive="active">

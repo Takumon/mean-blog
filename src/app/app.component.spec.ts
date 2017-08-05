@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import { AppComponent } from './app.component';
-import { ArticleService } from './services/article.service';
+import { ArticleService } from './articles/shared/article.service';
 
 describe('AppComponent', () => {
   // テスト対象のComponent

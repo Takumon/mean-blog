@@ -8,8 +8,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
 import marked from 'marked';
 import hljs from 'highlight.js';
-import { Article } from '../models/article';
-import { ArticleService } from '../services/article.service';
+import { ArticleModel } from '../shared/article.model';
+import { ArticleService } from '../shared/article.service';
 
 @Component({
   selector: 'app-article-edit',
@@ -18,7 +18,7 @@ import { ArticleService } from '../services/article.service';
   providers: [ ArticleService ]
 })
 export class ArticleEditComponent implements OnInit {
-  article: Article;
+  article: ArticleModel;
   preview: String;
   action: String;
   @ViewChild('syncScrollTarget')
@@ -42,7 +42,7 @@ export class ArticleEditComponent implements OnInit {
           });
       } else {
         this.action = '投稿';
-        this.article = new Article();
+        this.article = new ArticleModel();
       }
     });
   }

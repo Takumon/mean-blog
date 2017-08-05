@@ -2,34 +2,32 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '@angular/material';
+import { Router } from '@angular/router';
+import 'hammerjs';
 
 import { AppComponent } from './app.component';
-import { ArticleService } from './services/article.service';
-import { ArticlesComponent } from './articles/articles.component';
-
 import { AppRoutingModule } from './app-routing.module';
-import { ArticleEditComponent } from './article-edit/article-edit.component';
-import { ArticleDetailComponent } from './article-detail/article-detail.component';
-import 'hammerjs';
+import { ArticlesModule } from './articles/articles.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ArticlesComponent,
-    ArticleEditComponent,
-    ArticleDetailComponent,
   ],
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
+    ArticlesModule,
+    AppRoutingModule,
   ],
-  providers: [ArticleService],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(router: Router) {
+    console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
+  }
+}

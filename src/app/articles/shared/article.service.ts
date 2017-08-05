@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
-import { Article } from '../models/article';
+import { ArticleModel } from './article.model';
 
 @Injectable()
 export class ArticleService {
@@ -34,7 +34,7 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  update(article: Article): Observable<any> {
+  update(article: ArticleModel): Observable<any> {
     const url = `${this.baseUrl}/${article.articleId}`;
 
     return this.http

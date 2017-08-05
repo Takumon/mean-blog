@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {Location} from '@angular/common';
 
-import { Article } from '../models/article';
-import { ArticleService } from '../services/article.service';
+import { ArticleModel } from '../shared/article.model';
+import { ArticleService } from '../shared/article.service';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { ArticleService } from '../services/article.service';
   providers: [ ArticleService ]
 })
 export class ArticleDetailComponent implements OnInit {
-  article: Article;
+  article: ArticleModel;
 
   constructor(
     private articleService: ArticleService,
