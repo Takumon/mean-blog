@@ -36,6 +36,7 @@ articleRouter.post('/', (req, res, next) => {
   const article = new Article({
     title: req.body.title,
     body: req.body.body,
+    isMarkdown: req.body.isMarkdown,
   });
 
   article.save((err, result) => {

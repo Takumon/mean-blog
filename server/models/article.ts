@@ -11,6 +11,10 @@ const ArticleSchema = new mongoose.Schema({
     type: String,
     required: [true, '本文を入力してください。']
   },
+  isMarkdown: {
+    type: Boolean,
+    default: false
+  },
   // author: { type : mongoose.Schema.ObjectId, ref : 'User' },
   date: { type: Date, default: Date.now },
 });
