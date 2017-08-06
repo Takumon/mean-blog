@@ -11,7 +11,13 @@
       </a>
     </div>
   </div>
-  <div class="article-body markdown-body">
-    <p [innerHTML]="article.body | toMarkdown" ></p>
+  <div class="article-body">
+    <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
+    <ng-template #markdown>
+      <p [innerHTML]="article.body | toMarkdown" class="markdown-body"></p>
+    </ng-template>
+    <ng-template #plainText>
+      <pre [innerHTML]="article.body" class="plain-text-body"></pre>                
+    </ng-template>
   </div>
 </div>

@@ -17,8 +17,14 @@
               <md-card-title>{{item.title}}</md-card-title>
               <md-card-subtitle>{{item.date}}</md-card-subtitle>
             </md-card-header>
-            <md-card-content class="article-card-content markdown-body">
-              <p [innerHTML]="item.body | toMarkdown" ></p>
+            <md-card-content class="article-card-content">
+              <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
+              <ng-template #markdown>
+                <p [innerHTML]="item.body | toMarkdown" class="markdown-body"></p>
+              </ng-template>
+              <ng-template #plainText>
+                <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
+              </ng-template>
             </md-card-content>
           </md-card>
         </md-grid-tile>

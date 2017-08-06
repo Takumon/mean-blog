@@ -8,6 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
+import { EditMode } from './edit-mode.enum';
 
 @Component({
   selector: 'app-article-edit',
@@ -18,6 +19,9 @@ import { ArticleService } from '../shared/article.service';
 export class ArticleEditComponent {
   article: ArticleModel;
   action: String;
+  EditMode = EditMode;
+  editMode: String = EditMode[EditMode.harfPreviewing];
+
   @ViewChild('syncScrollTarget')
   scrollTarget: ElementRef;
 
@@ -44,8 +48,10 @@ export class ArticleEditComponent {
   }
 
   isNew() {
-    return !this.article.articleId;
+    const target = this.article.articleId;
+    return target !== 0 && !target;
   }
+
 
   @HostListener('scroll', ['$event'])
   private syncScroll($event: Event): void {

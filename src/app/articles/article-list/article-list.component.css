@@ -2,6 +2,7 @@
   width: 1114px;
   margin: auto;
 }
+
 .article-area {
 }
 
@@ -44,9 +45,21 @@
 }
 
 .article-card-content {
-  padding: 24px;  
+  padding: 24px;
+  color: #222;
+  -webkit-font-smoothing: antialiased;
 }
 
+.plain-text-body {
+  white-space: pre;          
+  white-space: pre-wrap;
+  white-space: pre-line;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -hp-pre-wrap;
+  word-wrap: break-word;
+}
 .article-card:hover {
   box-shadow: 1px 1px 15px 1px rgba(0,0,0,.4);
 }
