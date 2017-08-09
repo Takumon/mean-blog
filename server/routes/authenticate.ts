@@ -16,8 +16,9 @@ authenticateRouter.post('/check-state',  authenticate.verifyToken, (req, res) =>
 
 authenticateRouter.post('/login', (req, res) => {
 
+  const reqUser = req.body.user;
   User.findOne({
-    userId: req.body.userId
+    userId: reqUser.userId
   }, function(err, user) {
     if (err) {
       throw err;
@@ -32,7 +33,7 @@ authenticateRouter.post('/login', (req, res) => {
     }
 
     // TODO パスワードの暗号化
-    if (user.password !== req.body.password) {
+    if (user.password !== reqUser.password) {
       res.json({
         success: false,
         message: '認証に失敗しました。'
@@ -55,7 +56,7 @@ authenticateRouter.post('/login', (req, res) => {
 
 
 authenticateRouter.post('/register', (req, res) => {
-  const reqUser = req.body;
+  const reqUser = req.body.user;
 
   User.findOne({ 'userId': reqUser.userId }, (err, user) => {
     if (err) {
