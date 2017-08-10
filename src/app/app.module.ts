@@ -9,7 +9,14 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+
 import { ArticlesModule } from './articles/articles.module';
+
+import { JwtService } from './shared/services/jwt.service';
+import { AuthenticationService } from './shared/services/authentication.service';
+import { CurrentUserService } from './shared/services/current-user.service';
+import { AlertService } from './shared/services/alert.service';
+import { AuthGuard } from './shared/auth.guard';
 
 @NgModule({
   declarations: [
@@ -21,8 +28,15 @@ import { ArticlesModule } from './articles/articles.module';
     FormsModule,
     BrowserAnimationsModule,
     MaterialModule,
-    ArticlesModule,
     AppRoutingModule,
+    ArticlesModule,
+  ],
+  providers: [
+    AlertService,
+    JwtService,
+    AuthenticationService,
+    CurrentUserService,
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
 })

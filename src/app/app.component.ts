@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { CurrentUserService } from './shared/services/current-user.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,6 +10,12 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent {
   title = `Takumon's Blog!`;
 
-  constructor() {
+  constructor(
+    private currentUserService: CurrentUserService
+  ) {
+  }
+
+  isLogin() {
+    return this.currentUserService.getToken();
   }
 }
