@@ -8,7 +8,7 @@ const authenticate = {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (!token) {
-      res.stetus(403).send({
+      res.status(403).send({
         success: false,
         message: 'トークンが存在しません。'
       });

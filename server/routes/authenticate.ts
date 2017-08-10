@@ -16,7 +16,7 @@ authenticateRouter.post('/check-state',  authenticate.verifyToken, (req, res) =>
 
 authenticateRouter.post('/login', (req, res) => {
 
-  const reqUser = req.body.user;
+  const reqUser = req.body;
   User.findOne({
     userId: reqUser.userId
   }, function(err, user) {
@@ -56,7 +56,7 @@ authenticateRouter.post('/login', (req, res) => {
 
 
 authenticateRouter.post('/register', (req, res) => {
-  const reqUser = req.body.user;
+  const reqUser = req.body;
 
   User.findOne({ 'userId': reqUser.userId }, (err, user) => {
     if (err) {
