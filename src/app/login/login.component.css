@@ -1,0 +1,83 @@
+.login-box {
+    top: 20%;
+    left: 50%;
+    width: 500px;
+    margin-left: -250px;
+    padding: 0;
+    position: fixed;
+}
+
+.login-title {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.login-title .title {
+  display: block;
+  font-weight: 100;
+  font-size: 36px;
+}
+
+.login-title .subtitle {
+  
+}
+
+.login-content {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.input-container {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.input-container input{
+  padding-left: 12px;
+  padding-right: 12px; 
+  box-sizing: border-box;
+}
+
+.input-container input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+
+.remenber-me-area {
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.button-area {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.button-area button {
+  flex: 1;
+  height: 48px;
+}
+
+.footer {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  padding: 12px;
+  border-top: 1px solid #f5f4f4;
+  color: gray
+}
+
+.footer button {
+  flex:1;
+}
+.spacer {
+  flex: 1 1 auto;
+}

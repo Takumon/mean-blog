@@ -9,7 +9,7 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
+import { LoginModule } from './login/login.module';
 import { ArticlesModule } from './articles/articles.module';
 
 import { JwtService } from './shared/services/jwt.service';
@@ -18,9 +18,12 @@ import { CurrentUserService } from './shared/services/current-user.service';
 import { AlertService } from './shared/services/alert.service';
 import { AuthGuard } from './shared/auth.guard';
 
+import { AlertComponent } from './shared/directives/alert.component';
+
 @NgModule({
   declarations: [
     AppComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +32,7 @@ import { AuthGuard } from './shared/auth.guard';
     BrowserAnimationsModule,
     MaterialModule,
     AppRoutingModule,
+    LoginModule,
     ArticlesModule,
   ],
   providers: [
