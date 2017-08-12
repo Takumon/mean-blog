@@ -4,4 +4,5 @@ export class ArticleModel {
   body: string;
   isMarkdown: boolean;
   date: Date;
+  author: string;
 }
