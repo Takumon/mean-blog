@@ -8,4 +8,5 @@ export class UserModel {
   isAdmin: Boolean;
   blogTitle: String;
   userDescription: String;
+  icon: String;
 }

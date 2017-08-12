@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
 import { AuthenticationService } from '../shared/services/authentication.service';
+import { IconGeneratorService } from '../shared/services/icon-generator.service';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AuthenticationService } from '../shared/services/authentication.service
   ],
   providers: [
     AuthenticationService,
+    IconGeneratorService,
   ],
 })
 export class LoginModule { }

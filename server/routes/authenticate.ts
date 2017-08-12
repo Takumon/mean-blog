@@ -4,6 +4,7 @@ import { User } from '../models/user';
 import * as jwt from 'jsonwebtoken';
 import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
 import { authenticate } from '../middleware/authenticate';
+import * as jdenticon from 'jdenticon';
 
 const authenticateRouter: Router = Router();
 
@@ -72,6 +73,7 @@ authenticateRouter.post('/register', (req, res) => {
 
     const newUser = new User();
     newUser.userId = reqUser.userId;
+    newUser.icon = jdenticon.toPng(reqUser.userId, 200).toString('base64');
     // TOOD 暗号化
     newUser.password = reqUser.password;
     newUser.save( (err2) => {
