@@ -6,7 +6,7 @@ const articleRouter: Router = Router();
 
 // 全記事を取得する
 articleRouter.get('/', (req, res, next) => {
-  Article.find(function(err, doc) {
+  const cb = (err, doc) => {
     if (err) {
       return res.status(500).json({
           title: 'エラーが発生しました。',
@@ -14,13 +14,23 @@ articleRouter.get('/', (req, res, next) => {
       });
     }
     return res.status(200).json(doc);
-  });
+  };
+
+
+  if (req.query.withUser) {
+    Article
+      .find()
+      .populate('author', '-password')
+      .exec(cb);
+  } else {
+    Article
+      .find(cb);
+  }
 });
 
 // 指定したIDの記事を取得する
 articleRouter.get('/:id', (req, res, next) => {
-
-  Article.find({ articleId: +req.params.id }, function(err, doc) {
+  const cb = (err, doc) => {
     if (err) {
       return res.status(500).json({
           title: 'エラーが発生しました。',
@@ -28,16 +38,23 @@ articleRouter.get('/:id', (req, res, next) => {
       });
     }
     return res.status(200).json(doc[0]);
-  });
+  };
+
+
+  if (req.query.withUser) {
+    Article
+      .find({ articleId: +req.params.id })
+      .populate('author', '-password')
+      .exec(cb);
+  } else {
+    Article
+      .find({ articleId: +req.params.id }, cb);
+  }
 });
 
 // 記事を登録する
 articleRouter.post('/', (req, res, next) => {
-  const article = new Article({
-    title: req.body.title,
-    body: req.body.body,
-    isMarkdown: req.body.isMarkdown,
-  });
+  const article = new Article(req.body);
 
   article.save((err, result) => {
     if (err) {

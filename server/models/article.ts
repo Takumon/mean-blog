@@ -15,7 +15,10 @@ const ArticleSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  // author: { type : mongoose.Schema.ObjectId, ref : 'User' },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   date: { type: Date, default: Date.now },
 });
 
