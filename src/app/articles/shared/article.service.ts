@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
+import { Http, Response, URLSearchParams } from '@angular/http';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
