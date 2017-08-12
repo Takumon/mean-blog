@@ -6,6 +6,10 @@
 .article-area {
 }
 
+.avatar {
+  background: white;
+}
+
 .article-tile {
 }
 
@@ -40,8 +44,8 @@
 
 .article-card-header {
   padding: 12px 0 0 12px;
-  background: #e4e4e4;
-  border-bottom: #d2d2d2 solid 1px;
+  background: #fdfdfd;
+  box-shadow: #969696 0 0 2px 0px;
 }
 
 .article-card-content {

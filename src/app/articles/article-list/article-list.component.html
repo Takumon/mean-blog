@@ -13,7 +13,7 @@
               [routerLink]="['/articles', item.articleId]"
               routerLinkActive="active">
             <md-card-header class="article-card-header">
-              <img md-card-avatar src="assets/images/logo.jpeg">
+              <img class="avatar" md-card-avatar src="data:image/png;base64,{{item.author.icon}}">
               <md-card-title>{{item.title}}</md-card-title>
               <md-card-subtitle>{{item.author.userId}}   {{item.date}}</md-card-subtitle>
             </md-card-header>

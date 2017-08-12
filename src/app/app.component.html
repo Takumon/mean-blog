@@ -5,7 +5,7 @@
     md-button routerLink="/drafts/new" routerLinkActive="active"><i class="fa fa-fw fa-pencil-square"></i><span> 投稿する</span></button>  
 
   <button md-icon-button [mdMenuTriggerFor]="menu">
-  <img class="menu-icon" src="assets/images/logo.jpeg">
+  <img class="menu-icon" src="data:image/png;base64,{{user().icon}}">
   </button>
   <md-menu #menu="mdMenu">
     <div md-menu-item disabled class="status"><span class="username">{{user().userId}}</span>としてログイン済</div>

@@ -1,6 +1,7 @@
 <div class="article-area" *ngIf="article">
   <h1 class="article-title">{{article.title}}</h1>
   <div class="article-metadata">
+    <img class="article-author-icon" src="data:image/png;base64,{{article.author.icon}}">
     <div class="article-author">{{article.author.userId}}</div>
     <div class="article-date">{{article.date}} に更新</div>
     <div *ngIf="isMyArticle()" class="operation-area">

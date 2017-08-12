@@ -22,9 +22,13 @@
   padding: 6px 24px;
 }
 
+.article-author-icon {
+  width: 24px;
+  margin-right: 4px;
+}
 .article-author {
   padding-right: 24px;
-  font-size: 0.8em;
+  font-size: 0.9em;
   white-space: nowrap;
 }
 
