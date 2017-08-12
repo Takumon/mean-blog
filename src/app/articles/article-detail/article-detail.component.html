@@ -2,14 +2,21 @@
   <h1 class="article-title">{{article.title}}</h1>
   <div class="article-metadata">
     <div class="article-author">{{article.author.userId}}</div>
-    <div class="article-date">{{article.date}}</div>
-    <div *ngIf="isMyArticle()">
-      <a md-button [routerLink]="['/drafts', article.articleId, 'edit']"  routerLinkActive="active">
+    <div class="article-date">{{article.date}} に更新</div>
+    <div *ngIf="isMyArticle()" class="operation-area">
+      <button md-button [routerLink]="['/drafts', article.articleId, 'edit']"  routerLinkActive="active">
         <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
-      </a>
-      <a md-button (click)="deleteArticle()">
-        <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
-      </a>
+      </button>
+      <span class="spacer"></span>
+      <button md-button [mdMenuTriggerFor]="menu">
+        <i class="fa fa-fw fa-cog"></i>  設定
+      </button>
+      <md-menu #menu="mdMenu">
+        <div md-menu-item disabled></div>
+        <a md-menu-item (click)="deleteArticle()">
+          <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
+        </a>
+      </md-menu>
     </div>
   </div>
   <div class="article-body">

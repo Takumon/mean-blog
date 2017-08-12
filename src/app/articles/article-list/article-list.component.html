@@ -13,10 +13,9 @@
               [routerLink]="['/articles', item.articleId]"
               routerLinkActive="active">
             <md-card-header class="article-card-header">
-              <span>{{item.author.userId}}</span>
               <img md-card-avatar src="assets/images/logo.jpeg">
               <md-card-title>{{item.title}}</md-card-title>
-              <md-card-subtitle>{{item.date}}</md-card-subtitle>
+              <md-card-subtitle>{{item.author.userId}}   {{item.date}}</md-card-subtitle>
             </md-card-header>
             <md-card-content class="article-card-content">
               <div *ngIf="item.isMarkdown; then markdown else plainText"></div>

@@ -22,9 +22,31 @@
   padding: 6px 24px;
 }
 
+.article-author {
+  padding-right: 24px;
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+
 .article-date {
   padding-right: 24px;
   font-size: 0.8em;
+  white-space: nowrap;
+}
+
+.operation-area {
+  display: flex;
+  width: 100%;
+}
+
+.operation-area button{
+  border: #dadada 1px solid;
+  height: 28px;
+  line-height: 24px;
+}
+
+.operation-area .spacer {
+  flex: 1 1 auto;
 }
 
 .article-body {
