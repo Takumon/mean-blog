@@ -26,3 +26,11 @@
   height: 100%;
   border-radius: 50%;
 }
+
+.status {
+  border-bottom: gray 1px solid;
+}
+
+.status .username {
+  font-weight: bold;
+}

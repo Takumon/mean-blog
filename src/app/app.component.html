@@ -8,7 +8,7 @@
   <img class="menu-icon" src="assets/images/logo.jpeg">
   </button>
   <md-menu #menu="mdMenu">
-    <div md-menu-item disabled>{{user().userId}}</div>
+    <div md-menu-item disabled class="status"><span class="username">{{user().userId}}</span>としてログイン済</div>
     <button
       *ngIf="isLogin()"
       md-menu-item
