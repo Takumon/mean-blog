@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticleService } from '../shared/article.service';
+import { ArticleWithUserModel } from '../shared/article-with-user.model';
 
 
 @Component({
@@ -9,7 +10,7 @@ import { ArticleService } from '../shared/article.service';
   providers: [ ArticleService ],
 })
 export class ArticleListComponent implements OnInit {
-  articles: Array<any>;
+  articles: Array<ArticleWithUserModel>;
 
   constructor(
     private articleService: ArticleService,
@@ -23,10 +24,12 @@ export class ArticleListComponent implements OnInit {
   }
 
   getArticles(): void {
+    const withUser = true;
+
     this.articleService
-      .getAll()
+      .getAll(withUser)
       .subscribe((res: any) => {
-        this.articles = res;
+        this.articles = res as Array<ArticleWithUserModel>;
       });
   }
 }

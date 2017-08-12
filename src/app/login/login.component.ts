@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { User } from '../users/shared/user';
+import { UserModel } from '../users/shared/user.model';
 import { AuthenticationService } from '../shared/services/authentication.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   message: String;
-  user: User;
+  user: UserModel;
   user_status: boolean;
   returnUrl: string;
   isLoginMode: Boolean;
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
   ) {
-    this.user = new User();
+    this.user = new UserModel();
     this.authenticationService.logout();
     this.setLoginMode(true);
   }
@@ -57,7 +57,6 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        this.authenticationService.setUser(res.user);
         this.router.navigate([this.returnUrl]);
       });
   }
@@ -72,7 +71,6 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        this.authenticationService.setUser(res.user);
         this.router.navigate([this.returnUrl]);
       });
   }

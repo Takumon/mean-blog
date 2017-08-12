@@ -13,14 +13,21 @@ export class JwtService {
     private currentUserService: CurrentUserService
   ) {}
 
-  jwt() {
+  getHeaders() {
     if (!this.currentUserService.hasToken()) {
       return;
     }
 
-    const headers = new Headers({
+    return new Headers({
       'x-access-token': this.currentUserService.getToken()
     });
-    return new RequestOptions({ headers: headers });
+  }
+
+  getRequestOptions() {
+    if (!this.currentUserService.hasToken()) {
+      return;
+    }
+
+    return new RequestOptions({ headers: this.getHeaders() });
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
@@ -16,9 +16,16 @@ export class ArticleService {
     private jwtService: JwtService
   ) {}
 
-  getAll(): Observable<any> {
+  getAll(withUser: Boolean = false): Observable<any> {
+    const URL = this.baseUrl;
+    const headers = this.jwtService.getHeaders();
+    const search = new URLSearchParams();
+    if (withUser) {
+      search.set('withUser', `true`);
+    }
+
     return this.http
-        .get(this.baseUrl, this.jwtService.jwt())
+        .get(URL, { headers, search })
         .map((response: Response) => {
           const result = response.json();
           return result;
@@ -26,11 +33,16 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  get(id: number): Observable<any> {
-    const url = `${this.baseUrl}/${id}`;
+  get(id: number, withUser: Boolean = false): Observable<any> {
+    const URL = `${this.baseUrl}/${id}`;
+    const headers = this.jwtService.getHeaders();
+    const search = new URLSearchParams();
+    if (withUser) {
+      search.set('withUser', `true`);
+    }
 
     return this.http
-        .get(url, this.jwtService.jwt())
+        .get(URL, { headers, search })
         .map((response: Response) => {
           const result = response.json();
           return result;
@@ -39,10 +51,10 @@ export class ArticleService {
   }
 
   update(article: ArticleModel): Observable<any> {
-    const url = `${this.baseUrl}/${article.articleId}`;
+    const URL = `${this.baseUrl}/${article.articleId}`;
 
     return this.http
-      .put(url, article, this.jwtService.jwt())
+      .put(URL, article, this.jwtService.getRequestOptions())
       .map((response: Response) => {
         const result = response.json();
         return result;
@@ -50,12 +62,11 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  register(title: string, body: string): Observable<any> {
+  register(article: ArticleModel): Observable<any> {
+    const URL = this.baseUrl;
+
     return this.http
-      .post('/api/articles', {
-        title: title,
-        body: body
-      }, this.jwtService.jwt())
+      .post(URL, article, this.jwtService.getRequestOptions())
       .map((response: Response) => {
         const result = response.json();
         return result;
@@ -64,10 +75,10 @@ export class ArticleService {
   }
 
   delete(id: number): Observable<any> {
-    const url = `${this.baseUrl}/${id}`;
+    const URL = `${this.baseUrl}/${id}`;
 
     return this.http
-        .delete(url, this.jwtService.jwt())
+        .delete(URL, this.jwtService.getRequestOptions())
         .map((response: Response) => {
           const result = response.json();
           return result;

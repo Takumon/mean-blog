@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/observable';
-import { User } from '../../users/shared/user';
+import { UserModel } from '../../users/shared/user.model';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
@@ -14,11 +14,8 @@ import { CurrentUserService } from './current-user.service';
  */
 @Injectable()
 export class AuthenticationService {
-  // TODO tokenを保持する場所がここが最適なのか？
-  token: string;
   private base_url = '/api/authenticate';
-  private userSource = new Subject<User>();
-  user$ = this.userSource.asObservable();
+  private userSource = new Subject<UserModel>();
 
   constructor(
     public http: Http,
@@ -26,13 +23,8 @@ export class AuthenticationService {
     private currentUserService: CurrentUserService,
   ) { }
 
-  setUser(user: User) {
-    this.userSource.next(user);
-  }
 
-
-
-  loginUser(user: User): Observable<Object> {
+  loginUser(user: UserModel): Observable<Object> {
     const URL = `${this.base_url}/login`;
 
     // TODO URL JSON形式でいいか検討
@@ -42,7 +34,7 @@ export class AuthenticationService {
   }
 
 
-  registerUser(user: User): Observable<Object> {
+  registerUser(user: UserModel): Observable<Object> {
     const URL = `${this.base_url}/register`;
 
     return this.http
@@ -54,13 +46,12 @@ export class AuthenticationService {
     const URL = `${this.base_url}/check-state`;
 
     return this.http
-      .get(URL, this.jwtService.jwt())
+      .get(URL, this.jwtService.getRequestOptions())
       .map( res => res.json() );
   }
 
 
   logout() {
-    this.token = null;
     this.currentUserService.remove();
   }
 
@@ -71,10 +62,8 @@ export class AuthenticationService {
       return body;
     }
 
-    this.token = body.token;
-
     const currentUser = {
-      userId: body.user.userId,
+      user: body.user,
       token: body.token
     };
     this.currentUserService.set(currentUser);

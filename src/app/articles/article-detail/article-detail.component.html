@@ -1,8 +1,9 @@
 <div class="article-area" *ngIf="article">
   <h1 class="article-title">{{article.title}}</h1>
   <div class="article-metadata">
+    <div class="article-author">{{article.author.userId}}</div>
     <div class="article-date">{{article.date}}</div>
-    <div>
+    <div *ngIf="isMyArticle()">
       <a md-button [routerLink]="['/drafts', article.articleId, 'edit']"  routerLinkActive="active">
         <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
       </a>

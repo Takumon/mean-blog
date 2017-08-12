@@ -9,6 +9,8 @@ import {Location} from '@angular/common';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 import { EditMode } from './edit-mode.enum';
+import { CurrentUserService } from '../../shared/services/current-user.service';
+
 
 @Component({
   selector: 'app-article-edit',
@@ -31,6 +33,7 @@ export class ArticleEditComponent {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
+    private currentUserService: CurrentUserService,
     ) {
     this.route.params.subscribe( params => {
       if ( params['id']) {
@@ -39,10 +42,12 @@ export class ArticleEditComponent {
           .get(+params['id'])
           .subscribe(article => {
             this.article = article;
+            this.article.author = this.currentUserService.get().user._id;
           });
       } else {
         this.action = '投稿';
         this.article = new ArticleModel();
+        this.article.author = this.currentUserService.get().user._id;
       }
     });
   }
@@ -70,7 +75,7 @@ export class ArticleEditComponent {
 
     if (this.isNew()) {
       this.articleService
-        .register(this.article.title, this.article.body)
+        .register(this.article)
         .subscribe((res: any) => {
           this.goBack();
         });
