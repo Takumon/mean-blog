@@ -7,7 +7,7 @@
       <md-grid-list cols="3">
         <md-grid-tile
           class="article-tile"
-          *ngFor="let item of articles"
+          *ngFor="let item of articles | orderby: ['-date']"
           [colspan]="1" >
           <md-card class="article-card" 
               [routerLink]="['/articles', item.articleId]"
@@ -15,7 +15,10 @@
             <md-card-header class="article-card-header">
               <img class="avatar" md-card-avatar src="data:image/png;base64,{{item.author.icon}}">
               <md-card-title>{{item.title}}</md-card-title>
-              <md-card-subtitle>{{item.author.userId}}   {{item.date}}</md-card-subtitle>
+              <md-card-subtitle class="article-card-subtitle">
+                <span class="article-card-author-name">{{item.author.userId}}</span>
+                <span class="article-card-date">{{item.date | date: 'yyyy/MM/dd HH:mm' }}</span>
+              </md-card-subtitle>
             </md-card-header>
             <md-card-content class="article-card-content">
               <div *ngIf="item.isMarkdown; then markdown else plainText"></div>

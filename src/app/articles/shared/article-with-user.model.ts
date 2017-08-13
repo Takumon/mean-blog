@@ -5,6 +5,6 @@ export class ArticleWithUserModel {
   title: string;
   body: string;
   isMarkdown: boolean;
-  date: Date;
+  date: string;
   author: UserModel;
 }

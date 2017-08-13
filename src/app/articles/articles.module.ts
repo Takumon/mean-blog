@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { ArticleService } from './shared/article.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
+import { OrderByPipe } from './shared/orderby.pipe';
+
 
 import { ArticlesRoutingModule } from './articles-routing.module';
 import { ArticleListComponent } from './article-list/article-list.component';
@@ -20,6 +22,7 @@ import { ArticleEditComponent } from './article-edit/article-edit.component';
     ArticleEditComponent,
     ArticleDetailComponent,
     MarkdownParsePipe,
+    OrderByPipe,
   ],
   imports: [
     BrowserModule,

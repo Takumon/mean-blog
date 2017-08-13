@@ -43,9 +43,20 @@
 }
 
 .article-card-header {
-  padding: 12px 0 0 12px;
+  padding: 12px 12px 0 12px;
   background: #fdfdfd;
   box-shadow: #969696 0 0 2px 0px;
+}
+
+.article-card-subtitle {
+  width: 100%;
+}
+
+.article-card-author-name {
+}
+
+.article-card-date {
+  padding-left: 12px;
 }
 
 .article-card-content {
