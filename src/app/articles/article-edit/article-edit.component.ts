@@ -42,7 +42,6 @@ export class ArticleEditComponent {
           .get(+params['id'])
           .subscribe(article => {
             this.article = article;
-            this.article.author = this.currentUserService.get().user._id;
           });
       } else {
         this.action = '投稿';

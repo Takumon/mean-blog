@@ -49,6 +49,7 @@ authenticateRouter.post('/login', (req, res) => {
 
     res.json({
       user: {
+        _id: user._id,
         userId: user.userId,
         icon: user.icon
       },
@@ -91,6 +92,7 @@ authenticateRouter.post('/register', (req, res) => {
 
       return res.send({
         user: {
+          _id: user._id,
           userId: newUser.userId,
           icon: newUser.icon
         },
