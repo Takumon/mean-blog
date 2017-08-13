@@ -1,10 +1,12 @@
 import * as http from 'http';
 import { Router, Response } from 'express';
-import { User } from '../models/user';
 import * as jwt from 'jsonwebtoken';
+import * as jdenticon from 'jdenticon';
+
+import { User } from '../models/user';
 import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
 import { authenticate } from '../middleware/authenticate';
-import * as jdenticon from 'jdenticon';
+import { PasswordManager } from '../helpers/password-manager';
 
 const authenticateRouter: Router = Router();
 
@@ -33,8 +35,7 @@ authenticateRouter.post('/login', (req, res) => {
       return;
     }
 
-    // TODO パスワードの暗号化
-    if (user.password !== reqUser.password) {
+    if (!PasswordManager.compare(reqUser.password, user.password)) {
       res.json({
         success: false,
         message: '認証に失敗しました。'
@@ -47,7 +48,10 @@ authenticateRouter.post('/login', (req, res) => {
     });
 
     res.json({
-      user: user,
+      user: {
+        userId: user.userId,
+        icon: user.icon
+      },
       success: true,
       message: '認証成功',
       token: token,
@@ -74,8 +78,8 @@ authenticateRouter.post('/register', (req, res) => {
     const newUser = new User();
     newUser.userId = reqUser.userId;
     newUser.icon = jdenticon.toPng(reqUser.userId, 200).toString('base64');
-    // TOOD 暗号化
-    newUser.password = reqUser.password;
+    newUser.password = PasswordManager.crypt(reqUser.password);
+
     newUser.save( (err2) => {
       if (err2) {
         throw err2;
@@ -86,7 +90,10 @@ authenticateRouter.post('/register', (req, res) => {
       });
 
       return res.send({
-        user: newUser,
+        user: {
+          userId: newUser.userId,
+          icon: newUser.icon
+        },
         success: true,
         message: 'ユーザ情報を新規作成しました。',
         token: token
