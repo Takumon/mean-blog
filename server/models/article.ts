@@ -2,6 +2,27 @@ import * as mongoose from 'mongoose';
 import * as autoIncrement from 'mongoose-auto-increment';
 import '../connection';
 
+const CommentSchema = new mongoose.Schema({
+  articleId: {
+    type: String,
+    required: true
+  },
+  text: {
+    type: String,
+    required: [true, 'コメントを入力してください。']
+  },
+  isMarkdown: {
+    type: Boolean,
+    default: false
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  created: { type: Date, default: Date.now },
+  updated: { type: Date, default: Date.now },
+});
+
 const ArticleSchema = new mongoose.Schema({
   title:  {
     type: String,
@@ -19,6 +40,7 @@ const ArticleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  comments: [ CommentSchema ],
   date: { type: Date, default: Date.now },
 });
 

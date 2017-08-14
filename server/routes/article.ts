@@ -21,6 +21,7 @@ articleRouter.get('/', (req, res, next) => {
     Article
       .find()
       .populate('author', '-password')
+      .populate('comments.user', '-password')
       .exec(cb);
   } else {
     Article
@@ -45,7 +46,8 @@ articleRouter.get('/:id', (req, res, next) => {
     Article
       .find({ articleId: +req.params.id })
       .populate('author', '-password')
-      .exec(cb);
+      .populate('comments.user', '-password')
+     .exec(cb);
   } else {
     Article
       .find({ articleId: +req.params.id }, cb);
@@ -93,7 +95,7 @@ articleRouter.put('/:id', (req, res, next) => {
 
 // 記事を削除する
 articleRouter.delete('/:id', (req, res, next) => {
-  Article.findOne({ articleId: req.params.id }, req.body, (err, model) => {
+  Article.findOne({ articleId: req.params.id }, (err, model) => {
 
     if (err) {
       return res.status(500).json({
@@ -113,6 +115,96 @@ articleRouter.delete('/:id', (req, res, next) => {
       return res.status(200).json({
         message: '記事を削除しました。',
       });
+    });
+  });
+});
+
+
+
+
+
+// 指定したIDの記事にコメントを追加する
+articleRouter.post('/:id/comments', (req, res, next) => {
+
+  // TODO 入力チェック、権限チェック
+  const condition = { articleId: +req.params.id };
+  const update = { $push : { comments: req.body} };
+  const options = { new: true, safe: true };
+  console.log('コメント追加');
+  console.log(condition);
+  console.log(update);
+
+  Article.findOneAndUpdate(condition, update, options, (err, doc) => {
+    if (err) {
+      return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+      });
+    }
+
+    res.status(200).json({
+      message: '記事にコメントを登録しました。',
+      obj: doc
+    });
+  });
+});
+
+// 指定したIDのコメントを更新する
+articleRouter.put('/:articleId/comments/:commentId', (req, res, next) => {
+
+  // TODO 入力チェック、権限チェック
+  const condition = {
+    articleId: +req.params.articleId,
+    'comments._id': req.params.commentId
+  };
+  const update = { $set : {
+    'comments.$.text': req.body.text,
+    'comments.$.isMarkdown': req.body.isMarkdown,
+    'comments.$.updated': new Date(),
+  } };
+  const options = {new : true};
+  console.log('コメント更新');
+  console.log(condition);
+  console.log(update);
+
+  Article.findOneAndUpdate(condition, update, options, (err, doc) => {
+    if (err) {
+      return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+      });
+    }
+
+    res.status(200).json({
+      message: '記事のコメントを更新しました。',
+      obj: doc
+    });
+  });
+});
+
+
+// 指定したIDのコメントを削除する
+articleRouter.delete('/:articleId/comments/:commentId', (req, res, next) => {
+
+  // TODO 入力チェック、権限チェック
+  const condition = { articleId: +req.params.articleId };
+  const update = { $pull : { comments : { _id: req.params.commentId} } };
+  const options = {new : true};
+  console.log('コメント削除');
+  console.log(condition);
+  console.log(update);
+
+  Article.findOneAndUpdate(condition, update, options, (err, doc) => {
+    if (err) {
+      return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+      });
+    }
+
+    res.status(200).json({
+      message: '記事のコメントを削除しました。',
+      obj: doc
     });
   });
 });
