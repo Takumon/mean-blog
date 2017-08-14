@@ -2,6 +2,7 @@
   width: 1114px;
   margin: auto;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+  margin-bottom: 96px;
 }
 
 .article-title {
@@ -55,10 +56,29 @@
 
 .article-body {
   padding: 48px;
-  margin-bottom: 192px;
   background: white;
   color: #222;
   -webkit-font-smoothing: antialiased;
+}
+
+.article-comment-area {
+  width: 1114px;
+  box-sizing: border-box;
+  margin: auto;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+  padding: 48px;
+  background: white;
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 192px;
+}
+
+.article-comment-area-title {
+  margin-top: -86px;
+  position: absolute;
+  font-weight: bold;
+  margin-left: -48px;
+  color: gray
 }
 
 .plain-text-body {
@@ -70,4 +90,81 @@
   white-space: -moz-pre-wrap;
   white-space: -hp-pre-wrap;
   word-wrap: break-word;
+}
+
+
+.article-comment-area .article-comment {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.article-comment-area .article-comment:last-child {
+  border-bottom: 1px gray solid;
+  margin-bottom: 12px;
+}
+
+.article-comment-metadata {
+  display: flex;
+}
+
+.article-comment-author-icon {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  box-shadow: grey 0 0 2px 0px;
+}
+
+.article-comment-metadata-sub {
+  flex: 1 1 auto;
+}
+
+.article-comment-author {
+  font-weight: bold;
+  color: #3f51b5;
+  padding-right: 12px
+}
+
+.article-comment-created {
+  white-space: nowrap;
+  color: gray;
+  font-size: 12px;
+}
+
+.article-comment-operation {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+
+
+.article-comment-text {
+}
+
+.article-comment-editor-checkbox {
+  display: block;
+  margin: 4px 0;
+}
+
+.article-comment-operation-area {
+  display: flex;
+  justify-content: flex-end;
+}
+article-comment-operation-area button {
+  margin-right: 4px;
+}
+
+article-comment-operation-area button:last-child {
+  margin-right: 0;
+}
+
+.register-comment-body {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 2px;
+    border: #c3c3c3 solid 1px;
+    min-height: 124px;
+    font-size: 12px;
+    padding: 12px;
+    display: block;
+    margin-bottom: 4px;
 }

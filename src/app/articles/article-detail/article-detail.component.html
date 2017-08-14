@@ -30,3 +30,84 @@
     </ng-template>
   </div>
 </div>
+
+<div class="article-comment-area" *ngIf="article && article.comments">
+  <div class="article-comment-area-title">{{article.comments.length}}件のコメント</div>
+  <div class="article-comment" *ngFor="let comment of article.comments | orderby: ['created']">
+
+    <div *ngIf="comment.isEditable; then editComment else displayComment"></div>
+    <ng-template #editComment>
+      <div class="article-comment-editor">
+        <div class="article-comment-metadata">
+          <img class="article-comment-author-icon" src="data:image/png;base64,{{comment.user.icon}}">
+          <div class="article-comment-operation">コメントを編集する</div>
+        </div>
+        <md-checkbox class="article-comment-editor-checkbox" [(ngModel)]="comment.isMarkdown">Markdonw形式で書く</md-checkbox>
+        <textarea
+          class="register-comment-body" 
+          [(ngModel)]="comment.text"
+          placeholder="本文"></textarea>
+        <div class="article-comment-operation-area">
+          <button 
+            md-raised-button
+            type="button"
+            id="cancel-edit-btn"
+            (click)='comment.isEditable = false;'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
+
+          <button 
+            md-raised-button
+            color="primary"
+            type="button"
+            id="registe-comment-btn"
+            (click)='updateComment(comment)'><i class="fa fa-fw fa-commenting"></i>  更新</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #displayComment>
+      <div class="article-comment-metadata">
+        <img class="article-comment-author-icon" src="data:image/png;base64,{{comment.user.icon}}">
+        <div class="article-comment-metadata-sub">
+          <div class="article-comment-author">{{comment.user.userId}}</div>
+          <div class="article-comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
+        </div>
+        <div *ngIf="isMyComment(comment.user)" class="comment-operation-area">
+          <button md-button (click)="comment.isEditable = true;">
+            <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
+          </button>
+          <button md-button (click)="deleteComment(comment._id)">
+            <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
+          </button>
+        </div>
+      </div>
+      <div class="article-comment-text">
+        <div *ngIf="comment.isMarkdown; then markdownComment else plainTextComment"></div>
+        <ng-template #markdownComment>
+          <p [innerHTML]="comment.text | toMarkdown" class="article-comment-markdown-body"></p>
+        </ng-template>
+        <ng-template #plainTextComment>
+          <pre [innerHTML]="comment.text" class="article-comment-plain-text-body"></pre>                
+        </ng-template>
+      </div>       
+    </ng-template>
+  </div>
+
+  <div class="article-comment-register">
+    <div class="article-comment-metadata">
+      <img class="article-comment-author-icon" src="data:image/png;base64,{{user().icon}}">
+      <div class="article-comment-operation">コメントを追加する</div>
+    </div>
+    <md-checkbox class="article-comment-editor-checkbox" [(ngModel)]="newComment.isMarkdown">Markdonw形式で書く</md-checkbox>
+    <textarea
+      class="register-comment-body" 
+      [(ngModel)]="newComment.text"
+      placeholder="本文"></textarea>
+    <div class="article-comment-operation-area">
+      <button 
+        md-raised-button
+        color="primary"
+        type="button"
+        id="registe-comment-btn"
+        (click)='registerComment()'><i class="fa fa-fw fa-commenting"></i>  追加</button>
+    </div>
+  </div>
+</div>
