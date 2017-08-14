@@ -130,9 +130,6 @@ articleRouter.post('/:id/comments', (req, res, next) => {
   const condition = { articleId: +req.params.id };
   const update = { $push : { comments: req.body} };
   const options = { new: true, safe: true };
-  console.log('コメント追加');
-  console.log(condition);
-  console.log(update);
 
   Article.findOneAndUpdate(condition, update, options, (err, doc) => {
     if (err) {
@@ -163,9 +160,6 @@ articleRouter.put('/:articleId/comments/:commentId', (req, res, next) => {
     'comments.$.updated': new Date(),
   } };
   const options = {new : true};
-  console.log('コメント更新');
-  console.log(condition);
-  console.log(update);
 
   Article.findOneAndUpdate(condition, update, options, (err, doc) => {
     if (err) {
@@ -190,9 +184,6 @@ articleRouter.delete('/:articleId/comments/:commentId', (req, res, next) => {
   const condition = { articleId: +req.params.articleId };
   const update = { $pull : { comments : { _id: req.params.commentId} } };
   const options = {new : true};
-  console.log('コメント削除');
-  console.log(condition);
-  console.log(update);
 
   Article.findOneAndUpdate(condition, update, options, (err, doc) => {
     if (err) {
