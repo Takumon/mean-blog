@@ -5,7 +5,9 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import { ArticleModel } from './article.model';
+import { CommentModel } from './comment.model';
 import { JwtService } from '../../shared/services/jwt.service';
+
 
 @Injectable()
 export class ArticleService {
@@ -33,8 +35,8 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  get(id: number, withUser: Boolean = false): Observable<any> {
-    const URL = `${this.baseUrl}/${id}`;
+  get(articleId: number, withUser: Boolean = false): Observable<any> {
+    const URL = `${this.baseUrl}/${articleId}`;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
     if (withUser) {
@@ -74,8 +76,9 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  delete(id: number): Observable<any> {
-    const URL = `${this.baseUrl}/${id}`;
+
+  delete(articleId: number): Observable<any> {
+    const URL = `${this.baseUrl}/${articleId}`;
 
     return this.http
         .delete(URL, this.jwtService.getRequestOptions())
@@ -85,4 +88,56 @@ export class ArticleService {
         })
       .catch((error: Response) => Observable.throw(error.json()));
   }
+
+
+  registerComment(articleId: number, comment: any): Observable<any> {
+    const URL = `${this.baseUrl}/${articleId}/comments`;
+    const options = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      headers: this.jwtService.getHeaders()
+    };
+
+    return this.http
+      .post(URL, comment, options)
+      .map((response: Response) => {
+        const result = response.json();
+        return result;
+      })
+      .catch((error: Response) => {
+        return Observable.throw(error.json());
+      });
+  }
+
+  updateComment(articleId: number, comment: any): Observable<any> {
+    const URL = `${this.baseUrl}/${articleId}/comments/${comment._id}`;
+    const options = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      headers: this.jwtService.getHeaders()
+    };
+
+    return this.http
+      .put(URL, comment, options)
+      .map((response: Response) => {
+        const result = response.json();
+        return result;
+      })
+      .catch((error: Response) => {
+        return Observable.throw(error.json());
+      });
+  }
+
+  deleteComment(articleId: number, commentId: String): Observable<any> {
+    const URL = `${this.baseUrl}/${articleId}/comments/${commentId}`;
+
+    return this.http
+      .delete(URL, this.jwtService.getRequestOptions())
+      .map((response: Response) => {
+        const result = response.json();
+        return result;
+      })
+      .catch((error: Response) => {
+        return Observable.throw(error.json());
+      });
+  }
+
 }
