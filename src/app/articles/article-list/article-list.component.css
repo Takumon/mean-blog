@@ -10,7 +10,6 @@
 
 
 .article-item {
-  cursor: pointer;
   box-sizing: border-box;
   padding: 0;
   transition: 0.5s;
@@ -41,11 +40,39 @@
 }
 
 .article-item-header {
+  cursor: pointer;
   background: #5e6371;
   display: flex;
   position: relative;
   color: white;
 }
+
+
+.underline-animation:before,
+.underline-animation:after{
+  position: absolute;
+  bottom: 0;
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.11);
+  transition: 0.4s;
+}
+
+.underline-animation:before{
+  left: 50%;
+}
+
+.underline-animation:after{
+  right: 50%;
+}
+
+.underline-animation:hover:before,
+.underline-animation:hover:after{
+  width: 50%;
+}
+
 
 .article-item-avator {
   margin: 12px;
