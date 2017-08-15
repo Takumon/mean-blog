@@ -4,65 +4,97 @@
 }
 
 .article-area {
+  width: 810px;
 }
 
-.avatar {
-  background: white;
-}
 
-.article-tile {
-}
 
-.article-card {
-  width: 95%;
-  height: 95%;
+.article-item {
   cursor: pointer;
   box-sizing: border-box;
   padding: 0;
-
-  -webkit-transition: 0.5s;
-  -moz-transition: 0.5s;
-  -o-transition: 0.5s;
   transition: 0.5s;
-  overflow: hidden;
+  border-bottom: 1px dotted #ccc;
+  background: white;
   position: relative;
+  margin-bottom: 24px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 10px -1px rgba(0,0,0,.4);
 }
 
-.article-card:after {
+.article-item:hover {
+}
+
+.article-item:after {
   content  : "";
   position : absolute;
   z-index  : 1;
-  bottom   : 0;
+  bottom   : 48px;
   left     : 0;
   pointer-events   : none;
   background-image : linear-gradient(to bottom, 
                     rgba(255,255,255, 0), 
                     rgba(255,255,255, 1) 90%);
   width    : 100%;
-  height   : 5em;
+  height: 4em;
+  border-bottom: #d4d4d4 1px solid;
 }
 
-.article-card-header {
-  padding: 12px 12px 0 12px;
-  background: #fdfffd;
-  box-shadow: #969696 0 0 2px 0px;
+.article-item-header {
+  background: #5e6371;
+  display: flex;
+  position: relative;
+  color: white;
 }
 
-.article-card-subtitle {
+.article-item-avator {
+  margin: 12px;
+  width: 42px;
+  box-sizing: border-box;
+}
+
+.avatar {
+  background: white;
   width: 100%;
+  border-radius: 2px;
 }
 
-.article-card-author-name {
+.article-item-subtitle {
+  margin: 12px;
+  margin-left: 0px;
 }
 
-.article-card-date {
+.article-item-author-name {
+  white-space: nowrap;
+}
+
+.article-item-date {
+  font-size: 0.7em;
+  white-space: nowrap;
+}
+
+.article-item-title-area {
+  margin: 12px;
+  margin-left: 0;
+  border-left: solid 1px gray;
   padding-left: 12px;
 }
 
-.article-card-content {
-  padding: 24px;
-  color: #222;
-  -webkit-font-smoothing: antialiased;
+.article-item-title {
+  height: 100%;
+  color: #ffffff;
+  font-size: 1.6em;
+}
+
+.article-item-content {
+    padding: 12px;
+    padding-bottom: 0;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    bottom: 0;
+    height: 180px;
+    margin-bottom: 48px;
+    overflow: hidden;
 }
 
 .plain-text-body {
@@ -77,32 +109,58 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
   color: #24292e;
+  margin: 0;
 }
 
 .markdown-body {
   font-size: 14px;
+  margin: 0;
+}
+
+.markdown-body>*:first-child {
+    margin-top: 0;
 }
 
 .markdown-body h1 {
   padding-bottom: 0.2em;
-  font-size: 1.5em;
+  font-size: 1em;
   border-bottom: 1px solid #eaecef;
   color: rgba(36, 41, 46, 0.9);
 }
 
 .markdown-body h2 {
   padding-bottom: 0.2em;
-  font-size: 1.2em;
+  font-size: 1em;
   border-bottom: 1px solid #eaecef;
   color: rgba(36, 41, 46, 0.9);
 }
 
 .markdown-body h3 {
-  font-size: 1.1em;
+  font-size: 1em;
   color: rgba(36, 41, 46, 0.95);
 }
 
-.article-card:hover {
-  box-shadow: 1px 1px 15px 1px rgba(0,0,0,.4);
+
+.article-item-comments {
+  height: 48px;
+  width: 100%;
+  background: #fdfdfd;
+  padding: 12px;
+  box-sizing: border-box;
+  display: flex;
+  position: absolute;
+  bottom: 0;
 }
 
+.article-item-comments-count {
+  font-size: 0.9em;
+  margin-right: 12px;
+}
+
+.article-item-comment-user {
+  width: 24px;
+  box-shadow: grey 0 0 1px 0;
+  margin-right: 12px;
+  background: white;
+  border-radius: 4px;
+}

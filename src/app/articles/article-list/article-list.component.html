@@ -1,37 +1,43 @@
 <div class="articles-area">
-  <div class="sub-title">
-    <h1 class="chapter-title">記事一覧</h1>
-  </div>
   <div *ngIf='articles'>
     <div class="article-area">
-      <md-grid-list cols="3">
-        <md-grid-tile
-          class="article-tile"
+      <div class="article-list">
+        <div
+          class="article-item"
           *ngFor="let item of articles | orderby: ['-date']"
-          [colspan]="1" >
-          <md-card class="article-card" 
-              [routerLink]="['/articles', item.articleId]"
-              routerLinkActive="active">
-            <md-card-header class="article-card-header">
-              <img class="avatar" md-card-avatar src="data:image/png;base64,{{item.author.icon}}">
-              <md-card-title>{{item.title}}</md-card-title>
-              <md-card-subtitle class="article-card-subtitle">
-                <span class="article-card-author-name">{{item.author.userId}}</span>
-                <span class="article-card-date">{{item.date | date: 'yyyy/MM/dd HH:mm' }}</span>
-              </md-card-subtitle>
-            </md-card-header>
-            <md-card-content class="article-card-content">
-              <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
-              <ng-template #markdown>
-                <p [innerHTML]="item.body | toMarkdown" class="markdown-body"></p>
-              </ng-template>
-              <ng-template #plainText>
-                <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
-              </ng-template>
-            </md-card-content>
-          </md-card>
-        </md-grid-tile>
-      </md-grid-list>
+          [routerLink]="['/articles', item.articleId]"
+          routerLinkActive="active">
+          <div class="article-item-header">
+            <div class="article-item-avator">
+              <img class="avatar" src="data:image/png;base64,{{item.author.icon}}">
+            </div>
+            <div class="article-item-subtitle">
+              <div class="article-item-author-name">{{item.author.userId}}</div>
+              <div class="article-item-date">{{item.date | date: 'yyyy/MM/dd HH:mm' }}</div>
+            </div>
+            <div class="article-item-title-area">
+              <div  class="article-item-title">{{item.title}}</div>
+            </div>
+          </div>
+          <div class="article-item-content">
+            <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
+            <ng-template #markdown>
+              <p [innerHTML]="item.body | toMarkdown" class="markdown-body"></p>
+            </ng-template>
+            <ng-template #plainText>
+              <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
+            </ng-template>
+          </div>
+          <div class="article-item-comments">
+            <div class="article-item-comments-count">コメント{{item.comments.length}}件</div>
+            <div *ngIf='item.comments'>
+              <img
+                *ngFor="let comment of item.comments | orderby: ['created']"
+                class="article-item-comment-user" src="data:image/png;base64,{{comment.user.icon}}">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
