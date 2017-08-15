@@ -44,7 +44,7 @@
 
 .article-card-header {
   padding: 12px 12px 0 12px;
-  background: #fdfdfd;
+  background: #fdfffd;
   box-shadow: #969696 0 0 2px 0px;
 }
 
@@ -74,7 +74,34 @@
   white-space: -moz-pre-wrap;
   white-space: -hp-pre-wrap;
   word-wrap: break-word;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14px;
+  color: #24292e;
 }
+
+.markdown-body {
+  font-size: 14px;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.2em;
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+  color: rgba(36, 41, 46, 0.9);
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.2em;
+  font-size: 1.2em;
+  border-bottom: 1px solid #eaecef;
+  color: rgba(36, 41, 46, 0.9);
+}
+
+.markdown-body h3 {
+  font-size: 1.1em;
+  color: rgba(36, 41, 46, 0.95);
+}
+
 .article-card:hover {
   box-shadow: 1px 1px 15px 1px rgba(0,0,0,.4);
 }

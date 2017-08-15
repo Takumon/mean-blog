@@ -82,7 +82,7 @@
       <div class="article-comment-text">
         <div *ngIf="comment.isMarkdown; then markdownComment else plainTextComment"></div>
         <ng-template #markdownComment>
-          <p [innerHTML]="comment.text | toMarkdown" class="article-comment-markdown-body"></p>
+          <p [innerHTML]="comment.text | toMarkdown" class="markdown-body article-comment-markdown-body"></p>
         </ng-template>
         <ng-template #plainTextComment>
           <pre [innerHTML]="comment.text" class="article-comment-plain-text-body"></pre>                
