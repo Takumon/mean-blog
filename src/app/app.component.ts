@@ -9,11 +9,11 @@ import { UserModel } from './users/shared/user.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = `Takumon's Blog!`;
 
   constructor(
     private currentUserService: CurrentUserService
   ) {
+
   }
 
   isLogin() {

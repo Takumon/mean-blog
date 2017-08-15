@@ -1,5 +1,5 @@
 <md-toolbar *ngIf="isLogin()" class="toolbar-fixed" color="primary">
-  <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{title}}</button>
+  <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{user().userId}}'s Blog</button>
   <span class="toolbar-spacer"></span>
   <button
     md-button routerLink="/drafts/new" routerLinkActive="active"><i class="fa fa-fw fa-pencil-square"></i><span> 投稿する</span></button>  
