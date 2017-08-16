@@ -33,8 +33,31 @@
             <div *ngIf='item.comments'>
               <img
                 *ngFor="let comment of item.comments | orderby: ['created']"
-                class="article-item-comment-user" src="data:image/png;base64,{{comment.user.icon}}">
+                mdTooltip="{{comment.text}}"
+                class="article-item-comment-user"
+                src="data:image/png;base64,{{comment.user.icon}}">
             </div>
+            <div class="article-item-operation-area">
+              <button 
+                md-button
+                type="button"
+                class="show-comment-editor-btn"
+                (click)='createNewComment(item)'><i class="fa fa-fw fa-commenting"></i>  コメントする</button>
+            </div>
+          </div>
+          <div *ngIf="item.newComment" class="article-comment-editor">
+            <img class="article-comment-author-icon" src="data:image/png;base64,{{user().icon}}">
+            <textarea
+              class="register-comment-body" 
+              [(ngModel)]="item.newComment.text"
+              placeholder="コメントする..."></textarea>
+            <button 
+              md-raised-button
+              class="register-comment-btn"
+              color="primary"
+              type="button"
+              id="registe-comment-btn"
+              (click)='registerComment(item.articleId, item.newComment)'><i class="fa fa-fw fa-commenting"></i>  追加</button>
           </div>
         </div>
       </div>

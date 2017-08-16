@@ -1,5 +1,6 @@
 import { UserModel } from '../../users/shared/user.model';
 import { CommentWithUserModel } from './comment-with-user.model';
+import { CommentModel } from './comment.model';
 
 export class ArticleWithUserModel {
   articleId: number;
@@ -9,4 +10,5 @@ export class ArticleWithUserModel {
   date: string;
   author: UserModel;
   comments: Array<CommentWithUserModel>;
+  newComment: CommentModel;
 }

@@ -24,21 +24,6 @@
 .article-item:hover {
 }
 
-.article-item:after {
-  content  : "";
-  position : absolute;
-  z-index  : 1;
-  bottom   : 48px;
-  left     : 0;
-  pointer-events   : none;
-  background-image : linear-gradient(to bottom, 
-                    rgba(255,255,255, 0), 
-                    rgba(255,255,255, 1) 90%);
-  width    : 100%;
-  height: 4em;
-  border-bottom: #d4d4d4 1px solid;
-}
-
 .article-item-header {
   cursor: pointer;
   background: #5e6371;
@@ -76,8 +61,11 @@
 
 .article-item-avator {
   margin: 12px;
-  width: 42px;
   box-sizing: border-box;
+}
+
+.article-item-avator img {
+  width: 42px;
 }
 
 .avatar {
@@ -114,14 +102,13 @@
 }
 
 .article-item-content {
-    padding: 12px;
-    padding-bottom: 0;
-    -webkit-font-smoothing: antialiased;
-    position: relative;
-    bottom: 0;
-    height: 180px;
-    margin-bottom: 48px;
-    overflow: hidden;
+  padding: 12px;
+  padding-bottom: 0;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  bottom: 0;
+  height: 180px;
+  overflow: hidden;
 }
 
 .plain-text-body {
@@ -167,6 +154,22 @@
   color: rgba(36, 41, 46, 0.95);
 }
 
+.article-item-content:after {
+  content  : "";
+  position : absolute;
+  z-index  : 1;
+  left     : 0;
+  pointer-events   : none;
+  background-image : linear-gradient(to bottom, 
+                    rgba(255,255,255, 0), 
+                    rgba(255,255,255, 1) 90%);
+  width    : 100%;
+  height: 4em;
+  border-bottom: #d4d4d4 1px solid;
+  bottom   : 0;
+}
+
+
 
 .article-item-comments {
   height: 48px;
@@ -175,8 +178,7 @@
   padding: 12px;
   box-sizing: border-box;
   display: flex;
-  position: absolute;
-  bottom: 0;
+  position: relative;
 }
 
 .article-item-comments-count {
@@ -191,3 +193,44 @@
   background: white;
   border-radius: 4px;
 }
+
+.show-comment-editor-btn {
+  line-height: 1;
+  height: 100%;
+  display: block;
+  color: #5e6371;
+}
+
+.article-comment-editor {
+  width: 100%;
+  background: #fdfdfd;
+  height: 62px;
+  padding: 12px;
+  box-sizing: border-box;
+  border-top: 1px #d4d4d4 solid;
+  display: flex;
+}
+
+.article-comment-author-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px #c7c7c7 solid;
+  border-radius: 2px;
+  margin-right: 12px;
+  box-sizing: border-box;
+}
+
+.register-comment-body {
+  flex: 1;
+  height: 36px;
+  box-sizing: border-box;
+  font-size: 12px;
+  line-height: 25px;
+  border: solid 1px #d4d4d4;
+  outline: 0;
+}
+
+.register-comment-btn {
+  margin-left: 8px;
+}
+
