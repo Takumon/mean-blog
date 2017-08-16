@@ -10,8 +10,6 @@ import { NavLinkModel } from './shared/models/nav-link.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  a = '';
-  b = 'articles';
 
   constructor(
     private currentUserService: CurrentUserService
