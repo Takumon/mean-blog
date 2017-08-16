@@ -32,6 +32,7 @@ export class ArticleListComponent implements OnInit {
       if (!(evt instanceof NavigationEnd)) {
        return;
       }
+
       this.getArticles();
     });
 
@@ -45,10 +46,23 @@ export class ArticleListComponent implements OnInit {
 
   getArticles(): void {
     this.route.params.subscribe( params => {
+
       // TODO URLで条件分岐するのは、設計として良いのか？？
-      const condition = params['_userId'] ?
-        { author: params['_userId'] } :
-        {};
+      let condition;
+      if (this.router.url === '/') {
+        // TODO 仮の検索條件
+        condition = { $or: [
+          {author: '598fdb30f2962420aedca7a0'},
+          {author: '598dca120ad06672f2d26ab3'}
+        ]};
+      } else if (params['_userId']) {
+
+        condition = { author: params['_userId'] };
+      } else {
+
+        condition = {};
+      }
+
       const withUser = true;
 
       this.articleService.get(condition, withUser)

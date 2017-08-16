@@ -7,7 +7,9 @@
   width: 810px;
 }
 
-
+.article-list {
+  margin-bottom: 124px;
+}
 
 .article-item {
   box-sizing: border-box;

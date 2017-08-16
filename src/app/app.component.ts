@@ -10,23 +10,12 @@ import { NavLinkModel } from './shared/models/nav-link.model';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  navLinks: Array<NavLinkModel>;
+  a = '';
+  b = 'articles';
 
   constructor(
     private currentUserService: CurrentUserService
   ) {
-    this.navLinks = [];
-    // TODO お気に入り用URL作成
-    this.navLinks.push(new NavLinkModel(
-      'お気に入り',
-      '/',
-      'fa-star',
-    ));
-    this.navLinks.push(new NavLinkModel(
-      '記事一覧',
-      '/articles',
-      'fa-list',
-    ));
   }
 
   isLogin() {

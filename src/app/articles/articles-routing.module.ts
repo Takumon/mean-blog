@@ -7,6 +7,7 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
+  { path: '', component: ArticleListComponent , pathMatch: 'full', canActivate: [AuthGuard] },
   { path: 'articles', component: ArticleListComponent , canActivate: [AuthGuard] },
   // TOOD　プロフィール画面作る
   { path: ':_userId', component: ArticleListComponent , canActivate: [AuthGuard] },
@@ -16,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
+  imports: [ RouterModule.forRoot(routes, {enableTracing: true}) ],
   exports: [ RouterModule ]
 })
 export class ArticlesRoutingModule {}
