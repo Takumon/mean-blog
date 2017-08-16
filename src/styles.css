@@ -6,6 +6,9 @@ body {
     background:#f5f4f4;
 }
 
+body * {
+  -webkit-font-smoothing: antialiased;
+}
 
 .chapter-title {
   color: #3949ab;
