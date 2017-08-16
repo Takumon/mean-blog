@@ -16,16 +16,20 @@ articleRouter.get('/', (req, res, next) => {
     return res.status(200).json(doc);
   };
 
+  const query = req.query;
+  const condition = query.condition ?
+    JSON.parse(query.condition) :
+    {};
 
-  if (req.query.withUser) {
+  if (query.withUser) {
     Article
-      .find()
+      .find(condition)
       .populate('author', '-password')
       .populate('comments.user', '-password')
       .exec(cb);
   } else {
     Article
-      .find(cb);
+      .find(condition);
   }
 });
 
