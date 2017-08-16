@@ -33,7 +33,7 @@
             <div *ngIf='item.comments'>
               <img
                 *ngFor="let comment of item.comments | orderby: ['created']"
-                mdTooltip="{{comment.text}}"
+                mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
                 class="article-item-comment-user"
                 src="data:image/png;base64,{{comment.user.icon}}">
             </div>
