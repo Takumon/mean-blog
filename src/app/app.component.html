@@ -1,11 +1,32 @@
 <md-toolbar *ngIf="isLogin()" class="toolbar-fixed" color="primary">
   <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{user().userId}}'s Blog</button>
+
+
+  <nav md-tab-nav-bar class="nav-bar ink-bar-white">
+    <a md-tab-link
+      class="nav-bar-link"
+      *ngFor="let link of navLinks"
+      [routerLink]="link.value"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+      <i class="fa fa-fw {{link.iconClassName}}"></i>  <span>{{link.label}}</span>
+    </a>
+    <a md-tab-link
+      class="nav-bar-link"
+      [routerLink]="this.user()._id"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+      <i class="fa fa-fw fa-user-circle"></i>  <span>自分の投稿</span>
+    </a>
+  </nav>
   <span class="toolbar-spacer"></span>
   <button
-    md-button routerLink="/drafts/new" routerLinkActive="active"><i class="fa fa-fw fa-pencil-square"></i><span> 投稿する</span></button>  
-
+    md-button routerLink="/drafts/new" 
+    routerLinkActive="active">
+    <i class="fa fa-fw fa-pencil-square"></i><span>  投稿する</span>
+  </button>  
   <button md-icon-button [mdMenuTriggerFor]="menu">
-  <img class="menu-icon" src="data:image/png;base64,{{user().icon}}">
+    <img class="menu-icon" src="data:image/png;base64,{{user().icon}}">
   </button>
   <md-menu #menu="mdMenu">
     <div md-menu-item disabled class="status"><span class="username">{{user().userId}}</span>としてログイン済</div>

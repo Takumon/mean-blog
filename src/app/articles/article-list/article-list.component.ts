@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import {Location} from '@angular/common';
+
 import { ArticleService } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CurrentUserService } from '../../shared/services/current-user.service';
@@ -16,25 +19,43 @@ export class ArticleListComponent implements OnInit {
   articles: Array<ArticleWithUserModel>;
 
   constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private location: Location,
     private articleService: ArticleService,
     private currentUserService: CurrentUserService,
   ) {
   }
 
   ngOnInit() {
+    this.router.events.subscribe((evt) => {
+      if (!(evt instanceof NavigationEnd)) {
+       return;
+      }
+      this.getArticles();
+    });
+
     this.getArticles();
   }
+
   onSelect(): void {
   }
 
-  getArticles(): void {
-    const withUser = true;
 
-    this.articleService
-      .getAll(withUser)
-      .subscribe((res: any) => {
-        this.articles = res as Array<ArticleWithUserModel>;
+
+  getArticles(): void {
+    this.route.params.subscribe( params => {
+      // TODO URLで条件分岐するのは、設計として良いのか？？
+      const condition = params['_userId'] ?
+        { author: params['_userId'] } :
+        {};
+      const withUser = true;
+
+      this.articleService.get(condition, withUser)
+       .subscribe(articles => {
+         this.articles = articles as Array<ArticleWithUserModel>;
       });
+    });
   }
 
   isLogin() {

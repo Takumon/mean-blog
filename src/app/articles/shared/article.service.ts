@@ -18,10 +18,11 @@ export class ArticleService {
     private jwtService: JwtService
   ) {}
 
-  getAll(withUser: Boolean = false): Observable<any> {
+  get(condition: Object, withUser: Boolean = false): Observable<any> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
+    search.set('condition', JSON.stringify(condition));
     if (withUser) {
       search.set('withUser', `true`);
     }
@@ -35,7 +36,7 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  get(articleId: number, withUser: Boolean = false): Observable<any> {
+  getOne(articleId: number, withUser: Boolean = false): Observable<any> {
     const URL = `${this.baseUrl}/${articleId}`;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();

@@ -41,7 +41,7 @@ export class ArticleDetailComponent implements OnInit {
   refreshArticle(): void {
     this.route.params.subscribe( params => {
       const withUser = true;
-      this.articleService.get(+params['id'], withUser)
+      this.articleService.getOne(+params['id'], withUser)
        .subscribe(article => {
          this.article = article as ArticleWithUserModel;
          this.refreshComment(article.articleId);

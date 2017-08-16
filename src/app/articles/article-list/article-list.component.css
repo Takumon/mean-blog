@@ -71,7 +71,7 @@
 .avatar {
   background: white;
   width: 100%;
-  border-radius: 2px;
+  border-radius: 50%;
 }
 
 .article-item-subtitle {
@@ -188,10 +188,10 @@
 
 .article-item-comment-user {
   width: 24px;
-  box-shadow: grey 0 0 1px 0;
+  box-shadow: grey 0 0 1px 1px;
   margin-right: 12px;
   background: white;
-  border-radius: 4px;
+  border-radius: 50%;
 }
 
 .show-comment-editor-btn {
@@ -215,7 +215,7 @@
   width: 36px;
   height: 36px;
   border: 1px #c7c7c7 solid;
-  border-radius: 2px;
+  border-radius: 50%;
   margin-right: 12px;
   box-sizing: border-box;
 }

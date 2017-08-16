@@ -14,3 +14,8 @@ body {
   line-height: 40px;
   margin-bottom: 30px;
 }
+
+.ink-bar-white .mat-ink-bar {
+  background-color: #f1f1ff;
+  height: 3px;
+}
