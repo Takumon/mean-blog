@@ -6,10 +6,12 @@ import {
   HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
+
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 import { EditMode } from './edit-mode.enum';
 import { CurrentUserService } from '../../shared/services/current-user.service';
+import { RouteNamesService } from '../../shared/services/route-names.service';
 
 
 @Component({
@@ -34,12 +36,13 @@ export class ArticleEditComponent {
     private route: ActivatedRoute,
     private location: Location,
     private currentUserService: CurrentUserService,
+    private routeNamesService: RouteNamesService,
     ) {
     this.route.params.subscribe( params => {
       if ( params['id']) {
         this.action = '更新';
         this.articleService
-          .get(+params['id'])
+          .getOne(+params['id'])
           .subscribe(article => {
             this.article = article;
           });
@@ -48,6 +51,8 @@ export class ArticleEditComponent {
         this.article = new ArticleModel();
         this.article.author = this.currentUserService.get().user._id;
       }
+
+      this.routeNamesService.name.next(`記事を${this.action}する`);
     });
   }
 

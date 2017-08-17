@@ -7,6 +7,7 @@ import { CommentModel } from '../shared/comment.model';
 import { ArticleService } from '../shared/article.service';
 import { CurrentUserService } from '../../shared/services/current-user.service';
 import { UserModel } from '../../users/shared/user.model';
+import { RouteNamesService } from '../../shared/services/route-names.service';
 
 
 @Component({
@@ -26,8 +27,9 @@ export class ArticleDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private currentUserService: CurrentUserService,
+    private routeNamesService: RouteNamesService,
   ) {
-
+    this.routeNamesService.name.next(`記事詳細`);
   }
 
   ngOnInit(): void {

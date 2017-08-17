@@ -13,6 +13,7 @@ import { LoginModule } from './login/login.module';
 import { UsersModule } from './users/users.module';
 import { ArticlesModule } from './articles/articles.module';
 
+import { RouteNamesService } from './shared/services/route-names.service';
 import { JwtService } from './shared/services/jwt.service';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { CurrentUserService } from './shared/services/current-user.service';
@@ -39,6 +40,7 @@ import { AlertComponent } from './shared/directives/alert.component';
   ],
   providers: [
     AlertService,
+    RouteNamesService,
     JwtService,
     AuthenticationService,
     CurrentUserService,

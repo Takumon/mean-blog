@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { CurrentUserService } from '../../shared/services/current-user.service';
 import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
+import { RouteNamesService } from '../../shared/services/route-names.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -18,18 +19,12 @@ export class UserDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private currentUserService: CurrentUserService,
     private userService: UserService,
+    private routeNamesService: RouteNamesService,
   ) {
+    this.routeNamesService.name.next('プロフィール');
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe((evt) => {
-      if (!(evt instanceof NavigationEnd)) {
-       return;
-      }
-
-      this.getUser();
-    });
-
     this.getUser();
   }
 

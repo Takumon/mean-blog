@@ -64,10 +64,10 @@
     </button>
 -->
   <md-toolbar *ngIf="isLogin()" class="toolbar-fixed" color="primary">
-    <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{title}}</button>
+    <button md-button class="app-logo" routerLink="" routerLinkActive="active">{{title}}</button>
 
 
-    <nav md-tab-nav-bar class="nav-bar ink-bar-white">
+    <nav *ngIf="isActiveNavbar" md-tab-nav-bar class="nav-bar ink-bar-white">
       <a md-tab-link
         class="nav-bar-link"
         routerLink=""
@@ -96,6 +96,8 @@
         <i class="fa fa-fw fa-user-circle"></i>  <span>自分の投稿</span>
       </a>
     </nav>
+
+    <h1 *ngIf="!isActiveNavbar" class="routeName">{{routeName}}</h1>
 
     <span class="toolbar-spacer"></span>
     <button md-button [mdMenuTriggerFor]="menu">
