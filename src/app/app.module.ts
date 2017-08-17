@@ -10,6 +10,7 @@ import 'hammerjs';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginModule } from './login/login.module';
+import { UsersModule } from './users/users.module';
 import { ArticlesModule } from './articles/articles.module';
 
 import { JwtService } from './shared/services/jwt.service';
@@ -33,6 +34,7 @@ import { AlertComponent } from './shared/directives/alert.component';
     MaterialModule,
     AppRoutingModule,
     LoginModule,
+    UsersModule,
     ArticlesModule,
   ],
   providers: [
