@@ -10,6 +10,7 @@ import { MONGO_URL, SECRET } from './config';
 import { articleRouter } from './routes/article';
 import { authenticateRouter } from './routes/authenticate';
 import { setupRouter } from './routes/setup';
+import { userRouter } from './routes/user';
 import { authenticate } from './middleware/authenticate';
 
 class App {
@@ -37,6 +38,7 @@ class App {
     this.express.use(authenticate.verifyToken);
 
 
+    this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);
 
     // その他のリクエストはindexファイルにルーティング
