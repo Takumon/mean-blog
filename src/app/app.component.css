@@ -1,7 +1,17 @@
-.app-logo {
-  font-size: 24px;
-  margin-right: 24px;
+.toolbar {
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  /* box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);*/
 }
+
+.app-logo {
+  font-size: 32px;
+  margin-right: 24px;
+  font-weight: 100;
+  padding-left: 7px;
+}
+
 .app-logo:focus {
   outline: 0;
 }
@@ -17,14 +27,20 @@
 }
 
 .container {
-  padding-top: 100px;
+  padding-top: 63px;
   width: 100%;
+  height: 100%;
   margin: auto;
 }
 
+.menu-icon-username {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
 .menu-icon {
-  width: 100%;
-  height: 100%;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: white;
 }
@@ -53,4 +69,76 @@
 
 .nav-bar-link i {
   margin-right: 4px;
+}
+
+.new-article-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1;
+}
+
+/* TODO スライドバー方式を検討中　*/
+
+.example-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 10px;
+  z-index: 1;
+}
+
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav-area {
+  height: 100%;
+  width: 240px;
+  box-shadow: 8px 0px 7px -1px rgba(0,0,0,.2);
+  overflow-y: initial;
+}
+
+.app-title {
+  padding: 16px;
+  background: #fafafa;
+  color: #5e6371;
+}
+
+
+.app-title .app-logo {
+  margin-bottom: 16px;
+  padding: 0;
+  display: block;
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.user-avator {
+  border-radius: 50%;
+  width: 48px;
+  background: white;
+}
+
+.user-info {
+  font-size: small;
+}
+
+.sidnav-container .user-info:last-child {
+  opacity: 0.8;
+}
+
+.sidenav-list {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.sidenav-list-item {
+  display: flex;
+  align-items: center;
+}
+
+.sidenav-list-item i {
+  margin-right: 8px;
 }

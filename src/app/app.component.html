@@ -1,55 +1,139 @@
-<md-toolbar *ngIf="isLogin()" class="toolbar-fixed" color="primary">
-  <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{user().userId}}'s Blog</button>
+<!--
+<md-sidenav-container  class="sidenav-container">
+
+  <md-sidenav *ngIf="isLogin()" class="sidenav-area" #sidenav mode="side" opened="true">
+    <div class="app-title">
+      <button md-button class="app-logo" routerLink="" routerLinkActive="active">Material Blog</button>
+      <img class="user-avator" src="data:image/png;base64,{{user().icon}}">
+      <span></span>
+      <div class="user-info">{{user().userId}}</div>
+      <div class="user-info">email@domainname.com</div>
+    </div>
+
+    <md-nav-list class="sidenav-list">
+      <md-list-item>
+        <a class="sidenav-list-item" 
+          routerLink=""
+          routerLinkActive #rla1="routerLinkActive"
+          >
+          <i md-list-icon class="fa fa-fw fa-star"></i>
+          <span md-line> お気に入り </span>
+        </a>
+      </md-list-item>
+
+      <md-list-item>
+        <a class="sidenav-list-item" 
+          routerLink="articles"
+          routerLinkActive #rla2="routerLinkActive"
+          [routerLinkActiveOptions]="{exact: true}"
+          >
+          <i md-list-icon class="fa fa-fw fa-list"></i>
+          <span md-line> 記事一覧 </span>
+        </a>
+      </md-list-item>
+
+      <md-list-item>
+        <a class="sidenav-list-item" 
+          [routerLink]="[user()._id, 'articles']"
+          routerLinkActive #rla3="routerLinkActive"
+          >
+          <i md-list-icon class="fa fa-fw fa-user-circle"></i>
+          <span md-line> 自分の投稿 </span>
+        </a>
+      </md-list-item>
+      <md-divider></md-divider>
+      <h4 md-subheader>その他</h4>
+      <md-list-item>
+        <a class="sidenav-list-item" [routerLink]="[user()._id, 'profile']">
+          <i md-list-icon class="fa fa-fw fa-user-circle"></i>
+          <span md-line> マイページ </span>
+        </a>
+      </md-list-item>
+      <md-list-item>
+        <a class="sidenav-list-item" routerLink="login">
+          <i md-list-icon class="fa fa-fw fa-sign-out"></i>
+          <span md-line> ログアウト </span>
+        </a>
+      </md-list-item>
+    </md-nav-list>
+  </md-sidenav>
 
 
-  <nav md-tab-nav-bar class="nav-bar ink-bar-white">
-    <a md-tab-link
-      class="nav-bar-link"
-      routerLink=""
-      routerLinkActive #rla1="routerLinkActive"
-      [active]="rla1.isActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      >
-      <i class="fa fa-fw fa-star"></i>  <span>お気に入り</span>
-    </a>
-    <a md-tab-link
-      class="nav-bar-link"
-      routerLink="articles"
-      routerLinkActive #rla2="routerLinkActive"
-      [active]="rla2.isActive"
-      >
-      <i class="fa fa-fw fa-list"></i>  <span>記事一覧</span>
-    </a>
-    <a md-tab-link
-      class="nav-bar-link"
-      [routerLink]="this.user()._id"
-      routerLinkActive #rla3="routerLinkActive"
-      [active]="rla3.isActive"
-      >
-      <i class="fa fa-fw fa-user-circle"></i>  <span>自分の投稿</span>
-    </a>
-  </nav>
-
-  <span class="toolbar-spacer"></span>
-  <button
-    md-button routerLink="/drafts/new" 
-    routerLinkActive="active">
-    <i class="fa fa-fw fa-pencil-square"></i><span>  投稿する</span>
-  </button>  
-  <button md-icon-button [mdMenuTriggerFor]="menu">
-    <img class="menu-icon" src="data:image/png;base64,{{user().icon}}">
-  </button>
-  <md-menu #menu="mdMenu">
-    <div md-menu-item disabled class="status"><span class="username">{{user().userId}}</span>としてログイン済</div>
-    <button
-      *ngIf="isLogin()"
-      md-menu-item
-      routerLink="/login" 
-      routerLinkActive="active">
-      <i class="fa fa-fw fa-sign-out"></i><span> ログアウト</span>
+      <button  md-mini-fab class="example-fab" (click)="sidenav.toggle()">
+      <md-icon>add</md-icon>
     </button>
-  </md-menu>
+-->
+  <md-toolbar *ngIf="isLogin()" class="toolbar-fixed" color="primary">
+    <button md-button class="app-logo" routerLink="articles" routerLinkActive="active">{{title}}</button>
+
+
+    <nav md-tab-nav-bar class="nav-bar ink-bar-white">
+      <a md-tab-link
+        class="nav-bar-link"
+        routerLink=""
+        routerLinkActive #rla1="routerLinkActive"
+        [active]="rla1.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >
+        <i class="fa fa-fw fa-star"></i>  <span>お気に入り</span>
+      </a>
+      <a md-tab-link
+        class="nav-bar-link"
+        routerLink="articles"
+        routerLinkActive #rla2="routerLinkActive"
+        [active]="rla2.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >
+        <i class="fa fa-fw fa-list"></i>  <span>記事一覧</span>
+      </a>
+      <a md-tab-link
+        class="nav-bar-link"
+        [routerLink]="[user()._id, 'articles']"
+        routerLinkActive #rla3="routerLinkActive"
+        [active]="rla3.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >
+        <i class="fa fa-fw fa-user-circle"></i>  <span>自分の投稿</span>
+      </a>
+    </nav>
+
+    <span class="toolbar-spacer"></span>
+    <button md-button [mdMenuTriggerFor]="menu">
+      <span class="menu-icon-username">{{user().userId}}</span>
+      <img class="menu-icon" src="data:image/png;base64,{{user().icon}}">
+    </button>
+    <md-menu #menu="mdMenu">
+      <div md-menu-item disabled class="status"><span class="username">{{user().userId}}</span>としてログイン済</div>
+      <button
+        *ngIf="isLogin()"
+        md-menu-item
+        [routerLink]="[user()._id, 'profile']"
+        routerLinkActive="active">
+        <i class="fa fa-fw fa-user-circle"></i><span> マイページ</span>
+      </button>
+      <button
+        *ngIf="isLogin()"
+        md-menu-item
+        routerLink="/login" 
+        routerLinkActive="active">
+        <i class="fa fa-fw fa-sign-out"></i><span> ログアウト</span>
+      </button>
+    </md-menu>
   </md-toolbar>
+
   <div class="container">
     <router-outlet></router-outlet>
   </div>
+<!--</md-sidenav-container>-->
+
+
+<button  *ngIf="isLogin() && isNotEditor()" 
+  md-fab class="new-article-btn" 
+  routerLink="/drafts/new"
+  mdTooltip="投稿する"
+  mdTooltipPosition="before"
+  >
+    <i class="fa fa-fw fa-pencil fa-3x"></i>
+</button>
+
+

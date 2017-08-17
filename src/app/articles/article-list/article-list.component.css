@@ -1,6 +1,5 @@
 .articles-area {
-  width: 1114px;
-  margin: auto;
+  margin: 24px;
 }
 
 .article-area {
@@ -32,6 +31,11 @@
   display: flex;
   position: relative;
   color: white;
+}
+
+.article-item-header:focus {
+    outline: 0;
+    background: rgba(94, 99, 113, 0.74);
 }
 
 
