@@ -64,4 +64,23 @@ userRouter.get('/:_id', (req, res, next) => {
   }
 });
 
+userRouter.put('/:id', (req, res, next) => {
+  User.update({
+    _id: req.params.id
+  }, req.body, (err, result) => {
+
+    if (err) {
+      return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+      });
+    }
+
+    return res.status(200).json({
+      message: 'ユーザを更新しました。',
+      obj: result
+    });
+  });
+});
+
 export { userRouter };
