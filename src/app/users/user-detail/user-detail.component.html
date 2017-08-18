@@ -1,44 +1,55 @@
 <div *ngIf="user" class="container">
+
+
+  <nav md-tab-nav-bar class="nav-bar ink-bar-pink">
+    <a md-tab-link
+      class="nav-bar-link"
+      [routerLink]="['/', getUserFromLocalStrage()._id, 'profile']"
+      routerLinkActive #rla1="routerLinkActive"
+      [active]="rla1.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >プロフィール</a>
+    <a md-tab-link
+      class="nav-bar-link"
+      [routerLink]="['/settings', 'profile']"
+      routerLinkActive #rla2="routerLinkActive"
+      [active]="rla2.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >プロフィール編集</a>
+  </nav>
+
   <div class="profile-area">
-    <div class="_id">
-      <div class="label">ID</div>
-      <div class="value">{{user._id}}</div>
-    </div>
-    <div class="userId">
+    <div class="data-group userId">
       <div class="label">ユーザID</div>
       <div class="value">{{user.userId}}</div>
     </div>
-    <div class="icon">
+    <div class="data-group icon">
       <div class="label">アイコン</div>
       <div class="value">
         <img class="menu-icon" src="data:image/png;base64,{{user.icon}}">
       </div>
     </div>
-    <div class="lastName">
+    <div class="data-group lastName">
       <div class="label">氏</div>
       <div class="value">{{user.lastName}}</div>
     </div>
-    <div class="firstName">
+    <div class="data-group firstName">
       <div class="label">名</div>
       <div class="value">{{user.firstName}}</div>
     </div>
-    <div class="email">
+    <div class="data-group email">
       <div class="label">メール</div>
       <div class="value">{{user.email}}</div>
     </div>
-    <div class="blogTitle">
+    <div class="data-group blogTitle">
       <div class="label">ブログタイトル</div>
       <div class="value">{{user.blogTitle}}</div>
     </div>
-    <div class="userDescription">
+    <div class="data-group userDescription">
       <div class="label">自己紹介</div>
       <div class="value">{{user.userDescription}}</div>
     </div>
-    <div class="password">
-      <div class="label">パスワード</div>
-      <div class="value">{{user.password}}</div>
-    </div>
-    <div class="isAdmint">
+    <div class="data-group isAdmint">
       <div class="label">権限</div>
       <div class="value">{{user.isAdmin ? '管理者' : '一般ユーザ'}}</div>
     </div>

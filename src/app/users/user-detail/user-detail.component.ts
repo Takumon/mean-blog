@@ -21,7 +21,7 @@ export class UserDetailComponent implements OnInit {
     private userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
-    this.routeNamesService.name.next('プロフィール');
+    this.routeNamesService.name.next('マイページ');
   }
 
   ngOnInit(): void {
@@ -40,5 +40,9 @@ export class UserDetailComponent implements OnInit {
 
   getUserFromLocalStrage(): any {
     return this.currentUserService.get().user;
+  }
+
+  isMine(): Boolean {
+    return this.user._id === this.currentUserService.get().user._id;
   }
 }

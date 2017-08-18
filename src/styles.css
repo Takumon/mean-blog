@@ -28,6 +28,11 @@ body * {
   height: 3px;
 }
 
+.ink-bar-pink .mat-ink-bar {
+  background-color: #ec407a;
+  height: 3px;
+}
+
 .mat-tooltip {
   font-size: 0.9em !important;
 }
