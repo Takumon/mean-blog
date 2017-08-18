@@ -87,6 +87,7 @@ export class ArticleEditComponent {
       this.articleService
         .update(this.article)
         .subscribe((res: any) => {
+          // TODO alertでメッセージを表示
           this.goBack();
         });
     }
