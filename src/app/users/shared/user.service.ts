@@ -38,7 +38,7 @@ export class UserService {
   }
 
   update(user: UserModel) {
-    const URL = `${this.baseUrl}/${user.userId}`;
+    const URL = `${this.baseUrl}/${user._id}`;
 
     return this.http
       .put(URL, user, this.jwtService.getRequestOptions())

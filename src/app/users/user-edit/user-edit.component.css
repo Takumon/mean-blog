@@ -1,0 +1,78 @@
+.container {
+  height: 100%;
+}
+
+.nav-bar {
+  background: #e6e6e6;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.nav-bar a {
+  font-size: 16px;
+  opacity: 1;  
+}
+
+.nav-bar a:hover {
+  background: #ededed;
+}
+
+.profile-area {
+  width: 940px;
+  margin: 44px auto 96px;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+  padding: 80px 60px 25px;
+  background: white;
+  box-sizing: border-box;
+}
+
+.profile-form {
+  padding: 0 50px 40px;
+  margin-top: 20px;
+}
+
+.form-title {
+  color: #3f51b5;
+  font-weight: 300;
+}
+
+.input-container {
+  position: relative;
+  padding-left: 60px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.input-label {
+  position: absolute;
+  left: -60px;
+  display: block;
+  bottom: 6px;
+  font-size: 24px;
+  color: #737373;
+}
+
+.input-label.focused {
+  color: #3f51b5;
+}
+
+.input-username-area {
+  display: flex;
+}
+
+
+.input-username-area .input-container {
+  flex: 1;
+  padding-left: 16px;
+}
+.input-username-area .input-container:first-child {
+  padding-left: 60px;
+}
+
+.menu-icon {
+    border-radius: 50%;
+    box-shadow: black 0 0 8px -1px;
+    width: 200px;
+    height: 200px;
+}

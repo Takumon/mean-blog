@@ -7,11 +7,13 @@ import { FormsModule } from '@angular/forms';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
 import { UserService } from './shared/user.service';
 
 @NgModule({
   declarations: [
     UserDetailComponent,
+    UserEditComponent,
   ],
   imports: [
     BrowserModule,

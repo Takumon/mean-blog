@@ -1,0 +1,154 @@
+<div *ngIf="user" class="container">
+
+
+  <nav md-tab-nav-bar class="nav-bar ink-bar-pink">
+    <a md-tab-link
+      class="nav-bar-link"
+      [routerLink]="['/', getUserFromLocalStrage()._id, 'profile']"
+      routerLinkActive #rla1="routerLinkActive"
+      [active]="rla1.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >プロフィール</a>
+    <a md-tab-link
+      class="nav-bar-link"
+      [routerLink]="['/settings', 'profile']"
+      routerLinkActive #rla2="routerLinkActive"
+      [active]="rla2.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >プロフィール編集</a>
+  </nav>
+
+
+  <div class="profile-area">
+    <form class="profile-form" (ngSubmit)="updateProfile()">
+      <h1 class="form-title">基本情報</h1>
+      <div>
+        <md-input-container class="input-container">
+          <i class="input-label fa fa-fw fa-id-card" #labelUserId [class.focused]="labelUserId.focused"></i>
+          <input 
+            mdInput
+            type="text"
+            id="userId"
+            name="userId"
+            (focus)="labelUserId.focused = true"
+            (blur)="labelUserId.focused = false"
+            [(ngModel)]="user.userId"
+            placeholder="ユーザID"
+            required
+            readonly
+            >
+        </md-input-container>
+        <div class="input-username-area">
+          <md-input-container class="input-container">
+            <i class="input-label fa fa-fw fa-user" #labelUserName [class.focused]="labelUserName.focused"></i>
+            <input
+              mdInput
+              type="text"
+              id="lastName"
+              name="lastName"
+              (focus)="labelUserName.focused = true"
+              (blur)="labelUserName.focused = false"
+              [(ngModel)]="user.lastName"
+              placeholder="氏"
+              >
+          </md-input-container>
+          <md-input-container class="input-container">
+            <input
+              mdInput
+              type="text"
+              id="firstName"
+              name="firstName"
+              (focus)="labelUserName.focused = true"
+              (blur)="labelUserName.focused = false"
+              [(ngModel)]="user.firstName"
+              placeholder="名"
+              >
+          </md-input-container>
+        </div>
+        <md-input-container class="input-container">
+          <i class="input-label fa fa-fw fa-envelope" #labelEmail [class.focused]="labelEmail.focused"></i>
+          <input
+            mdInput
+            type="text"
+            id="email"
+            name="email"
+            (focus)="labelEmail.focused = true"
+            (blur)="labelEmail.focused = false"
+            [(ngModel)]="user.email"
+            placeholder="メール"
+            >
+        </md-input-container>
+        <md-input-container class="input-container">
+          <i class="input-label fa fa-fw fa-flag" #labelBlogTitle [class.focused]="labelBlogTitle.focused"></i>
+          <input
+            mdInput
+            type="text"
+            id="blogTitle"
+            name="blogTitle"
+            (focus)="labelBlogTitle.focused = true"
+            (blur)="labelBlogTitle.focused = false"
+            [(ngModel)]="user.blogTitle"
+            placeholder="ブログタイトル"
+            >
+        </md-input-container>
+        <md-input-container class="input-container">
+          <i class="input-label fa fa-fw fa-comment" #labelUserDescription [class.focused]="labelUserDescription.focused"></i>
+          <input
+            mdInput
+            type="text"
+            id="userDescription"
+            name="userDescription"
+            (focus)="labelUserDescription.focused = true"
+            (blur)="labelUserDescription.focused = false"
+            [(ngModel)]="user.userDescription"
+            placeholder="自己紹介"
+            >
+        </md-input-container>
+        <md-input-container class="input-container">
+          <i class="input-label fa fa-fw fa-certificate" #labelIsAdmin [class.focused]="labelIsAdmin.focused"></i>
+          <input
+            mdInput
+            type="text"
+            id="isAdmin"
+            name="isAdmin"
+            (focus)="labelIsAdmin.focused = true"
+            (blur)="labelIsAdmin.focused = false"
+            value="{{user.isAdmin ? '管理者' : '一般ユーザ'}}"
+            placeholder="権限"
+            required
+            readonly
+            >
+        </md-input-container>
+      </div>
+
+      <h1 class="form-title">アバター変更</h1>
+      <div class="input-container">
+        <img class="menu-icon" src="data:image/png;base64,{{user.icon}}">
+        <button
+          type="button"
+          md-button
+          (click)="iconFileInput.click()">アイコンを追加</button>
+        <input
+          hidden
+          #iconFileInput
+          type="file"
+          accept="image/*"
+          id="icon"
+          name="icon"
+          (change)="onChangeIconFile($event)"
+          >
+      </div>
+
+
+      <div class="button-area">
+        <button
+          md-raised-button
+          color="primary"
+          type="submit"
+          id="update-profile-btn">
+          <i class="fa fa-fw fa-upload"></i>  更新
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
