@@ -221,10 +221,10 @@
 .article-comment-author-icon {
   width: 36px;
   height: 36px;
-  border: 1px #c7c7c7 solid;
-  border-radius: 50%;
+  border-radius: 4px;
   margin-right: 12px;
   box-sizing: border-box;
+  box-shadow: #2f2f2f 0 0 1px 0;
 }
 
 .register-comment-body {
