@@ -21,7 +21,7 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 export class ArticleDetailComponent implements OnInit {
   article: ArticleWithUserModel;
   newComment: CommentModel;
-
+  loginUser: UserModel;
 
   constructor(
     private articleService: ArticleService,
@@ -29,13 +29,14 @@ export class ArticleDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     public currentUserService: CurrentUserService,
-    public userService: UserService,
+    private userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
     this.routeNamesService.name.next(`記事詳細`);
   }
 
   ngOnInit(): void {
+    this.setLoginUser();
     this.refreshArticle();
   }
 
@@ -48,6 +49,10 @@ export class ArticleDetailComponent implements OnInit {
          this.refreshComment(article.articleId);
       });
     });
+  }
+
+  setLoginUser() {
+    this.userService.getLoginUser().subscribe(user => this.loginUser = user);
   }
 
   refreshComment(articleId: number): void {

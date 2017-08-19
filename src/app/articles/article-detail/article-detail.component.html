@@ -92,7 +92,7 @@
   </div>
   <div class="article-comment-register">
     <div class="article-comment-metadata">
-      <img class="article-comment-author-icon" src="data:image/png;base64,{{(userService.getLoginUser() | async)?.icon }}">
+      <img class="article-comment-author-icon" *ngIf="loginUser"  src="data:image/png;base64,{{ loginUser.icon }}">
       <div class="article-comment-operation">コメントを追加する</div>
     </div>
     <md-checkbox class="article-comment-editor-checkbox" [(ngModel)]="newComment.isMarkdown">Markdonw形式で書く</md-checkbox>
