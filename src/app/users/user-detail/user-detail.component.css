@@ -20,33 +20,66 @@
 
 .profile-area {
   width: 940px;
-  margin: 44px auto 96px;
+  margin: 64px auto 120px;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
-  padding: 80px 60px 25px;
+  padding: 80px 120px;
   background: white;
   box-sizing: border-box;
 }
 
+.data-title {
+  color: #3f51b5;
+  font-weight: 300;
+}
 
 .data-group {
+  padding-bottom: 24px;
 }
 
-
-.data-group .label {
-    color: #919496;
-    font-weight: 400;
+.data-container {
+  position: relative;
+  padding-left: 60px;
+  display: block;
+  margin-bottom: 16px;
 }
 
+.data-container .icon {
+  position: absolute;
+  left: 0px;
+  display: block;
+  bottom: 6px;
+  font-size: 24px;
+  color: #737373;
+}
+
+.data-container .label {
+  color: #3f51b5;
+}
 
 .data-group .value {
   padding-top: 2px;
-  padding-bottom: 36px;
-  
+  min-height: 2em;
+  border-bottom: 1px solid #e0dede;
 }
 
-.menu-icon {
-    border-radius: 50%;
-    box-shadow: black 0 0 8px -1px;
-    width: 200px;
-    height: 200px;
+
+.data-username-area {
+  display: flex;
+}
+
+.data-username-area .data-container {
+  flex: 1;
+  padding-left: 16px;
+}
+.data-username-area .data-container:first-child {
+  padding-left: 60px;
+}
+
+
+.avator-icon {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  box-shadow: black 0 0 8px -1px;
+  margin-left: 16px;
 }

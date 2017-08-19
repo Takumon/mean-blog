@@ -19,39 +19,52 @@
   </nav>
 
   <div class="profile-area">
-    <div class="data-group userId">
-      <div class="label">ユーザID</div>
-      <div class="value">{{user.userId}}</div>
-    </div>
-    <div class="data-group icon">
-      <div class="label">アイコン</div>
-      <div class="value">
-        <img class="menu-icon" src="data:image/png;base64,{{user.icon}}">
+    <h1 class="data-title">基本情報</h1>
+    <div class="data-group">
+      <div class="data-container userId">
+          <i class="icon fa fa-fw fa-id-card"></i>
+        <div class="label">ユーザID</div>
+        <div class="value">{{user.userId}}</div>
       </div>
+      <div class="data-username-area">
+        <div class="data-container lastName">
+          <i class="icon fa fa-fw fa-user" ></i>
+          <div class="label">氏</div>
+          <div class="value">{{user.lastName}}</div>
+        </div>
+        <div class="data-container firstName">
+          <div class="label">名</div>
+          <div class="value">{{user.firstName}}</div>
+        </div>
+      </div>
+      <div class="data-container email">
+        <i class="icon material-icons fw">email</i>
+        <div class="label">メール</div>
+        <div class="value">{{user.email}}</div>
+      </div>
+      <div class="data-container blogTitle">
+        <i class="icon fa fa-fw fa-flag"></i>
+        <div class="label">ブログタイトル</div>
+        <div class="value">{{user.blogTitle}}</div>
+      </div>
+      <div class="data-container userDescription">
+        <i class="icon material-icons fw">description</i>
+        <div class="label">自己紹介</div>
+        <div class="value">{{user.userDescription}}</div>
+      </div>
+      <div class="data-container isAdmint">
+        <i class="icon fa fa-fw fa-certificate"></i>
+        <div class="label">権限</div>
+        <div class="value">{{user.isAdmin ? '管理者' : '一般ユーザ'}}</div>
+      </div>
+
     </div>
-    <div class="data-group lastName">
-      <div class="label">氏</div>
-      <div class="value">{{user.lastName}}</div>
-    </div>
-    <div class="data-group firstName">
-      <div class="label">名</div>
-      <div class="value">{{user.firstName}}</div>
-    </div>
-    <div class="data-group email">
-      <div class="label">メール</div>
-      <div class="value">{{user.email}}</div>
-    </div>
-    <div class="data-group blogTitle">
-      <div class="label">ブログタイトル</div>
-      <div class="value">{{user.blogTitle}}</div>
-    </div>
-    <div class="data-group userDescription">
-      <div class="label">自己紹介</div>
-      <div class="value">{{user.userDescription}}</div>
-    </div>
-    <div class="data-group isAdmint">
-      <div class="label">権限</div>
-      <div class="value">{{user.isAdmin ? '管理者' : '一般ユーザ'}}</div>
+
+    <h1 class="data-title">アバター</h1>
+    <div class="data-group">
+      <div class="data-container">
+        <img class="avator-icon" src="data:image/png;base64,{{user.icon}}">
+      </div>
     </div>
   </div>
 </div>
