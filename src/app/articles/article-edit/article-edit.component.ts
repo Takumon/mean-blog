@@ -49,7 +49,7 @@ export class ArticleEditComponent {
       } else {
         this.action = '投稿';
         this.article = new ArticleModel();
-        this.article.author = this.currentUserService.get().user._id;
+        this.article.author = this.currentUserService.get()._id;
       }
 
       this.routeNamesService.name.next(`記事を${this.action}する`);

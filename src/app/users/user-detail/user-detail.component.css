@@ -79,7 +79,9 @@
 .avator-icon {
   width: 150px;
   height: 150px;
-  border-radius: 50%;
+  border-radius: 8px;
   box-shadow: black 0 0 8px -1px;
   margin-left: 16px;
+  image-rendering: -webkit-optimize-contrast;
+  background: white;
 }

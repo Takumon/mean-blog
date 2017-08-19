@@ -70,14 +70,13 @@
   box-sizing: border-box;
 }
 
-.article-item-avator img {
-  width: 42px;
-}
-
 .avatar {
+  max-width: 42px;
+  max-height: 42px;
   background: white;
   width: 100%;
-  border-radius: 50%;
+  border-radius: 4px;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .article-item-subtitle {
@@ -193,11 +192,13 @@
 }
 
 .article-item-comment-user {
-  width: 24px;
-  box-shadow: grey 0 0 1px 1px;
+  width: 30px;
+  height: 30px;
+  box-shadow: grey 0 0 1px 0px;
   margin-right: 12px;
   background: white;
-  border-radius: 50%;
+  border-radius: 3px;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .show-comment-editor-btn {

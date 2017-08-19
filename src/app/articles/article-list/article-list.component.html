@@ -46,7 +46,7 @@
             </div>
           </div>
           <div *ngIf="item.newComment" class="article-comment-editor">
-            <img class="article-comment-author-icon" src="data:image/png;base64,{{user().icon}}">
+            <img class="article-comment-author-icon" *ngIf="loginUser" src="data:image/png;base64,{{loginUser.icon }}">
             <textarea
               class="register-comment-body" 
               [(ngModel)]="item.newComment.text"

@@ -41,8 +41,9 @@
 .menu-icon {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 4px;
   background: white;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .status {

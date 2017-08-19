@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 import { CurrentUserModel } from '../models/current-user.model';
+import { UserModel } from '../../users/shared/user.model';
+
 
 const LOCAL_STRAGE_KEY_USER = 'currentUser';
 
@@ -18,7 +21,7 @@ export class CurrentUserService {
     localStorage.setItem(LOCAL_STRAGE_KEY_USER, JSON.stringify(currentUer));
   }
 
-  remove() {
+  remove(): void {
     localStorage.removeItem(LOCAL_STRAGE_KEY_USER);
   }
 
@@ -27,7 +30,7 @@ export class CurrentUserService {
   }
 
   getToken(): string {
-    const user = this.get();
-    return user && user.token;
+    const currentUser = this.get();
+    return currentUser && currentUser.token;
   }
 }

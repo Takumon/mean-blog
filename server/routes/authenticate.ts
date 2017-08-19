@@ -43,18 +43,16 @@ authenticateRouter.post('/login', (req, res) => {
       return;
     }
 
+    user.icon = null;
     const token = jwt.sign(user, SECRET, {
       expiresIn: TOKEN_EFFECTIVE_SECOND
     });
 
     res.json({
-      user: {
-        _id: user._id,
-        userId: user.userId,
-        icon: user.icon
-      },
       success: true,
       message: '認証成功',
+      // TODO _id userIdどちらにするか検討
+      _id: user._id,
       token: token,
     });
   });
@@ -91,11 +89,7 @@ authenticateRouter.post('/register', (req, res) => {
       });
 
       return res.send({
-        user: {
-          _id: user._id,
-          userId: newUser.userId,
-          icon: newUser.icon
-        },
+        _id: user._id,
         success: true,
         message: 'ユーザ情報を新規作成しました。',
         token: token

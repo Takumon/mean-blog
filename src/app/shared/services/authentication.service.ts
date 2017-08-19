@@ -63,7 +63,7 @@ export class AuthenticationService {
     }
 
     const currentUser = {
-      user: body.user,
+      _id: body._id,
       token: body.token
     };
     this.currentUserService.set(currentUser);

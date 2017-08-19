@@ -17,7 +17,7 @@ export class UserDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private currentUserService: CurrentUserService,
+    public currentUserService: CurrentUserService,
     private userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
@@ -38,11 +38,7 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-  getUserFromLocalStrage(): any {
-    return this.currentUserService.get().user;
-  }
-
   isMine(): Boolean {
-    return this.user._id === this.currentUserService.get().user._id;
+    return this.user._id === this.currentUserService.get()._id;
   }
 }

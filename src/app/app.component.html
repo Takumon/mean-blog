@@ -88,7 +88,7 @@
       </a>
       <a md-tab-link
         class="nav-bar-link"
-        [routerLink]="[user()._id, 'articles']"
+        [routerLink]="[currentUserService.get()._id, 'articles']"
         routerLinkActive #rla3="routerLinkActive"
         [active]="rla3.isActive"
         [routerLinkActiveOptions]="{exact: true}"
@@ -98,18 +98,17 @@
     </nav>
 
     <h1 *ngIf="!isActiveNavbar" class="routeName">{{routeName}}</h1>
-
     <span class="toolbar-spacer"></span>
     <button md-button [mdMenuTriggerFor]="menu">
-      <span class="menu-icon-username">{{user().userId}}</span>
-      <img class="menu-icon" src="data:image/png;base64,{{user().icon}}">
+      <span class="menu-icon-username">{{loginUser?.userId}}</span>
+      <img class="menu-icon" *ngIf="loginUser" src="data:image/png;base64,{{loginUser.icon }}">
     </button>
     <md-menu #menu="mdMenu">
-      <div md-menu-item disabled class="status"><span class="username">{{user().userId}}</span>としてログイン済</div>
+      <div md-menu-item disabled class="status"><span class="username">{{loginUser?.userId}}</span>としてログイン済</div>
       <button
         *ngIf="isLogin()"
         md-menu-item
-        [routerLink]="[user()._id, 'profile']"
+        [routerLink]="[currentUserService.get()._id, 'profile']"
         routerLinkActive="active">
         <i class="fa fa-fw fa-user-circle"></i><span> マイページ</span>
       </button>

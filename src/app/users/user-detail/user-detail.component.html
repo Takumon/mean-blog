@@ -1,10 +1,9 @@
 <div *ngIf="user" class="container">
 
-
   <nav md-tab-nav-bar class="nav-bar ink-bar-pink">
     <a md-tab-link
       class="nav-bar-link"
-      [routerLink]="['/', getUserFromLocalStrage()._id, 'profile']"
+      [routerLink]="['/', currentUserService.get()._id, 'profile']"
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
       [routerLinkActiveOptions]="{exact: true}"

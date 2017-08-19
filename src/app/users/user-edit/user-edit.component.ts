@@ -17,7 +17,6 @@ export class UserEditComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private currentUserService: CurrentUserService,
     private userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
@@ -29,15 +28,11 @@ export class UserEditComponent implements OnInit {
   }
 
   getUser(): void {
-    const _id = this.getUserFromLocalStrage()._id;
-    this.userService.getById(_id).subscribe(user => {
-      this.user = user as UserModel;
-    });
+    this.userService
+      .getLoginUser()
+      .subscribe(user => this.user = user);
   }
 
-  getUserFromLocalStrage(): any {
-    return this.currentUserService.get().user;
-  }
 
 
   updateProfile(): void {
@@ -54,12 +49,9 @@ export class UserEditComponent implements OnInit {
 
   onChangeIconFile(event): void {
     const file = event.srcElement.files[0];
-    console.log(file);
     this.getBase64(file, base64File => {
       this.user.icon = base64File;
-      console.log(base64File);
     });
-    console.log(this.user.icon);
   }
 
   getBase64(file: File, callback: Function) {

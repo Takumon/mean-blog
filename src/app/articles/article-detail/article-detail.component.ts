@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {Location} from '@angular/common';
 
+
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
 import { ArticleService } from '../shared/article.service';
 import { CurrentUserService } from '../../shared/services/current-user.service';
+import { UserService } from '../../users/shared/user.service';
 import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 
@@ -26,7 +28,8 @@ export class ArticleDetailComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    private currentUserService: CurrentUserService,
+    public currentUserService: CurrentUserService,
+    public userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
     this.routeNamesService.name.next(`記事詳細`);
@@ -34,10 +37,6 @@ export class ArticleDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshArticle();
-  }
-
-  user(): UserModel {
-    return this.currentUserService.get().user;
   }
 
   refreshArticle(): void {
@@ -53,7 +52,7 @@ export class ArticleDetailComponent implements OnInit {
 
   refreshComment(articleId: number): void {
     this.newComment = new CommentModel();
-    this.newComment.user = this.currentUserService.get().user._id;
+    this.newComment.user = this.currentUserService.get()._id;
     this.newComment.isMarkdown = true;
   }
 
@@ -65,11 +64,11 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   isMyArticle(): Boolean {
-    return this.article.author.userId === this.currentUserService.get().user.userId;
+    return this.article.author._id === this.currentUserService.get()._id;
   }
 
   isMyComment(commentUser): Boolean {
-    return commentUser.userId === this.currentUserService.get().user.userId;
+    return commentUser._id === this.currentUserService.get()._id;
   }
 
 
