@@ -22,7 +22,7 @@
   <div class="profile-area">
     <form class="profile-form" (ngSubmit)="updateProfile()">
       <h1 class="form-title">基本情報</h1>
-      <div>
+      <div class="form-group">
         <md-input-container class="input-container">
           <i class="input-label fa fa-fw fa-id-card" #labelUserId [class.focused]="labelUserId.focused"></i>
           <input 
@@ -66,7 +66,7 @@
           </md-input-container>
         </div>
         <md-input-container class="input-container">
-          <i class="input-label fa fa-fw fa-envelope" #labelEmail [class.focused]="labelEmail.focused"></i>
+          <i class="input-label material-icons fw" #labelEmail [class.focused]="labelEmail.focused">email</i>
           <input
             mdInput
             type="text"
@@ -92,7 +92,7 @@
             >
         </md-input-container>
         <md-input-container class="input-container">
-          <i class="input-label fa fa-fw fa-comment" #labelUserDescription [class.focused]="labelUserDescription.focused"></i>
+          <i class="input-label material-icons fw" #labelUserDescription #labelUserDescription [class.focused]="labelUserDescription.focused">description</i>
           <input
             mdInput
             type="text"
@@ -121,23 +121,24 @@
         </md-input-container>
       </div>
 
-      <h1 class="form-title">アバター変更</h1>
-      <div class="input-container">
-        <img class="menu-icon" src="data:image/png;base64,{{user.icon}}">
-        <button
-          type="button"
-          md-button
-          (click)="iconFileInput.click()">アイコンを追加</button>
-        <input
-          hidden
-          #iconFileInput
-          type="file"
-          accept="image/*"
-          id="icon"
-          name="icon"
-          (change)="onChangeIconFile($event)"
-          >
+      <h1 class="form-title">アバター</h1>
+      <div class="form-group avator-area">
+          <button
+            type="button"
+            md-raised-button
+            (click)="iconFileInput.click()">画像変更</button>
+          <input
+            hidden
+            #iconFileInput
+            type="file"
+            accept="image/*"
+            id="icon"
+            name="icon"
+            (change)="onChangeIconFile($event)"
+            >
+          <img class="avator-icon" src="data:image/png;base64,{{user.icon}}">
       </div>
+
 
 
       <div class="button-area">

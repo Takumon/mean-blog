@@ -20,16 +20,20 @@
 
 .profile-area {
   width: 940px;
-  margin: 44px auto 96px;
+  margin: 44px auto;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
-  padding: 80px 60px 25px;
+  padding: 80px 60px;
   background: white;
   box-sizing: border-box;
 }
 
 .profile-form {
-  padding: 0 50px 40px;
+  padding: 0 50px;
   margin-top: 20px;
+}
+
+.form-group {
+  padding-bottom: 24px;
 }
 
 .form-title {
@@ -61,7 +65,6 @@
   display: flex;
 }
 
-
 .input-username-area .input-container {
   flex: 1;
   padding-left: 16px;
@@ -70,9 +73,20 @@
   padding-left: 60px;
 }
 
-.menu-icon {
-    border-radius: 50%;
-    box-shadow: black 0 0 8px -1px;
-    width: 200px;
-    height: 200px;
+.avator-area {
+  display: flex;
+  align-items: start;
+  border-bottom: 1px solid #d8d7d7;
+}
+
+.avator-icon {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  box-shadow: black 0 0 8px -1px;
+  margin-left: 16px;
+}
+
+.button-area {
+  padding-top: 60px;
 }
