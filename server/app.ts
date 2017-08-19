@@ -23,8 +23,8 @@ class App {
   }
 
   private middleware(): void {
-    this.express.use(bodyParser.json());
-    this.express.use(bodyParser.urlencoded({ extended: false }));
+    this.express.use(bodyParser.json({limit: '50mb'}));
+    this.express.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
     mongoose.Promise = global.Promise;
   }
 
