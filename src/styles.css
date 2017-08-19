@@ -1,6 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+
+/* fontawsomeのfa-fwに概要するクラス　等幅でマテリアルアイコンを表示する */
+.material-icons.fw {
+  width: 1.28571429em;
+  text-align: center;
+}
+
 html,
 body {
   height: 100%;
@@ -35,4 +42,16 @@ body * {
 
 .mat-tooltip {
   font-size: 0.9em !important;
+}
+
+.mat-raised-button:hover,
+.mat-fab:hover,
+.mat-mini-fab:hover {
+  box-shadow: 0 25px 55px 0 rgba(0, 0, 0, 0.21), 0 16px 28px 0 rgba(0, 0, 0, 0.22);
+  -webkit-transition-duration: 0.2s;
+  -moz-transition-duration: 0.2s;
+  -ms-transition-duration: 0.2s;
+  -o-transition-duration: 0.2s;
+  -transition-duration: 0.2s;
+  transition-duration: 0.2s;
 }
