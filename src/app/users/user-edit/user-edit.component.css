@@ -20,25 +20,20 @@
 
 .profile-area {
   width: 940px;
-  margin: 44px auto;
+  margin: 64px auto 120px;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
-  padding: 80px 60px;
+  padding: 80px 120px;
   background: white;
   box-sizing: border-box;
-}
-
-.profile-form {
-  padding: 0 50px;
-  margin-top: 20px;
-}
-
-.form-group {
-  padding-bottom: 24px;
 }
 
 .form-title {
   color: #3f51b5;
   font-weight: 300;
+}
+
+.form-group {
+  padding-bottom: 24px;
 }
 
 .input-container {
