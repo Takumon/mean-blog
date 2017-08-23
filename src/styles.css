@@ -55,3 +55,8 @@ body * {
   -transition-duration: 0.2s;
   transition-duration: 0.2s;
 }
+
+/* TODO キャレットの色検討 */
+input,textarea {
+  caret-color: blue;
+}
