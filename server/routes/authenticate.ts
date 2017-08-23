@@ -89,7 +89,7 @@ authenticateRouter.post('/register', (req, res) => {
       });
 
       return res.send({
-        _id: user._id,
+        _id: newUser._id,
         success: true,
         message: 'ユーザ情報を新規作成しました。',
         token: token
