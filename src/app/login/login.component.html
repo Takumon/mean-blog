@@ -3,78 +3,18 @@
     <h1 class="title">Material Blog</h1>
     <md-toolbar-row>
       <span *ngIf="isLoginMode" class="subtitle">ログイン</span>
-      <span *ngIf="isLoginMode === false" class="subtitle">ユーザ登録</span>
+      <span *ngIf="!isLoginMode" class="subtitle">ユーザ登録</span>
     </md-toolbar-row>
   </md-toolbar>
 
-
-  <form (ngSubmit)="action(user)" class="login-content">
-    <md-input-container class="input-container">
-      <input 
-        mdInput
-        type="text"
-        id="userId"
-        [(ngModel)]="user.userId"
-        name="userId"
-        placeholder="ユーザID"
-        required>
-    </md-input-container>
-    <md-input-container class="input-container">
-      <input
-        mdInput
-        type="password"
-        id="password"
-        [(ngModel)]="user.password"
-        name="password"
-        placeholder="パスワード"
-        required>
-    </md-input-container>
-
-    <div *ngIf="isLoginMode" class="remenber-me-area">
-      <md-checkbox>パスワードを記録する</md-checkbox>
-    </div>
-
-    <div class="button-area">
-      <button
-        *ngIf="isLoginMode"
-        md-raised-button
-        color="primary"
-        type="submit"
-        id="registe-article-btn">
-        <i class="fa fa-fw fa-sign-in"></i>  ログイン
-      </button>
-      <button
-        *ngIf="isLoginMode === false"
-        md-raised-button
-        color="primary"
-        type="submit"
-        id="registe-article-btn">
-        <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録
-      </button>
-    </div>
-
-  </form>
-  <div class="footer">
-    <span class="spacer"></span>
-    <button
-      *ngIf="isLoginMode"
-      md-button
-      type="button"
-      id="registe-article-btn"
-      (click)="setLoginMode(false)"
-      >
-      <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録はこちら</button>
-    <button
-      *ngIf="isLoginMode === false"
-      md-button
-      type="button"
-      id="registe-article-btn"
-      (click)="setLoginMode(true)"
-      >
-      <i class="fa fa-fw fa-chevron-circle-left"></i>  ログイン画面に戻る
-    </button>
-  </div>
-
-  <p *ngIf="message">{{message}}</p>
-
+  <app-login-form 
+    *ngIf="isLoginMode"
+    (changeLoginMode)="setLoginMode(false)"
+    (complete)="goNextPage()"
+    ></app-login-form>
+  <app-register-form
+    *ngIf="!isLoginMode"
+    (changeLoginMode)="setLoginMode(true)"
+    (complete)="goNextPage()"
+    ></app-register-form>
 </md-card>

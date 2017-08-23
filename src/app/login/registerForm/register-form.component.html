@@ -1,0 +1,84 @@
+<form 
+  (ngSubmit)="onSubmit(registerForm)" 
+  [formGroup]="registerForm"
+  class="login-content"
+  >
+
+  <div class="form-group">
+    <md-input-container class="input-container">
+      <input
+        mdInput
+        type="text"
+        placeholder="ユーザID"
+        [errorStateMatcher]="errorStateMatcher"
+        formControlName="userId"
+        >
+        <md-error *ngIf="hasError('required', userId)">
+          {{ messageService.get('required',['ユーザID']) }}
+        </md-error>
+        <md-error *ngIf="hasError('minlength', userId)">
+          {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
+        </md-error>
+    </md-input-container>
+
+    <md-input-container class="input-container">
+      <input
+        mdInput
+        type="password"
+        placeholder="パスワード"
+        [errorStateMatcher]="errorStateMatcher"
+        formControlName="password"
+        >
+        <md-error *ngIf="hasError('required', password)">
+          {{ messageService.get('required',['パスワード']) }}
+        </md-error>
+        <md-error *ngIf="hasError('minlength', password)">
+          {{ messageService.get('minlength',['パスワード', password.getError('minlength').requiredLength]) }}
+        </md-error>
+    </md-input-container>
+
+    <md-input-container class="input-container" >
+      <input
+        mdInput
+        type="password"
+        placeholder="確認用パスワード"
+        [errorStateMatcher]="errorStateMatcher"
+        formControlName="confirmPassword"
+        >
+        <md-error *ngIf="hasError('required', confirmPassword)">
+          {{ messageService.get('required',['確認用パスワード']) }}
+        </md-error>
+        <md-error *ngIf="hasError('minlength', confirmPassword)">
+          {{ messageService.get('minlength',['確認用パスワード', confirmPassword.getError('minlength').requiredLength]) }}
+        </md-error>
+    </md-input-container>
+
+  </div>
+
+
+  
+  <div class="button-area">
+    <button
+      md-raised-button
+      color="primary"
+      type="submit"
+      id="registe-article-btn">
+      <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録
+    </button>
+  </div>
+</form>
+
+
+<div class="footer">
+  <span class="spacer"></span>
+  <button
+    md-button
+    type="button"
+    id="registe-article-btn"
+    (click)="toRegister()"
+    >
+    <i class="fa fa-fw fa-chevron-circle-left"></i>  ログイン画面に戻る
+  </button>
+</div>
+
+<p *ngIf="message">{{message}}</p>
