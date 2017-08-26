@@ -10,13 +10,6 @@ import { PasswordManager } from '../helpers/password-manager';
 
 const authenticateRouter: Router = Router();
 
-authenticateRouter.post('/check-state',  authenticate.verifyToken, (req, res) => {
-  res.send({
-    success: true,
-    message: '認証成功'
-  });
-});
-
 authenticateRouter.post('/login', (req, res) => {
 
   const reqUser = req.body;
@@ -43,17 +36,18 @@ authenticateRouter.post('/login', (req, res) => {
       return;
     }
 
-    user.icon = null;
-    const token = jwt.sign(user, SECRET, {
+    const token = jwt.sign({ _id: user._id }, SECRET, {
       expiresIn: TOKEN_EFFECTIVE_SECOND
     });
+
+    // パスワードはクライアント側に送信しない
+    deleteProp(user, 'password');
 
     res.json({
       success: true,
       message: '認証成功',
-      // TODO _id userIdどちらにするか検討
-      _id: user._id,
       token: token,
+      user: user,
     });
   });
 });
@@ -81,22 +75,90 @@ authenticateRouter.post('/register', (req, res) => {
 
     newUser.save( (err2) => {
       if (err2) {
-        throw err2;
+        return res.status(500).json({
+          success: false,
+          message: `ユーザ情報の登録に失敗しました。`,
+        });
       }
 
-      const token = jwt.sign(newUser, SECRET, {
+      const token = jwt.sign({ _id: newUser._id }, SECRET, {
         expiresIn : TOKEN_EFFECTIVE_SECOND
       });
 
+      // パスワードはクライアント側に送信しない
+      deleteProp(user, 'password');
+
       return res.send({
-        _id: newUser._id,
         success: true,
         message: 'ユーザ情報を新規作成しました。',
-        token: token
+        token: token,
+        user: user,
       });
     });
   });
 });
 
+
+authenticateRouter.get('/check-state', (req, res) => {
+  const token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+  if (!token) {
+    res.status(403).send({
+      success: false,
+      message: 'トークンが存在しません。'
+    });
+    return;
+  }
+
+  jwt.verify(token, SECRET, (err, decoded) => {
+    if (err || !decoded._id) {
+      return res.status(403).json({
+        success: false,
+        message: 'トークン認証に失敗しました。'
+      });
+    }
+
+    User
+      .find({ _id: decoded._id })
+      .select('-password')
+      .exec( (err2, doc) => {
+        if (err2) {
+          return res.status(403).json({
+            success: false,
+            message: 'ログインユーザ情報が取得できませんでした。',
+          });
+        }
+
+        if (!doc[0]) {
+          return res.status(403).json({
+            success: false,
+            message: 'ログインユーザ情報が削除された可能性があります。',
+          });
+        }
+
+        return res.send({
+          success: true,
+          message: '認証成功',
+          token: token,
+          user: doc[0],
+        });
+      });
+
+  });
+});
+
+/**
+ * delete演算子の代役
+ * deleteだとプロパィが削除できないので
+ * 回避策としてundefinedを代入する（値がundefinedの場合プロパティ自体レスポンスに定義されない）
+ *
+ * @param obj
+ * @param propertyName
+ */
+function deleteProp(obj: Object, propertyName: string) {
+  if (propertyName in obj) {
+    obj[propertyName] = undefined;
+  }
+}
 
 export { authenticateRouter };
