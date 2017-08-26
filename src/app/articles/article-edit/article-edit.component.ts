@@ -1,16 +1,18 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ElementRef,
   ViewChild,
   HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 import { EditMode } from './edit-mode.enum';
-import { CurrentUserService } from '../../shared/services/current-user.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 
 
@@ -20,7 +22,8 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
   styleUrls: ['./article-edit.component.css'],
   providers: [ ArticleService ]
 })
-export class ArticleEditComponent {
+export class ArticleEditComponent implements OnInit, OnDestroy {
+  subscription: Subscription;
   article: ArticleModel;
   action: String;
   EditMode = EditMode;
@@ -35,10 +38,14 @@ export class ArticleEditComponent {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    private currentUserService: CurrentUserService,
+    private auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
     ) {
-    this.route.params.subscribe( params => {
+
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.route.params.subscribe( params => {
       if ( params['id']) {
         this.action = '更新';
         this.articleService
@@ -49,11 +56,15 @@ export class ArticleEditComponent {
       } else {
         this.action = '投稿';
         this.article = new ArticleModel();
-        this.article.author = this.currentUserService.get()._id;
+        this.article.author = this.auth.loginUser._id;
       }
 
       this.routeNamesService.name.next(`記事を${this.action}する`);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   isNew() {

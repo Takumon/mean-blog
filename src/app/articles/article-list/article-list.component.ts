@@ -4,8 +4,7 @@ import {Location} from '@angular/common';
 
 import { ArticleService } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { CurrentUserService } from '../../shared/services/current-user.service';
-import { UserService } from '../../users/shared/user.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
 
@@ -18,30 +17,20 @@ import { CommentModel } from '../shared/comment.model';
 })
 export class ArticleListComponent implements OnInit {
   articles: Array<ArticleWithUserModel>;
-  loginUser: UserModel;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
     private articleService: ArticleService,
-    public currentUserService: CurrentUserService,
-    private userService: UserService,
+    public auth: AuthenticationService,
   ) {
   }
 
   ngOnInit() {
-    this.setLoginUser();
     this.getArticles();
   }
 
-  setLoginUser() {
-    this.userService.getLoginUser().subscribe(user => this.loginUser = user);
-  }
-
-  isLogin(): Boolean {
-    return !!this.currentUserService.getToken();
-  }
 
   getArticles(): void {
     this.route.params.subscribe( params => {
@@ -74,7 +63,7 @@ export class ArticleListComponent implements OnInit {
   // TODO コメントはプレーンテキスト固定で良いか検討
   createNewComment(item: ArticleWithUserModel) {
     const newComment = new CommentModel();
-    newComment.user = this.currentUserService.get()._id;
+    newComment.user = this.auth.loginUser._id;
     newComment.articleId = item.articleId;
     newComment.isMarkdown = false;
 

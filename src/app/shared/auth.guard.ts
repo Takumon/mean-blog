@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { CurrentUserService } from './services/current-user.service';
+import { JwtTokenService } from './services/jwt-token.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private currentUserService: CurrentUserService
+    private token: JwtTokenService
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.currentUserService.hasToken()) {
+    if (this.token.has()) {
       return true;
     }
 

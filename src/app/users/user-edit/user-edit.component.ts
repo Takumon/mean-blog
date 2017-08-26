@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
-import { CurrentUserService } from '../../shared/services/current-user.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -19,6 +19,7 @@ export class UserEditComponent implements OnInit {
     private route: ActivatedRoute,
     private userService: UserService,
     private routeNamesService: RouteNamesService,
+    private auth: AuthenticationService,
   ) {
     this.routeNamesService.name.next('マイページ');
   }
@@ -28,9 +29,7 @@ export class UserEditComponent implements OnInit {
   }
 
   getUser(): void {
-    this.userService
-      .getLoginUser()
-      .subscribe(user => this.user = user);
+    this.user = this.auth.loginUser;
   }
 
 

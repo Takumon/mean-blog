@@ -4,8 +4,6 @@ import { Observable } from 'rxjs/Observable';
 
 import { UserModel } from './user.model';
 import { JwtService } from '../../shared/services/jwt.service';
-import { CurrentUserService } from '../../shared/services/current-user.service';
-import { CurrentUserModel } from '../../shared/models/current-user.model';
 
 
 @Injectable()
@@ -15,7 +13,6 @@ export class UserService {
   constructor(
     private http: Http,
     private jwtService: JwtService,
-    private currentUserService: CurrentUserService,
   ) { }
 
   getAll(): Observable<Array<UserModel>> {
@@ -57,13 +54,4 @@ export class UserService {
       .delete(URL, this.jwtService.getRequestOptions())
       .map((response: Response) => response.json());
   }
-
-  getLoginUser(): Observable<UserModel> {
-    const currentUser: CurrentUserModel = this.currentUserService.get();
-    if (!currentUser) {
-      return;
-    }
-    return this.getById(currentUser._id);
-  }
-
 }

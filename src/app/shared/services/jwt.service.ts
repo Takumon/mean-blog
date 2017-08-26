@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
 
-import { CurrentUserService } from './current-user.service';
+import { JwtTokenService } from './jwt-token.service';
 
 /**
  * 認証が必要なサーバリクエストのリクエストヘッダーを生成する
@@ -10,21 +10,21 @@ import { CurrentUserService } from './current-user.service';
 export class JwtService {
 
   constructor(
-    private currentUserService: CurrentUserService
+    private jwtTokenService: JwtTokenService
   ) {}
 
   getHeaders() {
-    if (!this.currentUserService.hasToken()) {
+    if (!this.jwtTokenService.has()) {
       return;
     }
 
     return new Headers({
-      'x-access-token': this.currentUserService.getToken()
+      'x-access-token': this.jwtTokenService.get()
     });
   }
 
   getRequestOptions() {
-    if (!this.currentUserService.hasToken()) {
+    if (!this.jwtTokenService.has()) {
       return;
     }
 

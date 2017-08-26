@@ -1,5 +1,5 @@
 <div class="articles-area">
-  <div *ngIf='articles'>
+  <div *ngIf='articles?.length > 0'>
     <div class="article-area">
       <div class="article-list">
         <div
@@ -46,7 +46,7 @@
             </div>
           </div>
           <div *ngIf="item.newComment" class="article-comment-editor">
-            <img class="article-comment-author-icon" *ngIf="loginUser" src="data:image/png;base64,{{loginUser.icon }}">
+            <img class="article-comment-author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
             <textarea
               class="register-comment-body" 
               [(ngModel)]="item.newComment.text"

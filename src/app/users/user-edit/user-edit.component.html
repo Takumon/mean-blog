@@ -1,6 +1,5 @@
 <div *ngIf="user" class="container">
 
-
   <nav md-tab-nav-bar class="nav-bar ink-bar-pink">
     <a md-tab-link
       class="nav-bar-link"
@@ -17,7 +16,6 @@
       [routerLinkActiveOptions]="{exact: true}"
       >プロフィール編集</a>
   </nav>
-
 
   <div class="profile-area">
     <form class="profile-form" (ngSubmit)="updateProfile()">

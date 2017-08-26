@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { CurrentUserService } from './shared/services/current-user.service';
-import { UserService } from './users/shared/user.service';
+
+import { AuthenticationService } from './shared/services/authentication.service';
 import { RouteNamesService } from './shared/services/route-names.service';
 import { UserModel } from './users/shared/user.model';
 import { NavLinkModel } from './shared/models/nav-link.model';
@@ -17,15 +17,14 @@ import { NavLinkModel } from './shared/models/nav-link.model';
 export class AppComponent implements OnInit {
   title: String = 'Material Blog';
   routeName: String;
-  loginUser: UserModel;
 
+  isActiveHeader: Boolean;
   isActiveNavbar: Boolean;
 
   constructor(
     private router: Router,
     private routeNamesService: RouteNamesService,
-    private userService: UserService,
-    public currentUserService: CurrentUserService,
+    public auth: AuthenticationService,
   ) {
   }
 
@@ -35,26 +34,30 @@ export class AppComponent implements OnInit {
        return;
       }
 
-      this.isActiveNavbar = this.isNavbarsUrl();
-      if (this.isLogin()) {
-        this.setLoginUser();
-      }
+      this.refreshActiveHeader();
+      this.refreshActiveNavbar();
       window.scrollTo(0, 0);
     });
 
+    if (this.auth.isLogin()) {
+      this.checkLoginState();
+    }
     this.routeNamesService.name.subscribe(n => this.routeName = n);
   }
 
-  setLoginUser() {
-    this.userService.getLoginUser().subscribe(user => {
-      this.loginUser = user;
+  checkLoginState() {
+    this.auth.checkState().subscribe(res => {
+      if (res.success !== true) {
+        console.log(res.message);
+        return;
+      }
+      // TODO エラー処理
+
+      this.auth.setLoginUser(res.user);
     }, error => {
+      // TODO エラー処理
       console.log(error);
     });
-  }
-
-  isLogin(): Boolean {
-    return !!this.currentUserService.getToken();
   }
 
 
@@ -63,16 +66,23 @@ export class AppComponent implements OnInit {
     return !url.startsWith('/drafts/');
   }
 
-  isNavbarsUrl(): Boolean {
-    if (!this.isLogin()) {
-      return false;
+  refreshActiveHeader(): void {
+    const url: String = this.router.url;
+    // 前方一致
+    this.isActiveHeader = ! url.startsWith('/login');
+  }
+
+  refreshActiveNavbar(): void {
+    const url: String = this.router.url;
+
+    // 完全一致
+    if (url === '/' || url === '/articles') {
+      this.isActiveNavbar = true;
+    } else if (this.auth.loginUser && url === `/${this.auth.loginUser._id}/articles`) {
+      this.isActiveNavbar = true;
+    } else {
+      this.isActiveNavbar = false;
     }
-
-
-    const url = this.router.url;
-    const _id = this.currentUserService.get()._id;
-
-    return url === '/' || url === '/articles' || url === `/${_id}/articles`;
   }
 
 }

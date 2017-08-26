@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
 import { JwtService } from './jwt.service';
-import { CurrentUserService } from './current-user.service';
+import { JwtTokenService } from './jwt-token.service';
 
 
 /**
@@ -14,27 +14,36 @@ import { CurrentUserService } from './current-user.service';
  */
 @Injectable()
 export class AuthenticationService {
+  loginUser: UserModel;
+
   private base_url = '/api/authenticate';
-  private userSource = new Subject<UserModel>();
 
   constructor(
     public http: Http,
     private jwtService: JwtService,
-    private currentUserService: CurrentUserService,
-  ) { }
+    private jwtTokenService: JwtTokenService,
+  ) {
+    this.initLoginUser();
+  }
 
+  initLoginUser() {
+    this.loginUser = null;
+  }
 
-  loginUser(user: UserModel): Observable<Object> {
+  setLoginUser(user: UserModel) {
+    this.loginUser = user;
+  }
+
+  login(user: UserModel): Observable<Object> {
     const URL = `${this.base_url}/login`;
 
-    // TODO URL JSON形式でいいか検討
     return this.http
       .post(URL, user)
       .map( res => this.setToken(res) );
   }
 
 
-  registerUser(user: UserModel): Observable<Object> {
+  register(user: UserModel): Observable<Object> {
     const URL = `${this.base_url}/register`;
 
     return this.http
@@ -42,7 +51,11 @@ export class AuthenticationService {
       .map( res => this.setToken(res) );
   }
 
-  verify(): Observable<Object> {
+  isLogin(): Boolean {
+    return !!this.jwtTokenService.get();
+  }
+
+  checkState(): Observable<any> {
     const URL = `${this.base_url}/check-state`;
 
     return this.http
@@ -52,22 +65,27 @@ export class AuthenticationService {
 
 
   logout() {
-    this.currentUserService.remove();
+    this.initLoginUser();
+    this.jwtTokenService.remove();
   }
 
 
-  private setToken(res): Object {
+  setToken(res): Object {
     const body = res.json();
     if ( body.success !== true ) {
       return body;
     }
 
-    const currentUser = {
-      _id: body._id,
-      token: body.token
-    };
-    this.currentUserService.set(currentUser);
+    this.jwtTokenService.set(body.token);
 
     return body;
+  }
+
+  getToken(): String {
+    return this.jwtTokenService.get();
+  }
+
+  hasToken(): boolean {
+    return this.jwtTokenService.has();
   }
 }

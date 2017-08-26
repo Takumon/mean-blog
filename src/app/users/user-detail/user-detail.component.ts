@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
-import { CurrentUserService } from '../../shared/services/current-user.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -13,19 +13,20 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 })
 export class UserDetailComponent implements OnInit {
   user: UserModel;
+  isMine: Boolean;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    public currentUserService: CurrentUserService,
+    private auth: AuthenticationService,
     private userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
-    this.routeNamesService.name.next('マイページ');
   }
 
   ngOnInit(): void {
     this.getUser();
+    this.routeNamesService.name.next('マイページ');
   }
 
   getUser(): void {
@@ -33,12 +34,10 @@ export class UserDetailComponent implements OnInit {
 
       const _id = params['_userId'];
       this.userService.getById(_id).subscribe(user => {
+        this.isMine = user._id === this.auth.loginUser._id;
         this.user = user as UserModel;
       });
     });
   }
 
-  isMine(): Boolean {
-    return this.user._id === this.currentUserService.get()._id;
-  }
 }

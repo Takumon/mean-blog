@@ -28,7 +28,7 @@ export class RegisterFormComponent implements OnInit {
   registerForm: FormGroup;
 
   constructor(
-    private authenticationService: AuthenticationService,
+    private auth: AuthenticationService,
     public messageService: MessageService,
     private fb: FormBuilder,
   ) {
@@ -82,8 +82,8 @@ export class RegisterFormComponent implements OnInit {
     }
 
 
-    this.authenticationService
-      .registerUser({
+    this.auth
+      .register({
         userId: registerForm.value['userId'],
         password: registerForm.value['password']
       } as UserModel)
@@ -93,6 +93,7 @@ export class RegisterFormComponent implements OnInit {
           return;
         }
 
+        this.auth.setLoginUser(res.user);
         this.complete.emit();
       });
   }

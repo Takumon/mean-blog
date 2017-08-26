@@ -25,7 +25,7 @@ export class LoginFormComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(
-    private authenticationService: AuthenticationService,
+    private auth: AuthenticationService,
     public messageService: MessageService,
     private fb: FormBuilder,
   ) {
@@ -72,8 +72,8 @@ export class LoginFormComponent implements OnInit {
       return;
     }
 
-    this.authenticationService
-      .loginUser({
+    this.auth
+      .login({
         userId: loginForm.value['userId'],
         password: loginForm.value['password']
       } as UserModel)
@@ -83,6 +83,7 @@ export class LoginFormComponent implements OnInit {
           return;
         }
 
+        this.auth.setLoginUser(res.user);
         this.complete.emit();
       });
   }

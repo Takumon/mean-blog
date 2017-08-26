@@ -16,7 +16,7 @@ import { ArticlesModule } from './articles/articles.module';
 import { RouteNamesService } from './shared/services/route-names.service';
 import { JwtService } from './shared/services/jwt.service';
 import { AuthenticationService } from './shared/services/authentication.service';
-import { CurrentUserService } from './shared/services/current-user.service';
+import { JwtTokenService } from './shared/services/jwt-token.service';
 import { AlertService } from './shared/services/alert.service';
 import { AuthGuard } from './shared/auth.guard';
 
@@ -44,7 +44,7 @@ import { AlertComponent } from './shared/directives/alert.component';
     RouteNamesService,
     JwtService,
     AuthenticationService,
-    CurrentUserService,
+    JwtTokenService,
     AuthGuard,
   ],
   bootstrap: [AppComponent],

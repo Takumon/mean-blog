@@ -4,7 +4,7 @@
     <img class="article-author-icon" src="data:image/png;base64,{{article.author.icon}}">
     <div class="article-author">{{article.author.userId}}</div>
     <div class="article-date">{{article.date | date: 'yyyy/MM/dd HH:mm' }}</div>
-    <div *ngIf="isMyArticle()" class="operation-area">
+    <div *ngIf="auth.loginUser.userId === article.author.userId" class="operation-area">
       <button md-button [routerLink]="['/drafts', article.articleId, 'edit']"  routerLinkActive="active">
         <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
       </button>
@@ -70,7 +70,7 @@
           <div class="article-comment-author">{{comment.user.userId}}</div>
           <div class="article-comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
         </div>
-        <div *ngIf="isMyComment(comment.user)" class="comment-operation-area">
+        <div *ngIf="auth.loginUser._id === comment.user" class="comment-operation-area">
           <button md-button (click)="comment.isEditable = true;">
             <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
           </button>
@@ -90,9 +90,10 @@
       </div>       
     </ng-template>
   </div>
-  <div class="article-comment-register">
+  <div *ngIf="auth.loginUser" class="article-comment-register">
     <div class="article-comment-metadata">
-      <img class="article-comment-author-icon" *ngIf="loginUser"  src="data:image/png;base64,{{ loginUser.icon }}">
+      <img class="article-comment-author-icon" 
+        src="data:image/png;base64,{{ auth.loginUser.icon }}">
       <div class="article-comment-operation">コメントを追加する</div>
     </div>
     <md-checkbox class="article-comment-editor-checkbox" [(ngModel)]="newComment.isMarkdown">Markdonw形式で書く</md-checkbox>
