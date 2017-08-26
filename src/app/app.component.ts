@@ -16,14 +16,14 @@ import { NavLinkModel } from './shared/models/nav-link.model';
 })
 export class AppComponent implements OnInit {
   title: String = 'Material Blog';
-  routeName: String;
+  routerName: String;
 
   isActiveHeader: Boolean;
   isActiveNavbar: Boolean;
 
   constructor(
     private router: Router,
-    private routeNamesService: RouteNamesService,
+    public routeNameService: RouteNamesService,
     public auth: AuthenticationService,
   ) {
   }
@@ -39,10 +39,13 @@ export class AppComponent implements OnInit {
       window.scrollTo(0, 0);
     });
 
+    this.routeNameService.name.subscribe(name => {
+      setTimeout(() => this.routerName = name);
+    });
+
     if (this.auth.isLogin()) {
       this.checkLoginState();
     }
-    this.routeNamesService.name.subscribe(n => this.routeName = n);
   }
 
   checkLoginState() {
