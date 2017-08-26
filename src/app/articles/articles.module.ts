@@ -9,6 +9,8 @@ import { ArticleService } from './shared/article.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
+import { AutofocusDirective } from '../shared/directives/autofocus.directive';
+
 
 
 import { ArticlesRoutingModule } from './articles-routing.module';
@@ -23,6 +25,7 @@ import { ArticleEditComponent } from './article-edit/article-edit.component';
     ArticleDetailComponent,
     MarkdownParsePipe,
     OrderByPipe,
+    AutofocusDirective,
   ],
   imports: [
     BrowserModule,

@@ -42,9 +42,9 @@
           <img class="article-comment-author-icon" src="data:image/png;base64,{{comment.user.icon}}">
           <div class="article-comment-operation">コメントを編集する</div>
         </div>
-        <md-checkbox class="article-comment-editor-checkbox" [(ngModel)]="comment.isMarkdown">Markdonw形式で書く</md-checkbox>
         <textarea
-          class="register-comment-body" 
+          class="register-comment-body"
+          appAutofocus
           [(ngModel)]="comment.text"
           placeholder="本文"></textarea>
         <div class="article-comment-operation-area">
@@ -70,7 +70,7 @@
           <div class="article-comment-author">{{comment.user.userId}}</div>
           <div class="article-comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
         </div>
-        <div *ngIf="auth.loginUser._id === comment.user" class="comment-operation-area">
+        <div *ngIf="auth.loginUser._id === comment.user._id" class="comment-operation-area">
           <button md-button (click)="comment.isEditable = true;">
             <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
           </button>

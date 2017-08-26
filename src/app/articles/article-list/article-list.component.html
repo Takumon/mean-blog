@@ -48,10 +48,12 @@
           <div *ngIf="item.newComment" class="article-comment-editor">
             <img class="article-comment-author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
             <textarea
-              class="register-comment-body" 
+              class="register-comment-body"
+              appAutofocus
               [(ngModel)]="item.newComment.text"
-              placeholder="コメントする..."></textarea>
-            <button 
+              placeholder="コメントする..." ></textarea>
+
+              <button
               md-raised-button
               class="register-comment-btn"
               color="primary"
@@ -64,3 +66,4 @@
     </div>
   </div>
 </div>
+
