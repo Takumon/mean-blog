@@ -65,7 +65,6 @@ export class ArticleListComponent implements OnInit {
     const newComment = new CommentModel();
     newComment.user = this.auth.loginUser._id;
     newComment.articleId = item.articleId;
-    newComment.isMarkdown = false;
 
     item.newComment = newComment;
   }

@@ -80,13 +80,7 @@
         </div>
       </div>
       <div class="article-comment-text">
-        <div *ngIf="comment.isMarkdown; then markdownComment else plainTextComment"></div>
-        <ng-template #markdownComment>
-          <p [innerHTML]="comment.text | toMarkdown" class="markdown-body article-comment-markdown-body"></p>
-        </ng-template>
-        <ng-template #plainTextComment>
-          <pre [innerHTML]="comment.text" class="article-comment-plain-text-body"></pre>                
-        </ng-template>
+        <pre [innerHTML]="comment.text" class="article-comment-plain-text-body"></pre>                
       </div>       
     </ng-template>
   </div>
@@ -96,7 +90,6 @@
         src="data:image/png;base64,{{ auth.loginUser.icon }}">
       <div class="article-comment-operation">コメントを追加する</div>
     </div>
-    <md-checkbox class="article-comment-editor-checkbox" [(ngModel)]="newComment.isMarkdown">Markdonw形式で書く</md-checkbox>
     <textarea
       class="register-comment-body" 
       [(ngModel)]="newComment.text"

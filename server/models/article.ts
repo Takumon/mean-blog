@@ -11,10 +11,6 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: [true, 'コメントを入力してください。']
   },
-  isMarkdown: {
-    type: Boolean,
-    default: false
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

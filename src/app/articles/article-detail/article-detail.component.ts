@@ -54,7 +54,6 @@ export class ArticleDetailComponent implements OnInit {
   refreshComment(articleId: number): void {
     this.newComment = new CommentModel();
     this.newComment.user = this.auth.loginUser._id;
-    this.newComment.isMarkdown = true;
   }
 
   deleteArticle(): void {

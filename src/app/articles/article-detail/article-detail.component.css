@@ -108,12 +108,12 @@
 }
 
 .article-comment-area .article-comment:last-child {
-  border-bottom: 1px gray solid;
-  margin-bottom: 12px;
+  margin-bottom: 48px;
 }
 
 .article-comment-metadata {
   display: flex;
+  margin-bottom: 12px;
 }
 
 .article-comment-author-icon {
@@ -194,27 +194,4 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 14px;
   color: #24292e;
-}
-
-.article-comment-markdown-body {
-  font-size: 14px;
-}
-
-.article-comment-markdown-body h1 {
-  padding-bottom: 0.2em;
-  font-size: 1.5em;
-  border-bottom: 1px solid #eaecef;
-  color: rgba(36, 41, 46, 0.9);
-}
-
-.article-comment-markdown-body h2 {
-  padding-bottom: 0.2em;
-  font-size: 1.2em;
-  border-bottom: 1px solid #eaecef;
-  color: rgba(36, 41, 46, 0.9);
-}
-
-.article-comment-markdown-body h3 {
-  font-size: 1.1em;
-  color: rgba(36, 41, 46, 0.95);
 }
