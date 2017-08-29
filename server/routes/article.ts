@@ -71,12 +71,12 @@ articleRouter.get('/:id', (req, res, next) => {
         maxDepth: 0,
         as: 'replies'
       }},
+      // 子コメントを日付昇順でソート（配列なので一旦バラしてソート後にグルーピング）
       {$unwind: {
         path: '$replies',
         preserveNullAndEmptyArrays: true
       }},
       { $sort: {
-        'created': 1,
         'replies.created': 1}},
       {$group: {
         _id: '$_id',
@@ -88,6 +88,11 @@ articleRouter.get('/:id', (req, res, next) => {
         updated: { $first: '$updated'},
         'replies': {$push: '$replies._id'}
       }},
+      // 親コメントは日付昇順に度ソート
+      { $sort: {
+        'created': 1,
+        'replies.created': 1}},
+      // ユーザ情報を追加
       // TODO アイコンサイズ
       { $lookup: {
           from: 'users',
