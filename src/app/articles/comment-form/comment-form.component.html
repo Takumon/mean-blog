@@ -1,0 +1,48 @@
+<form 
+  (ngSubmit)="onSubmit(form)" 
+  [formGroup]="form"
+  class="comment-form"
+  >
+  <div class="comment-metadata">
+    <img class="comment-author-icon" 
+      src="data:image/png;base64,{{ auth.loginUser.icon }}">
+    <div class="comment-operation">コメントを{{action}}する</div>
+  </div>
+  <md-input-container class="input-container">
+    <textarea
+      *ngIf="isAuthfocuse"
+      mdInput
+      class="comment-body" 
+      [errorStateMatcher]="errorStateMatcher"
+      formControlName="commentText"
+      placeholder="コメント本文"
+      appAutofocus
+      ></textarea>
+    <textarea
+      *ngIf="!isAuthfocuse"
+      mdInput
+      class="comment-body" 
+      [errorStateMatcher]="errorStateMatcher"
+      formControlName="commentText"
+      placeholder="コメント本文"
+      ></textarea>
+    <md-error *ngIf="hasError('required', commentText)">
+      {{ messageService.get('required',['コメント本文']) }}
+    </md-error>
+  </md-input-container>
+  <div class="comment-operation-area">
+    <button 
+      *ngIf="hasCancelBtn"
+      md-raised-button
+      type="button"
+      id="cancel-edit-btn"
+      (click)='onCancel();'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
+    <button
+      md-raised-button
+      color="primary"
+      type="submit"
+      id="registe-comment-btn"
+      [disabled]="!form.valid"
+      ><i class="fa fa-fw fa-commenting"></i>  {{action}}</button>
+  </div>
+</form>

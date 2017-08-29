@@ -3,6 +3,7 @@ import { CommentWithUserModel } from './comment-with-user.model';
 import { CommentModel } from './comment.model';
 
 export class ArticleWithUserModel {
+  _id: string;
   articleId: number;
   title: string;
   body: string;

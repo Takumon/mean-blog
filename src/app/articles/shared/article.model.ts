@@ -1,6 +1,7 @@
 import { CommentModel } from './comment.model';
 
 export class ArticleModel {
+  _id: string;
   articleId: number;
   title: string;
   body: string;
@@ -9,3 +10,4 @@ export class ArticleModel {
   author: string;
   comments: Array<CommentModel>;
 }
+

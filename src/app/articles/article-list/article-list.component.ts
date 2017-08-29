@@ -64,7 +64,7 @@ export class ArticleListComponent implements OnInit {
   createNewComment(item: ArticleWithUserModel) {
     const newComment = new CommentModel();
     newComment.user = this.auth.loginUser._id;
-    newComment.articleId = item.articleId;
+    newComment.articleId = item._id;
 
     item.newComment = newComment;
   }
@@ -75,7 +75,7 @@ export class ArticleListComponent implements OnInit {
 
   registerComment(articleId: number, newComment: CommentModel) {
     this.articleService
-      .registerComment(articleId, newComment)
+      .registerComment(newComment)
       .subscribe(res => {
         this.getArticles();
       });

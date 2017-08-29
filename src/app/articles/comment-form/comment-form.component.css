@@ -1,0 +1,53 @@
+.comment-metadata {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.comment-author-icon {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+  background: white;
+  box-shadow: grey 0 0 2px 0px;
+  border-radius: 4px;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #3f51b5;
+  padding-right: 12px
+}
+
+.comment-operation {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.comment-operation-area {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comment-operation-area button {
+  margin-right: 4px;
+}
+
+.comment-operation-area button:last-child {
+  margin-right: 0;
+}
+
+
+.input-container {
+  width: 100%;
+}
+
+.comment-body {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fbfbfb;
+    min-height: 124px;
+    font-size: 12px;
+    padding: 12px;
+    display: block;
+    margin-bottom: 4px;
+}

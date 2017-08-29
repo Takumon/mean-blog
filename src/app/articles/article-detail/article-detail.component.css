@@ -105,9 +105,10 @@
 .article-comment-area .article-comment {
   padding-top: 12px;
   padding-bottom: 12px;
+  border-top: 1px solid #eaeaea;
 }
 
-.article-comment-area .article-comment:last-child {
+.article-comment-area .article-comment.last-item {
   margin-bottom: 48px;
 }
 
@@ -140,47 +141,6 @@
   color: gray;
   font-size: 12px;
 }
-
-.article-comment-operation {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-
-
-.article-comment-text {
-}
-
-.article-comment-editor-checkbox {
-  display: block;
-  margin: 4px 0;
-}
-
-.article-comment-operation-area {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.article-comment-operation-area button {
-  margin-right: 4px;
-}
-
-.article-comment-operation-area button:last-child {
-  margin-right: 0;
-}
-
-.register-comment-body {
-    width: 100%;
-    box-sizing: border-box;
-    border-radius: 2px;
-    border: #c3c3c3 solid 1px;
-    min-height: 124px;
-    font-size: 12px;
-    padding: 12px;
-    display: block;
-    margin-bottom: 4px;
-}
-
 
 .article-comment-plain-text-body {
   white-space: pre;          

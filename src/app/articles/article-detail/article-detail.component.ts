@@ -5,9 +5,9 @@ import {Location} from '@angular/common';
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
+import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserService } from '../../users/shared/user.service';
 import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 
@@ -20,7 +20,6 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 })
 export class ArticleDetailComponent implements OnInit {
   article: ArticleWithUserModel;
-  newComment: CommentModel;
   loginUser: UserModel;
 
   constructor(
@@ -29,7 +28,6 @@ export class ArticleDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     public auth: AuthenticationService,
-    private userService: UserService,
     private routeNamesService: RouteNamesService,
   ) {
   }
@@ -45,15 +43,30 @@ export class ArticleDetailComponent implements OnInit {
       this.articleService.getOne(+params['id'], withUser)
        .subscribe(article => {
          this.article = article as ArticleWithUserModel;
-         this.refreshComment(article.articleId);
       });
     });
   }
 
+  createComment(commentWithUserModel: CommentWithUserModel = null, parentId: string = null): CommentModel {
+    // 追加の場合
+    if (commentWithUserModel === null) {
+      const newComment = new CommentModel();
+      newComment.user = this.auth.loginUser._id;
+      newComment.articleId = this.article._id;
+      newComment.parentId = parentId;
+      return newComment;
+    }
 
-  refreshComment(articleId: number): void {
-    this.newComment = new CommentModel();
-    this.newComment.user = this.auth.loginUser._id;
+    // 更新の場合（差分更新なので必要なのは_idとテキスト情報のみ）
+    const commentModel = new CommentModel();
+    commentModel._id = commentWithUserModel._id;
+    commentModel.text = commentWithUserModel.text;
+    return commentModel;
+  }
+
+  calcMarginOfComment(depth: number): number {
+    const d: number = depth > 4 ? 4 : depth;
+    return d * 56;
   }
 
   deleteArticle(): void {
@@ -64,25 +77,9 @@ export class ArticleDetailComponent implements OnInit {
   }
 
 
-  registerComment(): void {
-    this.articleService
-      .registerComment(this.article.articleId, this.newComment)
-      .subscribe(res => {
-        this.refreshArticle();
-      });
-  }
-
-  updateComment(comment): void {
-    this.articleService
-      .updateComment(this.article.articleId, comment)
-      .subscribe(res => {
-        this.refreshArticle();
-      });
-  }
-
   deleteComment(commentId: String): void {
     this.articleService
-      .deleteComment(this.article.articleId, commentId)
+      .deleteComment(commentId)
       .subscribe(res => {
         this.refreshArticle();
       });

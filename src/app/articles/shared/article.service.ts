@@ -12,6 +12,7 @@ import { JwtService } from '../../shared/services/jwt.service';
 @Injectable()
 export class ArticleService {
   private baseUrl = '/api/articles';
+  private commentUrl = '/api/comments';
 
   constructor(
     private http: Http,
@@ -91,8 +92,27 @@ export class ArticleService {
   }
 
 
-  registerComment(articleId: number, comment: any): Observable<any> {
-    const URL = `${this.baseUrl}/${articleId}/comments`;
+  getComment(condition: Object, withUser: Boolean = false): Observable<any> {
+    const URL = this.commentUrl;
+    const headers = this.jwtService.getHeaders();
+    const search = new URLSearchParams();
+    search.set('condition', JSON.stringify(condition));
+    if (withUser) {
+      search.set('withUser', `true`);
+    }
+
+    return this.http
+      .get(URL, { headers, search })
+      .map((response: Response) => {
+        const result = response.json();
+        return result;
+      })
+      .catch((error: Response) => Observable.throw(error.json()));
+  }
+
+  registerComment(comment: CommentModel): Observable<any> {
+    const URL = this.commentUrl;
+
     const options = {
       'Content-Type': 'application/x-www-form-urlencoded',
       headers: this.jwtService.getHeaders()
@@ -109,15 +129,16 @@ export class ArticleService {
       });
   }
 
-  updateComment(articleId: number, comment: any): Observable<any> {
-    const URL = `${this.baseUrl}/${articleId}/comments/${comment._id}`;
+  // 必ず差分更新とする
+  updateComment(comment: CommentModel): Observable<any> {
+    const URL = `${this.commentUrl}/${comment._id}`;
     const options = {
       'Content-Type': 'application/x-www-form-urlencoded',
       headers: this.jwtService.getHeaders()
     };
 
     return this.http
-      .put(URL, comment, options)
+      .put(URL, {$set: comment}, options)
       .map((response: Response) => {
         const result = response.json();
         return result;
@@ -127,8 +148,8 @@ export class ArticleService {
       });
   }
 
-  deleteComment(articleId: number, commentId: String): Observable<any> {
-    const URL = `${this.baseUrl}/${articleId}/comments/${commentId}`;
+  deleteComment(commentId: String): Observable<any> {
+    const URL = `${this.commentUrl}/${commentId}`;
 
     return this.http
       .delete(URL, this.jwtService.getRequestOptions())

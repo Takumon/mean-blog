@@ -31,12 +31,25 @@
   </div>
 </div>
 
-<div class="article-comment-area" *ngIf="article && article.comments">
-  <div class="article-comment-area-title">{{article.comments.length}}件のコメント</div>
-  <div class="article-comment" *ngFor="let comment of article.comments | orderby: ['created']">
+<div *ngIf="article" class="article-comment-area">
+  <div class="article-comment-area-title" >{{article.comments? article.comments.length: 0}}件のコメント</div>
+  <div
+    *ngFor="let comment of article.comments; let last = last"
+    class="article-comment"
+    [class.last-item]="last"
+    [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
+    >
 
     <div *ngIf="comment.isEditable; then editComment else displayComment"></div>
     <ng-template #editComment>
+      <app-comment-form 
+        [commentModel]="createComment(comment)"
+        [hasCancelBtn]="true"
+        [isAuthfocuse]="true"
+        (complete)="refreshArticle()"
+        (cancel)="comment.isEditable = false;"
+        ></app-comment-form>
+      <!--
       <div class="article-comment-editor">
         <div class="article-comment-metadata">
           <img class="article-comment-author-icon" src="data:image/png;base64,{{comment.user.icon}}">
@@ -62,6 +75,7 @@
             (click)='updateComment(comment)'><i class="fa fa-fw fa-commenting"></i>  更新</button>
         </div>
       </div>
+      -->
     </ng-template>
     <ng-template #displayComment>
       <div class="article-comment-metadata">
@@ -85,22 +99,10 @@
     </ng-template>
   </div>
   <div *ngIf="auth.loginUser" class="article-comment-register">
-    <div class="article-comment-metadata">
-      <img class="article-comment-author-icon" 
-        src="data:image/png;base64,{{ auth.loginUser.icon }}">
-      <div class="article-comment-operation">コメントを追加する</div>
-    </div>
-    <textarea
-      class="register-comment-body" 
-      [(ngModel)]="newComment.text"
-      placeholder="本文"></textarea>
-    <div class="article-comment-operation-area">
-      <button 
-        md-raised-button
-        color="primary"
-        type="button"
-        id="registe-comment-btn"
-        (click)='registerComment()'><i class="fa fa-fw fa-commenting"></i>  追加</button>
-    </div>
+    <app-comment-form 
+      [commentModel]="createComment()"
+      [hasCancelBtn]="false"
+      [isAuthfocuse]="false"
+      (complete)="refreshArticle()"></app-comment-form>
   </div>
 </div>

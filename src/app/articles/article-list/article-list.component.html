@@ -29,7 +29,7 @@
             </ng-template>
           </div>
           <div class="article-item-comments">
-            <div class="article-item-comments-count">コメント{{item.comments.length}}件</div>
+            <div *ngIf='item.comments' class="article-item-comments-count">コメント{{item.comments.length}}件</div>
             <div *ngIf='item.comments'>
               <img
                 *ngFor="let comment of item.comments | orderby: ['created']"
