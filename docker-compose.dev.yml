@@ -1,4 +1,12 @@
 mongo:
-  image: mongo:3.5.10
+  image: mongo:3.5.12
   ports:
     - 27017:27017
+  volumes:
+    - ./db:/data/db
+mongo-express:
+    image: "mongo-express:latest"
+    ports:
+    - "8082:8081"
+    links:
+     - mongo
