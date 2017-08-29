@@ -7,11 +7,12 @@ import * as jwt from 'jsonWebToken';
 
 
 import { MONGO_URL, SECRET } from './config';
-import { articleRouter } from './routes/article';
 import { authenticateRouter } from './routes/authenticate';
 import { setupRouter } from './routes/setup';
-import { userRouter } from './routes/user';
 import { authenticate } from './middleware/authenticate';
+import { articleRouter } from './routes/article';
+import { commentRouter } from './routes/comment';
+import { userRouter } from './routes/user';
 
 class App {
   public express: express.Application;
@@ -40,6 +41,7 @@ class App {
 
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);
+    this.express.use('/api/comments', commentRouter);
 
     // その他のリクエストはindexファイルにルーティング
     this.express.get('*', (req, res) => {
