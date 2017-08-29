@@ -5,7 +5,7 @@ import { Comment } from '../models/comment';
 const commentRouter: Router = Router();
 
 
-// 全記事を取得する
+// 全コメントを取得する
 commentRouter.get('/', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
@@ -55,8 +55,11 @@ commentRouter.post('/', (req, res, next) => {
 
 // コメントを更新する
 commentRouter.put('/:commentId', (req, res, next) => {
+  console.log(req.params.commentId);
+  console.log(req.body);
+
   Comment.update({
-    articleId: req.params.id
+    _id: req.params.commentId
   }, req.body, (err, result) => {
 
     if (err) {
@@ -76,7 +79,7 @@ commentRouter.put('/:commentId', (req, res, next) => {
 
 // 指定したIDのコメントを削除する
 commentRouter.delete('/:commentId', (req, res, next) => {
-  Comment.findOne({ commentId: req.params.commentId }, (err, model) => {
+  Comment.findOne({ _id: req.params.commentId }, (err, model) => {
 
     if (err) {
       return res.status(500).json({
