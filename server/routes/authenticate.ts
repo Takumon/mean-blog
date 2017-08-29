@@ -86,13 +86,13 @@ authenticateRouter.post('/register', (req, res) => {
       });
 
       // パスワードはクライアント側に送信しない
-      deleteProp(user, 'password');
+      deleteProp(newUser, 'password');
 
       return res.send({
         success: true,
         message: 'ユーザ情報を新規作成しました。',
         token: token,
-        user: user,
+        user: newUser,
       });
     });
   });
