@@ -39,7 +39,19 @@ articleRouter.get('/', (req, res, next) => {
 
 // 指定したIDの記事を取得する
 articleRouter.get('/:id', (req, res, next) => {
-  const cb = (err, doc) => {
+  // 記事検索
+  if (req.query.withUser) {
+    Article
+      .find({ articleId: +req.params.id })
+      .populate('author', '-password')
+      .exec(cbFind);
+  } else {
+    Article
+      .find({ articleId: +req.params.id })
+      .exec(cbFind);
+  }
+
+  function cbFind(err, doc): void {
     if (err) {
       return res.status(500).json({
         title: 'エラーが発生しました。',
@@ -54,8 +66,13 @@ articleRouter.get('/:id', (req, res, next) => {
     }
 
     const article = doc[0];
+    setCommentsAndReturnResponse(article);
+  }
 
+
+  function setCommentsAndReturnResponse(article): void {
     const commentsHolder = [];
+
     // 記事に紐づくコメントを取得
     Comment.aggregate([
       { $match : {
@@ -106,7 +123,9 @@ articleRouter.get('/:id', (req, res, next) => {
     ])
     .cursor({ batchSize: 100 })
     .exec()
-    .each(function(error, commentWithChild) {
+    .each(cbAggregate);
+
+    function cbAggregate(error, commentWithChild): void {
       if (error) {
         return res.status(500).json({
           title: `記事(articleId=${req.params.id})のコメント取得時にエラーが発生しました。`,
@@ -120,20 +139,9 @@ articleRouter.get('/:id', (req, res, next) => {
         articleObj.comments = treeSort(commentsHolder);
         return res.status(200).json(articleObj);
       }
-    });
-  };
-
-
-  if (req.query.withUser) {
-    Article
-      .find({ articleId: +req.params.id })
-      .populate('author', '-password')
-      .exec(cb);
-  } else {
-    Article
-      .find({ articleId: +req.params.id })
-      .exec(cb);
+    }
   }
+
 });
 
 /**
@@ -200,32 +208,6 @@ function getReply( _id: any, comments: Array<any>): any {
   }
 }
 
-function setComments(article) {
-  const articleId = article._id;
-
-
-  Comment.aggregate(
-    [
-      // 親コメントを取得
-      { '$match': { 'parentId': {$exists: false} } },
-      // 子コメントを再帰的に検索
-      { $graphLookup: {
-        from: 'vwComment',
-        startWith: '$_id',
-        connectFromField: '_id',
-        connectToField: 'parentId',
-        as: 'replies"'
-      }},
-    ],
-    function (err, result) {
-      if (err) {
-          console.log(err);
-          return;
-      }
-      console.log(result);
-    }
-  );
-}
 
 // 記事を登録する
 articleRouter.post('/', (req, res, next) => {
