@@ -1,6 +1,5 @@
 import * as http from 'http';
 import { Router, Response } from 'express';
-import * as mongoose from 'mongoose';
 
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
@@ -38,16 +37,16 @@ articleRouter.get('/', (req, res, next) => {
 });
 
 // 指定したIDの記事を取得する
-articleRouter.get('/:id', (req, res, next) => {
+articleRouter.get('/:_id', (req, res, next) => {
   // 記事検索
   if (req.query.withUser) {
     Article
-      .find({ articleId: +req.params.id })
+      .find({ _id: req.params._id })
       .populate('author', '-password')
       .exec(cbFind);
   } else {
     Article
-      .find({ articleId: +req.params.id })
+      .find({ _id: req.params._id })
       .exec(cbFind);
   }
 
@@ -61,7 +60,7 @@ articleRouter.get('/:id', (req, res, next) => {
 
     if (!doc[0]) {
       return res.status(500).json({
-        title: `記事(articleId=${req.params.id})が見つかりませんでした。`,
+        title: `記事(articleId=${req.params._id})が見つかりませんでした。`,
       });
     }
 
@@ -229,9 +228,9 @@ articleRouter.post('/', (req, res, next) => {
 });
 
 // 記事を更新する
-articleRouter.put('/:id', (req, res, next) => {
+articleRouter.put('/:_id', (req, res, next) => {
   Article.update({
-    articleId: req.params.id
+    _id: req.params._id
   }, {$set: req.body }, (err, result) => {
 
     if (err) {
@@ -249,8 +248,10 @@ articleRouter.put('/:id', (req, res, next) => {
 });
 
 // 記事を削除する
-articleRouter.delete('/:id', (req, res, next) => {
-  Article.findOne({ articleId: req.params.id }, (err, model) => {
+articleRouter.delete('/:_id', (req, res, next) => {
+  Article.findOne({
+    _id: req.params._id 
+  }, (err, model) => {
 
     if (err) {
       return res.status(500).json({

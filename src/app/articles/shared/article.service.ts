@@ -37,8 +37,8 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  getOne(articleId: number, withUser: Boolean = false): Observable<any> {
-    const URL = `${this.baseUrl}/${articleId}`;
+  getOne(_id: string, withUser: Boolean = false): Observable<any> {
+    const URL = `${this.baseUrl}/${_id}`;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
     if (withUser) {
@@ -55,7 +55,7 @@ export class ArticleService {
   }
 
   update(article: ArticleModel): Observable<any> {
-    const URL = `${this.baseUrl}/${article.articleId}`;
+    const URL = `${this.baseUrl}/${article._id}`;
 
     return this.http
       .put(URL, article, this.jwtService.getRequestOptions())
@@ -79,8 +79,8 @@ export class ArticleService {
   }
 
 
-  delete(articleId: number): Observable<any> {
-    const URL = `${this.baseUrl}/${articleId}`;
+  delete(_id: string): Observable<any> {
+    const URL = `${this.baseUrl}/${_id}`;
 
     return this.http
         .delete(URL, this.jwtService.getRequestOptions())

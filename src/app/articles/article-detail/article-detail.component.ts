@@ -40,7 +40,7 @@ export class ArticleDetailComponent implements OnInit {
   refreshArticle(): void {
     this.route.params.subscribe( params => {
       const withUser = true;
-      this.articleService.getOne(+params['id'], withUser)
+      this.articleService.getOne(params['_id'], withUser)
        .subscribe(article => {
          this.article = article as ArticleWithUserModel;
       });
@@ -71,7 +71,7 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   deleteArticle(): void {
-    this.articleService.delete(this.article.articleId)
+    this.articleService.delete(this.article._id)
       .subscribe(article => {
         this.goBack();
       });

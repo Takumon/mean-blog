@@ -6,7 +6,7 @@
           class="article-item"
           *ngFor="let item of articles | orderby: ['-date']">
           <div class="article-item-header underline-animation"
-            [routerLink]="['/articles', item.articleId]"
+            [routerLink]="['/articles', item._id]"
             routerLinkActive="active">
             <div class="article-item-avator">
               <img class="avatar" src="data:image/png;base64,{{item.author.icon}}">

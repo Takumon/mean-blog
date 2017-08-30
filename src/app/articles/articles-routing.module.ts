@@ -12,8 +12,8 @@ const routes: Routes = [
   // TOOD　プロフィール画面作る
   { path: ':_userId/articles', component: ArticleListComponent , canActivate: [AuthGuard] },
   { path: 'drafts/new',  component: ArticleEditComponent, canActivate: [AuthGuard]  },
-  { path: 'drafts/:id/edit',  component: ArticleEditComponent, canActivate: [AuthGuard]  },
-  { path: 'articles/:id',  component: ArticleDetailComponent, canActivate: [AuthGuard]  },
+  { path: 'drafts/:_id/edit',  component: ArticleEditComponent, canActivate: [AuthGuard]  },
+  { path: 'articles/:_id',  component: ArticleDetailComponent, canActivate: [AuthGuard]  },
 ];
 
 @NgModule({

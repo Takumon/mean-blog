@@ -46,10 +46,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.route.params.subscribe( params => {
-      if ( params['id']) {
+      if ( params['_id']) {
         this.action = '更新';
         this.articleService
-          .getOne(+params['id'])
+          .getOne(params['_id'])
           .subscribe(article => {
             this.article = article;
           });
