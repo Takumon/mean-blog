@@ -56,8 +56,6 @@ commentRouter.post('/', (req, res, next) => {
 
 // コメントを更新する
 commentRouter.put('/:commentId', (req, res, next) => {
-  console.log(req.params.commentId);
-  console.log(req.body);
 
   Comment.update({
     _id: req.params.commentId
