@@ -40,7 +40,7 @@ export class CommentFormComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.isRegister = !!this.commentModel.created;
+    this.isRegister = !this.commentModel.created;
     this.action = this.commentModel.created ? '更新' : '追加';
   }
 
