@@ -61,12 +61,13 @@ export class ArticleDetailComponent implements OnInit {
     const commentModel = new CommentModel();
     commentModel._id = commentWithUserModel._id;
     commentModel.text = commentWithUserModel.text;
+    commentModel.created = commentWithUserModel.created;
     return commentModel;
   }
 
   calcMarginOfComment(depth: number): number {
     const d: number = depth > 4 ? 4 : depth;
-    return d * 56;
+    return d * 42;
   }
 
   deleteArticle(): void {
