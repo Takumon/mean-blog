@@ -1,5 +1,6 @@
 import * as http from 'http';
 import { Router, Response } from 'express';
+import * as mongoose from 'mongoose';
 import { Comment } from '../models/comment';
 
 const commentRouter: Router = Router();
@@ -77,30 +78,69 @@ commentRouter.put('/:commentId', (req, res, next) => {
 });
 
 
-// 指定したIDのコメントを削除する
-commentRouter.delete('/:commentId', (req, res, next) => {
-  Comment.findOne({ _id: req.params.commentId }, (err, model) => {
 
-    if (err) {
+
+
+
+
+// 指定したIDのコメントを削除する
+// 子孫含めて削除
+commentRouter.delete('/:commentId', (req, res, next) => {
+
+  const cbAggregate = (error, commentWithChild) => {
+    if (error) {
       return res.status(500).json({
-        title: '削除しようとしたコメント(articleId=${req.params.id})が見つかりませんでした。',
-        error: err.message
+        title: `コメント(_id=${req.params.commentId})の子コメント取得時にエラーが発生しました。`,
+        error: error.message
       });
     }
 
-    model.remove(err2 => {
-      if (err2) {
-        return res.status(500).json({
-            title: 'エラーが発生しました。',
-            error: err.message
-        });
-      }
+    // TODO AggregateCursor#eachの使用方法がいまいちわからないので調査
+    if (commentWithChild) {
+      const deleteCommentIds = commentWithChild.childCommentIds;
+      deleteCommentIds.push(commentWithChild._id);
 
-      return res.status(200).json({
-        message: 'コメントを削除しました。',
+      Comment.remove({_id: {$in: deleteCommentIds}}, cbRemoveComments);
+    }
+  };
+
+  const cbRemoveComments = (error, removed) => {
+    if (error) {
+      return res.status(500).json({
+        title: '削除しようとしたコメント(articleId=${req.params.id})が削除できませんでした。',
+        error: error.message
       });
+    }
+
+    return res.status(200).json({
+      message: 'コメントを削除しました。',
+      removed: removed
     });
-  });
+  };
+
+  // 削除対象コメントを検索
+  Comment.aggregate([
+    { $match : {
+      _id : mongoose.Types.ObjectId(req.params.commentId),
+    }},
+    // 子コメントを再帰的に検索
+    { $graphLookup: {
+      from: 'comments',
+      startWith: '$_id',
+      connectFromField: '_id',
+      connectToField: 'parentId',
+      as: 'replies'
+    }},
+    // 子コメントの_id(replies._id)の配列を生成
+    {$unwind: {
+      path: '$replies',
+      preserveNullAndEmptyArrays: true
+    }},
+    { $group : { _id: '$_id', childCommentIds : {$push: '$replies._id'} }}
+  ])
+  .cursor({ batchSize: 1000 })
+  .exec()
+  .each(cbAggregate);
 });
 
 export { commentRouter };
