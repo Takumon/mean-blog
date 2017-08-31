@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
+import { CommentService } from '../shared/comment.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -19,35 +20,54 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
   providers: [ ArticleService ]
 })
 export class ArticleDetailComponent implements OnInit {
+  REPLY_COMMENT_INDENT_MARGIN: Number = 42;
+
   article: ArticleWithUserModel;
-  loginUser: UserModel;
+  comments: Array<CommentWithUserModel>;
 
   constructor(
-    private articleService: ArticleService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    public auth: AuthenticationService,
+
     private routeNamesService: RouteNamesService,
+    public auth: AuthenticationService,
+    private articleService: ArticleService,
+    private commentService: CommentService,
   ) {
   }
 
   ngOnInit(): void {
     this.routeNamesService.name.next(`記事詳細`);
-    this.refreshArticle();
+    this.getArticle();
+    this.refreshComments();
   }
 
-  refreshArticle(): void {
+
+  getArticle(): void {
     this.route.params.subscribe( params => {
+      const _idOfArticle = params['_id'];
       const withUser = true;
-      this.articleService.getOne(params['_id'], withUser)
-       .subscribe(article => {
-         this.article = article as ArticleWithUserModel;
+      this.articleService.getOne(_idOfArticle, withUser)
+      .subscribe(article => {
+        this.article = article as ArticleWithUserModel;
       });
     });
   }
 
-  createComment(commentWithUserModel: CommentWithUserModel = null, parentId: string = null): CommentModel {
+  refreshComments(): void {
+    this.route.params.subscribe( params => {
+      const _idOfArticle = params['_id'];
+      const withUser = true;
+      this.commentService.getOfArticle(_idOfArticle, withUser)
+        .subscribe(comments => {
+          this.comments = comments as Array<CommentWithUserModel>;
+        });
+    });
+  }
+
+
+  commentOfForm(commentWithUserModel: CommentWithUserModel = null, parentId: string = null): CommentModel {
     // 追加の場合
     if (commentWithUserModel === null) {
       const newComment = new CommentModel();
@@ -82,7 +102,7 @@ export class ArticleDetailComponent implements OnInit {
     this.articleService
       .deleteComment(commentId)
       .subscribe(res => {
-        this.refreshArticle();
+        this.refreshComments();
       });
   }
 

@@ -7,5 +7,10 @@ export class CommentWithUserModel {
   parentId: string;
   user: UserModel;
   created: string;
-  update: string;
+  updated: string;
+
+  // 表示制御用
+  depth: number;
+  isEditable: boolean;
+  addReply: boolean;
 }

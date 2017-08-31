@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 import { ArticleService } from './shared/article.service';
+import { CommentService } from './shared/comment.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
@@ -39,6 +40,7 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
   ],
   providers: [
     ArticleService,
+    CommentService,
     MarkdownParseService,
   ],
 })
