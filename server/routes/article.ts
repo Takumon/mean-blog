@@ -113,7 +113,7 @@ articleRouter.put('/:_id', (req, res, next) => {
 // 記事を削除する
 articleRouter.delete('/:_id', (req, res, next) => {
   Article.findOne({
-    _id: req.params._id 
+    _id: req.params._id
   }, (err, model) => {
 
     if (err) {

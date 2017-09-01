@@ -31,10 +31,11 @@ export class CommentFormComponent implements OnInit {
   isRegister: boolean;
 
   constructor(
-    private articleService: ArticleService,
-    private auth: AuthenticationService,
-    public messageService: MessageService,
     private fb: FormBuilder,
+
+    private articleService: ArticleService,
+    public auth: AuthenticationService,
+    public messageService: MessageService,
   ) {
   }
 
@@ -80,8 +81,8 @@ export class CommentFormComponent implements OnInit {
         .subscribe(res => {
           // TODO エラー処理
 
-          this.form.reset();
           this.complete.emit();
+          this.form.reset();
         });
     } else {
       this.articleService
@@ -89,8 +90,8 @@ export class CommentFormComponent implements OnInit {
         .subscribe(res => {
           // TODO エラー処理
 
-          this.form.reset();
           this.complete.emit();
+          this.form.reset();
         });
     }
 
