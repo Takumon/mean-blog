@@ -1,9 +1,138 @@
+import * as mongoose from 'mongoose';
+
+import { Article } from '../models/article';
 import { Comment } from '../models/comment';
 
 /**
  * ツリー構造のコメントを取得するためのユーティリティ
  */
 class CommentTreeClass {
+
+
+  // TODO とりあえず検索条件なしでやる
+  // TODO あとで第一引数にconditionを追加
+  getArticlesWithCommentOfTree(withUser: boolean, cb: Function): void {
+    // 検索条件
+    const pipeline: Array<Object> = [
+      // 記事にコメントを追加
+      {$lookup: {
+        from: 'comments',
+        localField: '_id',
+        foreignField: 'articleId',
+        as: 'comments'
+      }},
+      // コメント配列を展開
+      {$unwind: {
+        path: '$comments',
+        preserveNullAndEmptyArrays: true
+      }},
+        // コメントにリプライコメントを追加
+        {$lookup: {
+          from: 'comments',
+          localField: 'comments._id',
+          foreignField: 'parentId',
+          as: 'comments.replies'
+        }},
+
+        // リプライコメント配列を展開
+        {$unwind: {
+          path: '$comments.replies',
+          preserveNullAndEmptyArrays: true
+        }},
+          // 新しいリプライコメントを最後に
+          { $sort: {
+            'comments.replies.created': 1,
+          }},
+        // リプライコメントを集約(_idのみ)
+        {$group: {
+          _id: '$comments._id',
+          _idOfArticle: { $first: '$_id' }, // 記事の_idは一時的に別名で保存
+          articleId: { $first: '$title' },
+          title: { $first: '$title'},
+          body: { $first: '$body'},
+          isMarkdown: { $first: '$isMarkdown'},
+          author: { $first: '$author'},
+          date: { $first: '$date'},
+          comments: { $first: '$comments'},
+          // TODO　直接comments.repliesに代入できないか
+          replies: { $push: '$comments.replies._id'}
+        }},
+        {$addFields: {
+          'comments.replies': '$replies'
+        }},
+        // 新しいコメントを最後に
+        {$sort: {
+          'comments.created': 1,
+        }},
+        // TODO　withUserを見る
+        { $lookup: {
+          from: 'users',
+          localField: 'comments.user',
+          foreignField: '_id',
+          as: 'comments.user'
+        }},
+        { $unwind: {
+            path: '$comments.user',
+            preserveNullAndEmptyArrays: true
+        }},
+        { $project: { 'comments.user.password': 0 } },
+      // コメントを集約
+      {$group: {
+        // _id: '$_id',
+        _id: '$_idOfArticle',
+        articleId: { $first: '$title' },
+        title: { $first: '$title'},
+        body: { $first: '$body'},
+        isMarkdown: { $first: '$isMarkdown'},
+        author: { $first: '$author'},
+        date: { $first: '$date'},
+        comments: { $push: '$comments'}
+      }},
+      // 新しい記事は最初に
+      {$sort: {
+        'created': 1,
+      }},
+    ];
+
+
+
+    if (withUser) {
+      // ユーザ取得処理を追加
+      pipeline.push(
+        // TODO アイコンサイズ
+        // 記事のユーザ
+        { $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'author'
+        }},
+        { $unwind: '$author' },
+      );
+    }
+
+    const articlesHolder = [];
+
+    // 記事に紐づくコメントを取得
+    Article
+      .aggregate(pipeline)
+      .cursor({ batchSize: 100 })
+      .exec()
+      .each((error, article) => {
+        if (error) {
+          cb(error, article);
+        }
+
+
+        if (article) {
+          article.comments = this.treeSort(article.comments);
+          articlesHolder.push(article);
+        } else {
+          cb(error, articlesHolder);
+        }
+      });
+  }
+
 
   /**
    * 指定した記事の_idにひもづくコメントを
@@ -13,7 +142,7 @@ class CommentTreeClass {
    * @param withUser レスポンスにコメントしたユーザ情報を含めるか
    * @param cb コールバック関数(第一引数はerror, 第二引数はcomments)
    */
-  getCommentOfTree(_idOfArticle: string, withUser: boolean, cb: Function): void {
+  getCommentOfTree(_idOfArticle: mongoose.Types.ObjectId, withUser: boolean, cb: Function): void {
     // 検索条件
     const pipeline: Array<Object> = [
       { $match : {
@@ -99,7 +228,7 @@ class CommentTreeClass {
     for (const c of inputComments) {
 
       // トップ階層以外のコメントは除外
-      if (c.parentId !== null) { continue; }
+      if (c.parentId) { continue; }
 
       const topLevelComment = c;
       topLevelComment.depth = 0;
@@ -144,7 +273,6 @@ class CommentTreeClass {
    */
   private getReply( _id: any, comments: Array<any>): any {
     for (const comment of comments) {
-      // そのままの比較だと上手くいかない
       if (_id.toString() === comment._id.toString()) {
         return comment;
       }

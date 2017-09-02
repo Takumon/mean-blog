@@ -3,6 +3,7 @@ import { Router, Response } from 'express';
 
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
+import { CommentTree } from '../helpers/comment-tree';
 
 
 const articleRouter: Router = Router();
@@ -23,18 +24,11 @@ articleRouter.get('/', (req, res, next) => {
   const condition = query.condition ?
     JSON.parse(query.condition) :
     {};
+  const withUser: boolean = !!req.query.withUser;
 
-  if (query.withUser) {
-    Article
-      .find(condition)
-      .populate('author', '-password')
-      .exec(cb);
-  } else {
-    Article
-      .find(condition)
-      .exec(cb);
-  }
+  CommentTree.getArticlesWithCommentOfTree(withUser, cb);
 });
+
 
 // 指定したIDの記事を取得する
 articleRouter.get('/:_id', (req, res, next) => {

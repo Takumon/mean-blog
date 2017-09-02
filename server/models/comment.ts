@@ -3,7 +3,8 @@ import {connection} from '../connection';
 
 const CommentSchema = new mongoose.Schema({
   articleId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Article',
     required: true
   },
   parentId: {

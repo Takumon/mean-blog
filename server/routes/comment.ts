@@ -152,7 +152,8 @@ commentRouter.get('/ofArticle/:_idOfArticle', (req, res, next) => {
 
 
   const withUser: boolean = !!req.query.withUser;
-  CommentTree.getCommentOfTree(req.params._idOfArticle, withUser, cb);
+  const _idOfArticle: mongoose.Types.ObjectId = mongoose.Types.ObjectId(req.params._idOfArticle);
+  CommentTree.getCommentOfTree(_idOfArticle, withUser, cb);
 });
 
 
