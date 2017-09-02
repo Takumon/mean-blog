@@ -177,7 +177,6 @@
 
 
 .article-item-comments {
-  height: 48px;
   width: 100%;
   background: #fdfdfd;
   padding: 12px;
@@ -187,10 +186,22 @@
 }
 
 .article-item-comments-count {
+  white-space: nowrap;
   font-size: 0.9em;
   margin-right: 12px;
+  color: gray;
 }
 
+.article-item-comments-area {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -12px;
+}
+
+.article-item-comment-user-wrapper {
+  margin-top: 12px;
+  line-height: 0;
+}
 .article-item-comment-user {
   width: 30px;
   height: 30px;
@@ -199,6 +210,10 @@
   background: white;
   border-radius: 3px;
   image-rendering: -webkit-optimize-contrast;
+}
+
+.article-item-operation-area {
+  height: 30px;
 }
 
 .show-comment-editor-btn {
@@ -240,4 +255,3 @@
 .register-comment-btn {
   margin-left: 8px;
 }
-

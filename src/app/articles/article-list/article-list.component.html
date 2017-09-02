@@ -30,12 +30,15 @@
           </div>
           <div class="article-item-comments">
             <div *ngIf='item.comments' class="article-item-comments-count">コメント{{item.comments.length}}件</div>
-            <div *ngIf='item.comments'>
-              <img
+            <div *ngIf='item.comments' class="article-item-comments-area">
+              <div 
                 *ngFor="let comment of item.comments"
-                mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
-                class="article-item-comment-user"
-                src="data:image/png;base64,{{comment.user.icon}}">
+                class="article-item-comment-user-wrapper">
+                  <img
+                  mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
+                  class="article-item-comment-user"
+                  src="data:image/png;base64,{{comment.user.icon}}">
+              </div>
             </div>
             <div class="article-item-operation-area">
               <button 
