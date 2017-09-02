@@ -87,7 +87,7 @@ export class ArticleDetailComponent implements OnInit {
 
   calcMarginOfComment(depth: number): number {
     const d: number = depth > 4 ? 4 : depth;
-    return d * 42;
+    return d * 24;
   }
 
   deleteArticle(): void {
