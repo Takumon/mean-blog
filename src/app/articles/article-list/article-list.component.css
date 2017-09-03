@@ -210,6 +210,7 @@
   background: white;
   border-radius: 3px;
   image-rendering: -webkit-optimize-contrast;
+  cursor: pointer;
 }
 
 .article-item-operation-area {
