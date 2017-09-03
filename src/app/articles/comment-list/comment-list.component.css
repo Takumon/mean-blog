@@ -1,10 +1,21 @@
-.comment-area-title {
-  margin-bottom: 48px;
-  font-size: 24px;
+.comment-title-area {
+  display: flex;  
+}
+  
+.comment-title {
+  margin-bottom: 12px;
   font-weight: bold;
   color: gray;
   width: 100%;
 }
+
+
+.toggle-comment-detail-btn {
+  color: gray;
+  height: 30px;
+  line-height: 0;
+}
+
 
 .comment {
   padding-top: 6px;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 
 import { ArticleService } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -31,6 +31,13 @@ export class ArticleListComponent implements OnInit {
     this.getArticles();
   }
 
+  refreshComments(item: ArticleWithUserModel, event: any) {
+    item.comments = event.comments;
+  }
+
+  toggleCommentDetail(item: ArticleWithUserModel) {
+    item.showCommentDetail = !item.showCommentDetail;
+  }
 
   getArticles(): void {
     this.route.params.subscribe( params => {
@@ -69,7 +76,7 @@ export class ArticleListComponent implements OnInit {
     item.newComment = newComment;
   }
 
-  deleteNewComment(item: ArticleWithUserModel) {
+  cancelNewComment(item: ArticleWithUserModel) {
     item.newComment = null;
   }
 

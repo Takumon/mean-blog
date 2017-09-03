@@ -2,7 +2,16 @@
     <md-progress-bar mode="indeterminate"></md-progress-bar>
 </ng-container>    
 <ng-container *ngIf="comments">
-  <div *ngIf="comments" class="comment-area-title" >{{comments.length}}件のコメント</div>    
+  <div class="comment-title-area">
+    <div class="comment-title" >コメント{{comments.length}}件</div>
+    <div style="flex: 1 1 auto"></div>
+    <button
+      *ngIf="hasCloseBtn"
+      md-icon-button
+      type="button"
+      class="toggle-comment-detail-btn"
+      (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
+  </div>
   <div
     *ngFor="let comment of comments; let last = last"
     class="comment"

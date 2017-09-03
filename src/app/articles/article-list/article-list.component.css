@@ -252,6 +252,21 @@
   outline: 0;
 }
 
+.cancel-comment-btn {
+  margin-left: 8px;  
+}
 .register-comment-btn {
   margin-left: 8px;
+}
+
+
+.article-comment-detail-area {
+  padding: 12px;
+  background: #fdfdfd;
+}
+
+.toggle-comment-detail-btn {
+  color: gray;
+  height: 30px;
+  line-height: 0;
 }

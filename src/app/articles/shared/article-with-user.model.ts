@@ -12,4 +12,7 @@ export class ArticleWithUserModel {
   author: UserModel;
   comments: Array<CommentWithUserModel>;
   newComment: CommentModel;
+
+  // 表示制御用
+  showCommentDetail: boolean;
 }
