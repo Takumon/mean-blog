@@ -26,12 +26,19 @@ class CommentTreeClass {
         path: '$comments',
         preserveNullAndEmptyArrays: true
       }},
-        // コメントにリプライコメントを追加
+        // コメントがない記事対策
+        // そのままlookupするとnullと一致するコメントが引っかかってしまうため
+        {$addFields: {
+            '_commentsId' : { $ifNull: [ '$comments._id', '__not_existed_id__' ] }
+        }},
         {$lookup: {
           from: 'comments',
-          localField: 'comments._id',
+          localField: '_commentsId',
           foreignField: 'parentId',
-          as: 'comments.replies'
+          as: 'replies'
+        }},
+        {$addFields: {
+          'comments.replies': '$replies'
         }},
 
         // リプライコメント配列を展開
@@ -125,6 +132,10 @@ class CommentTreeClass {
 
 
         if (article) {
+          console.log('▼');
+          console.log(article.body);
+          console.log(article.comments[0].replies);
+          console.log('▲');
           article.comments = this.treeSort(article.comments);
           articlesHolder.push(article);
         } else {
@@ -225,6 +236,14 @@ class CommentTreeClass {
   private treeSort(inputComments: Array<any>): Array<any> {
     const outputComments = [];
 
+    // TODO 下記処理をaggregateで吸収する
+    // コメントが0件の記事対策
+    // inputCommentsが[comments: [{ replies: []}]] のような値になるので
+    // その場合は空配列を返す
+    if (!inputComments || !inputComments[0] || !inputComments[0]._id) {
+      return outputComments;
+    }
+
     for (const c of inputComments) {
 
       // トップ階層以外のコメントは除外
@@ -232,7 +251,6 @@ class CommentTreeClass {
 
       const topLevelComment = c;
       topLevelComment.depth = 0;
-
       outputComments.push(topLevelComment);
       this.setReplies(topLevelComment, inputComments, outputComments);
     }
