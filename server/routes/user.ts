@@ -38,8 +38,7 @@ userRouter.get('/', (req, res, next) => {
 });
 
 // 指定したIDの記事を取得する
-// TODO _idをuserIdに置き換える
-userRouter.get('/:_id', (req, res, next) => {
+userRouter.get('/:userId', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
       return res.status(500).json({
@@ -50,7 +49,7 @@ userRouter.get('/:_id', (req, res, next) => {
     return res.status(200).json(doc[0]);
   };
 
-  const condition = { _id: req.params._id };
+  const condition = { userId: req.params.userId };
 
   if (req.query.withPassword) {
     // TODO 管理者権限チェック
@@ -64,10 +63,11 @@ userRouter.get('/:_id', (req, res, next) => {
   }
 });
 
-userRouter.put('/:id', (req, res, next) => {
+// ユーザ情報を更新する（差分更新）
+userRouter.put('/:userId', (req, res, next) => {
   User.update({
-    _id: req.params.id
-  }, req.body, (err, result) => {
+    userId: req.params.userId
+  }, {$set: req.body }, (err, result) => {
 
     if (err) {
       return res.status(500).json({
@@ -79,6 +79,35 @@ userRouter.put('/:id', (req, res, next) => {
     return res.status(200).json({
       message: 'ユーザを更新しました。',
       obj: result
+    });
+  });
+});
+
+
+// ユーザ情報を削除する
+userRouter.delete('/:userId', (req, res, next) => {
+  User.findOne({
+    userId: req.params.userId
+  }, (err, model) => {
+
+    if (err) {
+      return res.status(500).json({
+        title: '削除しようとしたユーザ情報(userId=${req.params.userId})が見つかりませんでした。',
+        error: err.message
+      });
+    }
+
+    model.remove(err2 => {
+      if (err2) {
+        return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+        });
+      }
+
+      return res.status(200).json({
+        message: '記事を削除しました。',
+      });
     });
   });
 });

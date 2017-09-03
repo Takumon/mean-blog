@@ -70,7 +70,7 @@
       <div md-menu-item disabled class="status"><span class="username">{{auth.loginUser.userId}}</span>としてログイン済</div>
       <button
         md-menu-item
-        [routerLink]="[auth.loginUser._id, 'profile']"
+        [routerLink]="[auth.loginUser.userId, 'profile']"
         routerLinkActive="active">
         <i class="fa fa-fw fa-user-circle"></i><span> マイページ</span>
       </button>

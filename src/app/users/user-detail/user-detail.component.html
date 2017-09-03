@@ -3,7 +3,7 @@
   <nav *ngIf="isMine" md-tab-nav-bar class="nav-bar ink-bar-pink">
     <a md-tab-link
       class="nav-bar-link"
-      [routerLink]="['/', user._id, 'profile']"
+      [routerLink]="['/', user.userId, 'profile']"
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
       [routerLinkActiveOptions]="{exact: true}"

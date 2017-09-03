@@ -32,8 +32,8 @@ export class UserDetailComponent implements OnInit {
   getUser(): void {
     this.route.params.subscribe( params => {
 
-      const _id = params['_userId'];
-      this.userService.getById(_id).subscribe(user => {
+      const userId = params['_userId'];
+      this.userService.getById(userId).subscribe(user => {
         this.isMine = user._id === this.auth.loginUser._id;
         this.user = user as UserModel;
       });

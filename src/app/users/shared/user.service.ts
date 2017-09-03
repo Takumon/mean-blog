@@ -23,8 +23,8 @@ export class UserService {
       .map((response: Response) => response.json() as Array<UserModel>);
   }
 
-  getById(_id: string): Observable<UserModel> {
-    const URL = `${this.baseUrl}/${_id}`;
+  getById(userId: string): Observable<UserModel> {
+    const URL = `${this.baseUrl}/${userId}`;
 
     return this.http
       .get(URL, this.jwtService.getRequestOptions())
