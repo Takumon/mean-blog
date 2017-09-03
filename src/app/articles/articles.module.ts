@@ -18,6 +18,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
+import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
 
 @NgModule({
@@ -25,6 +26,7 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
     ArticleListComponent,
     ArticleEditComponent,
     ArticleDetailComponent,
+    CommentListComponent,
     CommentFormComponent,
     MarkdownParsePipe,
     OrderByPipe,

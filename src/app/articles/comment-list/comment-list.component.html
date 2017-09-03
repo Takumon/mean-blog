@@ -1,0 +1,73 @@
+<ng-container *ngIf="!comments">
+    <md-progress-bar mode="indeterminate"></md-progress-bar>
+</ng-container>    
+<ng-container *ngIf="comments">
+  <div *ngIf="comments" class="comment-area-title" >{{comments.length}}件のコメント</div>    
+  <div
+    *ngFor="let comment of comments; let last = last"
+    class="comment"
+    [class.last-item]="last"
+    [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
+    >
+
+    <div *ngIf="comment.isEditable; then editComment else displayComment"></div>
+    <ng-template #editComment>
+      <app-comment-form 
+        [commentModel]="commentOfForm(comment)"
+        [hasCancelBtn]="true"
+        [isAuthfocuse]="true"
+        (complete)="refreshComments()"
+        (cancel)="comment.isEditable = false;"
+        ></app-comment-form>
+    </ng-template>
+    <ng-template #displayComment>
+      <div class="comment-display-container">
+        <img class="comment-author-icon" src="data:image/png;base64,{{comment.user.icon}}">
+        <div class="comment-content">
+          <div class="comment-metadata">
+            <div class="comment-author">{{comment.user.userId}}</div>
+            <div class="comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
+          </div>
+          <div class="comment-text">
+            <pre [innerHTML]="comment.text" class="comment-plain-text-body"></pre>                
+          </div>
+          <div class="comment-operation-area">
+            <button
+              md-button
+              (click)="comment.addReply = true; comment.isEditable = false;">
+              <i class="fa fa-fw fa-reply"></i><span>  返信</span>
+            </button>
+            <button 
+              md-button 
+              *ngIf="auth.loginUser._id === comment.user._id"
+              (click)="comment.isEditable = true; comment.addReply = false">
+              <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
+            </button>
+            <button
+              md-button
+              *ngIf="auth.loginUser._id === comment.user._id"
+              (click)="deleteComment(comment._id)">
+              <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="comment.addReply" class="add-reply-area">
+        <app-comment-form  
+          [commentModel]="commentOfForm(null, comment._id)"
+          [hasCancelBtn]="true"
+          [isAuthfocuse]="true"
+          (complete)="refreshComments()"
+          (cancel)="comment.addReply = false;"
+          ></app-comment-form>
+      </div>
+    </ng-template>
+  </div>
+  <div *ngIf="auth.loginUser" class="comment-register">
+      <app-comment-form 
+        [commentModel]="commentOfForm()"
+        [hasCancelBtn]="false"
+        [isAuthfocuse]="false"
+        (complete)="refreshComments()"></app-comment-form>
+  </div>  
+</ng-container>
