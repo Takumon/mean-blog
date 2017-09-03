@@ -84,7 +84,7 @@ articleRouter.post('/', (req, res, next) => {
   });
 });
 
-// 記事を更新する
+// 記事を更新する（差分更新）
 articleRouter.put('/:_id', (req, res, next) => {
   Article.update({
     _id: req.params._id
