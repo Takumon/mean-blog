@@ -37,6 +37,7 @@ export class ArticleService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
+  // 特定のユーザに紐づく特定の記事を１件取得する
   getOne(_id: string, withUser: Boolean = false): Observable<any> {
     const URL = `${this.baseUrl}/${_id}`;
     const headers = this.jwtService.getHeaders();

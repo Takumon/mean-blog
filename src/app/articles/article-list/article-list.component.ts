@@ -46,15 +46,21 @@ export class ArticleListComponent implements OnInit {
       let condition;
       if (this.router.url === '/') {
         // TODO 仮の検索條件
-        condition = { $or: [
-          {author: '598fdb30f2962420aedca7a0'},
-          {author: '598dca120ad06672f2d26ab3'}
-        ]};
-      } else if (params['_userId']) {
-
-        condition = { author: params['_userId'] };
+        condition = {
+          author: {
+            _id: [
+              '59a2b2a14c64a51a15fed639',
+              '59a95b9f7399b8e3b28523ba'
+            ]
+          }
+        };
+      } else if (params['userId']) {
+        condition = {
+          author: {
+            userId: params['userId']
+          }
+        };
       } else {
-
         condition = {};
       }
 

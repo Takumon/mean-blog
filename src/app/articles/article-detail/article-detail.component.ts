@@ -38,10 +38,16 @@ export class ArticleDetailComponent implements OnInit {
 
   getArticle(): void {
     this.route.params.subscribe( params => {
+      const userId = params['userId'];
       const _idOfArticle = params['_id'];
       const withUser = true;
       this.articleService.getOne(_idOfArticle, withUser)
       .subscribe(article => {
+
+        if (userId !== article.author.userId) {
+          this.router.navigate(['/', article.author.userId, 'articles', article._id]);
+        }
+
         this.article = article as ArticleWithUserModel;
       });
     });

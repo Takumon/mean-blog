@@ -29,7 +29,7 @@
     <a md-tab-link
       *ngIf="auth.loginUser"
       class="nav-bar-link"
-      [routerLink]="[auth.loginUser._id, 'articles']"
+      [routerLink]="[auth.loginUser.userId, 'articles']"
       routerLinkActive #rla3="routerLinkActive"
       [active]="rla3.isActive"
       [routerLinkActiveOptions]="{exact: true}"

@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
     // 完全一致
     if (url === '/' || url === '/articles') {
       this.isActiveNavbar = true;
-    } else if (this.auth.loginUser && url === `/${this.auth.loginUser._id}/articles`) {
+    } else if (this.auth.loginUser && url === `/${this.auth.loginUser.userId}/articles`) {
       this.isActiveNavbar = true;
     } else {
       this.isActiveNavbar = false;

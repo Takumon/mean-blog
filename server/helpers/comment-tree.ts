@@ -9,11 +9,36 @@ import { Comment } from '../models/comment';
 class CommentTreeClass {
 
 
-  // TODO とりあえず検索条件なしでやる
-  // TODO あとで第一引数にconditionを追加
-  getArticlesWithCommentOfTree(withUser: boolean, cb: Function): void {
+  getArticlesWithCommentOfTree(matchStatement: Object, withUser: boolean, cb: Function): void {
+    const articlesHolder = [];
+
+    // 記事に紐づくコメントを取得
+    Article
+      .aggregate(this.createPipeline(matchStatement, withUser))
+      .cursor({ batchSize: 100 })
+      .exec()
+      .each((error, article) => {
+        if (error) {
+          cb(error, article);
+        }
+
+
+        if (article) {
+          article.comments = this.treeSort(article.comments);
+          articlesHolder.push(article);
+        } else {
+          cb(error, articlesHolder);
+        }
+      });
+  }
+
+  private createPipeline(matchStatement: Object, withUser: boolean): Array<Object> {
+    const result: Array<Object> = [];
+    if (matchStatement) {
+      result.push(matchStatement);
+    }
     // 検索条件
-    const pipeline: Array<Object> = [
+    result.push(
       // 記事にコメントを追加
       {$lookup: {
         from: 'comments',
@@ -99,13 +124,13 @@ class CommentTreeClass {
       {$sort: {
         'created': 1,
       }},
-    ];
+    );
 
 
 
     if (withUser) {
       // ユーザ取得処理を追加
-      pipeline.push(
+      result.push(
         // TODO アイコンサイズ
         // 記事のユーザ
         { $lookup: {
@@ -118,30 +143,7 @@ class CommentTreeClass {
       );
     }
 
-    const articlesHolder = [];
-
-    // 記事に紐づくコメントを取得
-    Article
-      .aggregate(pipeline)
-      .cursor({ batchSize: 100 })
-      .exec()
-      .each((error, article) => {
-        if (error) {
-          cb(error, article);
-        }
-
-
-        if (article) {
-          console.log('▼');
-          console.log(article.body);
-          console.log(article.comments[0].replies);
-          console.log('▲');
-          article.comments = this.treeSort(article.comments);
-          articlesHolder.push(article);
-        } else {
-          cb(error, articlesHolder);
-        }
-      });
+    return result;
   }
 
 

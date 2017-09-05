@@ -1,12 +1,12 @@
 export class UserModel {
   _id: string;
-  userId: String;
-  password: String;
-  email: String;
-  firstName: String;
-  lastName: String;
+  userId: string;
+  password: string;
+  email: string;
+  firstName: string;
+  lastName: string;
   isAdmin: Boolean;
-  blogTitle: String;
-  userDescription: String;
-  icon: String;
+  blogTitle: string;
+  userDescription: string;
+  icon: string;
 }

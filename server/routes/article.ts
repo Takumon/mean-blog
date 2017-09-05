@@ -1,33 +1,104 @@
+import * as mongoose from 'mongoose';
 import * as http from 'http';
 import { Router, Response } from 'express';
 
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
 import { CommentTree } from '../helpers/comment-tree';
+import { User } from '../models/user';
 
 
 const articleRouter: Router = Router();
 
 // 全記事を取得する
 articleRouter.get('/', (req, res, next) => {
-  const cb = (err, doc) => {
-    if (err) {
+
+  getCondition(req, function(error, condition) {
+    if (error) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: 'エラーが発生しました。',
+        error: error.message
       });
     }
-    return res.status(200).json(doc);
-  };
 
+    const withUser: boolean = !!req.query.withUser;
+    CommentTree.getArticlesWithCommentOfTree(condition, withUser, (err, doc) => {
+      if (err) {
+        return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+        });
+      }
+      return res.status(200).json(doc);
+    });
+  });
+});
+
+
+// 検索条件にauthorUserIdの指定がある場合はユーザ情報を取得して_idに変換する
+function getCondition(req: any, cb: Function): void {
   const query = req.query;
-  const condition = query.condition ?
+  const source = query.condition ?
     JSON.parse(query.condition) :
     {};
-  const withUser: boolean = !!req.query.withUser;
 
-  CommentTree.getArticlesWithCommentOfTree(withUser, cb);
-});
+  const factors = [];
+  const condition = {$match: {
+    $and: factors
+  }};
+
+  const userIds = source.author && source.author.userId;
+  if (userIds) {
+    let userFindCondition;
+    if (userIds instanceof Array) {
+      userFindCondition = {
+        userId: {
+          $in: userIds
+        }
+      };
+    } else {
+      userFindCondition = {
+        userId: userIds
+      };
+    }
+
+    return User.find(userFindCondition, function (err, users) {
+      if (err) {
+        return cb(err, null);
+      }
+
+      if (!users || !users.length) {
+        return cb(new mongoose.Error(`指定したユーザ(${userIds})が見つかりません`), null);
+      }
+
+      factors.push({
+        author: {
+          $in: users.map(user => user._id)
+        }
+      });
+
+      return cb(null, condition);
+    });
+  }
+
+
+  const _ids = source.author && source.author._id;
+  if (_ids) {
+    if (_ids instanceof Array) {
+      factors.push({
+        author: {
+          $in: _ids.map(id =>  new mongoose.Types.ObjectId(id))
+        }
+      });
+    } else {
+      factors.push({
+        author: new mongoose.Types.ObjectId(_ids)
+      });
+    }
+  }
+
+  return cb(null, factors.length > 0 ? condition : null);
+}
 
 
 // 指定したIDの記事を取得する

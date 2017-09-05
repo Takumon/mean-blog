@@ -49,7 +49,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if ( params['_id']) {
         this.action = '更新';
         this.articleService
-          .getOne(params['_id'])
+          .getOne(this.auth.loginUser.userId, params['_id'])
           .subscribe(article => {
             this.article = article;
           });
