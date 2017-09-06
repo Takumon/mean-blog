@@ -43,7 +43,7 @@ export class UserEditComponent implements OnInit {
       .update(this.user)
       .subscribe((res: any) => {
         this.snackBar.open('プロフィールを編集しました。', null, {duration: 3000});
-        this.router.navigate(['/', this.user._id, 'profile']);
+        this.router.navigate(['/', this.user.userId, 'profile']);
       });
   }
 
