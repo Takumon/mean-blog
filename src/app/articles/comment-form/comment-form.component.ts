@@ -9,6 +9,8 @@ import {
   Validators,
   FormBuilder,
 } from '@angular/forms';
+import { MdSnackBar } from '@angular/material';
+
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
 import { CommentModel } from '../shared/comment.model';
@@ -32,6 +34,7 @@ export class CommentFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    public snackBar: MdSnackBar,
 
     private articleService: ArticleService,
     public auth: AuthenticationService,
@@ -81,6 +84,7 @@ export class CommentFormComponent implements OnInit {
         .subscribe(res => {
           // TODO エラー処理
 
+          this.snackBar.open('コメントを追加しました。', null, {duration: 3000});
           this.complete.emit();
           this.form.reset();
         });
@@ -90,6 +94,7 @@ export class CommentFormComponent implements OnInit {
         .subscribe(res => {
           // TODO エラー処理
 
+          this.snackBar.open('コメントを更新しました。', null, {duration: 3000});
           this.complete.emit();
           this.form.reset();
         });

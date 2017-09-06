@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { MdSnackBar } from '@angular/material';
 
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -20,6 +21,7 @@ export class ArticleDetailComponent implements OnInit {
   article: ArticleWithUserModel;
 
   constructor(
+    public snackBar: MdSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
@@ -56,6 +58,7 @@ export class ArticleDetailComponent implements OnInit {
   deleteArticle(): void {
     this.articleService.delete(this.article._id)
       .subscribe(article => {
+        this.snackBar.open('記事を削除しました。', null, {duration: 3000});
         this.goBack();
       });
   }

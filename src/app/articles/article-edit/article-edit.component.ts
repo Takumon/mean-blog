@@ -8,6 +8,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
+import { MdSnackBar } from '@angular/material';
 
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
@@ -34,10 +35,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private articleService: ArticleService,
+    public snackBar: MdSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
+    private articleService: ArticleService,
     private auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
     ) {
@@ -92,13 +94,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       this.articleService
         .register(this.article)
         .subscribe((res: any) => {
+
+          this.snackBar.open('記事を投稿しました。', null, {duration: 3000});
           this.goBack();
         });
     } else {
       this.articleService
         .update(this.article)
         .subscribe((res: any) => {
-          // TODO alertでメッセージを表示
+          this.snackBar.open('記事を編集しました。', null, {duration: 3000});
           this.goBack();
         });
     }

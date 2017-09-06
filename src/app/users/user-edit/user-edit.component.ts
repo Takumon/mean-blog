@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { MdSnackBar } from '@angular/material';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../shared/user.model';
@@ -15,6 +16,7 @@ export class UserEditComponent implements OnInit {
   user: UserModel;
 
   constructor(
+    public snackBar: MdSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
@@ -40,10 +42,9 @@ export class UserEditComponent implements OnInit {
     this.userService
       .update(this.user)
       .subscribe((res: any) => {
-        // TODO alertでメッセージを表示
+        this.snackBar.open('プロフィールを編集しました。', null, {duration: 3000});
         this.router.navigate(['/', this.user._id, 'profile']);
       });
-
   }
 
   onChangeIconFile(event): void {

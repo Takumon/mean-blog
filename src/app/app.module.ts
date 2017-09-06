@@ -20,12 +20,10 @@ import { JwtTokenService } from './shared/services/jwt-token.service';
 import { AlertService } from './shared/services/alert.service';
 import { AuthGuard } from './shared/auth.guard';
 
-import { AlertComponent } from './shared/directives/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AlertComponent
   ],
   imports: [
     BrowserModule,

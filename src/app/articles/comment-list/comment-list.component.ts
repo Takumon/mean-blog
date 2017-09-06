@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { MdSnackBar } from '@angular/material';
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
@@ -26,6 +27,7 @@ export class CommentListComponent implements OnInit {
 
 
   constructor(
+    public snackBar: MdSnackBar,
     public auth: AuthenticationService,
     private articleService: ArticleService,
     private commentService: CommentService,
@@ -85,6 +87,7 @@ export class CommentListComponent implements OnInit {
     this.articleService
       .deleteComment(commentId)
       .subscribe(res => {
+        this.snackBar.open('コメントを削除しました。', null, {duration: 3000});
         this.refreshComments();
       });
   }
