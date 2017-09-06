@@ -33,6 +33,10 @@
   margin: auto;
 }
 
+.progressbar {
+  width: 100%;
+}
+
 .menu-icon-username {
   margin-right: 8px;
   font-size: 18px;

@@ -54,13 +54,14 @@ export class AppComponent implements OnInit {
         console.log(res.message);
         return;
       }
-      // TODO エラー処理
-
-      this.auth.setLoginUser(res.user);
     }, error => {
       // TODO エラー処理
       console.log(error);
     });
+  }
+
+  isLoginPage(): boolean {
+    return this.router.url === '/login';
   }
 
 

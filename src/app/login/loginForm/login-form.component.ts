@@ -82,8 +82,6 @@ export class LoginFormComponent implements OnInit {
           this.message = res['message'];
           return;
         }
-
-        this.auth.setLoginUser(res.user);
         this.complete.emit();
       });
   }
