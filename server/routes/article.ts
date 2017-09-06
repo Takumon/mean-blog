@@ -125,7 +125,7 @@ articleRouter.get('/:_id', (req, res, next) => {
 
     if (!doc[0]) {
       return res.status(500).json({
-        title: `記事(articleId=${req.params._id})が見つかりませんでした。`,
+        title: `記事(_id=${req.params._id})が見つかりませんでした。`,
       });
     }
 
@@ -183,7 +183,7 @@ articleRouter.delete('/:_id', (req, res, next) => {
 
     if (err) {
       return res.status(500).json({
-        title: '削除しようとした記事(articleId=${req.params.id})が見つかりませんでした。',
+        title: '削除しようとした記事(_id=${req.params.id})が見つかりませんでした。',
         error: err.message
       });
     }

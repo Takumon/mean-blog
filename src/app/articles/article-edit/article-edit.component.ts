@@ -51,8 +51,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       if ( params['_id']) {
         this.action = '更新';
         this.articleService
-          .getOne(this.auth.loginUser.userId, params['_id'])
+          .getOne(params['_id'], true)
           .subscribe(article => {
+            if (article.author._id !== this.auth.loginUser._id) {
+              // TODO エラー処理か、他のユーザでも編集できる仕様にする
+            }
             this.article = article;
           });
       } else {
@@ -70,8 +73,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   isNew() {
-    const target = this.article.articleId;
-    return target !== 0 && !target;
+    return !this.article._id;
   }
 
 

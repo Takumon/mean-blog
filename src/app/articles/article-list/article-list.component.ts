@@ -86,7 +86,7 @@ export class ArticleListComponent implements OnInit {
     item.newComment = null;
   }
 
-  registerComment(articleId: number, newComment: CommentModel) {
+  registerComment(newComment: CommentModel) {
     this.articleService
       .registerComment(newComment)
       .subscribe(res => {

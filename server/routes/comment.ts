@@ -100,7 +100,7 @@ commentRouter.delete('/:commentId', (req, res, next) => {
   const cbRemoveComments = (error, removed) => {
     if (error) {
       return res.status(500).json({
-        title: '削除しようとしたコメント(articleId=${req.params.id})が削除できませんでした。',
+        title: 'コメント(_id=${req.params.commentId})が削除できませんでした。',
         error: error.message
       });
     }
