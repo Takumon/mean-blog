@@ -85,7 +85,12 @@
 </md-toolbar>
 
 <div class="container">
-  <router-outlet></router-outlet>
+  <ng-container *ngIf="isLoginPage() || auth.isFinishedCheckState">
+    <router-outlet></router-outlet>
+  </ng-container> 
+  <ng-container *ngIf="!isLoginPage() && !auth.isFinishedCheckState">
+    <md-progress-bar class="progressbar" mode="indeterminate"></md-progress-bar>
+  </ng-container>
 </div>
 
 <button  *ngIf="auth.loginUser && isNotEditor()" 

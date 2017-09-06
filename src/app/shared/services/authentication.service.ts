@@ -15,6 +15,7 @@ import { JwtTokenService } from './jwt-token.service';
 @Injectable()
 export class AuthenticationService {
   loginUser: UserModel;
+  isFinishedCheckState: boolean;
 
   private base_url = '/api/authenticate';
 
@@ -28,10 +29,7 @@ export class AuthenticationService {
 
   initLoginUser() {
     this.loginUser = null;
-  }
-
-  setLoginUser(user: UserModel) {
-    this.loginUser = user;
+    this.isFinishedCheckState = false;
   }
 
   login(user: UserModel): Observable<Object> {
@@ -60,23 +58,26 @@ export class AuthenticationService {
 
     return this.http
       .get(URL, this.jwtService.getRequestOptions())
-      .map( res => res.json() );
+      .map( res => this.setToken(res));
   }
 
 
+  // ログイン画面に戻る時に使用する
   logout() {
     this.initLoginUser();
     this.jwtTokenService.remove();
   }
 
 
-  setToken(res): Object {
+  private setToken(res): Object {
     const body = res.json();
     if ( body.success !== true ) {
       return body;
     }
 
     this.jwtTokenService.set(body.token);
+    this.loginUser = body.user;
+    this.isFinishedCheckState = true;
 
     return body;
   }

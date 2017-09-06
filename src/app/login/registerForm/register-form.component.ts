@@ -93,7 +93,6 @@ export class RegisterFormComponent implements OnInit {
           return;
         }
 
-        this.auth.setLoginUser(res.user);
         this.complete.emit();
       });
   }
