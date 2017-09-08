@@ -7,7 +7,7 @@ import { CommentTree } from '../helpers/comment-tree';
 const commentRouter: Router = Router();
 
 
-// 全コメントを取得する
+// 複数件検索
 commentRouter.get('/', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
@@ -36,7 +36,7 @@ commentRouter.get('/', (req, res, next) => {
   }
 });
 
-// コメントを登録する
+// 単一検索
 commentRouter.post('/', (req, res, next) => {
   const comment = new Comment(req.body);
 
@@ -55,7 +55,7 @@ commentRouter.post('/', (req, res, next) => {
   });
 });
 
-// コメントを更新する
+// 更新
 commentRouter.put('/:commentId', (req, res, next) => {
 
   Comment.update({
@@ -76,64 +76,36 @@ commentRouter.put('/:commentId', (req, res, next) => {
   });
 });
 
-// 指定したIDのコメントを削除する
-// 子孫含めて削除
+// 論理削除
 commentRouter.delete('/:commentId', (req, res, next) => {
+  Comment.findOne({ _id: req.params.commentId }, (err, model) => {
 
-  const cbAggregate = (error, commentWithChild) => {
-    if (error) {
+    if (err) {
       return res.status(500).json({
-        title: `コメント(_id=${req.params.commentId})の子コメント取得時にエラーが発生しました。`,
-        error: error.message
+        title: '削除しようとしたコメント(_id=${req.params.id})が見つかりませんでした。',
+        error: err.message
       });
     }
+    const sysdate = new Date();
+    model.update({
+      $set: {
+        updated: sysdate,
+        deleted: sysdate,
+      }
+    }, err2 => {
+      if (err2) {
+        return res.status(500).json({
+            title: 'エラーが発生しました。',
+            error: err.message
+        });
+      }
 
-    // TODO AggregateCursor#eachの使用方法がいまいちわからないので調査
-    if (commentWithChild) {
-      const deleteCommentIds = commentWithChild.childCommentIds;
-      deleteCommentIds.push(commentWithChild._id);
-
-      Comment.remove({_id: {$in: deleteCommentIds}}, cbRemoveComments);
-    }
-  };
-
-  const cbRemoveComments = (error, removed) => {
-    if (error) {
-      return res.status(500).json({
-        title: 'コメント(_id=${req.params.commentId})が削除できませんでした。',
-        error: error.message
+      return res.status(200).json({
+        message: 'コメントを削除しました。',
       });
-    }
-
-    return res.status(200).json({
-      message: 'コメントを削除しました。',
-      removed: removed
     });
-  };
+  });
 
-  // 削除対象コメントを検索
-  Comment.aggregate([
-    { $match : {
-      _id : mongoose.Types.ObjectId(req.params.commentId),
-    }},
-    // 子コメントを再帰的に検索
-    { $graphLookup: {
-      from: 'comments',
-      startWith: '$_id',
-      connectFromField: '_id',
-      connectToField: 'parentId',
-      as: 'replies'
-    }},
-    // 子コメントの_id(replies._id)の配列を生成
-    {$unwind: {
-      path: '$replies',
-      preserveNullAndEmptyArrays: true
-    }},
-    { $group : { _id: '$_id', childCommentIds : {$push: '$replies._id'} }}
-  ])
-  .cursor({ batchSize: 1000 })
-  .exec()
-  .each(cbAggregate);
 });
 
 
