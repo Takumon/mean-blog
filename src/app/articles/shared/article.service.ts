@@ -139,7 +139,7 @@ export class ArticleService {
     };
 
     return this.http
-      .put(URL, {$set: comment}, options)
+      .put(URL, comment, options)
       .map((response: Response) => {
         const result = response.json();
         return result;

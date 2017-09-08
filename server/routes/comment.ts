@@ -55,12 +55,14 @@ commentRouter.post('/', (req, res, next) => {
   });
 });
 
-// 更新
+// 更新（差分更新）
 commentRouter.put('/:commentId', (req, res, next) => {
+  const comment = req.body;
+  comment.updated = new Date();
 
   Comment.update({
     _id: req.params.commentId
-  }, req.body, (err, result) => {
+  }, {$set: comment}, (err, result) => {
 
     if (err) {
       return res.status(500).json({
