@@ -21,6 +21,7 @@ const CommentSchema = new mongoose.Schema({
   },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
+  deleted: { type: Date, default: null },
 });
 
 const Comment = mongoose.model('Comment', CommentSchema);
