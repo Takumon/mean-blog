@@ -10,6 +10,8 @@ import { CommentService } from './shared/comment.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
+import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-comment.pipe';
+import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 
 
@@ -30,6 +32,8 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
     CommentFormComponent,
     MarkdownParsePipe,
     OrderByPipe,
+    ExcludeDeletedLeafCommentPipe,
+    ExcludeDeletedCommentPipe,
     AutofocusDirective,
   ],
   imports: [
