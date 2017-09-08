@@ -8,9 +8,12 @@ export class CommentWithUserModel {
   user: UserModel;
   created: string;
   updated: string;
+  deleted: string;
 
   // 表示制御用
   depth: number;
+  hasChildren: boolean;
   isEditable: boolean;
   addReply: boolean;
+
 }

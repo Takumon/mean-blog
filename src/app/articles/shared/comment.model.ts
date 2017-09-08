@@ -9,4 +9,5 @@ export class CommentModel {
   user: string;
   created: string;
   update: string;
+  deleted: string;
 }
