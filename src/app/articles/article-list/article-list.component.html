@@ -34,15 +34,22 @@
           
           <ng-template #displayComment>
             <div class="article-item-comments">
-              <div *ngIf='item.comments' class="article-item-comments-count">コメント{{item.comments.length}}件</div>
+              <div *ngIf='item.comments' class="article-item-comments-count">コメント{{(item.comments | excludeDeletedComment).length}}件</div>
               <div *ngIf='item.comments' class="article-item-comments-area">
                 <div 
-                  *ngFor="let comment of item.comments"
-                  class="article-item-comment-user-wrapper">
+                  *ngFor="let comment of (item.comments | excludeDeletedLeafComment)"
+                  class="article-item-comment-user-wrapper"
+                  >
+                    <img 
+                      *ngIf="comment.deleted"
+                      mdTooltip="このコメントは削除されました"
+                      class="article-item-comment-user"
+                      src="assets/images/deleted-comment.png">
                     <img
-                    mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
-                    class="article-item-comment-user"
-                    src="data:image/png;base64,{{comment.user.icon}}">
+                      *ngIf="!comment.deleted"
+                      mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
+                      class="article-item-comment-user"
+                      src="data:image/png;base64,{{comment.user.icon}}">
                 </div>
               </div>
               <div class="article-item-operation-area">

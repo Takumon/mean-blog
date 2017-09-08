@@ -3,7 +3,7 @@
 </ng-container>    
 <ng-container *ngIf="comments">
   <div class="comment-title-area">
-    <div class="comment-title" >コメント{{comments.length}}件</div>
+    <div class="comment-title" >コメント{{(comments | excludeDeletedComment).length}}件</div>
     <div style="flex: 1 1 auto"></div>
     <button
       *ngIf="hasCloseBtn"
@@ -13,13 +13,23 @@
       (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
   </div>
   <div
-    *ngFor="let comment of comments; let last = last"
+    *ngFor="let comment of (comments | excludeDeletedLeafComment); let last = last"
     class="comment"
     [class.last-item]="last"
     [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
     >
 
-    <div *ngIf="comment.isEditable; then editComment else displayComment"></div>
+    <div *ngIf="comment.deleted; then displayDeletedComment"></div>
+    <div *ngIf="!comment.deleted && comment.isEditable; then editComment"></div>
+    <div *ngIf="!comment.deleted && !comment.isEditable; then displayComment"></div>
+    <ng-template #displayDeletedComment>
+      <div class="comment-display-container deleted-comment">
+        <img class="comment-author-icon" src="assets/images/deleted-comment.png">
+        <div class="comment-content">
+          <div class="comment-text">このコメントは削除されました。</div>
+        </div>
+      </div>
+    </ng-template>
     <ng-template #editComment>
       <app-comment-form 
         [commentModel]="commentOfForm(comment)"

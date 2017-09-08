@@ -90,3 +90,14 @@
   border-top: 1px solid #eaeaea;
 }
 
+
+.deleted-comment.comment-display-container {
+  background-color: #f5f4f4;
+  padding: 8px;
+}
+
+.deleted-comment .comment-content {
+  color: gray;
+  line-height: 36px;
+  height: 36px;
+}
