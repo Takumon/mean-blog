@@ -185,6 +185,7 @@ class CommentTreeClass {
         user: { $first: '$user'},
         created: { $first: '$created'},
         updated: { $first: '$updated'},
+        deleted: { $first: '$deleted'},
         'replies': {$push: '$replies._id'}
       }},
       // 親コメントは日付昇順に度ソート
@@ -269,9 +270,11 @@ class CommentTreeClass {
    private setReplies(comment: any, inputComments: Array<any>, outputComments: Array<any>): void {
     if (!comment.replies || comment.replies.length === 0) {
       delete comment.replies;
+      comment.hasChildren = false;
       return;
     }
 
+    comment.hasChildren = true;
     // repliesは生成日時の昇順でソート済みの想定
     for (const replyId of comment.replies) {
       const reply = this.getReply(replyId, inputComments);
