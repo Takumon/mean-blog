@@ -13,6 +13,7 @@ export class CommentWithUserModel {
   // 表示制御用
   depth: number;
   hasChildren: boolean;
+  hasUndeletedChildren: boolean;
   isEditable: boolean;
   addReply: boolean;
 

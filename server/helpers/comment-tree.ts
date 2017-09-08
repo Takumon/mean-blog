@@ -266,25 +266,37 @@ class CommentTreeClass {
    *
    * @param comment コメント(depthは定義済み)
    * @param inputComments 子コメントの参照を持つコメント配列
+   * @param outputComments コメントツリー構造の順にソートした配列
    */
    private setReplies(comment: any, inputComments: Array<any>, outputComments: Array<any>): void {
+    // 子コメントが存在するか判断する
     if (!comment.replies || comment.replies.length === 0) {
+      // repliesは中間生成物なので削除
       delete comment.replies;
       comment.hasChildren = false;
+      comment.hasUndeletedChildren = false;
       return;
     }
-
     comment.hasChildren = true;
+
+
+    // 子孫に削除されていないコメントが存在するか判断する
+    comment.hasUndeletedChildren = false;
     // repliesは生成日時の昇順でソート済みの想定
     for (const replyId of comment.replies) {
       const reply = this.getReply(replyId, inputComments);
       reply.depth = comment.depth + 1;
-      // リプライをコメントにセット
       outputComments.push(reply);
       // 再帰呼び出しで、リプライのリプライをセット
       this.setReplies(reply, inputComments, outputComments);
+
+      // リプライが削除されている場合でもリプライへのリプライが削除されていなければOK
+      if (!reply.deleted || reply.hasUndeletedChildren) {
+        comment.hasUndeletedChildren = true;
+      }
     }
 
+    // repliesは中間生成物なので削除
     delete comment.replies;
   }
 
