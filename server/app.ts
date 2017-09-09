@@ -8,7 +8,6 @@ import * as jwt from 'jsonWebToken';
 
 import { MONGO_URL, SECRET } from './config';
 import { authenticateRouter } from './routes/authenticate';
-import { setupRouter } from './routes/setup';
 import { authenticate } from './middleware/authenticate';
 import { articleRouter } from './routes/article';
 import { commentRouter } from './routes/comment';
@@ -33,7 +32,6 @@ class App {
     // 静的資産へのルーティング
     this.express.use(express.static(path.join(__dirname, 'public')));
 
-    this.express.use('/setup', setupRouter);
     this.express.use('/api/authenticate', authenticateRouter);
 
     this.express.use(authenticate.verifyToken);
