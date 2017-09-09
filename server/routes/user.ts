@@ -9,6 +9,7 @@ import { PasswordManager } from '../helpers/password-manager';
 
 const userRouter: Router = Router();
 
+// 複数件検索
 userRouter.get('/', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
@@ -28,7 +29,8 @@ userRouter.get('/', (req, res, next) => {
   if (query.withPassword) {
     // TODO 管理者権限チェック
     User
-      .find(condition);
+      .find(condition)
+      .exec(cb);
   } else {
     User
       .find(condition)
@@ -37,7 +39,7 @@ userRouter.get('/', (req, res, next) => {
   }
 });
 
-// 指定したIDの記事を取得する
+// 1件検索
 userRouter.get('/:userId', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
@@ -54,7 +56,8 @@ userRouter.get('/:userId', (req, res, next) => {
   if (req.query.withPassword) {
     // TODO 管理者権限チェック
     User
-      .find(condition);
+      .find(condition)
+      .exec(cb);
   } else {
     User
       .find(condition)
@@ -63,11 +66,14 @@ userRouter.get('/:userId', (req, res, next) => {
   }
 });
 
-// ユーザ情報を更新する（差分更新）
+// 更新（差分更新）
 userRouter.put('/:userId', (req, res, next) => {
+  const user = req.body;
+  user.updated = new Date();
+
   User.update({
     userId: req.params.userId
-  }, {$set: req.body }, (err, result) => {
+  }, {$set: user }, (err, result) => {
 
     if (err) {
       return res.status(500).json({
@@ -84,7 +90,7 @@ userRouter.put('/:userId', (req, res, next) => {
 });
 
 
-// ユーザ情報を削除する
+// 削除
 userRouter.delete('/:userId', (req, res, next) => {
   User.findOne({
     userId: req.params.userId
