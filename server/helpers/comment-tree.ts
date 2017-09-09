@@ -118,6 +118,24 @@ class CommentTreeClass {
           'comments.userDeleted': '$comments.user.deleted'
         }}
     );
+    } else {
+    result.push(
+      { $lookup: {
+        from: 'users',
+        localField: 'comments.user',
+        foreignField: '_id',
+        as: 'comments.temp'
+      }},
+      { $unwind: {
+          path: '$comments.temp',
+          preserveNullAndEmptyArrays: true
+      }},
+      // 投稿者が削除されたかはwithUserがfalseの時を考慮してコメントのプロパティにする
+      { $addFields: {
+        'comments.userDeleted': '$comments.temp.deleted'
+      }},
+      { $project: { 'comments.temp': 0 } },
+    );
     }
 
     result.push(
@@ -244,6 +262,22 @@ class CommentTreeClass {
         { $addFields: {
           'userDeleted': '$user.deleted'
         }}
+      );
+    } else {
+      pipeline.push(
+        // TODO アイコンサイズ
+        { $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'temp'
+        }},
+        { $unwind: '$temp' },
+        // 投稿者が削除されたかはwithUserがfalseの時を考慮してコメントのプロパティにする
+        { $addFields: {
+          'userDeleted': '$temp.deleted'
+        }},
+        { $project: { 'temp': 0 } },
       );
     }
 
