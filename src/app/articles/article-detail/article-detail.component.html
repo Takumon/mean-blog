@@ -3,7 +3,7 @@
   <div class="article-metadata">
     <img class="article-author-icon" src="data:image/png;base64,{{article.author.icon}}">
     <div class="article-author">{{article.author.userId}}</div>
-    <div class="article-date">{{article.date | date: 'yyyy/MM/dd HH:mm' }}</div>
+    <div class="article-date">{{article.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
     <div *ngIf="auth.loginUser.userId === article.author.userId" class="operation-area">
       <button md-button [routerLink]="['/drafts', article._id, 'edit']"  routerLinkActive="active">
         <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>

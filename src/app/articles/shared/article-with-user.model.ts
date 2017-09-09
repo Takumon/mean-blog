@@ -8,11 +8,12 @@ export class ArticleWithUserModel {
   title: string;
   body: string;
   isMarkdown: boolean;
-  date: string;
   author: UserModel;
   comments: Array<CommentWithUserModel>;
   newComment: CommentModel;
-
+  created: string;
+  updated: string;
+  deleted: string;
   // 表示制御用
   showCommentDetail: boolean;
 }

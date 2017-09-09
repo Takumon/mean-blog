@@ -6,8 +6,11 @@ export class ArticleModel {
   title: string;
   body: string;
   isMarkdown: boolean;
-  date: Date;
   author: string;
   comments: Array<CommentModel>;
+  // TODO 型は検討
+  created: string;
+  updated: string;
+  deleted: string;
 }
 

@@ -157,9 +157,12 @@ articleRouter.post('/', (req, res, next) => {
 
 // 記事を更新する（差分更新）
 articleRouter.put('/:_id', (req, res, next) => {
+  const article = req.body;
+  article.updated = new Date();
+
   Article.update({
     _id: req.params._id
-  }, {$set: req.body }, (err, result) => {
+  }, {$set: article }, (err, result) => {
 
     if (err) {
       return res.status(500).json({
