@@ -64,6 +64,10 @@
   color: #A4A2A2;
 }
 
+.comment-created .created-or-updated {
+  font-size: 0.7em;
+}
+
 .comment-plain-text-body {
   white-space: pre;          
   white-space: pre-wrap;

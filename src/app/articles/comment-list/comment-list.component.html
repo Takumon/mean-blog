@@ -45,7 +45,7 @@
         <div class="comment-content">
           <div class="comment-metadata">
             <div class="comment-author">{{comment.user.userId}}</div>
-            <div class="comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
+            <div class="comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="created-or-updated"> に{{comment.created == comment.updated ? "投稿" : "更新" }}</span></div>
           </div>
           <div class="comment-text">
             <pre [innerHTML]="comment.text" class="comment-plain-text-body"></pre>                
