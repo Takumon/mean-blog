@@ -313,7 +313,7 @@ class CommentTreeClass {
       this.setReplies(reply, inputComments, outputComments);
 
       // リプライが削除されている場合でもリプライへのリプライが削除されていなければOK
-      if (!reply.deleted || reply.hasUndeletedChildren) {
+      if ((!reply.deleted && !reply.user.deleted) || reply.hasUndeletedChildren) {
         comment.hasUndeletedChildren = true;
       }
     }

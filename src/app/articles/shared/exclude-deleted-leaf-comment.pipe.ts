@@ -15,6 +15,6 @@ export class ExcludeDeletedLeafCommentPipe implements PipeTransform {
   }
 
   isDeletedLeafComment(c: CommentWithUserModel): boolean {
-    return c.deleted && !c.hasUndeletedChildren;
+    return (c.deleted || c.user.deleted) && !c.hasUndeletedChildren;
   }
 }

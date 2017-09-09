@@ -10,7 +10,7 @@ export class ExcludeDeletedCommentPipe implements PipeTransform {
     }
 
     return comments.filter(c => {
-      return !c.deleted;
+      return !c.deleted && !c.user.deleted;
     });
   }
 }
