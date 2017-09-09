@@ -144,6 +144,24 @@ class CommentTreeClass {
           as: 'author'
         }},
         { $unwind: '$author' },
+        // 削除ユーザは除外
+        { $match: {'author.deleted': {$exists: false}}}
+      );
+    } else {
+      // ユーザ情報をレスポンスで返さない場合でも削除ユーザの記事を除外するため一時的に取得する
+      result.push(
+        // TODO アイコンサイズ
+        // 記事のユーザ
+        { $lookup: {
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'temp'
+        }},
+        { $unwind: '$temp' },
+        // 削除ユーザは除外
+        { $match: {'temp.deleted': {$exists: false}}},
+        { $project: { 'temp': 0 } },
       );
     }
 
