@@ -9,12 +9,14 @@ export class ExcludeDeletedLeafCommentPipe implements PipeTransform {
       return comments;
     }
 
-    return comments.filter(c => {
+    const result = comments.filter(c => {
       return !this.isDeletedLeafComment(c);
     });
+    console.log(result);
+    return result;
   }
 
   isDeletedLeafComment(c: CommentWithUserModel): boolean {
-    return (c.deleted || c.user.deleted) && !c.hasUndeletedChildren;
+    return (c.deleted || c.userDeleted) && !c.hasUndeletedChildren;
   }
 }

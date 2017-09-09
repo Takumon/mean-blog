@@ -97,8 +97,11 @@ class CommentTreeClass {
         // 新しいコメントを最後に
         {$sort: {
           'comments.created': 1,
-        }},
-        // TODO　withUserを見る
+        }}
+    );
+
+    if (withUser) {
+    result.push(
         { $lookup: {
           from: 'users',
           localField: 'comments.user',
@@ -110,6 +113,14 @@ class CommentTreeClass {
             preserveNullAndEmptyArrays: true
         }},
         { $project: { 'comments.user.password': 0 } },
+        // 投稿者が削除されたかはwithUserがfalseの時を考慮してコメントのプロパティにする
+        { $addFields: {
+          'comments.userDeleted': '$comments.user.deleted'
+        }}
+    );
+    }
+
+    result.push(
       // コメントを集約
       {$group: {
         // _id: '$_id',
@@ -228,7 +239,12 @@ class CommentTreeClass {
           as: 'user'
         }},
         { $unwind: '$user' },
-        { $project: { 'user.password': 0 } });
+        { $project: { 'user.password': 0 } },
+        // 投稿者が削除されたかはwithUserがfalseの時を考慮してコメントのプロパティにする
+        { $addFields: {
+          'userDeleted': '$user.deleted'
+        }}
+      );
     }
 
     const commentsHolder = [];

@@ -19,10 +19,10 @@
     [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
     >
 
-    <div *ngIf=" comment.user.deleted;                                            then displayDeletedUserComment"></div>
-    <div *ngIf="!comment.user.deleted &&  comment.deleted;                        then displayDeletedComment"></div>
-    <div *ngIf="!comment.user.deleted && !comment.deleted && comment.isEditable;  then editComment"></div>
-    <div *ngIf="!comment.user.deleted && !comment.deleted && !comment.isEditable; then displayComment"></div>
+    <div *ngIf=" comment.userDeleted;                                            then displayDeletedUserComment"></div>
+    <div *ngIf="!comment.userDeleted &&  comment.deleted;                        then displayDeletedComment"></div>
+    <div *ngIf="!comment.userDeleted && !comment.deleted && comment.isEditable;  then editComment"></div>
+    <div *ngIf="!comment.userDeleted && !comment.deleted && !comment.isEditable; then displayComment"></div>
     <ng-template #displayDeletedUserComment>
       <div class="comment-display-container deleted-comment">
         <img class="comment-author-icon" src="assets/images/deleted-comment.png">

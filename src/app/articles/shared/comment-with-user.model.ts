@@ -14,6 +14,7 @@ export class CommentWithUserModel {
   depth: number;
   hasChildren: boolean;
   hasUndeletedChildren: boolean;
+  userDeleted: string; // コメント投稿者の削除日
   isEditable: boolean;
   addReply: boolean;
 
