@@ -14,7 +14,8 @@ authenticateRouter.post('/login', (req, res) => {
 
   const reqUser = req.body;
   User.findOne({
-    userId: reqUser.userId
+    userId: reqUser.userId,
+    deleted: { $exists : false }
   }, function(err, user) {
     if (err) {
       throw err;
@@ -56,7 +57,10 @@ authenticateRouter.post('/login', (req, res) => {
 authenticateRouter.post('/register', (req, res) => {
   const reqUser = req.body;
 
-  User.findOne({ 'userId': reqUser.userId }, (err, user) => {
+  User.findOne({
+    userId: reqUser.userId,
+    deleted: { $exists : false }
+  }, (err, user) => {
     if (err) {
       throw err;
     }
@@ -119,7 +123,10 @@ authenticateRouter.get('/check-state', (req, res) => {
     }
 
     User
-      .find({ _id: decoded._id })
+      .find({
+        _id: decoded._id,
+        deleted: { $exists : false }
+      })
       .select('-password')
       .exec( (err2, doc) => {
         if (err2) {
@@ -132,7 +139,7 @@ authenticateRouter.get('/check-state', (req, res) => {
         if (!doc[0]) {
           return res.status(403).json({
             success: false,
-            message: 'ログインユーザ情報が削除された可能性があります。',
+            message: 'ログインユーザ情報が取得できませんでした。',
           });
         }
 

@@ -22,9 +22,16 @@ userRouter.get('/', (req, res, next) => {
   };
 
   const query = req.query;
-  const condition = query.condition ?
-    JSON.parse(query.condition) :
-    {};
+  // TODO 検索条件が必要なら追加
+  // 削除記事は除外
+  const factors: Array<Object> = [];
+  factors.push({
+    deleted: { $exists : false }
+  });
+
+  const condition = {$match: {
+    $and: factors
+  }};
 
   if (query.withPassword) {
     // TODO 管理者権限チェック
@@ -51,7 +58,10 @@ userRouter.get('/:userId', (req, res, next) => {
     return res.status(200).json(doc[0]);
   };
 
-  const condition = { userId: req.params.userId };
+  const condition = {
+    userId: req.params.userId,
+    deleted: { $exists : false } // 削除記事は除外
+  };
 
   if (req.query.withPassword) {
     // TODO 管理者権限チェック
@@ -103,7 +113,13 @@ userRouter.delete('/:userId', (req, res, next) => {
       });
     }
 
-    model.remove(err2 => {
+    const sysdate = new Date();
+    model.update({
+      $set: {
+        updated: sysdate,
+        deleted: sysdate,
+      }
+    }, err2 => {
       if (err2) {
         return res.status(500).json({
           title: 'エラーが発生しました。',
@@ -112,7 +128,7 @@ userRouter.delete('/:userId', (req, res, next) => {
       }
 
       return res.status(200).json({
-        message: '記事を削除しました。',
+        message: 'ユーザを削除しました。',
       });
     });
   });
