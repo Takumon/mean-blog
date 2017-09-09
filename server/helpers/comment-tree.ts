@@ -84,7 +84,9 @@ class CommentTreeClass {
           body: { $first: '$body'},
           isMarkdown: { $first: '$isMarkdown'},
           author: { $first: '$author'},
-          date: { $first: '$date'},
+          created: { $first: '$created'},
+          updated: { $first: '$updated'},
+          deleted: { $first: '$deleted'},
           comments: { $first: '$comments'},
           // TODO　直接comments.repliesに代入できないか
           replies: { $push: '$comments.replies._id'}
@@ -117,7 +119,9 @@ class CommentTreeClass {
         body: { $first: '$body'},
         isMarkdown: { $first: '$isMarkdown'},
         author: { $first: '$author'},
-        date: { $first: '$date'},
+        created: { $first: '$created'},
+        updated: { $first: '$updated'},
+        deleted: { $first: '$deleted'},
         comments: { $push: '$comments'}
       }},
       // 新しい記事は最初に

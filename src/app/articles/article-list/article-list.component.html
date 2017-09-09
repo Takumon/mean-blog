@@ -4,7 +4,7 @@
       <div class="article-list">
         <div
           class="article-item"
-          *ngFor="let item of articles | orderby: ['-date']">
+          *ngFor="let item of articles | orderby: ['-created']">
           <div class="article-item-header underline-animation"
             [routerLink]="['/', item.author.userId, 'articles', item._id]"
             routerLinkActive="active">
@@ -13,7 +13,7 @@
             </div>
             <div class="article-item-subtitle">
               <div class="article-item-author-name">{{item.author.userId}}</div>
-              <div class="article-item-date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
+              <div class="article-item-date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="created-or-updated"> に{{item.created == item.updated ? "投稿" : "更新" }}</span></div>
             </div>
             <div class="article-item-title-area">
               <div  class="article-item-title">{{item.title}}</div>

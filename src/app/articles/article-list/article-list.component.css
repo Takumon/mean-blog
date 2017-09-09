@@ -93,6 +93,10 @@
   white-space: nowrap;
 }
 
+.created-or-updated {
+  font-size: 0.5em;
+}
+
 .article-item-title-area {
   margin: 12px;
   margin-left: 0;
