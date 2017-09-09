@@ -10,7 +10,7 @@ import { User } from '../models/user';
 
 const articleRouter: Router = Router();
 
-// 全記事を取得する
+// 複数件検索
 articleRouter.get('/', (req, res, next) => {
 
   getCondition(req, function(error, condition) {
@@ -42,7 +42,12 @@ function getCondition(req: any, cb: Function): void {
     JSON.parse(query.condition) :
     {};
 
-  const factors = [];
+  // 削除記事は除外
+  const factors: Array<Object> = [];
+  factors.push({
+    deleted: { $exists : false }
+  });
+
   const condition = {$match: {
     $and: factors
   }};
@@ -97,21 +102,25 @@ function getCondition(req: any, cb: Function): void {
     }
   }
 
-  return cb(null, factors.length > 0 ? condition : null);
+  return cb(null, condition);
 }
 
 
-// 指定したIDの記事を取得する
+// 一件検索
 articleRouter.get('/:_id', (req, res, next) => {
-  // 記事検索
+  const condition = {
+    _id: req.params._id,
+    deleted: { $exists : false } // 削除記事は除外
+  };
+
   if (req.query.withUser) {
     Article
-      .find({ _id: req.params._id })
+      .find(condition)
       .populate('author', '-password')
       .exec(cbFind);
   } else {
     Article
-      .find({ _id: req.params._id })
+      .find(condition)
       .exec(cbFind);
   }
 
@@ -134,9 +143,7 @@ articleRouter.get('/:_id', (req, res, next) => {
 });
 
 
-
-
-// 記事を登録する
+// 登録
 articleRouter.post('/', (req, res, next) => {
   const article = new Article(req.body);
 
@@ -155,7 +162,8 @@ articleRouter.post('/', (req, res, next) => {
   });
 });
 
-// 記事を更新する（差分更新）
+
+// 更新（差分更新）
 articleRouter.put('/:_id', (req, res, next) => {
   const article = req.body;
   article.updated = new Date();
@@ -178,7 +186,8 @@ articleRouter.put('/:_id', (req, res, next) => {
   });
 });
 
-// 記事を削除する
+
+// 論理削除
 articleRouter.delete('/:_id', (req, res, next) => {
   Article.findOne({
     _id: req.params._id
@@ -190,8 +199,13 @@ articleRouter.delete('/:_id', (req, res, next) => {
         error: err.message
       });
     }
-
-    model.remove(err2 => {
+    const sysdate = new Date();
+    model.update({
+      $set: {
+        updated: sysdate,
+        deleted: sysdate,
+      }
+    }, err2 => {
       if (err2) {
         return res.status(500).json({
             title: 'エラーが発生しました。',
