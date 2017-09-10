@@ -1,15 +1,22 @@
-<div  *ngIf="article" class="article-area">
-  <h1 class="article-title">{{article.title}}</h1>
-  <div class="article-metadata">
-    <img class="article-author-icon" src="data:image/png;base64,{{article.author.icon}}">
-    <div class="article-author">{{article.author.userId}}</div>
-    <div class="article-date">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
-    <div *ngIf="auth.loginUser.userId === article.author.userId" class="operation-area">
-      <button md-button [routerLink]="['/drafts', article._id, 'edit']"  routerLinkActive="active">
+<div  *ngIf="article" class="article">
+  <h1 class="article__title">{{article.title}}</h1>
+  <div class="article__metadata">
+    <img class="article__author-icon" src="data:image/png;base64,{{article.author.icon}}">
+    <div class="article__author">{{article.author.userId}}</div>
+    <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
+    <div
+      *ngIf="auth.loginUser.userId === article.author.userId"
+      class="article__operation">
+      <button
+        md-button
+        [routerLink]="['/drafts', article._id, 'edit']" 
+        routerLinkActive="active">
         <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
       </button>
       <span class="spacer"></span>
-      <button md-button [mdMenuTriggerFor]="menu">
+      <button
+        md-button
+        [mdMenuTriggerFor]="menu">
         <i class="fa fa-fw fa-cog"></i>  設定
       </button>
       <md-menu #menu="mdMenu">
@@ -20,7 +27,7 @@
       </md-menu>
     </div>
   </div>
-  <div class="article-body">
+  <div class="article__main">
     <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
     <ng-template #markdown>
       <p [innerHTML]="article.body | toMarkdown" class="markdown-body"></p>
@@ -31,7 +38,7 @@
   </div>
 </div>
 
-<div  *ngIf="article" class="article-comment-area">
+<div  *ngIf="article" class="comments">
   <app-comment-list
     _idOfArticle="{{article._id}}"
   ></app-comment-list>
