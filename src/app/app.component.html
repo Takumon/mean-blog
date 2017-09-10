@@ -47,6 +47,7 @@
       class="register-btn"
       *ngIf="!auth.loginUser"
       [routerLink]="['login']"
+      [queryParams]="{register: 'true'}"
       >
       <i class="fa fa-fw fa-sign-in"></i>  ユーザ登録
     </button>

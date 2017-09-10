@@ -23,7 +23,8 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     // 表示しようとしていたURLを保持しておく
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    this.setLoginMode(true);
+    const isLoginMode = !('register' in this.route.snapshot.queryParams);
+    this.setLoginMode(isLoginMode);
   }
 
   setLoginMode(value: Boolean): void {
