@@ -32,8 +32,9 @@
 
 .comment {
   display: flex;
-
+  $parent: &;
   &_deleted {
+    @extend #{$parent};
     background-color: #f5f4f4;
     padding: 8px;
   }
@@ -88,7 +89,10 @@
     color: #24292e;
     margin: 0;
 
+    $parent: &;
+
     &_deleted {
+      @extend #{$parent};
       color: gray;
       line-height: 36px;
       height: 36px;       

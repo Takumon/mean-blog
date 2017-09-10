@@ -24,18 +24,18 @@
     <div *ngIf="!comment.userDeleted && !comment.deleted && comment.isEditable;  then editComment"></div>
     <div *ngIf="!comment.userDeleted && !comment.deleted && !comment.isEditable; then displayComment"></div>
     <ng-template #displayDeletedUserComment>
-      <div class="comment comment_deleted">
+      <div class="comment_deleted">
         <img class="comment__author-icon" src="assets/images/deleted-comment.png">
         <div class="comment__main">
-          <pre class="comment__text comment__text_deleted">このコメントの投稿者は削除されました。</pre>
+          <pre class="comment__text_deleted">このコメントの投稿者は削除されました。</pre>
         </div>
       </div>
     </ng-template>
     <ng-template #displayDeletedComment>
-      <div class="comment comment_deleted">
+      <div class="comment_deleted">
         <img class="comment__author-icon" src="assets/images/deleted-comment.png">
         <div class="comment__main">
-          <pre class="comment__text comment__text_deleted">このコメントは削除されました。</pre>
+          <pre class="comment__text_deleted">このコメントは削除されました。</pre>
         </div>
       </div>
     </ng-template>
