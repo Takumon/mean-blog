@@ -20,7 +20,7 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 @Component({
   selector: 'app-article-edit',
   templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.css'],
+  styleUrls: ['./article-edit.component.scss'],
   providers: [ ArticleService ]
 })
 export class ArticleEditComponent implements OnInit, OnDestroy {

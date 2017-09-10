@@ -14,7 +14,7 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 @Component({
   selector: 'app-article-detail',
   templateUrl: './article-detail.component.html',
-  styleUrls: ['./article-detail.component.css'],
+  styleUrls: ['./article-detail.component.scss'],
   providers: [ ArticleService ]
 })
 export class ArticleDetailComponent implements OnInit {

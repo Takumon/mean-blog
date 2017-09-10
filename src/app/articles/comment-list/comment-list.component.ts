@@ -13,7 +13,7 @@ import { UserModel } from '../../users/shared/user.model';
 @Component({
   selector: 'app-comment-list',
   templateUrl: './comment-list.component.html',
-  styleUrls: ['./comment-list.component.css'],
+  styleUrls: ['./comment-list.component.scss'],
   providers: [ ArticleService ]
 })
 export class CommentListComponent implements OnInit {
