@@ -41,47 +41,50 @@
   <h1 *ngIf="!isActiveNavbar" class="routeName">{{routerName}}</h1>
   <span class="toolbar-spacer"></span>
 
-  <button
-    md-button
-    class="register-btn"
-    *ngIf="!auth.loginUser"
-    [routerLink]="['login']"
-    >
-    <i class="fa fa-fw fa-sign-in"></i>  ユーザ登録
-  </button>
+  <ng-container *ngIf="auth.isFinishedCheckState">
+    <button
+      md-button
+      class="register-btn"
+      *ngIf="!auth.loginUser"
+      [routerLink]="['login']"
+      >
+      <i class="fa fa-fw fa-sign-in"></i>  ユーザ登録
+    </button>
 
-  <button
-    md-button
-    color="normal"
-    *ngIf="!auth.loginUser"
-    [routerLink]="['login']"
-    >
-    <i class="fa fa-fw fa-sign-in"></i>  ログイン
-  </button>
+    <button
+      md-button
+      color="normal"
+      *ngIf="!auth.loginUser"
+      [routerLink]="['login']"
+      >
+      <i class="fa fa-fw fa-sign-in"></i>  ログイン
+    </button>
 
-  <button
-    *ngIf="auth.loginUser"
-    md-button
-    [mdMenuTriggerFor]="menu">
-    <span class="menu-icon-username">{{auth.loginUser.userId}}</span>
-    <img class="menu-icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
+    <button
+      *ngIf="auth.loginUser"
+      md-button
+      [mdMenuTriggerFor]="menu">
+      <span class="menu-icon-username">{{auth.loginUser.userId}}</span>
+      <img class="menu-icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
 
-    <md-menu #menu="mdMenu">
-      <div md-menu-item disabled class="status"><span class="username">{{auth.loginUser.userId}}</span>としてログイン済</div>
-      <button
-        md-menu-item
-        [routerLink]="[auth.loginUser.userId, 'profile']"
-        routerLinkActive="active">
-        <i class="fa fa-fw fa-user-circle"></i><span> マイページ</span>
-      </button>
-      <button
-        md-menu-item
-        routerLink="/login" 
-        routerLinkActive="active">
-        <i class="fa fa-fw fa-sign-out"></i><span> ログアウト</span>
-      </button>
-    </md-menu>
-  </button>
+      <md-menu #menu="mdMenu">
+        <div md-menu-item disabled class="status"><span class="username">{{auth.loginUser.userId}}</span>としてログイン済</div>
+        <button
+          md-menu-item
+          [routerLink]="[auth.loginUser.userId, 'profile']"
+          routerLinkActive="active">
+          <i class="fa fa-fw fa-user-circle"></i><span> マイページ</span>
+        </button>
+        <button
+          md-menu-item
+          routerLink="/login" 
+          routerLinkActive="active">
+          <i class="fa fa-fw fa-sign-out"></i><span> ログアウト</span>
+        </button>
+      </md-menu>
+    </button>
+  </ng-container>
+
 </md-toolbar>
 
 <div class="container">
