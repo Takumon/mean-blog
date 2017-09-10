@@ -15,7 +15,7 @@
   <div
     *ngFor="let comment of (comments | excludeDeletedLeafComment); let last = last"
     class="comment-wrapper"
-    [class.comment-wrapper--last]="last"
+    [class.comment-wrapper_last]="last"
     [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
     >
 
@@ -24,18 +24,18 @@
     <div *ngIf="!comment.userDeleted && !comment.deleted && comment.isEditable;  then editComment"></div>
     <div *ngIf="!comment.userDeleted && !comment.deleted && !comment.isEditable; then displayComment"></div>
     <ng-template #displayDeletedUserComment>
-      <div class="comment-display comment-display-container--deleted">
+      <div class="comment-display comment-display-container_deleted">
         <img class="comment-display__author-icon" src="assets/images/deleted-comment.png">
         <div class="comment-display__main">
-          <pre class="comment-display__main__text comment-display__main__text--deleted">このコメントの投稿者は削除されました。</pre>
+          <pre class="comment-display__main__text comment-display__main__text_deleted">このコメントの投稿者は削除されました。</pre>
         </div>
       </div>
     </ng-template>
     <ng-template #displayDeletedComment>
-      <div class="comment-display comment-display--deleted">
+      <div class="comment-display comment-display_deleted">
         <img class="comment-display__author-icon" src="assets/images/deleted-comment.png">
         <div class="comment-display__main">
-          <pre class="comment-display__main__text comment-display-main__text--deleted">このコメントは削除されました。</pre>
+          <pre class="comment-display__main__text comment-display-main__text_deleted">このコメントは削除されました。</pre>
         </div>
       </div>
     </ng-template>

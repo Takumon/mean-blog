@@ -20,7 +20,7 @@
   padding-bottom: 6px;
   border-top: 1px solid #f5f4f4;
 
-  &--last {
+  &_last {
     margin-bottom: 60px;
   }
 }
@@ -29,7 +29,7 @@
 .comment-display {
   display: flex;
 
-  &--deleted {
+  &_deleted {
     background-color: #f5f4f4;
     padding: 8px;
 
@@ -86,7 +86,7 @@
       color: #24292e;
       margin: 0;
 
-      &--deleted {
+      &_deleted {
         color: gray;
         line-height: 36px;
         height: 36px;       
