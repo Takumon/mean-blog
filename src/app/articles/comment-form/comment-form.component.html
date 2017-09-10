@@ -3,16 +3,16 @@
   [formGroup]="form"
   class="comment-form"
   >
-  <div class="comment-form__metadata">
-    <img class="comment-form__metadata__author-icon" 
+  <div class="comment-form__header">
+    <img class="comment-form__author-icon" 
       src="data:image/png;base64,{{ auth.loginUser.icon }}">
-    <div class="comment-form__metadata__operation">コメントを{{action}}する</div>
+    <div class="comment-form__title">コメントを{{action}}する</div>
   </div>
-  <md-input-container class="comment-form__input-container">
+  <md-input-container class="comment-form__main">
     <textarea
       *ngIf="isAuthfocuse"
       mdInput
-      class="comment-form__input-container__input" 
+      class="comment-form__textarea" 
       [errorStateMatcher]="errorStateMatcher"
       formControlName="commentText"
       placeholder="コメント本文"
@@ -21,7 +21,7 @@
     <textarea
       *ngIf="!isAuthfocuse"
       mdInput
-      class="comment-form__input-container__input" 
+      class="comment-form__textarea" 
       [errorStateMatcher]="errorStateMatcher"
       formControlName="commentText"
       placeholder="コメント本文"
@@ -30,7 +30,7 @@
       {{ messageService.get('required',['コメント本文']) }}
     </md-error>
   </md-input-container>
-  <div class="comment-form__operation-container">
+  <div class="comment-form__operation">
     <button 
       *ngIf="hasCancelBtn"
       md-raised-button

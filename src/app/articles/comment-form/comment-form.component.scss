@@ -1,38 +1,39 @@
 .comment-form {
-  &__metadata {
+  &__header {
     display: flex;
-    margin-bottom: 12px;
-    
-    &__author-icon {
-      width: 48px;
-      height: 48px;
-      margin-right: 12px;
-      background: white;
-      box-shadow: grey 0 0 2px 0px;
-      border-radius: 4px;
-    }
-
-    &__operation {
-      font-weight: bold;
-      font-size: 1.2em;
-    }    
+    margin-bottom: 12px;    
   }
-  &__input-container {
+
+  &__author-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+    background: white;
+    box-shadow: grey 0 0 2px 0px;
+    border-radius: 4px;
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.2em;
+  }    
+
+  &__main {
     width: 100%;
-
-    &__input {
-      width: 100%;
-      box-sizing: border-box;
-      background: #fbfbfb;
-      min-height: 124px;
-      font-size: 12px;
-      padding: 12px;
-      display: block;
-      margin-bottom: 4px;
-    }
   }
 
-  &__operation-container {
+  &__textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fbfbfb;
+    min-height: 124px;
+    font-size: 12px;
+    padding: 12px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  &__operation {
     display: flex;
     justify-content: flex-end;
     
