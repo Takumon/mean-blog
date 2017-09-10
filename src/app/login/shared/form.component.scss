@@ -1,0 +1,49 @@
+.form {
+  width: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+
+  &__input-container {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 18px;
+    line-height: 24px;
+    position: relative;
+    display: block;
+    margin: 16px 0;
+
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 30px white inset;
+    }
+  }
+
+  &__operation {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    margin-top: 12px;
+
+    button {
+      flex: 1;
+      height: 48px;
+    }
+  }
+
+  &__footer {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #f5f4f4;
+    color: gray;
+
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    button {
+      flex:1;
+    }
+  }  
+}
+

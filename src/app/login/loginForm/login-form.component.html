@@ -2,11 +2,11 @@
   <form 
     (ngSubmit)="onSubmit(loginForm)" 
     [formGroup]="loginForm"
-    class="login-content"
+    class="form"
     >
 
-    <div class="form-group">
-      <md-input-container class="input-container">
+    <div class="form__content">
+      <md-input-container class="form__input-container">
         <input
           mdInput
           type="text"
@@ -22,7 +22,7 @@
           </md-error>
       </md-input-container>
 
-      <md-input-container class="input-container">
+      <md-input-container class="form__input-container">
         <input
           mdInput
           type="password"
@@ -38,14 +38,12 @@
           </md-error>
       </md-input-container>
 
-      <div class="input-container remenber-me-area">
+      <div class="form__input-container">
         <md-checkbox>パスワードを記録する</md-checkbox>
       </div>
     </div>
-
-
     
-    <div class="button-area">
+    <div class="form__operation">
       <button
         md-raised-button
         color="primary"
@@ -57,7 +55,7 @@
     </div>
   </form>
 
-  <div class="footer">
+  <div class="form__footer">
     <span class="spacer"></span>
     <button
       md-button

@@ -16,7 +16,7 @@ import { MessageService } from '../../shared/services/message.service';
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss']
+  styleUrls: ['../shared/form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
   @Output() changeLoginMode = new EventEmitter();
