@@ -3,16 +3,16 @@
   [formGroup]="form"
   class="comment-form"
   >
-  <div class="comment-metadata">
-    <img class="comment-author-icon" 
+  <div class="comment-form__metadata">
+    <img class="comment-form__metadata__author-icon" 
       src="data:image/png;base64,{{ auth.loginUser.icon }}">
-    <div class="comment-operation">コメントを{{action}}する</div>
+    <div class="comment-form__metadata__operation">コメントを{{action}}する</div>
   </div>
-  <md-input-container class="input-container">
+  <md-input-container class="comment-form__input-container">
     <textarea
       *ngIf="isAuthfocuse"
       mdInput
-      class="comment-body" 
+      class="comment-form__input-container__input" 
       [errorStateMatcher]="errorStateMatcher"
       formControlName="commentText"
       placeholder="コメント本文"
@@ -21,7 +21,7 @@
     <textarea
       *ngIf="!isAuthfocuse"
       mdInput
-      class="comment-body" 
+      class="comment-form__input-container__input" 
       [errorStateMatcher]="errorStateMatcher"
       formControlName="commentText"
       placeholder="コメント本文"
@@ -30,18 +30,16 @@
       {{ messageService.get('required',['コメント本文']) }}
     </md-error>
   </md-input-container>
-  <div class="comment-operation-area">
+  <div class="comment-form__operation-container">
     <button 
       *ngIf="hasCancelBtn"
       md-raised-button
       type="button"
-      id="cancel-edit-btn"
       (click)='onCancel();'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
     <button
       md-raised-button
       color="primary"
       type="submit"
-      id="registe-comment-btn"
       [disabled]="!form.valid"
       ><i class="fa fa-fw fa-commenting"></i>  {{action}}</button>
   </div>

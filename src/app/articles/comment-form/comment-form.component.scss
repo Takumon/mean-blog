@@ -1,9 +1,11 @@
-.comment-metadata {
+
+
+.comment-form__metadata {
   display: flex;
   margin-bottom: 12px;
 }
 
-.comment-author-icon {
+.comment-form__metadata__author-icon {
   width: 48px;
   height: 48px;
   margin-right: 12px;
@@ -12,36 +14,30 @@
   border-radius: 4px;
 }
 
-.comment-author {
-  font-weight: bold;
-  color: #3f51b5;
-  padding-right: 12px
-}
-
-.comment-operation {
+.comment-form__metadata__operation {
   font-weight: bold;
   font-size: 1.2em;
 }
 
-.comment-operation-area {
+.comment-form__operation-container {
   display: flex;
   justify-content: flex-end;
 }
 
-.comment-operation-area button {
+.comment-form__operation-container button {
   margin-right: 4px;
 }
 
-.comment-operation-area button:last-child {
+.comment-form__operation-container button:last-child {
   margin-right: 0;
 }
 
 
-.input-container {
+.comment-form__input-container {
   width: 100%;
 }
 
-.comment-body {
+.comment-form__input-container__input {
     width: 100%;
     box-sizing: border-box;
     background: #fbfbfb;
