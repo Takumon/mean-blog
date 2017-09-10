@@ -2,20 +2,20 @@
     <md-progress-bar mode="indeterminate"></md-progress-bar>
 </ng-container>    
 <ng-container *ngIf="comments">
-  <div class="comment-title-area">
-    <div class="comment-title" >コメント{{(comments | excludeDeletedComment).length}}件</div>
+  <div class="metadata">
+    <div class="metadata__title" >コメント{{(comments | excludeDeletedComment).length}}件</div>
     <div style="flex: 1 1 auto"></div>
     <button
       *ngIf="hasCloseBtn"
       md-icon-button
       type="button"
-      class="toggle-comment-detail-btn"
+      class="metadata__toggle-btn"
       (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
   </div>
   <div
     *ngFor="let comment of (comments | excludeDeletedLeafComment); let last = last"
-    class="comment"
-    [class.last-item]="last"
+    class="comment-wrapper"
+    [class.comment-wrapper--last]="last"
     [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
     >
 
@@ -24,18 +24,18 @@
     <div *ngIf="!comment.userDeleted && !comment.deleted && comment.isEditable;  then editComment"></div>
     <div *ngIf="!comment.userDeleted && !comment.deleted && !comment.isEditable; then displayComment"></div>
     <ng-template #displayDeletedUserComment>
-      <div class="comment-display-container deleted-comment">
-        <img class="comment-author-icon" src="assets/images/deleted-comment.png">
-        <div class="comment-content">
-          <div class="comment-text">このコメントの投稿者は削除されました。</div>
+      <div class="comment-display comment-display-container--deleted">
+        <img class="comment-display__author-icon" src="assets/images/deleted-comment.png">
+        <div class="comment-display__main">
+          <pre class="comment-display__main__text comment-display__main__text--deleted">このコメントの投稿者は削除されました。</pre>
         </div>
       </div>
     </ng-template>
     <ng-template #displayDeletedComment>
-      <div class="comment-display-container deleted-comment">
-        <img class="comment-author-icon" src="assets/images/deleted-comment.png">
-        <div class="comment-content">
-          <div class="comment-text">このコメントは削除されました。</div>
+      <div class="comment-display comment-display--deleted">
+        <img class="comment-display__author-icon" src="assets/images/deleted-comment.png">
+        <div class="comment-display__main">
+          <pre class="comment-display__main__text comment-display-main__text--deleted">このコメントは削除されました。</pre>
         </div>
       </div>
     </ng-template>
@@ -49,17 +49,15 @@
         ></app-comment-form>
     </ng-template>
     <ng-template #displayComment>
-      <div class="comment-display-container">
-        <img class="comment-author-icon" src="data:image/png;base64,{{comment.user.icon}}">
-        <div class="comment-content">
-          <div class="comment-metadata">
-            <div class="comment-author">{{comment.user.userId}}</div>
-            <div class="comment-created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="created-or-updated"> に{{comment.created == comment.updated ? "投稿" : "更新" }}</span></div>
+      <div class="comment-display">
+        <img class="comment-display__author-icon" src="data:image/png;base64,{{comment.user.icon}}">
+        <div class="comment-display__main">
+          <div class="comment-display__main__metadata">
+            <div class="comment-display__main__metadata__author">{{comment.user.userId}}</div>
+            <div class="comment-display__main__metadata__created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}<span> に{{comment.created == comment.updated ? "投稿" : "更新" }}</span></div>
           </div>
-          <div class="comment-text">
-            <pre [innerHTML]="comment.text" class="comment-plain-text-body"></pre>                
-          </div>
-          <div class="comment-operation-area">
+          <pre [innerHTML]="comment.text" class="comment-display__main__text"></pre>                
+          <div class="comment-display__main__operation">
             <button
               md-button
               (click)="comment.addReply = true; comment.isEditable = false;">
@@ -80,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="comment.addReply" class="add-reply-area">
+      <div *ngIf="comment.addReply" class="add-reply">
         <app-comment-form  
           [commentModel]="commentOfForm(null, comment._id)"
           [hasCancelBtn]="true"
@@ -91,7 +89,7 @@
       </div>
     </ng-template>
   </div>
-  <div *ngIf="auth.loginUser" class="comment-register">
+  <div *ngIf="auth.loginUser">
       <app-comment-form 
         [commentModel]="commentOfForm()"
         [hasCancelBtn]="false"
