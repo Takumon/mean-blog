@@ -1,44 +1,59 @@
-<div class="editor" *ngIf="article">
-  <div class="title">
+<div class="article-editor" *ngIf="article">
+  <div class="article-editor__title">
     <input type="text" id="register-article-title" [(ngModel)]="article.title" placeholder="タイトル" />
   </div>
 
-  <div class="markdonw-controller">
+  <div class="article-editor__format-operation">
     <md-checkbox [(ngModel)]="article.isMarkdown">Markdonw形式で書く</md-checkbox>
 
-    <md-button-toggle-group *ngIf="article.isMarkdown" #group="mdButtonToggleGroup" [(ngModel)]="editMode" class="edit-mode-toggle">
-      <md-button-toggle [value]="EditMode[EditMode.notPreviewing]" mdTooltip="エディターのみ表示" [mdTooltipShowDelay]="500">
+    <md-button-toggle-group 
+      *ngIf="article.isMarkdown"
+      #group="mdButtonToggleGroup"
+      [(ngModel)]="editMode"
+      class="select-format article-editor__select-format">
+      <md-button-toggle
+        [value]="EditMode[EditMode.notPreviewing]"
+        mdTooltip="エディターのみ表示"
+        [mdTooltipShowDelay]="500"
+        class="select-format__button"
+        >
         <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
       </md-button-toggle>
-      <md-button-toggle [value]="EditMode[EditMode.harfPreviewing]" mdTooltip="両方を表示"  [mdTooltipShowDelay]="500" class="half-previewing">
-        <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>/<i class="fa fa-fw fa-eye" aria-hidden="true"></i>
+      <md-button-toggle
+        [value]="EditMode[EditMode.harfPreviewing]"
+        mdTooltip="両方を表示"
+        [mdTooltipShowDelay]="500"
+        class="select-format__button_icon_twice">
+        <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i> | <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
       </md-button-toggle>
-      <md-button-toggle [value]="EditMode[EditMode.fullPreviewing]" mdTooltip="プレビューのみ表示"  [mdTooltipShowDelay]="500">
+      <md-button-toggle
+        [value]="EditMode[EditMode.fullPreviewing]"
+        mdTooltip="プレビューのみ表示"
+        [mdTooltipShowDelay]="500"
+        class="select-format__button">
         <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
       </md-button-toggle>
     </md-button-toggle-group>
   </div>
-  <div class="example-selected-value">Selected value: {{editMode}}</div>
-
 
 
   <div *ngIf="article.isMarkdown; then bodyMarkdown else bodyPlainText"></div>
   <ng-template #bodyMarkdown>
-    <div [ngClass]="['body', 'body-markdown', editMode]" >
-      <div class="body-row-text">
+    <div class="article-editor__main markdonw-editor" >
+      <div [ngClass]="['markdonw-editor__row-text', editMode]">
         <textarea
           id="register-article-body" 
           [(ngModel)]="article.body"
           (scroll)="syncScroll($event)"
           placeholder="本文"></textarea>
       </div>
-      <div class="body-preview" #syncScrollTarget>
+      <div [ngClass]="['markdonw-editor__preview', editMode]" #syncScrollTarget>
         <p [innerHTML]="article.body | toMarkdown" class="markdown-body"></p>
       </div>
     </div>
   </ng-template>
   <ng-template #bodyPlainText>
-      <div class="body body-plain-text">
+      <div class="article-editor__main body-plain-text">
         <div class="body-row-text">
           <textarea 
             id="register-article-body" 
@@ -49,7 +64,7 @@
   </ng-template>
 
 
-  <div class="button-area">
+  <div class="article-editor__operation">
     <div class="spacer"></div>
     <button 
       md-raised-button
