@@ -55,9 +55,10 @@ export class AppComponent implements OnInit {
         return;
       }
     }, error => {
-      // TODO エラー処理
       console.log(error);
-    });
+      // ログイン後に元々表示しようとしていた画面を表示させる
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
+  });
   }
 
   isLoginPage(): boolean {
