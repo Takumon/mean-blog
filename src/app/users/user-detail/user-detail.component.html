@@ -1,15 +1,15 @@
-<div *ngIf="user" class="container">
+<ng-container *ngIf="user">
 
-  <nav *ngIf="isMine" md-tab-nav-bar class="nav-bar ink-bar-pink">
+  <nav *ngIf="isMine" md-tab-nav-bar class="nav-bar ink-bar-pink sub-nav-bar">
     <a md-tab-link
-      class="nav-bar-link"
+      class="sub-nav-bar__link"
       [routerLink]="['/', user.userId, 'profile']"
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
       [routerLinkActiveOptions]="{exact: true}"
       >プロフィール</a>
     <a md-tab-link
-      class="nav-bar-link"
+      class="sub-nav-bar__link"
       [routerLink]="['/settings', 'profile']"
       routerLinkActive #rla2="routerLinkActive"
       [active]="rla2.isActive"
@@ -17,52 +17,52 @@
       >プロフィール編集</a>
   </nav>
 
-  <div class="profile-area">
-    <h1 class="data-title">基本情報</h1>
-    <div class="data-group">
-      <div class="data-container userId">
-          <i class="icon fa fa-fw fa-id-card"></i>
-        <div class="label">ユーザID</div>
-        <div class="value">{{user.userId}}</div>
+  <div class="profile">
+    <h1 class="profile__title">基本情報</h1>
+    <div class="profile__main">
+      <div class="data userId">
+          <i class="data__icon fa fa-fw fa-id-card"></i>
+        <div class="data__label">ユーザID</div>
+        <div class="data__value">{{user.userId}}</div>
       </div>
-      <div class="data-username-area">
-        <div class="data-container lastName">
-          <i class="icon fa fa-fw fa-user" ></i>
-          <div class="label">氏</div>
-          <div class="value">{{user.lastName}}</div>
+      <div class="data-list">
+        <div class="data-list__data data lastName">
+          <i class="data__icon fa fa-fw fa-user" ></i>
+          <div class="data__label">氏</div>
+          <div class="data__value">{{user.lastName}}</div>
         </div>
-        <div class="data-container firstName">
-          <div class="label">名</div>
-          <div class="value">{{user.firstName}}</div>
+        <div class="data-list__data data firstName">
+          <div class="data__label">名</div>
+          <div class="data__value">{{user.firstName}}</div>
         </div>
       </div>
-      <div class="data-container email">
-        <i class="icon material-icons fw">email</i>
-        <div class="label">メール</div>
-        <div class="value">{{user.email}}</div>
+      <div class="data email">
+        <i class="data__icon material-icons fw">email</i>
+        <div class="data__label">メール</div>
+        <div class="data__value">{{user.email}}</div>
       </div>
-      <div class="data-container blogTitle">
-        <i class="icon fa fa-fw fa-flag"></i>
-        <div class="label">ブログタイトル</div>
-        <div class="value">{{user.blogTitle}}</div>
+      <div class="data blogTitle">
+        <i class="data__icon fa fa-fw fa-flag"></i>
+        <div class="data__label">ブログタイトル</div>
+        <div class="data__value">{{user.blogTitle}}</div>
       </div>
-      <div class="data-container userDescription">
-        <i class="icon material-icons fw">description</i>
-        <div class="label">自己紹介</div>
-        <div class="value">{{user.userDescription}}</div>
+      <div class="data userDescription">
+        <i class="data__icon material-icons fw">description</i>
+        <div class="data__label">自己紹介</div>
+        <div class="data__value">{{user.userDescription}}</div>
       </div>
-      <div class="data-container isAdmint">
-        <i class="icon fa fa-fw fa-certificate"></i>
-        <div class="label">権限</div>
-        <div class="value">{{user.isAdmin ? '管理者' : '一般ユーザ'}}</div>
+      <div class="data isAdmint">
+        <i class="data__icon fa fa-fw fa-certificate"></i>
+        <div class="data__label">権限</div>
+        <div class="data__value">{{user.isAdmin ? '管理者' : '一般ユーザ'}}</div>
       </div>
     </div>
 
-    <h1 class="data-title">アバター</h1>
-    <div class="data-group">
-      <div class="data-container">
+    <h1 class="profile__title">アバター</h1>
+    <div class="prifile__main">
+      <div class="data">
         <img class="avator-icon" src="data:image/png;base64,{{user.icon}}">
       </div>
     </div>
   </div>
-</div>
+</ng-container>
