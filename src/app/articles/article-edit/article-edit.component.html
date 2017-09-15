@@ -1,18 +1,29 @@
-<div class="article-editor" *ngIf="article">
+<form 
+  (ngSubmit)="onSubmit(form)" 
+  [formGroup]="form"
+  class="article-editor"
+  >
   <div class="article-editor__title">
-    <input type="text" id="register-article-title" [(ngModel)]="article.title" placeholder="タイトル" />
+    <input
+      type="text"
+      id="register-article-title"
+      formControlName="title"
+      placeholder="タイトル" />
   </div>
 
   <div class="article-editor__format-operation">
-    <md-checkbox [(ngModel)]="article.isMarkdown">Markdonw形式で書く</md-checkbox>
+    <md-checkbox
+      formControlName="isMarkdown"
+      >Markdonw形式で書く</md-checkbox>
 
     <md-button-toggle-group 
-      *ngIf="article.isMarkdown"
+      *ngIf="isMarkdown"
       #group="mdButtonToggleGroup"
-      [(ngModel)]="editMode"
+      [(ngModel)]="markdonwEditMode"
+      [ngModelOptions]="{standalone: true}"
       class="select-format article-editor__select-format">
       <md-button-toggle
-        [value]="EditMode[EditMode.notPreviewing]"
+        [value]="MarkdownEditMode[MarkdownEditMode.notPreviewing]"
         mdTooltip="エディターのみ表示"
         [mdTooltipShowDelay]="500"
         class="select-format__button"
@@ -20,14 +31,14 @@
         <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
       </md-button-toggle>
       <md-button-toggle
-        [value]="EditMode[EditMode.harfPreviewing]"
+        [value]="MarkdownEditMode[MarkdownEditMode.harfPreviewing]"
         mdTooltip="両方を表示"
         [mdTooltipShowDelay]="500"
         class="select-format__button_icon_twice">
         <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i> | <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
       </md-button-toggle>
       <md-button-toggle
-        [value]="EditMode[EditMode.fullPreviewing]"
+        [value]="MarkdownEditMode[MarkdownEditMode.fullPreviewing]"
         mdTooltip="プレビューのみ表示"
         [mdTooltipShowDelay]="500"
         class="select-format__button">
@@ -37,27 +48,28 @@
   </div>
 
 
-  <div *ngIf="article.isMarkdown; then bodyMarkdown else bodyPlainText"></div>
+  <div *ngIf="isMarkdown; then bodyMarkdown else bodyPlainText"></div>
   <ng-template #bodyMarkdown>
     <div class="article-editor__main markdonw-editor" >
-      <div [ngClass]="['markdonw-editor__row-text', editMode]">
+      <div [ngClass]="['markdonw-editor__row-text', markdonwEditMode]">
         <textarea
           id="register-article-body" 
-          [(ngModel)]="article.body"
+          formControlName="body"
           (scroll)="syncScroll($event)"
-          placeholder="本文"></textarea>
+          placeholder="本文"
+          ></textarea>
       </div>
-      <div [ngClass]="['markdonw-editor__preview', editMode]" #syncScrollTarget>
-        <p [innerHTML]="article.body | toMarkdown" class="markdown-body"></p>
+      <div [ngClass]="['markdonw-editor__preview', markdonwEditMode]" #syncScrollTarget>
+        <p [innerHTML]="body.value | toMarkdown" class="markdown-body"></p>
       </div>
     </div>
   </ng-template>
   <ng-template #bodyPlainText>
-      <div class="article-editor__main body-plain-text">
-        <div class="body-row-text">
-          <textarea 
+      <div class="article-editor__main plain-text-editor">
+        <div class="plain-text-editor__row-text">
+          <textarea
             id="register-article-body" 
-            [(ngModel)]="article.body"
+            formControlName="body"
             placeholder="本文"></textarea>
         </div>
       </div>   
@@ -65,13 +77,18 @@
 
 
   <div class="article-editor__operation">
-    <div class="spacer"></div>
-    <button 
+    <button
+      md-raised-button
+      type="button"
+      id="cancel-btn"
+      (click)='cancel()'><i class="fa fa-times"></i>  キャンセル</button> 
+    <div class="spacer"></div>  
+    <button
       md-raised-button
       color="primary"
       type="submit"
-      id="registe-article-btn"
-      (click)='upsertArticle()'><i class="fa fa-upload"></i>  {{action}}</button> 
+      [disabled]="!form.valid"
+      id="registe-article-btn"><i class="fa fa-upload"></i>  {{action}}</button> 
   </div>
-</div>
+</form>
 

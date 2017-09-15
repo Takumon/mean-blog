@@ -6,15 +6,27 @@ import {
   ViewChild,
   HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
+import {
+  ReactiveFormsModule,
+  FormsModule,
+  FormGroup,
+  FormGroupDirective,
+  FormControl,
+  NgForm,
+  Validators,
+  FormBuilder,
+} from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { MdSnackBar } from '@angular/material';
 
+import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 import { EditMode } from './edit-mode.enum';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
+import { MessageService } from '../../shared/services/message.service';
 
 
 @Component({
@@ -25,10 +37,13 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 })
 export class ArticleEditComponent implements OnInit, OnDestroy {
   subscription: Subscription;
-  article: ArticleModel;
   action: String;
-  EditMode = EditMode;
-  editMode: String = EditMode[EditMode.harfPreviewing];
+  // 更新の場合のみ保持する
+  articleId: string;
+  MarkdownEditMode = EditMode;
+  markdonwEditMode: String = EditMode[EditMode.harfPreviewing];
+  form: FormGroup;
+
 
   @ViewChild('syncScrollTarget')
   scrollTarget: ElementRef;
@@ -39,29 +54,44 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
+    private fb: FormBuilder,
+
     private articleService: ArticleService,
     private auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
+    public messageService: MessageService,
     ) {
 
   }
 
   ngOnInit(): void {
+    this.createForm();
+
     this.subscription = this.route.params.subscribe( params => {
       if ( params['_id']) {
         this.action = '更新';
+
+        const withUser = true;
         this.articleService
-          .getOne(params['_id'], true)
+          .getOne(params['_id'], withUser)
           .subscribe(article => {
             if (article.author._id !== this.auth.loginUser._id) {
               // TODO エラー処理か、他のユーザでも編集できる仕様にする
             }
-            this.article = article;
+
+            this.articleId = article._id;
+            this.form.patchValue({
+              title: article.title,
+              isMarkdown: article.isMarkdown,
+              body: article.body,
+            });
+
           });
       } else {
         this.action = '投稿';
-        this.article = new ArticleModel();
-        this.article.author = this.auth.loginUser._id;
+        this.form.patchValue({
+          isMarkdown: true,
+        });
       }
 
       this.routeNamesService.name.next(`記事を${this.action}する`);
@@ -72,8 +102,35 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  createForm() {
+    this.form = this.fb.group({
+      title: ['', [
+        Validators.required,
+      ]],
+      isMarkdown: ['', [
+      ]],
+      body: ['', [
+        Validators.required,
+      ]],
+    });
+  }
+
+  get title() { return this.form.get('title'); }
+  get body() { return this.form.get('body'); }
+  get isMarkdown() { return this.form.get('isMarkdown'); }
+
+  hasError(validationName: string, control: FormControl): Boolean {
+    return control.hasError(validationName) && control.dirty;
+  }
+
+  errorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control.invalid && (control.dirty || isSubmitted));
+  }
+
+
   isNew() {
-    return !this.article._id;
+    return !this.articleId;
   }
 
 
@@ -86,31 +143,46 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     target.scrollTop = (target.scrollHeight - target.clientHeight) * ratio;
   }
 
-  upsertArticle(): void {
-    // TODO 入力チェック
-    if (!this.article.title || !this.article.body) {
+  onSubmit(form: FormGroup): void {
+    if (!form.valid ) {
       return;
     }
 
+    const article = new ArticleModel();
+    article.title = form.value['title'];
+    article.isMarkdown = form.value['isMarkdown'];
+    article.body = form.value['body'];
+
     if (this.isNew()) {
+      article.author = this.auth.loginUser._id;
       this.articleService
-        .register(this.article)
+        .register(article)
         .subscribe((res: any) => {
 
           this.snackBar.open('記事を投稿しました。', null, {duration: 3000});
-          this.goBack();
+          this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
         });
     } else {
+      article._id = this.articleId;
       this.articleService
-        .update(this.article)
+        .update(article)
         .subscribe((res: any) => {
           this.snackBar.open('記事を編集しました。', null, {duration: 3000});
-          this.goBack();
+          this.goToDetail();
         });
     }
   }
 
-  goBack(): void {
-    this.location.back();
+  cancel(): void {
+    if (this.isNew()) {
+      this.router.navigate(['/articles']);
+    } else {
+      this.goToDetail();
+    }
   }
+
+  goToDetail() {
+    this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', this.articleId]);
+  }
+
 }
