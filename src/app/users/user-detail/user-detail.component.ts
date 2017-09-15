@@ -26,7 +26,6 @@ export class UserDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-    this.routeNamesService.name.next('マイページ');
   }
 
   getUser(): void {
@@ -36,6 +35,7 @@ export class UserDetailComponent implements OnInit {
       this.userService.getById(userId).subscribe(user => {
         this.isMine = user._id === this.auth.loginUser._id;
         this.user = user as UserModel;
+        this.routeNamesService.name.next(this.isMine ? 'マイページ' : 'プロフィール');
       });
     });
   }
