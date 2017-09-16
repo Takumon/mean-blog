@@ -1,78 +1,87 @@
-.container {
-  height: 100%;
-}
-
-.nav-bar {
+.sub-nav-bar {
   background: #e6e6e6;
   margin: 0;
   padding: 0;
   text-align: center;
+
+  &__link {
+    font-size: 16px;
+    opacity: 1;
+
+    &:hover {
+      background: #ededed;      
+    }
+  }
 }
 
-.nav-bar a {
-  font-size: 16px;
-  opacity: 1;  
-}
-
-.nav-bar a:hover {
-  background: #ededed;
-}
-
-.profile-area {
+.profile {
   width: 940px;
   margin: 64px auto 120px;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
   padding: 80px 120px;
   background: white;
   box-sizing: border-box;
+
+  &__title {
+    color: #3f51b5;
+    font-weight: 300;
+  }
+
+  &__main {
+    padding-bottom: 24px;
+  }
+
+  &__operation {
+    padding-top: 60px;
+  }
 }
 
-.form-title {
-  color: #3f51b5;
-  font-weight: 300;
+
+.data-list {
+  display: flex;
+
+  &__data {
+    flex: 1;
+    padding-left: 16px;
+  
+    &:first-child {
+      padding-left: 60px;
+    }
+  }  
 }
 
-.form-group {
-  padding-bottom: 24px;
-}
 
-.input-container {
+.data {
   position: relative;
   padding-left: 60px;
   display: block;
   margin-bottom: 16px;
+  $parent: &;
+
+  &_image {
+    @extend #{$parent};
+    padding-left: 0;    
+    display: flex;
+    align-items: start;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d8d7d7;
+  }
+  
+
+  &__icon {
+    position: absolute;
+    left: -60px;
+    display: block;
+    bottom: 6px;
+    font-size: 24px;
+    color: #737373;
+  
+    &_focused {
+      color: #3f51b5;
+    }
+  }
 }
 
-.input-label {
-  position: absolute;
-  left: -60px;
-  display: block;
-  bottom: 6px;
-  font-size: 24px;
-  color: #737373;
-}
-
-.input-label.focused {
-  color: #3f51b5;
-}
-
-.input-username-area {
-  display: flex;
-}
-
-.input-username-area .input-container {
-  flex: 1;
-  padding-left: 16px;
-}
-.input-username-area .input-container:first-child {
-  padding-left: 60px;
-}
-
-.avator-area {
-  display: flex;
-  align-items: start;
-  border-bottom: 1px solid #d8d7d7;
-}
 
 .avator-icon {
   width: 150px;
@@ -84,6 +93,3 @@
   image-rendering: -webkit-optimize-contrast;
 }
 
-.button-area {
-  padding-top: 60px;
-}
