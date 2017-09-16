@@ -1,79 +1,98 @@
 .toolbar {
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  /* box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);*/
-}
-
-.app-logo {
-  font-size: 32px;
-  margin-right: 24px;
-  font-weight: 100;
-  padding-left: 7px;
-}
-
-.app-logo:focus {
-  outline: 0;
-}
-
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
-
-.toolbar-fixed {
   position: fixed;
   z-index: 10;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+
+  &__app-logo {
+    font-size: 32px;
+    margin-right: 24px;
+    font-weight: 100;
+    padding-left: 7px;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  &__tab {
+    border-bottom: 0;
+  }
+
+  &__title {
+    font-weight: 100;
+  }
+
+  &__spacer {
+    flex: 1 1 auto;    
+  }
+
+  &__btn {
+    margin-right: 12px;
+    $parent: &;
+
+    &_color_white {
+      @extend #{$parent};
+      color: #2f2f2f;
+      background: white;
+    }
+  }
 }
 
-.container {
+
+.navbar {
+  
+  &__link {
+    opacity: 1;
+    color: #e6e8f5;
+    height: 63px;
+    line-height: 63px;
+    font-size: 16px;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+
+    i {
+      margin-right: 4px;      
+    }
+  }
+}
+
+
+.menu-btn {
+
+  &__username {
+    margin-right: 8px;
+    font-size: 18px;
+  }
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    background: white;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  &__menu {
+
+    &__description {
+      border-bottom: #e4e4e4 1px solid;    
+    }
+  
+    &__username {
+      font-weight: bold;    
+    }
+  }
+}
+
+.content {
   padding-top: 63px;
   width: 100%;
   height: 100%;
   margin: auto;
-}
 
-.progressbar {
-  width: 100%;
-}
-
-.menu-icon-username {
-  margin-right: 8px;
-  font-size: 18px;
-}
-
-.menu-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 4px;
-  background: white;
-  image-rendering: -webkit-optimize-contrast;
-}
-
-.status {
-  border-bottom: #e4e4e4 1px solid;
-}
-
-.status .username {
-  font-weight: bold;
-}
-
-.nav-bar {
-  border-bottom: 0;
-}
-
-.nav-bar-link {
-  opacity: 1;
-  color: #e6e8f5;
-  height: 63px;
-  line-height: 63px;
-  font-size: 16px;
-  font-weight: bold;
-  -webkit-font-smoothing: antialiased;
-}
-
-.nav-bar-link i {
-  margin-right: 4px;
+  &__progressbar {
+    width: 100%;
+  }
 }
 
 .new-article-btn {
@@ -81,10 +100,4 @@
   right: 24px;
   bottom: 24px;
   z-index: 1;
-}
-
-.register-btn {
-  margin-right: 12px;
-  color: #2f2f2f;
-  background: white;
 }

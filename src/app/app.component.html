@@ -1,15 +1,15 @@
-<md-toolbar *ngIf="isActiveHeader" class="toolbar-fixed" color="primary">
+<md-toolbar *ngIf="isActiveHeader" class="toolbar" color="primary">
   <button
     md-button
-    class="app-logo"
+    class="toolbar__app-logo"
     [routerLink]="auth.loginUser ? '': 'articles'"
     routerLinkActive="active">{{title}}</button>
 
 
-  <nav *ngIf="isActiveNavbar" md-tab-nav-bar class="nav-bar ink-bar-white">
+  <nav *ngIf="isActiveNavbar" md-tab-nav-bar class="toolbar__tab navbar ink-bar-white">
     <a md-tab-link
       *ngIf="auth.loginUser"
-      class="nav-bar-link"
+      class="navbar__link"
       routerLink=""
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
@@ -18,7 +18,7 @@
       <i class="fa fa-fw fa-star"></i>  <span>お気に入り</span>
     </a>
     <a md-tab-link
-      class="nav-bar-link"
+      class="navbar__link"
       routerLink="articles"
       routerLinkActive #rla2="routerLinkActive"
       [active]="rla2.isActive"
@@ -28,7 +28,7 @@
     </a>
     <a md-tab-link
       *ngIf="auth.loginUser"
-      class="nav-bar-link"
+      class="navbar__link"
       [routerLink]="[auth.loginUser.userId, 'articles']"
       routerLinkActive #rla3="routerLinkActive"
       [active]="rla3.isActive"
@@ -38,13 +38,13 @@
     </a>
   </nav>
 
-  <h1 *ngIf="!isActiveNavbar" class="routeName">{{routerName}}</h1>
-  <span class="toolbar-spacer"></span>
+  <h1 *ngIf="!isActiveNavbar" class="toolbar__title">{{routerName}}</h1>
+  <span class="toolbar__spacer"></span>
 
   <ng-container *ngIf="auth.isFinishedCheckState">
     <button
       md-button
-      class="register-btn"
+      class="toolbar__btn_color_white"
       *ngIf="!auth.loginUser"
       [routerLink]="['login']"
       [queryParams]="{register: 'true'}"
@@ -54,6 +54,7 @@
 
     <button
       md-button
+      class="toolbar__btn"
       color="normal"
       *ngIf="!auth.loginUser"
       [routerLink]="['login']"
@@ -64,12 +65,13 @@
     <button
       *ngIf="auth.loginUser"
       md-button
+      class="menu-btn"
       [mdMenuTriggerFor]="menu">
-      <span class="menu-icon-username">{{auth.loginUser.userId}}</span>
-      <img class="menu-icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
+      <span class="menu-btn__username">{{auth.loginUser.userId}}</span>
+      <img class="menu-btn__icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
 
-      <md-menu #menu="mdMenu">
-        <div md-menu-item disabled class="status"><span class="username">{{auth.loginUser.userId}}</span>としてログイン済</div>
+      <md-menu #menu="mdMenu" class="menu-btn__menu">
+        <div md-menu-item disabled class="menu-btn__menu__description"><span class="menu-btn__menu__username">{{auth.loginUser.userId}}</span>としてログイン済</div>
         <button
           md-menu-item
           [routerLink]="[auth.loginUser.userId, 'profile']"
@@ -88,12 +90,12 @@
 
 </md-toolbar>
 
-<div class="container">
+<div class="content">
   <ng-container *ngIf="isLoginPage() || auth.isFinishedCheckState">
     <router-outlet></router-outlet>
   </ng-container> 
   <ng-container *ngIf="!isLoginPage() && !auth.isFinishedCheckState">
-    <md-progress-bar class="progressbar" mode="indeterminate"></md-progress-bar>
+    <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>
   </ng-container>
 </div>
 
