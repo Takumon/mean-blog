@@ -9,13 +9,15 @@
       *ngIf="hasCloseBtn"
       md-icon-button
       type="button"
+      mdTooltip="コメント詳細を閉じる"
+      mdTooltipPosition="above"
+      mdTooltipShowDelay="500"
       class="comment-list-header__toggle-btn"
       (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
   </div>
   <div
-    *ngFor="let comment of (comments | excludeDeletedLeafComment); let last = last"
+    *ngFor="let comment of (comments | excludeDeletedLeafComment)"
     class="comment-list-content"
-    [class.comment-list-content_last]="last"
     [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
     >
 
@@ -88,6 +90,18 @@
           ></app-comment-form>
       </div>
     </ng-template>
+  </div>
+  <div class="comment-list-footer">
+    <div class="comment-list-footer__spacer"></div>  
+    <button
+      *ngIf="hasCloseBtn"
+      md-icon-button
+      mdTooltip="コメント詳細を閉じる"
+      mdTooltipPosition="above"
+      mdTooltipShowDelay="500"
+      type="button"
+      class="comment-list-footer__toggle-btn"
+      (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
   </div>
   <div *ngIf="auth.loginUser">
       <app-comment-form 

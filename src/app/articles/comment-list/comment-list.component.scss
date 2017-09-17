@@ -5,7 +5,6 @@
     margin-bottom: 12px;
     font-weight: bold;
     color: gray;
-    width: 100%;    
   }
 
   &__spacer {
@@ -16,17 +15,13 @@
     color: gray;
     height: 30px;
     line-height: 0;
-  }    
+  }   
 }
 
 .comment-list-content {
   padding-top: 6px;
   padding-bottom: 6px;
   border-top: 1px solid #f5f4f4;
-
-  &_last {
-    margin-bottom: 60px;
-  }
 }
 
 
@@ -101,6 +96,22 @@
 
   &__operation {
     color: gray;
+  }
+}
+
+
+.comment-list-footer {
+  display: flex;
+  margin-bottom: 60px;
+
+  &__spacer {
+    flex: 1 1 auto
+  }
+
+  &__toggle-btn {
+    color: gray;
+    height: 30px;
+    line-height: 0;
   }
 }
 
