@@ -1,116 +1,111 @@
-<div class="articles-area">
-  <div *ngIf='articles?.length > 0'>
-    <div class="article-area">
-      <div class="article-list">
-        <div
-          class="article-item"
-          *ngFor="let item of articles | orderby: ['-created']">
-          <div class="article-item-header underline-animation"
-            [routerLink]="['/', item.author.userId, 'articles', item._id]"
-            routerLinkActive="active">
-            <div class="article-item-avator">
-              <img class="avatar" src="data:image/png;base64,{{item.author.icon}}">
-            </div>
-            <div class="article-item-subtitle">
-              <div class="article-item-author-name">{{item.author.userId}}</div>
-              <div class="article-item-date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="created-or-updated"> に{{item.created == item.updated ? "投稿" : "更新" }}</span></div>
-            </div>
-            <div class="article-item-title-area">
-              <div  class="article-item-title">{{item.title}}</div>
-            </div>
-          </div>
-          <div class="article-item-content">
-            <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
-            <ng-template #markdown>
-              <p [innerHTML]="item.body | toMarkdown" class="markdown-body"></p>
-            </ng-template>
-            <ng-template #plainText>
-              <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
-            </ng-template>
-          </div>
-
-
-          <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
-          
-          <ng-template #displayComment>
-            <div class="article-item-comments">
-              <div *ngIf='item.comments' class="article-item-comments-count">コメント{{(item.comments | excludeDeletedComment).length}}件</div>
-              <div *ngIf='item.comments' class="article-item-comments-area">
-                <div 
-                  *ngFor="let comment of (item.comments | excludeDeletedLeafComment)"
-                  class="article-item-comment-user-wrapper"
-                  >
-                    <img 
-                      *ngIf=" comment.userDeleted"
-                      mdTooltip="このコメントの投稿者は削除されました。"
-                      class="article-item-comment-user"
-                      src="assets/images/deleted-comment.png">
-                    <img 
-                      *ngIf="!comment.userDeleted &&  comment.deleted"
-                      mdTooltip="このコメントは削除されました"
-                      class="article-item-comment-user"
-                      src="assets/images/deleted-comment.png">
-                    <img
-                      *ngIf="!comment.userDeleted && !comment.deleted"
-                      mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
-                      class="article-item-comment-user"
-                      src="data:image/png;base64,{{comment.user.icon}}">
-                </div>
-              </div>
-              <div class="article-item-operation-area">
-                  <button 
-                  md-button
-                  type="button"
-                  class="show-comment-editor-btn"
-                  (click)='createNewComment(item)'><i class="fa fa-fw fa-commenting"></i>  コメントする</button>
-              </div>
-              <div style="flex: 1 1 auto"></div>
-              <button
-                md-icon-button
-                mdTooltip="コメント詳細を開く"
-                mdTooltipPosition="above"
-                mdTooltipShowDelay="500"
-                type="button"
-                class="toggle-comment-detail-btn"
-                (click)='toggleCommentDetail(item)'><i class="fa fa-fw fa-chevron-down"></i></button>
-            </div>
-            <div *ngIf="item.newComment" class="article-comment-editor">
-              <img class="article-comment-author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
-              <textarea
-                class="register-comment-body"
-                appAutofocus
-                [(ngModel)]="item.newComment.text"
-                placeholder="コメントする..." ></textarea>
-                <button 
-                md-button
-                type="button"
-                class="cancel-comment-btn"
-                (click)='cancelNewComment(item)'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
-
-                <button
-                md-raised-button
-                class="register-comment-btn"
-                color="primary"
-                type="button"
-                id="registe-comment-btn"
-                (click)='registerComment(item.newComment)'><i class="fa fa-fw fa-commenting"></i>  追加</button>
-            </div>
-          </ng-template>
-
-          <ng-template #displayCommentDetail>
-            <div class="article-comment-detail-area">
-              <app-comment-list
-                [hasCloseBtn]="true"
-                _idOfArticle="{{item._id}}"
-                [comments]="item.comments"
-                (refresh)="refreshComments(item, $event)"
-                (close)="toggleCommentDetail(item)"
-              ></app-comment-list>
-            </div>
-          </ng-template>
+<ng-container *ngIf='articles?.length > 0'>
+  <div class="article-list">
+    <div
+      class="article-list__item article"
+      *ngFor="let item of articles | orderby: ['-created']">
+      <div class="article__header"
+        [routerLink]="['/', item.author.userId, 'articles', item._id]"
+        routerLinkActive="active">
+        <div class="article__avator">
+          <img class="article__avator-icon" src="data:image/png;base64,{{item.author.icon}}">
+        </div>
+        <div class="article__subtitle">
+          <div class="article__author-name">{{item.author.userId}}</div>
+          <div class="article__date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="article__created-or-updated"> に{{item.created == item.updated ? "投稿" : "更新" }}</span></div>
+        </div>
+        <div class="article__title-wrapper">
+          <div  class="article__title">{{item.title}}</div>
         </div>
       </div>
+      <div class="article__main">
+        <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
+        <ng-template #markdown>
+          <p [innerHTML]="item.body | toMarkdown" class="markdown-body"></p>
+        </ng-template>
+        <ng-template #plainText>
+          <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
+        </ng-template>
+      </div>
+
+
+      <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
+      
+      <ng-template #displayComment>
+        <div class="article__comments comments">
+          <div *ngIf='item.comments' class="comments__count">コメント{{(item.comments | excludeDeletedComment).length}}件</div>
+          <div *ngIf='item.comments' class="comments__main">
+            <div 
+              *ngFor="let comment of (item.comments | excludeDeletedLeafComment)"
+              class="comments__comment"
+              >
+                <img 
+                  *ngIf=" comment.userDeleted"
+                  mdTooltip="このコメントの投稿者は削除されました。"
+                  class="comments__comment__user"
+                  src="assets/images/deleted-comment.png">
+                <img 
+                  *ngIf="!comment.userDeleted &&  comment.deleted"
+                  mdTooltip="このコメントは削除されました"
+                  class="comments__comment__user"
+                  src="assets/images/deleted-comment.png">
+                <img
+                  *ngIf="!comment.userDeleted && !comment.deleted"
+                  mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
+                  class="comments__comment__user"
+                  src="data:image/png;base64,{{comment.user.icon}}">
+            </div>
+          </div>
+          <div class="comments__operation">
+            <button 
+              md-button
+              type="button"
+              class="comments__operation__show-editor-btn"
+                (click)='createNewComment(item)'><i class="fa fa-fw fa-commenting"></i>  コメントする</button>
+            <div style="flex: 1 1 auto"></div>
+            <button
+              md-icon-button
+              mdTooltip="コメント詳細を開く"
+              mdTooltipPosition="above"
+              mdTooltipShowDelay="500"
+              type="button"
+              class="comments__operation__show-detail-btn"
+              (click)='toggleCommentDetail(item)'><i class="fa fa-fw fa-chevron-down"></i></button>
+          </div>
+        </div>
+        <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
+          <img class="comment-editor__author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
+          <textarea
+            class="comment-editor__body"
+            appAutofocus
+            [(ngModel)]="item.newComment.text"
+            placeholder="コメントする..." ></textarea>
+            <button 
+            md-button
+            type="button"
+            class="comment-editor__cancel-btn"
+            (click)='cancelNewComment(item)'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
+
+          <button
+            md-raised-button
+            class="comment-editor__register-btn"
+            color="primary"
+            type="button"
+            id="registe-comment-btn"
+            (click)='registerComment(item.newComment)'><i class="fa fa-fw fa-commenting"></i>  追加</button>
+        </div>
+      </ng-template>
+
+      <ng-template #displayCommentDetail>
+        <div class="article__comments-detail">
+          <app-comment-list
+            [hasCloseBtn]="true"
+            _idOfArticle="{{item._id}}"
+            [comments]="item.comments"
+            (refresh)="refreshComments(item, $event)"
+            (close)="toggleCommentDetail(item)"
+          ></app-comment-list>
+        </div>
+      </ng-template>
     </div>
   </div>
-</div>
-
+</ng-container>
