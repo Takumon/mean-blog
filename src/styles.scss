@@ -60,3 +60,60 @@ body * {
 input,textarea {
   caret-color: blue;
 }
+
+
+/* 
+ * 一覧のMarkdownは限られたスペースで多くの情報を表示したいので
+ * スタイルをスリムアップする
+ */
+.article-list .markdown-body {
+  font-size: 14px;
+  margin: 0;
+
+  &>*:first-child {
+    margin-top: 0;
+  }
+
+  h1 {
+    padding-bottom: 0.2em;
+    margin: 0 0.2em 0.6em 0;
+    font-size: 1.2em;
+    border-bottom: 1px solid #eaecef;
+    color: rgba(36, 41, 46, 0.9);
+  }
+  
+  h2 {
+    padding-bottom: 0.2em;
+    margin: 0 0.2em 0.6em 0;
+    font-size: 1.2em;
+    border-bottom: 1px solid #eaecef;
+    color: rgba(36, 41, 46, 0.9);
+  }
+  
+  h3 {
+    padding-bottom: 0.2em;
+    margin: 0 0.2em 0.6em 0;
+    font-size: 1.2em;
+    color: rgba(36, 41, 46, 0.95);
+  }
+
+  h4 {
+    padding-bottom: 0.2em;
+    margin: 0 0.2em 0.6em 0;
+    font-size: 1.2em;
+    color: rgba(36, 41, 46, 0.95);
+  }
+
+  h5 {
+    padding-bottom: 0.2em;
+    margin: 0 0.2em 0.6em 0;
+    font-size: 1.2em;
+    color: rgba(36, 41, 46, 0.95);
+  }
+
+  p {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+  }
+}
+
