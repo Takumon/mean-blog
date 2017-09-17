@@ -12,7 +12,6 @@ export class ExcludeDeletedLeafCommentPipe implements PipeTransform {
     const result = comments.filter(c => {
       return !this.isDeletedLeafComment(c);
     });
-    console.log(result);
     return result;
   }
 
