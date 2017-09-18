@@ -19,14 +19,12 @@ commentRouter.get('/', (req, res, next) => {
             error: err.message
         });
       }
-      console.log(doc);
       return res.status(200).json(doc);
     };
 
 
     const withUser: boolean = !!req.query.withUser;
     const withArticle: boolean = !!req.query.withArticle;
-    console.log(condition);
     if (withUser) {
       if (withArticle) {
         Comment
