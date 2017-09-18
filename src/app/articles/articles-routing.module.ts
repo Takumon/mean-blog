@@ -7,12 +7,34 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: ArticleListComponent , pathMatch: 'full', canActivate: [AuthGuard] },
-  { path: 'articles', component: ArticleListComponent , canActivate: [AuthGuard] },
-  { path: ':userId/articles', component: ArticleListComponent , canActivate: [AuthGuard] },
-  { path: ':userId/articles/:_id',  component: ArticleDetailComponent, canActivate: [AuthGuard]  },
-  { path: 'drafts/new',  component: ArticleEditComponent, canActivate: [AuthGuard]  },
-  { path: 'drafts/:_id/edit',  component: ArticleEditComponent, canActivate: [AuthGuard]  },
+  {
+    path: '',
+    component: ArticleListComponent,
+    pathMatch: 'full',
+    data: {mode: ArticleListComponent.Mode.FAVORIT},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'articles',
+    component: ArticleListComponent,
+    data: {mode: ArticleListComponent.Mode.ALL},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: ':userId/articles/:_id',
+    component: ArticleDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'drafts/new',
+    component: ArticleEditComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'drafts/:_id/edit',
+    component: ArticleEditComponent,
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

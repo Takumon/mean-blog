@@ -1,0 +1,99 @@
+.blog-title {
+  height: 254px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: #3f51b5;
+  color: white;
+
+  h1 {
+    margin: 0 auto;
+    font-weight: 300;
+    font-size: 42px;
+  }
+}
+
+.sub-nav-bar {
+  background: #e6e6e6;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+
+  &__link {
+    font-size: 16px;
+    opacity: 1;
+
+    &:hover {
+      background: #ededed;      
+    }
+  }
+}
+
+.profile {
+  width: 940px;
+  margin: 64px auto 120px;
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+  padding: 80px 120px;
+  background: white;
+  box-sizing: border-box;
+
+
+  &__title {
+    color: #3f51b5;
+    font-weight: 300;      
+  }
+
+  &__main {
+    padding-bottom: 24px;    
+  }
+}
+
+.data-list {
+  display: flex;
+
+  &__data {
+    flex: 1;
+    padding-left: 16px;  
+
+    &:first-child {
+      padding-left: 60px;
+    }    
+  }
+}
+
+.data {
+  position: relative;
+  padding-left: 60px;
+  display: block;
+  margin-bottom: 16px;
+
+  &__icon {
+    position: absolute;
+    left: 0px;
+    display: block;
+    bottom: 6px;
+    font-size: 24px;
+    color: #737373;
+  }
+
+  &__label {
+    color: #3f51b5;
+  }
+    
+  &__value {
+    padding-top: 2px;
+    min-height: 2em;
+    border-bottom: 1px solid #e0dede;
+  }
+  
+}
+
+.avator-icon {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+  box-shadow: black 0 0 8px -1px;
+  margin-left: 16px;
+  image-rendering: -webkit-optimize-contrast;
+  background: white;
+}

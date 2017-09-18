@@ -9,6 +9,12 @@ import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
 
 
+enum Mode {
+  ALL,
+  FAVORIT,
+  MINE,
+}
+
 @Component({
   selector: 'app-article-list',
   templateUrl: './article-list.component.html',
@@ -16,6 +22,7 @@ import { CommentModel } from '../shared/comment.model';
   providers: [ ArticleService ],
 })
 export class ArticleListComponent implements OnInit {
+  static Mode = Mode;
   articles: Array<ArticleWithUserModel>;
 
   constructor(
@@ -40,6 +47,21 @@ export class ArticleListComponent implements OnInit {
   }
 
   getArticles(): void {
+    this.route.data.subscribe((data: any) => {
+      const mode = data['mode'];
+      switch (mode) {
+        case Mode.ALL:
+          console.log('ALLだよ');
+          break;
+        case Mode.FAVORIT:
+          console.log('FAVORITだよ');
+          break;
+        case Mode.MINE:
+          console.log('MINEだよ');
+          break;
+      }
+    });
+
     this.route.params.subscribe( params => {
 
       // TODO URLで条件分岐するのは、設計として良いのか？？

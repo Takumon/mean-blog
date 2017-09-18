@@ -1,3 +1,6 @@
+<ng-container *ngIf='!articles'>
+    <md-progress-bar mode="indeterminate"></md-progress-bar>    
+</ng-container>
 <ng-container *ngIf='articles?.length > 0'>
   <div class="article-list">
     <div
