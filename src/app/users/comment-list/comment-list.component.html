@@ -9,8 +9,20 @@
       <div class="comment__main">          
         <div class="comment__article">
           <img class="comment__article__author-icon" src="data:image/png;base64,{{comment.articleId.author.icon}}">
-          <div class="comment__article__author-wrapper"><span class="comment__article__author">{{comment.articleId.author.userId}}</span><span>の投稿</span></div>
-          <div class="comment__article__title-wrapper"><span class="comment__article__title">{{comment.articleId.title}}</span><span>にコメント</span></div>
+          <div class="comment__article__author-wrapper">
+            <span 
+              class="comment__article__author"
+              [routerLink]="['/', comment.articleId.author.userId, 'profile']"
+              >{{comment.articleId.author.userId}}</span>
+            <span>の投稿</span>
+          </div>
+          <div class="comment__article__title-wrapper">
+            <span 
+              class="comment__article__title"
+              [routerLink]="['/', comment.articleId.author.userId, 'articles', comment.articleId._id]"
+              >{{comment.articleId.title}}</span>
+            <span>にコメント</span>
+          </div>
           <!-- TODO　記事が削除されている場合のスタイル -->
           <div class="comment__created">{{comment.articleId.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
         </div>
