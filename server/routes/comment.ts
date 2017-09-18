@@ -3,40 +3,148 @@ import { Router, Response } from 'express';
 import * as mongoose from 'mongoose';
 import { Comment } from '../models/comment';
 import { CommentTree } from '../helpers/comment-tree';
+import { User } from '../models/user';
 
 const commentRouter: Router = Router();
 
 
 // 複数件検索
 commentRouter.get('/', (req, res, next) => {
-  const cb = (err, doc) => {
-    if (err) {
-      return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
-      });
-    }
-    return res.status(200).json(doc);
-  };
 
+  getCondition(req, function(error, condition) {
+    const cb = (err, doc) => {
+      if (err) {
+        return res.status(500).json({
+            title: 'エラーが発生しました。',
+            error: err.message
+        });
+      }
+      console.log(doc);
+      return res.status(200).json(doc);
+    };
+
+
+    const withUser: boolean = !!req.query.withUser;
+    const withArticle: boolean = !!req.query.withArticle;
+    console.log(condition);
+    if (withUser) {
+      if (withArticle) {
+        Comment
+        .find(condition)
+        .populate('user', '-password')
+        .populate({
+          path: 'articleId',
+          populate: {
+            path: 'author',
+            select: '-password',
+          }
+        })
+        .exec(cb);
+      } else {
+        Comment
+        .find(condition)
+        .populate('user', '-password')
+        // .populate({
+        //   path: 'articleId',
+        //   populate: {
+        //     path: 'author',
+        //     select: '-password',
+        //   }
+        // })
+        .exec(cb);
+      }
+    } else {
+      if (withArticle) {
+        Comment
+        .find(condition)
+        // .populate('user', '-password')
+        .populate({
+          path: 'articleId',
+          populate: {
+            path: 'author',
+            select: '-password',
+          }
+        })
+        .exec(cb);
+      } else {
+        Comment
+        .find(condition)
+        // .populate('user', '-password')
+        // .populate({
+        //   path: 'articleId',
+        //   populate: {
+        //     path: 'author',
+        //     select: '-password',
+        //   }
+        // })
+        .exec(cb);
+      }
+    }
+  });
+});
+
+
+// 検索条件にauthorUserIdの指定がある場合はユーザ情報を取得して_idに変換する
+function getCondition(req: any, cb: Function): void {
   const query = req.query;
-  const condition = query.condition ?
+  const source = query.condition ?
     JSON.parse(query.condition) :
     {};
 
-  if (query.withUser) {
-    Comment
-      .find(condition)
-      .populate('user', '-password')
-      .exec(cb);
-  } else {
-    Comment
-      .find(condition)
-      .exec(cb);
-  }
-});
+  // 削除記事は除外
+  const condition = {
+    deleted: { $exists : false }
+  };
 
-// 単一検索
+  const userIds = source.user && source.user.userId;
+  if (userIds) {
+    let userFindCondition;
+    if (userIds instanceof Array) {
+      userFindCondition = {
+        userId: {
+          $in: userIds
+        }
+      };
+    } else {
+      userFindCondition = {
+        userId: userIds
+      };
+    }
+
+    return User.find(userFindCondition, function (err, users) {
+      if (err) {
+        return cb(err, null);
+      }
+
+      if (!users || !users.length) {
+        return cb(new mongoose.Error(`指定したユーザ(${userIds})が見つかりません`), null);
+      }
+
+      condition['user']  = {
+          $in: users.map(user => user._id)
+      };
+
+      return cb(null, condition);
+    });
+  }
+
+
+  const _ids = source.user && source.user._id;
+  if (_ids) {
+    if (_ids instanceof Array) {
+      condition['user'] = {
+        $in: _ids.map(id =>  new mongoose.Types.ObjectId(id))
+      };
+    } else {
+      condition['user'] =  new mongoose.Types.ObjectId(_ids);
+    }
+  }
+
+  return cb(null, condition);
+}
+
+
+// 登録
 commentRouter.post('/', (req, res, next) => {
   const comment = new Comment(req.body);
 
