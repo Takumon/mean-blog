@@ -1,38 +1,17 @@
-.comment-list-header {
-  display: flex;  
+.comment-list {
+  width: 810px;
+  margin: 24px auto 124px;
+  border-bottom: 1px solid #dadada;
 
-  &__count {
-    margin-bottom: 12px;
-    font-weight: bold;
-    color: gray;
-  }
-
-  &__spacer {
-    flex: 1 1 auto
-  }
-
-  &__toggle-btn {
-    color: gray;
-    height: 30px;
-    line-height: 0;
-  }   
+  &__comment {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-top: 1px solid #dadada;
+  }  
 }
-
-.comment-list-content {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  border-top: 1px solid #f5f4f4;
-}
-
 
 .comment {
   display: flex;
-  $parent: &;
-  &_deleted {
-    @extend #{$parent};
-    background-color: #f5f4f4;
-    padding: 8px;
-  }
 
   &__author-icon {
     width: 36px;
@@ -44,31 +23,50 @@
     margin-top: 1px;
   }
 
+  &__article {
+    display: flex;
+    font-size: 14px;
+    
+    &__author-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+      background: white;
+      border-radius: 2px;
+      box-sizing: border-box;
+      margin-top: 1px;
+    }
+
+    &__author-wrapper {
+      margin-right: 6px;      
+    }
+
+    &__author {
+      font-weight: bold;
+      color: #3f51b5;
+    }
+
+    &__title-wrapper {
+      margin-right: 6px;      
+    }
+      
+    &__title {
+      font-weight: bold;
+      color: #3f51b5;
+    }
+  }
+  
+  &__created {
+    white-space: nowrap;
+    color: #A4A2A2;
+  }
+
   &__main {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
   }
 
-  &__metadata {
-    display: flex;
-    font-size: 14px;
-  }
-
-  &__author {
-    font-weight: bold;
-    color: #3f51b5;
-    padding-right: 6px;
-  }
-  
-  &__created {
-    white-space: nowrap;
-    color: #A4A2A2;
-
-    span {
-      font-size: 0.7em;
-    }
-  }
 
   &__text {
     white-space: pre;          
@@ -83,43 +81,5 @@
     font-size: 14px;
     color: #24292e;
     margin: 0;
-
-    $parent: &;
-
-    &_deleted {
-      @extend #{$parent};
-      color: gray;
-      line-height: 36px;
-      height: 36px;       
-    }
-  }
-
-  &__operation {
-    color: gray;
   }
 }
-
-
-.comment-list-footer {
-  display: flex;
-  margin-bottom: 60px;
-
-  &__spacer {
-    flex: 1 1 auto
-  }
-
-  &__toggle-btn {
-    color: gray;
-    height: 30px;
-    line-height: 0;
-  }
-}
-
-
-.reply {
-  margin: 12px 0 12px 42px;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  border-top: 1px solid #eaeaea;
-}
-

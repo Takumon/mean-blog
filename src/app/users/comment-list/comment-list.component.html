@@ -3,22 +3,19 @@
 </ng-container>
 
 <ng-container *ngIf="comments">
-  <div
-    *ngFor="let comment of comments"
-    class="comment-list-content"
-    >
-      <div class="comment">
-        <img class="comment__author-icon" src="data:image/png;base64,{{user.icon}}">
-        <div class="comment__main">
-          <div class="comment__metadata">
-            <img class="comment__author-icon" src="data:image/png;base64,{{comment.articleId.author.icon}}">
-            <div class="comment__author">{{comment.articleId.author.userId}}<span> の投稿</span></div>
-            <div class="comment__author">{{comment.articleId.title}}<span> にコメント</span></div>
-            <!-- TODO　記事が削除されている場合のスタイル -->
-            <div class="comment__created">{{comment.articleId.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
-          </div>
-          <pre [innerHTML]="comment.text" class="comment__text"></pre>                
+  <div class="comment-list">
+    <div *ngFor="let comment of comments" class="comment-list__comment comment">
+      <img class="comment__author-icon" src="data:image/png;base64,{{user.icon}}">
+      <div class="comment__main">          
+        <div class="comment__article">
+          <img class="comment__article__author-icon" src="data:image/png;base64,{{comment.articleId.author.icon}}">
+          <div class="comment__article__author-wrapper"><span class="comment__article__author">{{comment.articleId.author.userId}}</span><span>の投稿</span></div>
+          <div class="comment__article__title-wrapper"><span class="comment__article__title">{{comment.articleId.title}}</span><span>にコメント</span></div>
+          <!-- TODO　記事が削除されている場合のスタイル -->
+          <div class="comment__created">{{comment.articleId.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
         </div>
+        <pre [innerHTML]="comment.text" class="comment__text"></pre>          
       </div>
+    </div>
   </div>
 </ng-container>
