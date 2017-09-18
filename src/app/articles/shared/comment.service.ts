@@ -17,14 +17,17 @@ export class CommentService {
     private jwtService: JwtService
   ) {}
 
-  get(condition: Object, withUser: Boolean = false): Observable<any> {
+  get(condition: Object, withUser: Boolean = false, withArticle: Boolean = false): Observable<any> {
     const URL = this.baseUrl;
 
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
     search.set('condition', JSON.stringify(condition));
     if (withUser) {
-      search.set('withUser', `true`);
+      search.set('withUser', 'true');
+    }
+    if (withArticle) {
+      search.set('withArticle', 'true');
     }
 
     return this.http
