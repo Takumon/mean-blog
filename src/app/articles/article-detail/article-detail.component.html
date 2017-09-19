@@ -2,7 +2,9 @@
   <h1 class="article__title">{{article.title}}</h1>
   <div class="article__metadata">
     <img class="article__author-icon" src="data:image/png;base64,{{article.author.icon}}">
-    <div class="article__author">{{article.author.userId}}</div>
+    <div 
+      class="article__author" 
+      [routerLink]="['/', article.author.userId, 'profile']">{{article.author.userId}}</div>
     <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
     <div
       *ngIf="auth.loginUser.userId === article.author.userId"
