@@ -4,11 +4,12 @@
   border-bottom: 1px solid #dadada;
 
   &__comment {
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding-top: 12px;
+    padding-bottom: 12px;
     border-top: 1px solid #dadada;
   }  
 }
+
 
 .comment {
   display: flex;
@@ -46,7 +47,10 @@
       color: #3f51b5;
       cursor: pointer;
       &:hover {
-        color: #5967B2
+        color: #606DB0
+      }
+      &:focus {
+        outline: 0
       }
     }
 
@@ -59,7 +63,10 @@
       color: #3f51b5;
       cursor: pointer;
       &:hover {
-        color: #5967B2
+        color: #606DB0
+      }
+      &:focus {
+        outline: 0
       }
     }
   }

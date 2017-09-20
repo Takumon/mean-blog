@@ -59,6 +59,13 @@
     font-weight: bold;
     color: #3f51b5;
     padding-right: 6px;
+    cursor: pointer;
+    &:hover {
+      color: #606DB0
+    }
+    &:focus {
+      outline: 0
+    }
   }
   
   &__created {

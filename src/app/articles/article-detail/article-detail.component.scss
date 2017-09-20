@@ -41,7 +41,10 @@
     color: #3f51b5;
     cursor: pointer;
     &:hover {
-      color: #5967B2
+      color: #606DB0
+    }
+    &:focus {
+      outline: 0
     }
   }
 
