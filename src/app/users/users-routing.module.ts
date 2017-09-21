@@ -24,7 +24,7 @@ const routes: Routes = [
       {
         path: 'articles',
         component: ArticleListComponent,
-        data: {mode: ArticleListComponent.Mode.MINE },
+        data: {mode: ArticleListComponent.Mode.USER },
         canActivate: [AuthGuard]
       },
       {

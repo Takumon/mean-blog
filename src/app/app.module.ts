@@ -34,8 +34,8 @@ import { AuthGuard } from './shared/auth.guard';
     MaterialModule,
     AppRoutingModule,
     LoginModule,
-    UsersModule,
     ArticlesModule,
+    UsersModule,
   ],
   providers: [
     AlertService,

@@ -51,11 +51,9 @@ export class AppComponent implements OnInit {
   checkLoginState() {
     this.auth.checkState().subscribe(res => {
       if (res.success !== true) {
-        console.log(res.message);
         return;
       }
     }, error => {
-      console.log(error);
       // ログイン後に元々表示しようとしていた画面を表示させる
       this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
   });
@@ -82,8 +80,6 @@ export class AppComponent implements OnInit {
 
     // 完全一致
     if (url === '/' || url === '/articles') {
-      this.isActiveNavbar = true;
-    } else if (this.auth.loginUser && url === `/${this.auth.loginUser.userId}/articles`) {
       this.isActiveNavbar = true;
     } else {
       this.isActiveNavbar = false;

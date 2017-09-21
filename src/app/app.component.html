@@ -26,16 +26,6 @@
       >
       <i class="fa fa-fw fa-list"></i>  <span>記事一覧</span>
     </a>
-    <a md-tab-link
-      *ngIf="auth.loginUser"
-      class="navbar__link"
-      [routerLink]="[auth.loginUser.userId, 'articles']"
-      routerLinkActive #rla3="routerLinkActive"
-      [active]="rla3.isActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      >
-      <i class="fa fa-fw fa-user-circle"></i>  <span>自分の投稿</span>
-    </a>
   </nav>
 
   <h1 *ngIf="!isActiveNavbar" class="toolbar__title">{{routerName}}</h1>
@@ -74,9 +64,15 @@
         <div md-menu-item disabled class="menu-btn__menu__description"><span class="menu-btn__menu__username">{{auth.loginUser.userId}}</span>としてログイン済</div>
         <button
           md-menu-item
+          [routerLink]="[auth.loginUser.userId, 'articles']"
+          routerLinkActive="active">
+          <i class="fa fa-fw fa-list"></i><span> 投稿一覧</span>        
+        </button>
+        <button
+          md-menu-item
           [routerLink]="[auth.loginUser.userId, 'profile']"
           routerLinkActive="active">
-          <i class="fa fa-fw fa-user-circle"></i><span> マイページ</span>
+          <i class="fa fa-fw fa-user-circle"></i><span> プロフィール</span>
         </button>
         <button
           md-menu-item

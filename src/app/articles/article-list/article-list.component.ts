@@ -12,7 +12,7 @@ import { CommentModel } from '../shared/comment.model';
 enum Mode {
   ALL,
   FAVORIT,
-  MINE,
+  USER,
 }
 
 @Component({
@@ -48,50 +48,37 @@ export class ArticleListComponent implements OnInit {
 
   getArticles(): void {
     this.route.data.subscribe((data: any) => {
+      let condition;
+      const withUser = true;
       const mode = data['mode'];
       switch (mode) {
         case Mode.ALL:
-          console.log('ALLだよ');
+          this.articleService.get({}, withUser)
+          .subscribe(articles => {
+            this.articles = articles as Array<ArticleWithUserModel>;
+          });
           break;
         case Mode.FAVORIT:
-          console.log('FAVORITだよ');
+          // TODO 仮の検索條件
+          this.articleService.get({
+            author: { _id: [ '59a2b2a14c64a51a15fed639', '59a95b9f7399b8e3b28523ba' ] }
+          }, withUser)
+          .subscribe(articles => {
+            this.articles = articles as Array<ArticleWithUserModel>;
+          });
           break;
-        case Mode.MINE:
-          console.log('MINEだよ');
+        case Mode.USER:
+          this.route.parent.params.subscribe( params => {
+            const userId = params['_userId'];
+            this.articleService.get(condition = {
+              author: { userId: userId }
+            }, withUser)
+            .subscribe(articles => {
+              this.articles = articles as Array<ArticleWithUserModel>;
+            });
+          });
           break;
       }
-    });
-
-    this.route.params.subscribe( params => {
-
-      // TODO URLで条件分岐するのは、設計として良いのか？？
-      let condition;
-      if (this.router.url === '/') {
-        // TODO 仮の検索條件
-        condition = {
-          author: {
-            _id: [
-              '59a2b2a14c64a51a15fed639',
-              '59a95b9f7399b8e3b28523ba'
-            ]
-          }
-        };
-      } else if (params['userId']) {
-        condition = {
-          author: {
-            userId: params['userId']
-          }
-        };
-      } else {
-        condition = {};
-      }
-
-      const withUser = true;
-
-      this.articleService.get(condition, withUser)
-       .subscribe(articles => {
-         this.articles = articles as Array<ArticleWithUserModel>;
-      });
     });
   }
 
