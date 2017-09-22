@@ -117,6 +117,7 @@ articleRouter.get('/:_id', (req, res, next) => {
     Article
       .find(condition)
       .populate('author', '-password')
+      .populate('vote', '-password')
       .exec(cbFind);
   } else {
     Article

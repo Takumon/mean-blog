@@ -19,6 +19,10 @@ const ArticleSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  vote: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   deleted: { type: Date },
