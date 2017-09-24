@@ -16,7 +16,7 @@
         <div class="info-summary__factor">
           <div>
             <i class="info-summary__factor-icon fa fa-fw fa-commenting"></i>
-            <span class="info-summary__factor-count">{{article.comments ? article.comments.length : 0}}</span>
+            <span class="info-summary__factor-count">{{!commentListComponent ? 0 :!commentListComponent.comments ? 0 : (commentListComponent.comments| excludeDeletedComment).length}}</span>
           </div>
           <div class="info-summary__factor-label">コメント</div>
         </div>

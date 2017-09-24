@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { MdSnackBar } from '@angular/material';
@@ -9,7 +9,7 @@ import { ArticleService } from '../shared/article.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
-
+import { CommentListComponent } from '../comment-list/comment-list.component';
 
 @Component({
   selector: 'app-article-detail',
@@ -18,6 +18,9 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
   providers: [ ArticleService ]
 })
 export class ArticleDetailComponent implements OnInit {
+  @ViewChild(CommentListComponent)
+  commentListComponent: CommentListComponent;
+
   article: ArticleWithUserModel;
 
   constructor(
