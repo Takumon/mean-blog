@@ -1,5 +1,22 @@
 <div  *ngIf="article" class="article">
   <h1 class="article__title">{{article.title}}</h1>
+  <div>
+    <i class="fa fa-fw fa-thumbs-up"> {{article.vote ? article.vote.length : 0}}</i><span>いいね</span>
+  </div>
+  <div>
+    <button md-button
+      (click)="registerVote()"
+      *ngIf="!containMineVote(article.vote)"
+      >
+      <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
+    </button>
+    <button md-button
+      (click)="deleteVote()"
+      *ngIf="containMineVote(article.vote)"
+      >
+      <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
+    </button>
+  </div>
   <div class="article__metadata">
     <img class="article__author-icon" src="data:image/png;base64,{{article.author.icon}}">
     <div 

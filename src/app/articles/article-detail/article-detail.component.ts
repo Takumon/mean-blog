@@ -63,6 +63,39 @@ export class ArticleDetailComponent implements OnInit {
       });
   }
 
+  registerVote(): void {
+    this.articleService
+      .registerVote(this.article._id, this.auth.loginUser._id)
+      .subscribe(article => {
+        this.snackBar.open('いいねしました。', null, {duration: 3000});
+        this.articleService.getVoteOne(this.article._id)
+          .subscribe(vote => {
+            this.article.vote = vote;
+          });
+      });
+  }
+
+  deleteVote(): void {
+    this.articleService
+      .deleteVote(this.article._id, this.auth.loginUser._id)
+      .subscribe(article => {
+        this.snackBar.open('いいねを取り消しました。', null, {duration: 3000});
+        this.articleService.getVoteOne(this.article._id)
+          .subscribe(vote => {
+            this.article.vote = vote;
+          });
+      });
+  }
+
+  containMineVote(votes: Array<UserModel>): boolean {
+    if (!votes) {
+      return false;
+    }
+
+    const _idOfMine = this.auth.loginUser._id;
+    return votes.some(v => _idOfMine === v._id);
+  }
+
   goBack(): void {
     this.location.back();
   }
