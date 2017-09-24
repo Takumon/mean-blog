@@ -87,6 +87,7 @@ class CommentTreeClass {
           created: { $first: '$created'},
           updated: { $first: '$updated'},
           deleted: { $first: '$deleted'},
+          vote: { $first: '$vote'},
           comments: { $first: '$comments'},
           // TODO　直接comments.repliesに代入できないか
           replies: { $push: '$comments.replies._id'}
@@ -151,6 +152,7 @@ class CommentTreeClass {
         created: { $first: '$created'},
         updated: { $first: '$updated'},
         deleted: { $first: '$deleted'},
+        vote: { $first: '$vote'},
         comments: { $push: '$comments'}
       }},
       // 新しい記事は最初に
@@ -194,6 +196,37 @@ class CommentTreeClass {
       );
     }
 
+    // いいねしたユーザの情報を追加
+    result.push(
+      { $unwind: {
+          path: '$vote',
+          preserveNullAndEmptyArrays: true }},
+      { $lookup: {
+          from: 'users',
+          localField: 'vote',
+          foreignField: '_id',
+          as: 'vote'
+      }},
+      { $unwind: {
+        path: '$vote',
+        preserveNullAndEmptyArrays: true }},
+      {$group: {
+          _id: '$_id',
+          articleId: { $first: '$title' },
+          title: { $first: '$title'},
+          body: { $first: '$body'},
+          isMarkdown: { $first: '$isMarkdown'},
+          author: { $first: '$author'},
+          created: { $first: '$created'},
+          updated: { $first: '$updated'},
+          deleted: { $first: '$deleted'},
+          vote: { $push: '$vote'},
+          comments: { $first: '$comments'}
+        }}
+    );
+
+    console.log('▼');
+    console.log(JSON.stringify(result));
     return result;
   }
 
