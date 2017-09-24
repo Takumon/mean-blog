@@ -56,6 +56,13 @@ body * {
   transition-duration: 0.2s;
 }
 
+/* ツールバー */
+.mat-tooltip {
+  /* 改行を表示する */
+  white-space: pre-wrap;
+  /* 読みやすくするため透過率を上げる */
+  background: rgba(97,97,97, 0.95);
+}
 /* TODO キャレットの色検討 */
 input,textarea {
   caret-color: blue;
