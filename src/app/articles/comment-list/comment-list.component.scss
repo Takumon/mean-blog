@@ -12,9 +12,14 @@
   }
 
   &__toggle-btn {
-    color: gray;
-    height: 30px;
+    color: #3f51b5;
+    height: 24px;
+    width: 24px;
     line-height: 0;
+
+    &:hover {
+      background-color: #B8BFE0;
+    }
   }   
 }
 
@@ -116,9 +121,14 @@
   }
 
   &__toggle-btn {
-    color: gray;
-    height: 30px;
+    color: #3f51b5;
+    height: 24px;
+    width: 24px;
     line-height: 0;
+
+    &:hover {
+      background-color: #B8BFE0;
+    }
   }
 }
 

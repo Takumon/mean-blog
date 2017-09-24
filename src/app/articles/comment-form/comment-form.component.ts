@@ -15,6 +15,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { MessageService } from '../../shared/services/message.service';
 import { CommentModel } from '../shared/comment.model';
 import { ArticleService } from '../shared/article.service';
+import { CommentService } from '../shared/comment.service';
 
 @Component({
   selector: 'app-comment-form',
@@ -36,6 +37,7 @@ export class CommentFormComponent implements OnInit {
     private fb: FormBuilder,
     public snackBar: MdSnackBar,
 
+    private commentService: CommentService,
     private articleService: ArticleService,
     public auth: AuthenticationService,
     public messageService: MessageService,
@@ -79,8 +81,8 @@ export class CommentFormComponent implements OnInit {
     this.commentModel.text = form.value['commentText'];
 
     if (this.isRegister) {
-      this.articleService
-        .registerComment(this.commentModel)
+      this.commentService
+        .register(this.commentModel)
         .subscribe(res => {
           // TODO エラー処理
 
@@ -89,8 +91,8 @@ export class CommentFormComponent implements OnInit {
           this.form.reset();
         });
     } else {
-      this.articleService
-        .updateComment(this.commentModel)
+      this.commentService
+        .update(this.commentModel)
         .subscribe(res => {
           // TODO エラー処理
 

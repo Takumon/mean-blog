@@ -84,8 +84,8 @@ export class CommentListComponent implements OnInit {
 
 
   deleteComment(commentId: String): void {
-    this.articleService
-      .deleteComment(commentId)
+    this.commentService
+      .delete(commentId)
       .subscribe(res => {
         this.snackBar.open('コメントを削除しました。', null, {duration: 3000});
         this.refreshComments();
