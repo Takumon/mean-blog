@@ -1,3 +1,6 @@
+<div *ngIf="!article">
+    <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>    
+</div>  
 <div  *ngIf="article" class="article">
   <div class="article__header header">
     <div class="header__title-wrapper">
