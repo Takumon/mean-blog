@@ -17,7 +17,7 @@
       >Markdonw形式で書く</md-checkbox>
 
     <md-button-toggle-group 
-      *ngIf="isMarkdown"
+      *ngIf="isMarkdown.value"
       #group="mdButtonToggleGroup"
       [(ngModel)]="markdonwEditMode"
       [ngModelOptions]="{standalone: true}"
@@ -48,7 +48,7 @@
   </div>
 
 
-  <div *ngIf="isMarkdown; then bodyMarkdown else bodyPlainText"></div>
+  <div *ngIf="isMarkdown.value; then bodyMarkdown else bodyPlainText"></div>
   <ng-template #bodyMarkdown>
     <div class="article-editor__main markdonw-editor" >
       <div [ngClass]="['markdonw-editor__row-text', markdonwEditMode]">
