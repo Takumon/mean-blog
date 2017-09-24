@@ -1,0 +1,54 @@
+.content {
+  position: relative;
+}
+
+.close-btn {
+  color: gray;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  right: 0;
+  cursor: pointer;  
+  &:hover {
+    opacity: 0.7;
+  }  
+}
+
+.voters {
+  color: gray;
+
+  &__count {
+
+  }
+
+  &__count-unit {
+    font-size: 0.7em;
+  }
+}
+
+.voter {
+  color: gray;
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    margin-right: 12px;
+    box-sizing: border-box;
+    box-shadow: #2f2f2f 0 0 1px 0;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }  
+  }
+
+  &__userId {
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 0.7;
+    }  
+  }
+}

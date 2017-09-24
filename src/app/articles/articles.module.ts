@@ -22,6 +22,8 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
+import { VoterListComponent } from './article-list/voter-list.component';
+
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
     ArticleDetailComponent,
     CommentListComponent,
     CommentFormComponent,
+    VoterListComponent,
     MarkdownParsePipe,
     OrderByPipe,
     ExcludeDeletedLeafCommentPipe,
@@ -49,5 +52,6 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
     CommentService,
     MarkdownParseService,
   ],
+  entryComponents: [VoterListComponent]
 })
 export class ArticlesModule { }
