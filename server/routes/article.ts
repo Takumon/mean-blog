@@ -221,4 +221,86 @@ articleRouter.delete('/:_id', (req, res, next) => {
   });
 });
 
+
+// いいね登録
+articleRouter.post('/:_id/vote', (req, res, next) => {
+  const _idOfUser = req.body.voter;
+
+  Article.update({
+    _id: req.params._id
+  }, {$push: {
+    vote: new mongoose.Types.ObjectId(_idOfUser)
+  } }, (err, result) => {
+    console.log(result);
+
+    if (err) {
+      return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+      });
+    }
+
+    return res.status(200).json({
+      message: '記事にいいねしました。',
+      obj: result
+    });
+  });
+});
+
+// いいね削除
+articleRouter.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
+
+  Article.update({
+    _id: req.params._id
+  }, {$pull: {
+    vote: new mongoose.Types.ObjectId(req.params._idOfVorter)
+  } }, (err, result) => {
+    console.log(result);
+
+    if (err) {
+      return res.status(500).json({
+          title: 'エラーが発生しました。',
+          error: err.message
+      });
+    }
+
+    return res.status(200).json({
+      message: 'いいねを取り消しました。',
+      obj: result
+    });
+  });
+});
+
+
+// 複数件検索
+articleRouter.get('/:_id/vote', (req, res, next) => {
+
+  const condition = {
+    _id: req.params._id,
+    deleted: { $exists : false } // 削除記事は除外
+  };
+
+  Article
+    .find(condition)
+    .populate('vote', '-password')
+    .exec(cbFind);
+
+  function cbFind(err, doc): void {
+    if (err) {
+      return res.status(500).json({
+        title: 'エラーが発生しました。',
+        error: err.message
+      });
+    }
+
+    if (!doc[0]) {
+      return res.status(500).json({
+        title: `記事(_id=${req.params._id})が見つかりませんでした。`,
+      });
+    }
+
+    return res.status(200).json(doc[0].vote);
+  }
+});
+
 export { articleRouter };
