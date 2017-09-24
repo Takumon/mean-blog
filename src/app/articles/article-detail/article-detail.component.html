@@ -1,21 +1,63 @@
 <div  *ngIf="article" class="article">
-  <h1 class="article__title">{{article.title}}</h1>
-  <div>
-    <i class="fa fa-fw fa-thumbs-up"> {{article.vote ? article.vote.length : 0}}</i><span>いいね</span>
-  </div>
-  <div>
-    <button md-button
-      (click)="registerVote()"
-      *ngIf="!containMineVote(article.vote)"
-      >
-      <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
-    </button>
-    <button md-button
-      (click)="deleteVote()"
-      *ngIf="containMineVote(article.vote)"
-      >
-      <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
-    </button>
+  <div class="article__header header">
+    <div class="header__title-wrapper">
+      <h1 class="header__title">{{article.title}}</h1>
+    </div>
+    <div class="header__spacer"></div>
+    <div class="header__info-summary info-summary">
+      <div class="info-summary__factor-wrapper">
+        <div class="info-summary__factor_first">
+          <div>
+            <i class="info-summary__factor-icon fa fa-fw fa-thumbs-up"></i>
+            <span class="info-summary__factor-count">{{article.vote ? article.vote.length : 0}}</span>
+          </div>
+          <div class="info-summary__factor-label">いいね</div>
+        </div>
+        <div class="info-summary__factor">
+          <div>
+            <i class="info-summary__factor-icon fa fa-fw fa-commenting"></i>
+            <span class="info-summary__factor-count">{{article.comments ? article.comments.length : 0}}</span>
+          </div>
+          <div class="info-summary__factor-label">コメント</div>
+        </div>
+      </div>
+    
+      <div class="info-summary__vote-button-wrapper">
+        <button
+          md-raised-button
+          color="primary"
+          (click)="registerVote()"
+          *ngIf="!containMineVote(article.vote)"
+          >
+          <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
+        </button>
+        <button
+          md-raised-button
+          (click)="deleteVote()"
+          *ngIf="containMineVote(article.vote)"
+          >
+          <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
+        </button>
+      </div>
+      <div *ngIf="article.vote" class="info-summary__voter-icons">
+        <div 
+          *ngFor="let voter of article.vote"
+          class="info-summary__voter-icon-wrapper"
+          >
+            <img 
+              *ngIf="voter.deleted"
+              mdTooltip="いいねしたユーザは削除されました。"
+              class="info-summary__voter-icon"
+              src="assets/images/deleted-comment.png">
+            <img
+              *ngIf="!voter.deleted"
+              mdTooltip="{{voter.userId}}"
+              [routerLink]="['/', voter.userId, 'profile']"
+              class="info-summary__voter-icon"
+              src="data:image/png;base64,{{voter.icon}}">
+        </div>
+      </div>
+    </div>
   </div>
   <div class="article__metadata">
     <img class="article__author-icon" src="data:image/png;base64,{{article.author.icon}}">
