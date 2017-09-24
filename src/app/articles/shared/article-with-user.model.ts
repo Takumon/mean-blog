@@ -9,6 +9,7 @@ export class ArticleWithUserModel {
   body: string;
   isMarkdown: boolean;
   author: UserModel;
+  vote: Array<UserModel>;
   comments: Array<CommentWithUserModel>;
   newComment: CommentModel;
   created: string;
