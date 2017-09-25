@@ -77,9 +77,10 @@ class CommentTreeClass {
           }},
         // リプライコメントを集約(_idのみ)
         {$group: {
-          _id: '$comments._id',
+          // コメントが１件もない場合は記事がとりこぼされないように_idでグルーピング
+          _id: { $ifNull: ['$comments._id', '$_id'] },
           _idOfArticle: { $first: '$_id' }, // 記事の_idは一時的に別名で保存
-          articleId: { $first: '$title' },
+          articleId: { $first: '$articleId' },
           title: { $first: '$title'},
           body: { $first: '$body'},
           isMarkdown: { $first: '$isMarkdown'},
@@ -225,8 +226,6 @@ class CommentTreeClass {
         }}
     );
 
-    console.log('▼');
-    console.log(JSON.stringify(result));
     return result;
   }
 
