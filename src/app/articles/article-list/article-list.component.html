@@ -62,7 +62,7 @@
       <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
       
       <ng-template #displayComment>
-        <div *ngIf='(item.comments && item.comments.length > 0) || (item.vote && item.vote.length > 0)' class="article__comments comments">
+        <div *ngIf='(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && item.vote.length > 0)' class="article__comments comments">
           <div
             *ngIf="!item.vote || item.vote.length < 1"
             class="comments__count_vote">
