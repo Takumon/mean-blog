@@ -1,0 +1,26 @@
+
+<div class="content">
+  <div class="close-btn"
+    (click)="close()">
+      <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+  </div>
+  <h1 md-dialog-title class="users">
+      <i class="users__count-icon fa fa-fw fa-user"></i>
+  </h1>
+  <div md-dialog-content>
+    <ng-container *ngIf="!users">
+        <md-progress-bar mode="indeterminate"></md-progress-bar>    
+    </ng-container>
+    <md-list *ngIf="users">
+      <md-list-item
+        *ngFor="let user of users"
+        class="user">
+        <img
+          class="user__icon"
+          src="data:image/png;base64,{{user.icon}}">
+        <p class="voter__userId">{{user.userId}}</p>
+      </md-list-item>
+    </md-list>
+  </div>
+</div>
+

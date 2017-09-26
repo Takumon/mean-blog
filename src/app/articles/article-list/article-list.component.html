@@ -1,7 +1,26 @@
-<ng-container *ngIf='!articles'>
+<ng-container *ngIf="!articles">
     <md-progress-bar mode="indeterminate"></md-progress-bar>    
 </ng-container>
-<ng-container *ngIf='articles?.length > 0'>
+
+<div *ngIf="articles?.length > 0" class="search-condition">
+  <div class="search-condition__title">絞り込み条件</div>
+  <button 
+    md-button
+    type="button"
+    class="search-condition__operation-btn"
+    (click)="openUserList()"
+    >
+    <i class="fa fa-fw fa-user"></i> 人
+  </button>
+  <button 
+    md-button
+    type="button"
+    class="search-condition__operation-btn"
+    >
+    <i class="fa fa-fw fa-calendar"></i> 日付
+  </button>
+</div>
+<ng-container *ngIf="articles?.length > 0">
   <div class="article-list">
     <div
       class="article-list__item article"
@@ -53,7 +72,7 @@
           md-button
           type="button"
           class="article__operation-btn"
-          (click)='createNewComment(item)'
+          (click)="createNewComment(item)"
           >
           <i class="fa fa-fw fa-commenting"></i>コメントする
         </button>
@@ -62,7 +81,7 @@
       <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
       
       <ng-template #displayComment>
-        <div *ngIf='(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && item.vote.length > 0)' class="article__comments comments">
+        <div *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && item.vote.length > 0)" class="article__comments comments">
           <div
             *ngIf="!item.vote || item.vote.length < 1"
             class="comments__count_vote">
@@ -102,7 +121,7 @@
               mdTooltipShowDelay="500"
               type="button"
               class="comments__operation__show-detail-btn"
-              (click)='toggleCommentDetail(item)'><i class="fa fa-fw fa-chevron-down"></i></button>
+              (click)="toggleCommentDetail(item)"><i class="fa fa-fw fa-chevron-down"></i></button>
           </div>
         </div>
         <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
@@ -116,7 +135,7 @@
             md-raised-button
             type="button"
             class="comment-editor__cancel-btn"
-            (click)='cancelNewComment(item)'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
+            (click)="cancelNewComment(item)"><i class="fa fa-fw fa-times"></i>  キャンセル</button>
 
           <button
             md-raised-button
@@ -124,7 +143,7 @@
             color="primary"
             type="button"
             id="registe-comment-btn"
-            (click)='registerComment(item, item.newComment)'><i class="fa fa-fw fa-commenting"></i>  追加</button>
+            (click)="registerComment(item, item.newComment)"><i class="fa fa-fw fa-commenting"></i>  追加</button>
         </div>
       </ng-template>
 

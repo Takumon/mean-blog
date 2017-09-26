@@ -1,3 +1,13 @@
+.search-condition {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  width: 480px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 10px -1px rgba(0, 0, 0, 0.4);
+  padding: 12px;
+}
+
 .article-list {
   width: 810px;
   margin: 24px 24px 124px 24px;

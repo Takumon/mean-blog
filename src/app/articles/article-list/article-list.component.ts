@@ -10,6 +10,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
 import { VoterListComponent } from './voter-list.component';
+import { SearchUserListDialogComponent } from './search-user-list.dialog';
 
 
 enum Mode {
@@ -153,5 +154,13 @@ export class ArticleListComponent implements OnInit {
       width: '360px',
       data: { voters: voters }
     });
+  }
+
+  openUserList() {
+    const dialogRef = this.dialog.open(SearchUserListDialogComponent, {
+      width: '420px',
+      data: { }
+    });
+
   }
 }

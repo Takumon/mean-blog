@@ -23,6 +23,9 @@ import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
 import { VoterListComponent } from './article-list/voter-list.component';
+import { SearchUserListDialogComponent } from './article-list/search-user-list.dialog';
+
+
 
 
 @NgModule({
@@ -33,6 +36,7 @@ import { VoterListComponent } from './article-list/voter-list.component';
     CommentListComponent,
     CommentFormComponent,
     VoterListComponent,
+    SearchUserListDialogComponent,
     MarkdownParsePipe,
     OrderByPipe,
     ExcludeDeletedLeafCommentPipe,
@@ -52,6 +56,9 @@ import { VoterListComponent } from './article-list/voter-list.component';
     CommentService,
     MarkdownParseService,
   ],
-  entryComponents: [VoterListComponent]
+  entryComponents: [
+    VoterListComponent,
+    SearchUserListDialogComponent,
+  ]
 })
 export class ArticlesModule { }
