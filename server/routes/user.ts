@@ -22,16 +22,10 @@ userRouter.get('/', (req, res, next) => {
   };
 
   const query = req.query;
-  // TODO 検索条件が必要なら追加
   // 削除記事は除外
-  const factors: Array<Object> = [];
-  factors.push({
+  const condition = {
     deleted: { $exists : false }
-  });
-
-  const condition = {$match: {
-    $and: factors
-  }};
+  };
 
   if (query.withPassword) {
     // TODO 管理者権限チェック
