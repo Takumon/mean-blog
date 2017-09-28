@@ -12,6 +12,7 @@ import { authenticate } from './middleware/authenticate';
 import { articleRouter } from './routes/article';
 import { commentRouter } from './routes/comment';
 import { userRouter } from './routes/user';
+import { searchConditionRouter } from './routes/search-condition';
 
 class App {
   public express: express.Application;
@@ -40,6 +41,7 @@ class App {
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);
     this.express.use('/api/comments', commentRouter);
+    this.express.use('/api/searchconditions', searchConditionRouter);
 
     // その他のリクエストはindexファイルにルーティング
     this.express.get('*', (req, res) => {
