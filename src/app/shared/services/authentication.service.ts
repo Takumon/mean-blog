@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
 import { JwtService } from './jwt.service';
-import { JwtTokenService } from './jwt-token.service';
+import { LocalStrageService, KEY } from './local-strage.service';
 
 
 /**
@@ -22,7 +22,7 @@ export class AuthenticationService {
   constructor(
     public http: Http,
     private jwtService: JwtService,
-    private jwtTokenService: JwtTokenService,
+    private localStrageService: LocalStrageService,
   ) {
     this.initLoginUser();
   }
@@ -50,7 +50,7 @@ export class AuthenticationService {
   }
 
   isLogin(): Boolean {
-    return !!this.jwtTokenService.get();
+    return !!this.localStrageService.get(KEY.TOKEN);
   }
 
   checkState(): Observable<any> {
@@ -65,7 +65,7 @@ export class AuthenticationService {
   // ログイン画面に戻る時に使用する
   logout() {
     this.initLoginUser();
-    this.jwtTokenService.remove();
+    this.localStrageService.remove(KEY.TOKEN);
   }
 
 
@@ -75,7 +75,7 @@ export class AuthenticationService {
       return body;
     }
 
-    this.jwtTokenService.set(body.token);
+    this.localStrageService.set(KEY.TOKEN, body.token);
     this.loginUser = body.user;
     this.isFinishedCheckState = true;
 
@@ -83,10 +83,10 @@ export class AuthenticationService {
   }
 
   getToken(): String {
-    return this.jwtTokenService.get();
+    return this.localStrageService.get(KEY.TOKEN);
   }
 
   hasToken(): boolean {
-    return this.jwtTokenService.has();
+    return this.localStrageService.has(KEY.TOKEN);
   }
 }

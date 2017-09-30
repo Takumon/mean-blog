@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { JwtTokenService } from './services/jwt-token.service';
+import { LocalStrageService, KEY } from './services/local-strage.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private token: JwtTokenService
+    private localStrageService: LocalStrageService
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.token.has()) {
+    if (this.localStrageService.has(KEY.TOKEN)) {
       return true;
     }
 

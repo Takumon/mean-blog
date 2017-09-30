@@ -16,7 +16,7 @@ import { ArticlesModule } from './articles/articles.module';
 import { RouteNamesService } from './shared/services/route-names.service';
 import { JwtService } from './shared/services/jwt.service';
 import { AuthenticationService } from './shared/services/authentication.service';
-import { JwtTokenService } from './shared/services/jwt-token.service';
+import { LocalStrageService } from './shared/services/local-strage.service';
 import { AlertService } from './shared/services/alert.service';
 import { AuthGuard } from './shared/auth.guard';
 
@@ -42,7 +42,7 @@ import { AuthGuard } from './shared/auth.guard';
     RouteNamesService,
     JwtService,
     AuthenticationService,
-    JwtTokenService,
+    LocalStrageService,
     AuthGuard,
   ],
   bootstrap: [AppComponent],
