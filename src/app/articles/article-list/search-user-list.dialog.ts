@@ -11,7 +11,7 @@ import { UserService } from '../../users/shared/user.service';
 })
 export class SearchUserListDialogComponent implements OnInit {
 
-  users: Array<UserModel>;
+  checklist: Array<any>;
 
   constructor(
     public dialogRef: MdDialogRef<SearchUserListDialogComponent>,
@@ -27,7 +27,13 @@ export class SearchUserListDialogComponent implements OnInit {
   getUsers() {
     this.userService.getAll()
     .subscribe(users => {
-      this.users = users as Array<UserModel>;
+      this.checklist = users.map(user => {
+        return {
+          _id: user._id,
+          checked: false,
+          user: user
+        };
+      });
     });
   }
 

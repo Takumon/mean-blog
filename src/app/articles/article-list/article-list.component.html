@@ -3,22 +3,61 @@
 </ng-container>
 
 <div *ngIf="articles?.length > 0" class="search-condition">
-  <div class="search-condition__title">絞り込み条件</div>
-  <button 
-    md-button
-    type="button"
-    class="search-condition__operation-btn"
-    (click)="openUserList()"
-    >
-    <i class="fa fa-fw fa-user"></i> 人
-  </button>
-  <button 
-    md-button
-    type="button"
-    class="search-condition__operation-btn"
-    >
-    <i class="fa fa-fw fa-calendar"></i> 日付
-  </button>
+  <div class="search-condition__header">
+    <div class="search-condition__header__title">お気に入り検索条件</div>
+    <div class="search-condition__header__spacer"></div>
+    <button
+      md-button
+      type="button"
+      class="search-condition__header__operation-btn"
+      (click)="openUserList()">
+      <i class="fa fa-fw fa-plus"></i> 追加
+    </button>
+  </div>
+
+  <div class="search-condition__content_noconditions"
+    *ngIf="!seaerchConditions || seaerchConditions.length < 1">
+    <div>追加ボタンでお気に入り検索条件を追加しよう！</div>
+  </div>
+  <div class="search-condition__content conditions"
+    *ngIf="seaerchConditions && seaerchConditions.length > 0">
+    <md-card
+      class="conditions__condition condition"
+      [class.conditions__condition_checked]="condition.checked"
+      *ngFor="let condition of seaerchConditions; let i = index">
+      <div
+        (click)="selectCondition(condition._id)"
+        class="condition__title"
+        [class.condition__title_checked]="condition.checked">
+        {{condition.name ? condition.name : '検索条件' + (i + 1) }}
+      </div>
+      <md-card-content>
+        <div *ngIf="condition.users && condition.users.length > 0">
+          <div
+            *ngFor="let user of condition.users"
+            class="user">
+            <img
+              class="user__icon"
+              src="data:image/png;base64,{{user.icon}}">
+            <p 
+              class="user__userId">{{user.userId}}</p>
+          </div>
+        </div>
+      </md-card-content>
+      <md-card-actions>
+        <button 
+          md-button
+          type="button"
+          ><i class="fa fa-fw fa-trush"></i>  削除</button>
+        <button
+          md-button
+          class="comment-editor__register-btn"
+          color="primary"
+          type="button"
+          ><i class="fa fa-fw fa-cog"></i>  条件変更</button>
+      </md-card-actions>
+    </md-card>
+  </div>
 </div>
 <ng-container *ngIf="articles?.length > 0">
   <div class="article-list">

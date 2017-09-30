@@ -30,6 +30,20 @@
 .user {
   color: gray;
 
+  &:hover {
+    background-color: #E3E3E3;
+  }
+
+  &_checked {
+
+  }
+
+  &__check {
+    padding-right: 24px;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
   &__icon {
     width: 36px;
     height: 36px;
@@ -37,18 +51,11 @@
     margin-right: 12px;
     box-sizing: border-box;
     box-shadow: #2f2f2f 0 0 1px 0;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.7;
-    }  
   }
 
   &__userId {
-    cursor: pointer;
-    
-    &:hover {
-      opacity: 0.7;
-    }  
+    width: 100%;
+    margin: 0;
+    padding: 12px 0;
   }
 }

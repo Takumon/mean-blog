@@ -6,21 +6,36 @@
   </div>
   <h1 md-dialog-title class="users">
       <i class="users__count-icon fa fa-fw fa-user"></i>
+      <span>ユーザを選択する</span>
   </h1>
   <div md-dialog-content>
-    <ng-container *ngIf="!users">
+    <ng-container *ngIf="!checklist">
         <md-progress-bar mode="indeterminate"></md-progress-bar>    
     </ng-container>
-    <md-list *ngIf="users">
+    <md-list *ngIf="checklist">
       <md-list-item
-        *ngFor="let user of users"
-        class="user">
+        *ngFor="let checkinfo of checklist"
+        class="user"
+        >
+        <md-checkbox
+          class="user__check"
+          [(ngModel)]="checkinfo.checked"
+          >
+        </md-checkbox>
         <img
+          (click)="checkinfo.checked = !checkinfo.checked"
           class="user__icon"
-          src="data:image/png;base64,{{user.icon}}">
-        <p class="voter__userId">{{user.userId}}</p>
+          src="data:image/png;base64,{{checkinfo.user.icon}}">
+        <p 
+          (click)="checkinfo.checked = !checkinfo.checked"
+          class="user__userId">{{checkinfo.user.userId}}</p>
       </md-list-item>
     </md-list>
+  </div>
+  <div md-dialog-actions style="display:flex;">
+    <div style="flex: 1 1 auto"></div>
+    <button md-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
+    <button md-raised-button color="primary" [md-dialog-close]="checklist" >決定</button>
   </div>
 </div>
 

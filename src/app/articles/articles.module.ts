@@ -13,6 +13,7 @@ import { OrderByPipe } from './shared/orderby.pipe';
 import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-comment.pipe';
 import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
+import { SearchConditionService } from './shared/search-condition.service';
 
 
 
@@ -55,6 +56,7 @@ import { SearchUserListDialogComponent } from './article-list/search-user-list.d
     ArticleService,
     CommentService,
     MarkdownParseService,
+    SearchConditionService,
   ],
   entryComponents: [
     VoterListComponent,

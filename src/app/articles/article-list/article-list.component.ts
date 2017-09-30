@@ -5,12 +5,15 @@ import { MdSnackBar, MdDialog } from '@angular/material';
 
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
+import { SearchConditionService } from '../shared/search-condition.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
 import { VoterListComponent } from './voter-list.component';
 import { SearchUserListDialogComponent } from './search-user-list.dialog';
+import { SearchConditionModel } from '../shared/search-condition.model';
+import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 
 
 enum Mode {
@@ -28,21 +31,24 @@ enum Mode {
 export class ArticleListComponent implements OnInit {
   static Mode = Mode;
   articles: Array<ArticleWithUserModel>;
+  seaerchConditions: Array<SearchConditionModel>;
 
   constructor(
     public snackBar: MdSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
+    private localStrageService: LocalStrageService,
     private commentService: CommentService,
     private articleService: ArticleService,
+    private searchConditionService: SearchConditionService,
     public auth: AuthenticationService,
     public dialog: MdDialog,
   ) {
   }
 
   ngOnInit() {
-    this.getArticles();
+    this.getSearchCondition(this.getArticles);
   }
 
   refreshComments(item: ArticleWithUserModel, event: any) {
@@ -51,6 +57,61 @@ export class ArticleListComponent implements OnInit {
 
   toggleCommentDetail(item: ArticleWithUserModel) {
     item.showCommentDetail = !item.showCommentDetail;
+  }
+
+  getSearchCondition(cb: Function) {
+    this.searchConditionService.getAll({
+      userId: this.auth.loginUser._id.toString()
+    }, true).subscribe(con => {
+      this.seaerchConditions = con as Array<SearchConditionModel>;
+
+      if (this.seaerchConditions && this.seaerchConditions.length > 0) {
+
+        let selectedId;
+        // 選択している検索条件がない場合は一番先頭の検索条件を選択する
+        if (!this.localStrageService.has(KEY.SELECTED_CONDITION_ID)) {
+          selectedId = this.seaerchConditions[0]._id.toString();
+          this.localStrageService.set(KEY.SELECTED_CONDITION_ID, selectedId);
+        } else {
+          selectedId = this.localStrageService.get(KEY.SELECTED_CONDITION_ID);
+
+          // 選択している場合でも検索条件に一致するものがない場合は一番先頭の検索条件を選択する
+          let foundSelected = false;
+          for (const condition of this.seaerchConditions) {
+            if (selectedId === condition._id.toString()) {
+              foundSelected = true;
+              break;
+            }
+          }
+
+          if (!foundSelected) {
+            selectedId = this.seaerchConditions[0]._id.toString();
+            this.localStrageService.set(KEY.SELECTED_CONDITION_ID, selectedId);
+          }
+        }
+
+
+        // 検索条件にcheckedをセットする
+        for (const condition of this.seaerchConditions) {
+          condition.checked = selectedId === condition._id.toString();
+        }
+      } else {
+        // 選択した検索条件を初期化する
+        this.localStrageService.remove(KEY.SELECTED_CONDITION_ID);
+      }
+
+      if (cb) {
+        cb.apply(this);
+      }
+    });
+  }
+
+  selectCondition(selectedId: string) {
+    this.localStrageService.set(KEY.SELECTED_CONDITION_ID, selectedId);
+    for (const condition of this.seaerchConditions) {
+      condition.checked  = selectedId === condition._id.toString();
+    }
+    this.getArticles();
   }
 
   getArticles(): void {
@@ -66,10 +127,10 @@ export class ArticleListComponent implements OnInit {
           });
           break;
         case Mode.FAVORIT:
-          // TODO 仮の検索條件
-          this.articleService.get({
-            author: { _id: [ '59a2b2a14c64a51a15fed639', '59a95b9f7399b8e3b28523ba' ] }
-          }, withUser)
+          const hoge = this.createCondition();
+          this.articleService.get(
+            hoge,
+            withUser)
           .subscribe(articles => {
             this.articles = articles as Array<ArticleWithUserModel>;
           });
@@ -87,6 +148,35 @@ export class ArticleListComponent implements OnInit {
           break;
       }
     });
+  }
+
+  // TODO 今はユーザ情報のみだが今後条件を追加する
+  createCondition(): Object {
+    const noCondition = {};
+
+    if (!this.seaerchConditions
+      || this.seaerchConditions.length === 0) {
+      return noCondition;
+    }
+
+    let selected = this.seaerchConditions[0];
+
+    for (const con of this.seaerchConditions) {
+      if (con.checked) {
+        selected = con;
+        break;
+      }
+    }
+
+    if (!selected.users || selected.users.length === 0) {
+      return noCondition;
+    }
+    return {
+      author: { _id: selected.users.map(u => {
+        return u._id.toString();
+      }) }
+    };
+
   }
 
   // TODO コメントはプレーンテキスト固定で良いか検討
@@ -160,6 +250,26 @@ export class ArticleListComponent implements OnInit {
     const dialogRef = this.dialog.open(SearchUserListDialogComponent, {
       width: '420px',
       data: { }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      const searchUsers = result.filter(r => {
+        return r.checked;
+      }).map(r => {
+        return r._id;
+      });
+
+      const newSearchCondition = new SearchConditionModel();
+      newSearchCondition.author = this.auth.loginUser._id;
+      newSearchCondition.users = searchUsers;
+
+      this.searchConditionService
+        .create(newSearchCondition)
+        .subscribe(res => {
+          this.snackBar.open('お気に入り検索条件を登録しました。', null, {duration: 3000});
+          // TODO 初期化処理が冗長
+          this.getSearchCondition(this.getArticles);
+        });
     });
 
   }

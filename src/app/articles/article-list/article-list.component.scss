@@ -1,13 +1,3 @@
-.search-condition {
-  position: fixed;
-  top: 90px;
-  right: 24px;
-  width: 480px;
-  border-radius: 2px;
-  box-shadow: 1px 1px 10px -1px rgba(0, 0, 0, 0.4);
-  padding: 12px;
-}
-
 .article-list {
   width: 810px;
   margin: 24px 24px 124px 24px;
@@ -308,5 +298,127 @@
   }
   &__register-btn {
     margin-left: 8px;
+  }
+}
+
+
+.search-condition {
+  position: fixed;
+  top: 90px;
+  right: 24px;
+  bottom: 24px;
+  width: 480px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 10px -1px rgba(0, 0, 0, 0.4);
+  padding: 12px;
+  padding-top: 48px;
+
+
+  &__header {
+    display: flex;
+    padding: 12px;
+    color: white;
+    background: #4051b4;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    z-index: 1;
+    box-sizing: border-box;
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__spacer {
+      flex: 1 1 auto;
+    }
+
+    &__operation-btn {
+      margin-top: -8px;
+      margin-bottom: -8px;
+    }
+  }
+
+  &__content {
+    overflow-y: scroll;    
+    height: 100%;
+
+    $parent: &;
+
+    &_noconditions {
+      @extend #{$parent};
+
+      color: gray;
+      padding: 24px;
+      font-size: 18px;
+      margin-top: 12px;
+      background: #e6e6e6;
+      height: 60px;
+      border-radius: 4px;
+    }
+  }
+}
+
+.conditions {
+  &__condition {
+    margin-top: 12px;
+
+    &_checked {
+      position: relative;
+
+      &:after {
+        display: block;
+        position: absolute;
+        content: '';
+        width: 10px;
+        background-color: #ec407a;
+        top: 0px;
+        left: 0px;
+        z-index: 1;
+        bottom: 0;
+        border-radius: 4px 0 0 4px;
+      }
+    }
+  }
+}
+
+.condition {
+  &__title {
+    height: 36px;
+    display: flex;
+    font-size: 24px;
+    margin-bottom: 4px;
+    cursor: pointer;
+
+    &_checked {
+      color: #ec407a;
+    }
+  }
+}
+
+.user {
+  color: gray;
+  display: flex;
+  height: 36px;
+  padding: 4px;
+  box-sizing: border-box;
+  align-items: center;
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+    margin-right: 8px;
+    box-sizing: border-box;
+    box-shadow: #2f2f2f 0 0 1px 0;
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  &__userId {
+    width: 100%;
+    margin: 0;
+    padding: 8px 0;
   }
 }
