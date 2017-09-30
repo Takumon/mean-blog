@@ -101,7 +101,6 @@ searchConditionRouter.post('/', (req, res, next) => {
       });
     }
 
-    console.log(result);
     return res.status(200).json({
       message: '検索条件を登録しました。',
       obj: result
