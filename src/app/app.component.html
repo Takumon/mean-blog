@@ -33,6 +33,14 @@
 
   <ng-container *ngIf="auth.isFinishedCheckState">
     <button
+      *ngIf="auth.loginUser && isNotEditor()" 
+      md-icon-button
+      mdTooltip="記事を投稿する"
+      routerLink="/drafts/new">
+        <i class="fa fa-fw fa-pencil fa-2x"></i>
+    </button>
+
+    <button
       md-button
       class="toolbar__btn_color_white"
       *ngIf="!auth.loginUser"
@@ -52,12 +60,10 @@
       <i class="fa fa-fw fa-sign-in"></i>  ログイン
     </button>
 
-    <button
+    <div
       *ngIf="auth.loginUser"
-      md-button
       class="menu-btn"
       [mdMenuTriggerFor]="menu">
-      <span class="menu-btn__username">{{auth.loginUser.userId}}</span>
       <img class="menu-btn__icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
 
       <md-menu #menu="mdMenu" class="menu-btn__menu">
@@ -81,7 +87,7 @@
           <i class="fa fa-fw fa-sign-out"></i><span> ログアウト</span>
         </button>
       </md-menu>
-    </button>
+    </div>
   </ng-container>
 
 </md-toolbar>
@@ -94,14 +100,5 @@
     <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>
   </ng-container>
 </div>
-
-<button  *ngIf="auth.loginUser && isNotEditor()" 
-  md-fab class="new-article-btn" 
-  routerLink="/drafts/new"
-  mdTooltip="投稿する"
-  mdTooltipPosition="before"
-  >
-    <i class="fa fa-fw fa-pencil fa-3x"></i>
-</button>
 
 
