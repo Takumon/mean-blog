@@ -231,7 +231,6 @@ articleRouter.post('/:_id/vote', (req, res, next) => {
   }, {$push: {
     vote: new mongoose.Types.ObjectId(_idOfUser)
   } }, (err, result) => {
-    console.log(result);
 
     if (err) {
       return res.status(500).json({
@@ -255,7 +254,6 @@ articleRouter.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
   }, {$pull: {
     vote: new mongoose.Types.ObjectId(req.params._idOfVorter)
   } }, (err, result) => {
-    console.log(result);
 
     if (err) {
       return res.status(500).json({
