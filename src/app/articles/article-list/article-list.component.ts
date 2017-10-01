@@ -262,6 +262,15 @@ export class ArticleListComponent implements OnInit {
           this.getSearchCondition(this.getArticles);
         });
     });
+  }
 
+  deleteCondition(id: string) {
+    this.searchConditionService
+      .delete(id)
+      .subscribe(res => {
+        this.snackBar.open('お気に入り検索条件を削除しました。', null, {duration: 3000});
+        // TODO 初期化処理が冗長
+        this.getSearchCondition(this.getArticles);
+      });
   }
 }

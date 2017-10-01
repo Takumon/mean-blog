@@ -60,7 +60,7 @@ export class SearchConditionService {
       .map((response: Response) => response.json());
   }
 
-  delete(_id: number) {
+  delete(_id: string) {
     const URL = `${this.baseUrl}/${_id}`;
 
     return this.http
