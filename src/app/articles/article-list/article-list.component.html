@@ -32,7 +32,9 @@
         {{condition.name ? condition.name : '検索条件' + (i + 1) }}
       </div>
       <md-card-content>
-        <div *ngIf="condition.users && condition.users.length > 0">
+        <div 
+          *ngIf="condition.users && condition.users.length > 0"
+          class="condition__users">
           <div
             *ngFor="let user of condition.users"
             class="user">
