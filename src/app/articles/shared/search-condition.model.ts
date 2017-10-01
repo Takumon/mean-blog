@@ -3,8 +3,11 @@ export class SearchConditionModel {
   name: string;
   author: string;
   users: Array<any>;
+  dateSearchPattern: string;
   dateFrom: string;
   dateTo: string;
+  dateLatest: string;
+
   // 表示制御用
   checked: boolean;
 }

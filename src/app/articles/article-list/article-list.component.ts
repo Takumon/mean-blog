@@ -248,23 +248,14 @@ export class ArticleListComponent implements OnInit {
 
   openUserList() {
     const dialogRef = this.dialog.open(SearchUserListDialogComponent, {
-      width: '420px',
+      width: '600px',
       data: { }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      const searchUsers = result.filter(r => {
-        return r.checked;
-      }).map(r => {
-        return r._id;
-      });
-
-      const newSearchCondition = new SearchConditionModel();
-      newSearchCondition.author = this.auth.loginUser._id;
-      newSearchCondition.users = searchUsers;
 
       this.searchConditionService
-        .create(newSearchCondition)
+        .create(result as SearchConditionModel)
         .subscribe(res => {
           this.snackBar.open('お気に入り検索条件を登録しました。', null, {duration: 3000});
           // TODO 初期化処理が冗長

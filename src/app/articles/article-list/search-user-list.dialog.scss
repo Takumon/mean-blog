@@ -2,17 +2,40 @@
   position: relative;
 }
 
-.close-btn {
-  color: gray;
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  right: 0;
-  cursor: pointer;  
-  &:hover {
-    opacity: 0.7;
-  }  
+
+.title {
+  font-weight: 100;
+  padding: 12px 24px;
+  font-size: 24px;
+  color: white;
+  background: #4051b4;
+  margin: -24px -24px 0;
+  display: flex;
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__close-btn {
+    cursor: pointer;  
+    &:hover {
+      opacity: 0.7;
+    }    
+  }
+}
+
+
+.data-wrapper {
+  margin-top: 12px;  
+  width: 100%;
+}
+
+.data-label {
+  
+}
+  
+.data {
+  width: 100%;
 }
 
 .users {

@@ -1,18 +1,30 @@
-
 <div class="content">
-  <div class="close-btn"
-    (click)="close()">
-      <i class="fa fa-fw fa-times" aria-hidden="true"></i>
-  </div>
-  <h1 md-dialog-title class="users">
-      <i class="users__count-icon fa fa-fw fa-user"></i>
-      <span>ユーザを選択する</span>
-  </h1>
+  <div class="title">
+    <div>お気に入り検索条件を登録</div>
+    <div class="title__spacer"></div>
+    <div class="title__close-btn"
+      (click)="close()">
+        <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+    </div>
+  </div> 
   <div md-dialog-content>
+    <md-input-container class="data-wrapper">
+      <input 
+        mdInput
+        type="text"
+        class="data"
+        [(ngModel)]="form.name"
+        placeholder="検索条件名"
+        required
+        >
+    </md-input-container>
     <ng-container *ngIf="!checklist">
         <md-progress-bar mode="indeterminate"></md-progress-bar>    
     </ng-container>
-    <md-list *ngIf="checklist">
+    <div *ngIf="checklist" class="data-label">
+      <i class="fa fa-fw fa-user"></i>ユーザ
+    </div>      
+    <md-list *ngIf="checklist" class="data-wrapper">
       <md-list-item
         *ngFor="let checkinfo of checklist"
         class="user"
@@ -35,7 +47,10 @@
   <div md-dialog-actions style="display:flex;">
     <div style="flex: 1 1 auto"></div>
     <button md-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
-    <button md-raised-button color="primary" [md-dialog-close]="checklist" >決定</button>
+    <button
+      md-raised-button
+      color="primary"
+      (click)="validate()"
+      [md-dialog-close]="form">決定</button>
   </div>
 </div>
-
