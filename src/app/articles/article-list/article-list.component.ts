@@ -11,7 +11,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
 import { VoterListComponent } from './voter-list.component';
-import { SearchUserListDialogComponent } from './search-user-list.dialog';
+import { SearchConditionDialogComponent } from './search-condition.dialog';
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 
@@ -246,8 +246,8 @@ export class ArticleListComponent implements OnInit {
     });
   }
 
-  openUserList() {
-    const dialogRef = this.dialog.open(SearchUserListDialogComponent, {
+  openSerchCondition() {
+    const dialogRef = this.dialog.open(SearchConditionDialogComponent, {
       width: '600px',
       data: { }
     });

@@ -41,17 +41,17 @@ export { DATE_SEAERCH_PATTERN, DATE_SEAERCH_LATEST };
 
 
 @Component({
-  selector: 'app-search-user-list-dialog',
-  templateUrl: './search-user-list.dialog.html',
-  styleUrls: ['./search-user-list.dialog.scss'],
+  selector: 'app-search-condition-dialog',
+  templateUrl: './search-condition.dialog.html',
+  styleUrls: ['./search-condition.dialog.scss'],
 })
-export class SearchUserListDialogComponent implements OnInit {
+export class SearchConditionDialogComponent implements OnInit {
   form: SearchConditionModel;
   checklist: Array<any>;
 
   constructor(
     private fb: FormBuilder,
-    public dialogRef: MdDialogRef<SearchUserListDialogComponent>,
+    public dialogRef: MdDialogRef<SearchConditionDialogComponent>,
     @Inject(MD_DIALOG_DATA) public data: any,
     public auth: AuthenticationService,
     private userService: UserService,

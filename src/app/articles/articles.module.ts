@@ -24,7 +24,7 @@ import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
 import { VoterListComponent } from './article-list/voter-list.component';
-import { SearchUserListDialogComponent } from './article-list/search-user-list.dialog';
+import { SearchConditionDialogComponent } from './article-list/search-condition.dialog';
 
 
 
@@ -37,7 +37,7 @@ import { SearchUserListDialogComponent } from './article-list/search-user-list.d
     CommentListComponent,
     CommentFormComponent,
     VoterListComponent,
-    SearchUserListDialogComponent,
+    SearchConditionDialogComponent,
     MarkdownParsePipe,
     OrderByPipe,
     ExcludeDeletedLeafCommentPipe,
@@ -60,7 +60,7 @@ import { SearchUserListDialogComponent } from './article-list/search-user-list.d
   ],
   entryComponents: [
     VoterListComponent,
-    SearchUserListDialogComponent,
+    SearchConditionDialogComponent,
   ]
 })
 export class ArticlesModule { }
