@@ -253,6 +253,10 @@ export class ArticleListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result.name && (!result.users || result.users.length < 1)) {
+        // do nothing
+        return;
+      }
 
       this.searchConditionService
         .create(result as SearchConditionModel)
