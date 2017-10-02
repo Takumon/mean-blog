@@ -36,8 +36,14 @@ export class SearchConditionService {
       .map((response: Response) => response.json() as Array<SearchConditionModel>);
   }
 
-  getById(_id: string): Observable<SearchConditionModel> {
+  getById(_id: string, withUser: Boolean = false): Observable<SearchConditionModel> {
     const URL = `${this.baseUrl}/${_id}`;
+
+    const headers = this.jwtService.getHeaders();
+    const search = new URLSearchParams();
+    if (withUser) {
+      search.set('withUser', 'true');
+    }
 
     return this.http
       .get(URL, this.jwtService.getRequestOptions())

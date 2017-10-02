@@ -14,6 +14,7 @@ import {
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../../users/shared/user.service';
 import { SearchConditionModel } from '../shared/search-condition.model';
+import { SearchConditionService } from '../shared/search-condition.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 
 
@@ -55,33 +56,54 @@ export class SearchConditionDialogComponent implements OnInit {
     @Inject(MD_DIALOG_DATA) public data: any,
     public auth: AuthenticationService,
     private userService: UserService,
+    private searchConditionService: SearchConditionService,
   ) { }
 
 
   ngOnInit() {
-    // TODO 更新時の値設定
-    this.form = new SearchConditionModel();
-    this.form.author = this.auth.loginUser._id.toString();
-    this.getUsers();
-  }
-
-  getUsers() {
     this.cerateForm();
-    this.userService.getAll()
-    .subscribe(users => {
-      this.checklist = users.map(user => {
-        return {
-          _id: user._id,
-          checked: false,
-          user: user
-        };
-      });
-    });
   }
-
 
   cerateForm() {
-    console.log('jissou');
+    // TODO ページング
+    if (this.data.idForUpdate) {
+      const withUser = false;
+
+      this.searchConditionService
+        .getById(this.data.idForUpdate, withUser)
+        .subscribe(conditionForUpdate => {
+          this.form = conditionForUpdate;
+          const checkedUsers: Array<string> = this.form.users;
+
+          this.userService.getAll()
+            .subscribe(users => {
+              this.checklist = users.map(user => {
+                const _id = user._id.toString();
+                const checked = checkedUsers.indexOf(_id) !== -1;
+
+                return {
+                  _id: _id,
+                  checked: checked,
+                  user: user
+                };
+              });
+            });
+        });
+    } else {
+      this.form = new SearchConditionModel();
+      this.form.author = this.auth.loginUser._id.toString();
+      this.userService.getAll()
+        .subscribe(users => {
+          this.checklist = users.map(user => {
+            return {
+              _id: user._id,
+              checked: false, // 全てチェックオフ
+              user: user
+            };
+          });
+        });
+
+    }
   }
 
   validate() {

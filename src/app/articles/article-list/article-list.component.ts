@@ -60,9 +60,11 @@ export class ArticleListComponent implements OnInit {
   }
 
   getSearchCondition(cb: Function) {
+    const withUser = true;
+
     this.searchConditionService.getAll({
       userId: this.auth.loginUser._id.toString()
-    }, true).subscribe(con => {
+    }, withUser).subscribe(con => {
       this.seaerchConditions = con as Array<SearchConditionModel>;
 
       if (this.seaerchConditions && this.seaerchConditions.length > 0) {
@@ -246,25 +248,40 @@ export class ArticleListComponent implements OnInit {
     });
   }
 
-  openSerchCondition() {
+  // 引数なしの場合は新規登録
+  openSerchConditionDialog(idForUpdate: string) {
     const dialogRef = this.dialog.open(SearchConditionDialogComponent, {
       width: '600px',
-      data: { }
+      data: { idForUpdate: idForUpdate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
       if (!result.name && (!result.users || result.users.length < 1)) {
         // do nothing
         return;
       }
 
-      this.searchConditionService
+      if (result._id) {
+        this.searchConditionService
+        .update(result as SearchConditionModel)
+        .subscribe(res => {
+          this.snackBar.open('お気に入り検索条件を更新しました。', null, {duration: 3000});
+          // TODO 初期化処理が冗長
+          this.getSearchCondition(this.getArticles);
+        });
+      } else {
+        this.searchConditionService
         .create(result as SearchConditionModel)
         .subscribe(res => {
           this.snackBar.open('お気に入り検索条件を登録しました。', null, {duration: 3000});
           // TODO 初期化処理が冗長
           this.getSearchCondition(this.getArticles);
         });
+      }
     });
   }
 

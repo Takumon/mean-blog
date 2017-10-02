@@ -41,8 +41,6 @@ searchConditionRouter.get('/', (req, res, next) => {
     }
   }
 
-
-
   if (query.withPassword) {
     // TODO 管理者権限チェック
     SearchCondition
@@ -70,21 +68,28 @@ searchConditionRouter.get('/:_id', (req, res, next) => {
     return res.status(200).json(doc[0]);
   };
 
+  const withUser: boolean = !!req.query.withUser;
   const condition = {
-    _id: new mongoose.Types.ObjectId(req.params.userId),
+    _id: new mongoose.Types.ObjectId(req.params._id),
   };
 
-  if (req.query.withPassword) {
-    // TODO 管理者権限チェック
-    SearchCondition
-      .find(condition)
-      .populate('users')
-      .exec(cb);
+  if (withUser) {
+    if (req.query.withPassword) {
+      // TODO 管理者権限チェック
+      SearchCondition
+        .find(condition)
+        .populate('users')
+        .exec(cb);
+    } else {
+      SearchCondition
+        .find(condition)
+        .populate('users', '-password')
+        .exec(cb);
+    }
   } else {
-    SearchCondition
-      .find(condition)
-      .populate('users', '-password')
-      .exec(cb);
+      SearchCondition
+        .find(condition)
+        .exec(cb);
   }
 });
 
