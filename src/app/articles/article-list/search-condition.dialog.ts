@@ -1,15 +1,9 @@
 import { Component, Inject, OnInit} from '@angular/core';
-import { MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
 import {
-  ReactiveFormsModule,
-  FormsModule,
-  FormGroup,
-  FormGroupDirective,
-  FormControl,
-  NgForm,
-  Validators,
-  FormBuilder,
-} from '@angular/forms';
+  MdDialog,
+  MdDialogRef,
+  MD_DIALOG_DATA
+} from '@angular/material';
 
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../../users/shared/user.service';
@@ -42,13 +36,13 @@ export class SearchConditionDialogComponent implements OnInit {
   dateSearchPatterns: typeof DATE_SEAERCH_PATTERN = DATE_SEAERCH_PATTERN;
 
   constructor(
-    private fb: FormBuilder,
     public dialogRef: MdDialogRef<SearchConditionDialogComponent>,
     @Inject(MD_DIALOG_DATA) public data: any,
     public auth: AuthenticationService,
     private userService: UserService,
     private searchConditionService: SearchConditionService,
-  ) { }
+  ) {
+  }
 
 
   ngOnInit() {
@@ -106,5 +100,9 @@ export class SearchConditionDialogComponent implements OnInit {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  resetDateSearchPattern() {
+    this.form.dateSearchPattern = null;
   }
 }

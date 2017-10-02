@@ -32,6 +32,16 @@
 }
 
 .data-label {
+  display: flex;
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__clear-btn {
+    height: 24px;
+    line-height: 24px;
+  }
   
 }
   

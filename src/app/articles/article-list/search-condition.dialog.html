@@ -46,7 +46,14 @@
       </md-list-item>
     </md-list>
     <div *ngIf="checklist" class="data-label">
-      <i class="fa fa-fw fa-calendar"></i> 投稿日
+      <div><i class="fa fa-fw fa-calendar"></i> 投稿日</div>
+      <div class="data-label__spacer"></div>
+      <button
+        class="data-label__clear-btn"
+        *ngIf="form.dateSearchPattern"
+        md-button
+        (click)="resetDateSearchPattern()">
+        <i class="fa fa-fw fa-times"></i> 選択を解除</button>
     </div>
     <div class="data-wrapper">
       <md-radio-group
