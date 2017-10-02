@@ -15,7 +15,6 @@ const SearchConditoinSchema = new mongoose.Schema({
   dateSearchPattern: { type: String },
   dateFrom: { type: Date },
   dateTo: { type: Date },
-  dateLatest: { type: String },
 });
 
 const SearchCondition = mongoose.model('SearchCondition', SearchConditoinSchema);

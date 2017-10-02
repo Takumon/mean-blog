@@ -6,7 +6,6 @@ export class SearchConditionModel {
   dateSearchPattern: string;
   dateFrom: string;
   dateTo: string;
-  dateLatest: string;
 
   // 表示制御用
   checked: boolean;

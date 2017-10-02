@@ -26,8 +26,9 @@
 
 
 .data-wrapper {
-  margin-top: 12px;  
+  margin: 2px 0 24px;
   width: 100%;
+  padding: 0;
 }
 
 .data-label {
@@ -80,5 +81,21 @@
     width: 100%;
     margin: 0;
     padding: 12px 0;
+  }
+}
+
+
+.date-search-pattern {
+  &__factor {
+    margin-top: 8px;
+    margin-left: 8px;
+    width: 50%;
+    background: #d4d4d4;
+    padding: 12px;
+    border-radius: 4px;
+
+    &.checked {
+      background: #ffc3d6;
+    }
   }
 }

@@ -24,8 +24,8 @@
         <md-progress-bar mode="indeterminate"></md-progress-bar>    
     </ng-container>
     <div *ngIf="checklist" class="data-label">
-      <i class="fa fa-fw fa-user"></i>ユーザ
-    </div>      
+      <i class="fa fa-fw fa-user"></i> ユーザ
+    </div>
     <md-list *ngIf="checklist" class="data-wrapper">
       <md-list-item
         *ngFor="let checkinfo of checklist"
@@ -45,7 +45,23 @@
           class="user__userId">{{checkinfo.user.userId}}</p>
       </md-list-item>
     </md-list>
+    <div *ngIf="checklist" class="data-label">
+      <i class="fa fa-fw fa-calendar"></i> 投稿日
+    </div>
+    <div class="data-wrapper">
+      <md-radio-group
+        *ngIf="form"
+        [(ngModel)]="form.dateSearchPattern"
+        class="date-search-pattern">
+        <md-radio-button
+          class="date-search-pattern__factor"
+          *ngFor="let key of (dateSearchPatterns | keys)"
+          [class.checked]="form.dateSearchPattern === key"
+          [value]="key" >{{dateSearchPatterns[key]}}</md-radio-button>
+      </md-radio-group>
+    </div>
   </div>
+
   <div md-dialog-actions style="display:flex;">
     <div style="flex: 1 1 auto"></div>
     <button md-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
