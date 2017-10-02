@@ -14,6 +14,7 @@ import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-com
 import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { SearchConditionService } from './shared/search-condition.service';
+import { KeysPipe } from '../shared/pipes/keys.pipe';
 
 
 
@@ -42,6 +43,7 @@ import { SearchConditionDialogComponent } from './article-list/search-condition.
     OrderByPipe,
     ExcludeDeletedLeafCommentPipe,
     ExcludeDeletedCommentPipe,
+    KeysPipe,
     AutofocusDirective,
   ],
   imports: [
