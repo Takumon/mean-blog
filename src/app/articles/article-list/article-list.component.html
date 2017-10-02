@@ -45,6 +45,9 @@
               class="user__userId">{{user.userId}}</p>
           </div>
         </div>
+        <div
+          *ngIf="condition.dateSearchPattern"
+          class="date-search-pattern">{{dateSearchPatterns[condition.dateSearchPattern]}}</div>
       </md-card-content>
       <md-card-actions>
         <button 
