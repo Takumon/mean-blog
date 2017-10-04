@@ -131,9 +131,8 @@ export class ArticleListComponent implements OnInit {
           });
           break;
         case Mode.FAVORIT:
-          const hoge = this.createCondition();
           this.articleService.get(
-            hoge,
+            this.createCondition(),
             withUser)
           .subscribe(articles => {
             this.articles = articles as Array<ArticleWithUserModel>;
