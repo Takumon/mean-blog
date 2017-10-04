@@ -1,3 +1,35 @@
+.message-area {
+  margin: 24px;
+  border-radius: 4px;
+  width: 700px;
+  color: #464545;
+  background: #d2d2d2;
+  padding: 24px;
+
+  &__main {
+    display: flex;
+
+    &__icon {
+      width: 10%;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    &__message {
+      width: 90%;
+    }
+  }
+
+
+  &__operation {
+    margin-top: 24px;
+    display: flex;   
+    
+    &__spacer {
+      flex: 1 1 auto;
+    }      
+  }
+}
+
 .article-list {
   width: 810px;
   margin: 24px 24px 124px 24px;

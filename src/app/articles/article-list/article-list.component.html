@@ -2,7 +2,7 @@
     <md-progress-bar mode="indeterminate"></md-progress-bar>    
 </ng-container>
 
-<div *ngIf="articles?.length > 0" class="search-condition">
+<div class="search-condition">
   <div class="search-condition__header">
     <div class="search-condition__header__title">お気に入り検索条件</div>
     <div class="search-condition__header__spacer"></div>
@@ -66,6 +66,37 @@
           ><i class="fa fa-fw fa-cog"></i>  条件変更</button>
       </md-card-actions>
     </md-card>
+  </div>
+</div>
+
+<div class="message-area" *ngIf="(articles && articles.length === 0) && (!seaerchConditions || seaerchConditions.length < 1)">
+  <div class="message-area__main">
+    <div class="message-area__main__icon">
+      <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
+    </div>
+    <div class="message-area__main__message">
+      記事がまだ登録されていません。記事を登録しましよう。
+    </div>
+  </div>
+  <div class="message-area__operation">
+    <div class="message-area__operation__spacer"></div>
+    <button
+      md-raised-button
+      color="primary"
+      routerLink="/drafts/new">
+        <i class="fa fa-fw fa-pencil fa-2x"></i> 記事を投稿する
+    </button>
+  </div>
+</div>
+
+<div class="message-area" *ngIf="(articles && articles.length === 0) && !(!seaerchConditions || seaerchConditions.length < 1)">
+  <div class="message-area__main">
+    <div class="message-area__main__icon">
+      <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
+    </div>
+    <div class="message-area__main__message">
+      検索結果に一致する記事は見つかりませんでした。検索条件を変えて再度検索してください。
+    </div>
   </div>
 </div>
 <ng-container *ngIf="articles?.length > 0">
