@@ -404,6 +404,21 @@
     margin-top: -8px !important;
     margin-left: -8px;
   }
+
+  &__date {
+    background: #e6e6e6;
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 36px;
+    display: flex;
+    align-items: center;
+  
+    &__statement {
+      margin-left: 8px;
+    }
+  }
 }
 
 .user {
@@ -435,3 +450,4 @@
     padding: 8px 0;
   }
 }
+

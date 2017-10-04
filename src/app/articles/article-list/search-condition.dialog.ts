@@ -5,24 +5,13 @@ import {
   MD_DIALOG_DATA
 } from '@angular/material';
 
+import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../../users/shared/user.service';
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { SearchConditionService } from '../shared/search-condition.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { KeysPipe } from '../../shared/pipes/keys.pipe';
-
-enum DATE_SEAERCH_PATTERN {
-  今日,
-  昨日,
-  直近７日間,
-  直近30日間,
-  今月,
-  先月,
-  期間指定,
-}
-
-export { DATE_SEAERCH_PATTERN };
 
 
 @Component({
@@ -33,7 +22,7 @@ export { DATE_SEAERCH_PATTERN };
 export class SearchConditionDialogComponent implements OnInit {
   form: SearchConditionModel;
   checklist: Array<any>;
-  dateSearchPatterns: typeof DATE_SEAERCH_PATTERN = DATE_SEAERCH_PATTERN;
+  dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
     public dialogRef: MdDialogRef<SearchConditionDialogComponent>,

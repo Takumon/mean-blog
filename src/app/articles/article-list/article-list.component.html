@@ -47,7 +47,10 @@
         </div>
         <div
           *ngIf="condition.dateSearchPattern"
-          class="date-search-pattern">{{dateSearchPatterns[condition.dateSearchPattern]}}</div>
+          class="condition__date">
+          <i class="fa fa-fw fa-calendar"></i>
+          <div class="condition__date__statement">{{dateRangePatterns[condition.dateSearchPattern]}}  {{dateRange.of(condition.dateSearchPattern) | json }}</div>
+        </div>
       </md-card-content>
       <md-card-actions>
         <button 

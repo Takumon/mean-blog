@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { MdSnackBar, MdDialog } from '@angular/material';
 
+import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-pattern.enum';
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { SearchConditionService } from '../shared/search-condition.service';
@@ -14,7 +15,6 @@ import { VoterListComponent } from './voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition.dialog';
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
-import { DATE_SEAERCH_PATTERN } from './search-condition.dialog';
 
 enum Mode {
   ALL,
@@ -32,7 +32,8 @@ export class ArticleListComponent implements OnInit {
   static Mode = Mode;
   articles: Array<ArticleWithUserModel>;
   seaerchConditions: Array<SearchConditionModel>;
-  dateSearchPatterns: typeof DATE_SEAERCH_PATTERN = DATE_SEAERCH_PATTERN;
+  dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
+  dateRange = DateRange;
 
   constructor(
     public snackBar: MdSnackBar,

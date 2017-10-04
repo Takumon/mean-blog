@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
+import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { SearchConditionModel } from './search-condition.model';
 import { JwtService } from '../../shared/services/jwt.service';
 
@@ -9,6 +10,7 @@ import { JwtService } from '../../shared/services/jwt.service';
 @Injectable()
 export class SearchConditionService {
   baseUrl = '/api/searchconditions';
+  dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
     private http: Http,
@@ -16,17 +18,20 @@ export class SearchConditionService {
   ) { }
 
   getAll(condition, withUser: Boolean = false): Observable<Array<SearchConditionModel>> {
-    let con = {};
-    if (condition && condition.userId) {
-      con = {
-        userId: condition.userId
-      };
+    const modifiedCondition = {};
+    if (condition) {
+      if (condition.userId) {
+        modifiedCondition['userId'] = condition.userId;
+      }
+      if (condition.dateRangePatterns) {
+        modifiedCondition['userId'] = condition.userId;
+      }
     }
     const URL = this.baseUrl;
 
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(con));
+    search.set('condition', JSON.stringify(modifiedCondition));
     if (withUser) {
       search.set('withUser', 'true');
     }

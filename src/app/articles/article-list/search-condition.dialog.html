@@ -62,9 +62,9 @@
         class="date-search-pattern">
         <md-radio-button
           class="date-search-pattern__factor"
-          *ngFor="let key of (dateSearchPatterns | keys)"
+          *ngFor="let key of (dateRangePatterns | keys)"
           [class.checked]="form.dateSearchPattern === key"
-          [value]="key" >{{dateSearchPatterns[key]}}</md-radio-button>
+          [value]="key" >{{dateRangePatterns[key]}}</md-radio-button>
       </md-radio-group>
     </div>
   </div>
