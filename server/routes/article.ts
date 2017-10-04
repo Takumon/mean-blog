@@ -102,6 +102,23 @@ function getCondition(req: any, cb: Function): void {
     }
   }
 
+  if (source.dateFrom) {
+    factors.push({
+      created: {
+        $gte: new Date(source.dateFrom)
+      }
+    });
+  }
+
+
+  if (source.dateTo) {
+    factors.push({
+      created: {
+        $lte: new Date(source.dateTo)
+      }
+    });
+  }
+
   return cb(null, condition);
 }
 

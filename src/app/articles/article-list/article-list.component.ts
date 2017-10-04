@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { MdSnackBar, MdDialog } from '@angular/material';
+import * as moment from 'moment';
 
 import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-pattern.enum';
 import { ArticleService } from '../shared/article.service';
@@ -153,7 +154,6 @@ export class ArticleListComponent implements OnInit {
     });
   }
 
-  // TODO 今はユーザ情報のみだが今後条件を追加する
   createCondition(): Object {
     const noCondition = {};
 
@@ -171,15 +171,24 @@ export class ArticleListComponent implements OnInit {
       }
     }
 
-    if (!selected.users || selected.users.length === 0) {
-      return noCondition;
-    }
-    return {
-      author: { _id: selected.users.map(u => {
-        return u._id.toString();
-      }) }
-    };
 
+    const condition = {};
+
+    if (selected.users && selected.users.length > 0) {
+      condition['author'] = {
+        _id: selected.users.map(u => {
+          return u._id.toString();
+        })
+      };
+    }
+
+    if (selected.dateSearchPattern) {
+      const dateRangeCondition = this.dateRange.of(selected.dateSearchPattern);
+      condition['dateFrom'] = dateRangeCondition.dateFrom;
+      condition['dateTo'] = dateRangeCondition.dateTo;
+    }
+
+    return condition;
   }
 
   // TODO コメントはプレーンテキスト固定で良いか検討
@@ -294,5 +303,12 @@ export class ArticleListComponent implements OnInit {
         // TODO 初期化処理が冗長
         this.getSearchCondition(this.getArticles);
       });
+  }
+
+  dateFrom(pattern: string) {
+    return moment(this.dateRange.of(pattern).dateFrom).format('YYYY/MM/DD');
+  }
+  dateTo(pattern: string) {
+    return moment(this.dateRange.of(pattern).dateTo).format('YYYY/MM/DD');
   }
 }

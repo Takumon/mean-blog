@@ -11,7 +11,7 @@ export enum DATE_RANGE_PATTERN {
 }
 
 const DateRange = {
-  of(pattern: string, dateFrom: Date, dateTo: Date) {
+  of(pattern: string, dateFrom: Date = null, dateTo: Date = null) {
     const sysdate: moment.Moment = moment();
 
     const todayStart: moment.Moment = sysdate.clone().startOf('day');
@@ -70,6 +70,8 @@ const DateRange = {
     if (p === DATE_RANGE_PATTERN.期間指定) {
       return { dateFrom, dateTo };
     }
+
+    throw new Error(`予期しないパターン(${pattern})`);
   }
 };
 
