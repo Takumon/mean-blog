@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
-import { MdSnackBar, MdDialog } from '@angular/material';
+import {
+  MdSnackBar,
+  MdDialog,
+  MdInputModule,
+} from '@angular/material';
 import * as moment from 'moment';
 
 import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-pattern.enum';
@@ -305,10 +309,33 @@ export class ArticleListComponent implements OnInit {
       });
   }
 
-  dateFrom(pattern: string) {
+  dateFrom(pattern: string): string {
     return moment(this.dateRange.of(pattern).dateFrom).format('YYYY/MM/DD');
   }
-  dateTo(pattern: string) {
+  dateTo(pattern: string): string {
     return moment(this.dateRange.of(pattern).dateTo).format('YYYY/MM/DD');
+  }
+
+  dateRangeDisp(condition: SearchConditionModel): string {
+    const pattern = condition.dateSearchPattern;
+
+    const patternDisp = this.dateRangePatterns[pattern];
+
+    let from;
+    let to;
+    if (this.isSpecificDateRange(pattern)) {
+      const range = this.dateRange.of(pattern, new Date(condition.dateFrom), new Date(condition.dateTo));
+      from = moment(range.dateFrom).format('YYYY/MM/DD');
+      to = moment(range.dateTo).format('YYYY/MM/DD');
+    } else {
+      from = this.dateTo(pattern);
+      to = this.dateFrom(pattern);
+    }
+
+    return `${patternDisp} ( ${from} - ${to} )`;
+  }
+
+  isSpecificDateRange(pattern: string) {
+    return DATE_RANGE_PATTERN.期間指定 === Number(pattern);
   }
 }

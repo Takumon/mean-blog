@@ -17,6 +17,7 @@
         class="data"
         [(ngModel)]="form.name"
         placeholder="検索条件名"
+        ngDefaultControl
         required
         >
     </md-input-container>
@@ -34,6 +35,7 @@
         <md-checkbox
           class="user__check"
           [(ngModel)]="checkinfo.checked"
+          ngDefaultControl
           >
         </md-checkbox>
         <img
@@ -64,9 +66,36 @@
           class="date-search-pattern__factor"
           *ngFor="let key of (dateRangePatterns | keys)"
           [class.checked]="form.dateSearchPattern === key"
-          [value]="key" >{{dateRangePatterns[key]}}</md-radio-button>
+          [value]="key"
+          ngDefaultControl>{{dateRangePatterns[key]}}</md-radio-button>
       </md-radio-group>
     </div>
+    <div 
+      *ngIf="form && isSpecificDateRange(form.dateSearchPattern)"
+      class="data-wrapper">
+      <md-form-field>
+          <input
+            mdInput
+            [mdDatepicker]="fromPicker"
+            [(ngModel)]="form.dateFrom" 
+            ngDefaultControl
+            readonly          
+            placeholder="開始日">
+          <md-datepicker-toggle mdSuffix [for]="fromPicker"></md-datepicker-toggle>
+          <md-datepicker #fromPicker></md-datepicker>
+      </md-form-field>
+      <md-form-field>
+        <input
+          mdInput
+          [mdDatepicker]="toPicker"
+          [(ngModel)]="form.dateTo" 
+          ngDefaultControl
+          readonly           
+          placeholder="終了日">
+        <md-datepicker-toggle mdSuffix [for]="toPicker"></md-datepicker-toggle>
+        <md-datepicker #toPicker></md-datepicker>
+      </md-form-field>
+  </div>
   </div>
 
   <div md-dialog-actions style="display:flex;">

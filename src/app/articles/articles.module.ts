@@ -1,6 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { MaterialModule } from '@angular/material';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatMenuModule,
+  MatTabsModule,
+  MdInputModule,
+  MatRadioModule,
+  MdDatepickerModule,
+  MdNativeDateModule,
+  MatButtonToggleModule,
+  MatTooltipModule,
+  MatDialogModule,
+  MatSnackBarModule,
+  MatCardModule,
+  MatListModule,
+} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -49,10 +64,23 @@ import { SearchConditionDialogComponent } from './article-list/search-condition.
   imports: [
     BrowserModule,
     ArticlesRoutingModule,
-    MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MdInputModule,
+    MatRadioModule,
+    MdDatepickerModule,
+    MdNativeDateModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatListModule,
   ],
   providers: [
     ArticleService,
@@ -63,6 +91,7 @@ import { SearchConditionDialogComponent } from './article-list/search-condition.
   entryComponents: [
     VoterListComponent,
     SearchConditionDialogComponent,
-  ]
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class ArticlesModule { }

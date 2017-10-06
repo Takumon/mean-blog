@@ -1,6 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MaterialModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatTabsModule,
+  MatInputModule,
+  MatProgressBarModule,
+  MatSnackBarModule,
+} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
@@ -22,9 +28,13 @@ import { UserService } from './shared/user.service';
   imports: [
     BrowserModule,
     UsersRoutingModule,
-    MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
+    MatButtonModule,
+    MatTabsModule,
+    MatInputModule,
+    MatProgressBarModule,
+    MatSnackBarModule,
   ],
   providers: [
     UserService,

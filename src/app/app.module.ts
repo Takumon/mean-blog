@@ -3,7 +3,13 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatToolbarModule,
+  MatTabsModule,
+  MatMenuModule,
+  MatProgressBarModule,
+} from '@angular/material';
 import { Router } from '@angular/router';
 import 'hammerjs';
 
@@ -31,11 +37,15 @@ import { AuthGuard } from './shared/auth.guard';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MaterialModule,
     AppRoutingModule,
     LoginModule,
     ArticlesModule,
     UsersModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatTabsModule,
+    MatMenuModule,
+    MatProgressBarModule,
   ],
   providers: [
     AlertService,

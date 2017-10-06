@@ -4,7 +4,7 @@ import { Router, Response } from 'express';
 
 import { SearchCondition } from '../models/search-condition';
 
-
+const COSTOME_RANGE: String = '6';
 const searchConditionRouter: Router = Router();
 
 // 複数件検索
@@ -97,6 +97,15 @@ searchConditionRouter.get('/:_id', (req, res, next) => {
 // 登録
 searchConditionRouter.post('/', (req, res, next) => {
   const searchCondition = new SearchCondition(req.body);
+  if (searchCondition.dateSearchPattern === COSTOME_RANGE) {
+    if (req.body.dateFrom) {
+      searchCondition.dateFrom = new Date(req.body.dateFrom);
+    }
+
+    if (req.body.dateTo) {
+      searchCondition.dateTo = new Date(req.body.dateTo);
+    }
+  }
 
   searchCondition.save((err, result) => {
     if (err) {
@@ -116,6 +125,15 @@ searchConditionRouter.post('/', (req, res, next) => {
 // 更新（差分更新）
 searchConditionRouter.put('/:_id', (req, res, next) => {
   const searchCondition = req.body;
+  if (searchCondition.dateSearchPattern === COSTOME_RANGE) {
+    if (req.body.dateFrom) {
+      searchCondition.dateFrom = new Date(req.body.dateFrom);
+    }
+
+    if (req.body.dateTo) {
+      searchCondition.dateTo = new Date(req.body.dateTo);
+    }
+  }
 
   SearchCondition.update({
     _id: new mongoose.Types.ObjectId(req.params._id),

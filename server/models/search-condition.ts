@@ -12,9 +12,9 @@ const SearchConditoinSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
-  dateSearchPattern: { type: String },
   dateFrom: { type: Date },
   dateTo: { type: Date },
+  dateSearchPattern: { type: String },
 });
 
 const SearchCondition = mongoose.model('SearchCondition', SearchConditoinSchema);

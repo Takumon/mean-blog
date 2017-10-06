@@ -2,8 +2,13 @@ import { Component, Inject, OnInit} from '@angular/core';
 import {
   MdDialog,
   MdDialogRef,
-  MD_DIALOG_DATA
+  MD_DIALOG_DATA,
+  MdDatepickerModule,
+  MdNativeDateModule,
+  DateAdapter,
+  NativeDateAdapter,
 } from '@angular/material';
+import * as moment from 'moment';
 
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { UserModel } from '../../users/shared/user.model';
@@ -13,16 +18,28 @@ import { SearchConditionService } from '../shared/search-condition.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
+class MyDateAdapter extends NativeDateAdapter {
+  getDateNames(): string[] {
+    const dateNames: string[] = [];
+    for (let i = 0; i < 31; i++) {
+      dateNames[i] = String(i + 1);
+    }
+    return dateNames;
+  }
+}
+
 
 @Component({
   selector: 'app-search-condition-dialog',
   templateUrl: './search-condition.dialog.html',
   styleUrls: ['./search-condition.dialog.scss'],
+  providers: [ { provide: DateAdapter, useClass: MyDateAdapter }]
 })
 export class SearchConditionDialogComponent implements OnInit {
   form: SearchConditionModel;
   checklist: Array<any>;
   dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
+  customDateRange: any;
 
   constructor(
     public dialogRef: MdDialogRef<SearchConditionDialogComponent>,
@@ -30,8 +47,11 @@ export class SearchConditionDialogComponent implements OnInit {
     public auth: AuthenticationService,
     private userService: UserService,
     private searchConditionService: SearchConditionService,
-  ) {
+    dateAdapter: DateAdapter<NativeDateAdapter>) {
+      dateAdapter.setLocale('ja');
   }
+
+
 
 
   ngOnInit() {
@@ -85,6 +105,16 @@ export class SearchConditionDialogComponent implements OnInit {
       .filter(c => c.checked)
       .map(c => c._id);
 
+    if (this.isSpecificDateRange(this.form.dateSearchPattern)) {
+      if (this.form.dateFrom) {
+        this.form.dateFrom = moment(this.form.dateFrom).startOf('date').toString();
+      }
+      if (this.form.dateTo) {
+        this.form.dateTo = moment(this.form.dateTo).endOf('date').toString();
+      }
+    }
+
+
   }
 
   close(): void {
@@ -93,5 +123,9 @@ export class SearchConditionDialogComponent implements OnInit {
 
   resetDateSearchPattern() {
     this.form.dateSearchPattern = null;
+  }
+
+  isSpecificDateRange(pattern: string) {
+    return DATE_RANGE_PATTERN.期間指定 === Number(pattern);
   }
 }

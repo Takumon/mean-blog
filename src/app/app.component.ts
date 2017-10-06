@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-
 
 import { AuthenticationService } from './shared/services/authentication.service';
 import { RouteNamesService } from './shared/services/route-names.service';

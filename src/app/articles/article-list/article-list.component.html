@@ -49,7 +49,7 @@
           *ngIf="condition.dateSearchPattern"
           class="condition__date">
           <i class="fa fa-fw fa-calendar"></i>
-          <div class="condition__date__statement">{{dateRangePatterns[condition.dateSearchPattern]}} ( {{dateTo(condition.dateSearchPattern)}} - {{dateFrom(condition.dateSearchPattern)}} )</div>
+          <div class="condition__date__statement">{{dateRangeDisp(condition)}}</div>
         </div>
       </md-card-content>
       <md-card-actions>
