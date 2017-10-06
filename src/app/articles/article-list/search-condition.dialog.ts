@@ -67,6 +67,16 @@ export class SearchConditionDialogComponent implements OnInit {
         .getById(this.data.idForUpdate, withUser)
         .subscribe(conditionForUpdate => {
           this.form = conditionForUpdate;
+          if (this.form.dateSearchPattern
+              && (DATE_RANGE_PATTERN.期間指定 === Number(this.form.dateSearchPattern)) ) {
+            this.customDateRange = {};
+            if (this.form.dateFrom) {
+              this.customDateRange['dateFrom'] = new Date(this.form.dateFrom);
+            }
+            if (this.form.dateTo) {
+              this.customDateRange['dateTo'] = new Date(this.form.dateTo);
+            }
+          }
           const checkedUsers: Array<string> = this.form.users;
 
           this.userService.getAll()
@@ -106,15 +116,13 @@ export class SearchConditionDialogComponent implements OnInit {
       .map(c => c._id);
 
     if (this.isSpecificDateRange(this.form.dateSearchPattern)) {
-      if (this.form.dateFrom) {
-        this.form.dateFrom = moment(this.form.dateFrom).startOf('date').toString();
+      if (this.customDateRange.dateFrom) {
+        this.form.dateFrom = moment(this.customDateRange.dateFrom).startOf('date').toString();
       }
-      if (this.form.dateTo) {
-        this.form.dateTo = moment(this.form.dateTo).endOf('date').toString();
+      if (this.customDateRange.dateTo) {
+        this.form.dateTo = moment(this.customDateRange.dateTo).endOf('date').toString();
       }
     }
-
-
   }
 
   close(): void {

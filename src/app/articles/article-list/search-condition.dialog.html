@@ -71,13 +71,13 @@
       </md-radio-group>
     </div>
     <div 
-      *ngIf="form && isSpecificDateRange(form.dateSearchPattern)"
+      *ngIf="form && isSpecificDateRange(form.dateSearchPattern) && customDateRange"
       class="data-wrapper">
       <md-form-field>
           <input
             mdInput
             [mdDatepicker]="fromPicker"
-            [(ngModel)]="form.dateFrom" 
+            [(ngModel)]="customDateRange.dateFrom" 
             ngDefaultControl
             readonly          
             placeholder="開始日">
@@ -88,7 +88,7 @@
         <input
           mdInput
           [mdDatepicker]="toPicker"
-          [(ngModel)]="form.dateTo" 
+          [(ngModel)]="customDateRange.dateTo" 
           ngDefaultControl
           readonly           
           placeholder="終了日">
