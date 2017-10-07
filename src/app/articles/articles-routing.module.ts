@@ -11,7 +11,7 @@ const routes: Routes = [
     path: '',
     component: ArticleListComponent,
     pathMatch: 'full',
-    data: {mode: ArticleListComponent.Mode.FAVORIT},
+    data: {mode: ArticleListComponent.Mode.FAVORITE},
     canActivate: [AuthGuard]
   },
   {

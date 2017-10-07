@@ -40,7 +40,8 @@ import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
 import { VoterListComponent } from './article-list/voter-list.component';
-import { SearchConditionDialogComponent } from './article-list/search-condition.dialog';
+import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
+import { SearchConditionComponent } from './search-condition/search-condition.component';
 
 
 
@@ -54,6 +55,7 @@ import { SearchConditionDialogComponent } from './article-list/search-condition.
     CommentFormComponent,
     VoterListComponent,
     SearchConditionDialogComponent,
+    SearchConditionComponent,
     MarkdownParsePipe,
     OrderByPipe,
     ExcludeDeletedLeafCommentPipe,
