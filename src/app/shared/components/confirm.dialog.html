@@ -1,0 +1,6 @@
+<h2 md-dialog-title>{{data.title}}</h2>
+<div md-dialog-content>{{data.message}}</div>
+<div md-dialog-actions>
+  <button md-button md-dialog-close>いいえ</button>
+  <button md-button [md-dialog-close]="true">はい</button>
+</div>

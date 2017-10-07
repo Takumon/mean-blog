@@ -31,6 +31,7 @@ import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { SearchConditionService } from './shared/search-condition.service';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
+import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
 
 
 
@@ -62,6 +63,7 @@ import { SearchConditionComponent } from './search-condition/search-condition.co
     ExcludeDeletedLeafCommentPipe,
     ExcludeDeletedCommentPipe,
     KeysPipe,
+    ConfirmDialogComponent,
     AutofocusDirective,
   ],
   imports: [
@@ -95,6 +97,7 @@ import { SearchConditionComponent } from './search-condition/search-condition.co
   entryComponents: [
     VoterListComponent,
     SearchConditionDialogComponent,
+    ConfirmDialogComponent,
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
