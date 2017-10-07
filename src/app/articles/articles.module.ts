@@ -15,6 +15,7 @@ import {
   MatSnackBarModule,
   MatCardModule,
   MatListModule,
+  MatProgressSpinnerModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -83,6 +84,7 @@ import { SearchConditionComponent } from './search-condition/search-condition.co
     MatSnackBarModule,
     MatCardModule,
     MatListModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     ArticleService,

@@ -32,6 +32,7 @@ enum Mode {
 })
 export class ArticleListComponent implements OnInit {
   static Mode = Mode;
+  showPrograssBar: Boolean = false;
 
   @ViewChild(SearchConditionComponent)
   searchConditionComponent: SearchConditionComponent;
@@ -62,7 +63,7 @@ export class ArticleListComponent implements OnInit {
           this.getArticles();
           break;
         case Mode.FAVORITE:
-          // Do nothing
+          this.showPrograssBar = true;
           // 子コンポーネントの検索条件初期化が終わったらgetArticlesを呼ぶ
           break;
       }
@@ -79,6 +80,7 @@ export class ArticleListComponent implements OnInit {
   }
 
   getArticles(): void {
+    this.showPrograssBar = true;
     let condition;
     const withUser = true;
     switch (this.mode) {
@@ -86,10 +88,12 @@ export class ArticleListComponent implements OnInit {
         this.articleService.get({}, withUser)
         .subscribe(articles => {
           this.articles = articles as Array<ArticleWithUserModel>;
+          this.showPrograssBar = false;
         });
         break;
       case Mode.FAVORITE:
         if (!this.searchConditionComponent) {
+          this.showPrograssBar = false;
           return;
         }
         const cond = this.searchConditionComponent.createCondition();
@@ -98,6 +102,7 @@ export class ArticleListComponent implements OnInit {
           withUser)
         .subscribe(articles => {
           this.articles = articles as Array<ArticleWithUserModel>;
+          this.showPrograssBar = false;
         });
         break;
       case Mode.USER:
@@ -108,6 +113,7 @@ export class ArticleListComponent implements OnInit {
           }, withUser)
           .subscribe(articles => {
             this.articles = articles as Array<ArticleWithUserModel>;
+            this.showPrograssBar = false;
           });
         });
         break;

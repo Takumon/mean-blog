@@ -1,7 +1,3 @@
-<ng-container *ngIf="!articles">
-    <md-progress-bar mode="indeterminate"></md-progress-bar>    
-</ng-container>
-
 <app-search-condition
   *ngIf="mode && mode === Modes.FAVORITE"
   (changeSeaerchCondition)="getArticles()"
@@ -36,8 +32,11 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="articles?.length > 0">
-  <div class="article-list">
+<div class="prograss-bar" *ngIf="showPrograssBar" >
+  <md-spinner></md-spinner>
+</div>
+<ng-container *ngIf="articles && articles.length > 0">
+  <div class="article-list" *ngIf="!showPrograssBar">
     <div
       class="article-list__item article"
       *ngFor="let item of articles | orderby: ['-created']">
@@ -93,7 +92,7 @@
           <i class="fa fa-fw fa-commenting"></i>コメントする
         </button>
       </div>
-       
+      
       <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
       
       <ng-template #displayComment>
