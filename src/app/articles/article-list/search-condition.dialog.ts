@@ -36,10 +36,10 @@ class MyDateAdapter extends NativeDateAdapter {
   providers: [ { provide: DateAdapter, useClass: MyDateAdapter }]
 })
 export class SearchConditionDialogComponent implements OnInit {
-  form: SearchConditionModel;
-  checklist: Array<any>;
+  // formグループ化したい
+  form: any;
+  output: any = {};
   dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
-  customDateRange: any;
 
   constructor(
     public dialogRef: MdDialogRef<SearchConditionDialogComponent>,
@@ -61,27 +61,32 @@ export class SearchConditionDialogComponent implements OnInit {
   cerateForm() {
     // TODO ページング
     if (this.data.idForUpdate) {
+      // 更新時
       const withUser = false;
 
       this.searchConditionService
         .getById(this.data.idForUpdate, withUser)
         .subscribe(conditionForUpdate => {
-          this.form = conditionForUpdate;
+          this.form = {
+            _id: conditionForUpdate._id,
+            name: conditionForUpdate.name,
+            dateSearchPattern: conditionForUpdate.dateSearchPattern,
+          };
           if (this.form.dateSearchPattern
-              && (DATE_RANGE_PATTERN.期間指定 === Number(this.form.dateSearchPattern)) ) {
-            this.customDateRange = {};
-            if (this.form.dateFrom) {
-              this.customDateRange['dateFrom'] = new Date(this.form.dateFrom);
+              && (DATE_RANGE_PATTERN.期間指定 === Number(conditionForUpdate.dateSearchPattern)) ) {
+            if (conditionForUpdate.dateFrom) {
+              this.form['dateFrom'] = new Date(conditionForUpdate.dateFrom);
             }
-            if (this.form.dateTo) {
-              this.customDateRange['dateTo'] = new Date(this.form.dateTo);
+            if (conditionForUpdate.dateTo) {
+              this.form['dateTo'] = new Date(conditionForUpdate.dateTo);
             }
           }
-          const checkedUsers: Array<string> = this.form.users;
+
+          const checkedUsers: Array<string> = conditionForUpdate.users;
 
           this.userService.getAll()
             .subscribe(users => {
-              this.checklist = users.map(user => {
+              this.form['checkUserList'] = users.map(user => {
                 const _id = user._id.toString();
                 const checked = checkedUsers.indexOf(_id) !== -1;
 
@@ -94,11 +99,11 @@ export class SearchConditionDialogComponent implements OnInit {
             });
         });
     } else {
-      this.form = new SearchConditionModel();
-      this.form.author = this.auth.loginUser._id.toString();
+      // 新規登録時
+      this.form = {};
       this.userService.getAll()
         .subscribe(users => {
-          this.checklist = users.map(user => {
+          this.form['checkUserList'] = users.map(user => {
             return {
               _id: user._id,
               checked: false, // 全てチェックオフ
@@ -110,17 +115,22 @@ export class SearchConditionDialogComponent implements OnInit {
     }
   }
 
-  validate() {
-    this.form.users = this.checklist
-      .filter(c => c.checked)
-      .map(c => c._id);
+  setOutput() {
+    this.output.name = this.form.name;
+    this.output.author = this.auth.loginUser._id;
+    this.output.users = this.form.checkUserList.filter(c => c.checked).map(c => c._id);
+    this.output.dateSearchPattern = this.form.dateSearchPattern;
+
+    if (this.form._id) {
+      this.output._id = this.form._id;
+    }
 
     if (this.isSpecificDateRange(this.form.dateSearchPattern)) {
-      if (this.customDateRange.dateFrom) {
-        this.form.dateFrom = moment(this.customDateRange.dateFrom).startOf('date').toString();
+      if (this.form.dateFrom) {
+        this.output.dateFrom = moment(this.form.dateFrom).startOf('date').toString();
       }
-      if (this.customDateRange.dateTo) {
-        this.form.dateTo = moment(this.customDateRange.dateTo).endOf('date').toString();
+      if (this.form.dateTo) {
+        this.output.dateTo = moment(this.form.dateTo).endOf('date').toString();
       }
     }
   }

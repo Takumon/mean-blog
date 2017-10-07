@@ -124,6 +124,7 @@ searchConditionRouter.post('/', (req, res, next) => {
 
 // 更新（差分更新）
 searchConditionRouter.put('/:_id', (req, res, next) => {
+  let model;
   const searchCondition = req.body;
   if (searchCondition.dateSearchPattern === COSTOME_RANGE) {
     if (req.body.dateFrom) {
@@ -133,11 +134,22 @@ searchConditionRouter.put('/:_id', (req, res, next) => {
     if (req.body.dateTo) {
       searchCondition.dateTo = new Date(req.body.dateTo);
     }
+
+    model = {$set: searchCondition };
+  } else {
+    // 期間指定からそれ以外のdateSearchPatternに変更した場合dateFromとdateToは削除する
+    model = {
+      $set: searchCondition,
+      $unset: {
+        dateFrom: '',
+        dateTo: '',
+      },
+    };
   }
 
   SearchCondition.update({
     _id: new mongoose.Types.ObjectId(req.params._id),
-  }, {$set: searchCondition }, (err, result) => {
+  }, model, (err, result) => {
 
     if (err) {
       return res.status(500).json({

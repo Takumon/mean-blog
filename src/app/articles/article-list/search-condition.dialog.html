@@ -7,10 +7,8 @@
         <i class="fa fa-fw fa-times" aria-hidden="true"></i>
     </div>
   </div> 
-  <div md-dialog-content>
-    <md-input-container
-      *ngIf="form"
-      class="data-wrapper">
+  <div md-dialog-content *ngIf="form">
+    <md-input-container class="data-wrapper">
       <input 
         mdInput
         type="text"
@@ -18,25 +16,23 @@
         [(ngModel)]="form.name"
         placeholder="検索条件名"
         ngDefaultControl
-        required
-        >
+        required >
     </md-input-container>
-    <ng-container *ngIf="!checklist">
-        <md-progress-bar mode="indeterminate"></md-progress-bar>    
+
+    <ng-container *ngIf="!form.checkUserList">
+      <md-progress-bar mode="indeterminate"></md-progress-bar>    
     </ng-container>
-    <div *ngIf="checklist" class="data-label">
+    <div *ngIf="form.checkUserList" class="data-label">
       <i class="fa fa-fw fa-user"></i> ユーザ
     </div>
-    <md-list *ngIf="checklist" class="data-wrapper">
+    <md-list *ngIf="form.checkUserList" class="data-wrapper">
       <md-list-item
-        *ngFor="let checkinfo of checklist"
-        class="user"
-        >
+        *ngFor="let checkinfo of form.checkUserList"
+        class="user" >
         <md-checkbox
           class="user__check"
           [(ngModel)]="checkinfo.checked"
-          ngDefaultControl
-          >
+          ngDefaultControl >
         </md-checkbox>
         <img
           (click)="checkinfo.checked = !checkinfo.checked"
@@ -47,7 +43,7 @@
           class="user__userId">{{checkinfo.user.userId}}</p>
       </md-list-item>
     </md-list>
-    <div *ngIf="checklist" class="data-label">
+    <div class="data-label">
       <div><i class="fa fa-fw fa-calendar"></i> 投稿日</div>
       <div class="data-label__spacer"></div>
       <button
@@ -71,13 +67,13 @@
       </md-radio-group>
     </div>
     <div 
-      *ngIf="form && isSpecificDateRange(form.dateSearchPattern) && customDateRange"
+      *ngIf="isSpecificDateRange(form.dateSearchPattern)"
       class="data-wrapper">
       <md-form-field>
           <input
             mdInput
             [mdDatepicker]="fromPicker"
-            [(ngModel)]="customDateRange.dateFrom" 
+            [(ngModel)]="form.dateFrom" 
             ngDefaultControl
             readonly          
             placeholder="開始日">
@@ -88,14 +84,14 @@
         <input
           mdInput
           [mdDatepicker]="toPicker"
-          [(ngModel)]="customDateRange.dateTo" 
+          [(ngModel)]="form.dateTo" 
           ngDefaultControl
           readonly           
           placeholder="終了日">
         <md-datepicker-toggle mdSuffix [for]="toPicker"></md-datepicker-toggle>
         <md-datepicker #toPicker></md-datepicker>
       </md-form-field>
-  </div>
+    </div>
   </div>
 
   <div md-dialog-actions style="display:flex;">
@@ -104,7 +100,7 @@
     <button
       md-raised-button
       color="primary"
-      (click)="validate()"
-      [md-dialog-close]="form">決定</button>
+      (click)="setOutput()"
+      [md-dialog-close]="output">決定</button>
   </div>
 </div>

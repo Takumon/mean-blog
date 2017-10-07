@@ -187,7 +187,11 @@ export class ArticleListComponent implements OnInit {
     }
 
     if (selected.dateSearchPattern) {
-      const dateRangeCondition = this.dateRange.of(selected.dateSearchPattern);
+      const dateRangeCondition = this.dateRange.of(
+        selected.dateSearchPattern,
+        selected.dateFrom && new Date(selected.dateFrom),
+        selected.dateTo && new Date(selected.dateTo)
+      );
       condition['dateFrom'] = dateRangeCondition.dateFrom;
       condition['dateTo'] = dateRangeCondition.dateTo;
     }
