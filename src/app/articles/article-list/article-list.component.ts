@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -16,6 +16,7 @@ import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
 import { VoterListComponent } from './voter-list.component';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
+import { SearchConditionComponent } from '../search-condition/search-condition.component';
 
 enum Mode {
   ALL,
@@ -31,6 +32,10 @@ enum Mode {
 })
 export class ArticleListComponent implements OnInit {
   static Mode = Mode;
+
+  @ViewChild(SearchConditionComponent)
+  searchConditionComponent: SearchConditionComponent;
+
   Modes: typeof Mode = Mode;
   mode;
   articles: Array<ArticleWithUserModel>;
@@ -49,7 +54,20 @@ export class ArticleListComponent implements OnInit {
 
   ngOnInit() {
     // TODO 子コンポーネントの検索結果取得を待ってから記事検索する
-    this.getArticles();
+    this.route.data.subscribe((data: any) => {
+      this.mode = data['mode'];
+      switch (this.mode) {
+        case Mode.ALL:
+        case Mode.USER:
+          this.getArticles();
+          break;
+        case Mode.FAVORITE:
+          // Do nothing
+          // 子コンポーネントの検索条件初期化が終わったらgetArticlesを呼ぶ
+          break;
+      }
+    });
+
   }
 
   refreshComments(item: ArticleWithUserModel, event: any) {
@@ -61,40 +79,39 @@ export class ArticleListComponent implements OnInit {
   }
 
   getArticles(): void {
-    this.route.data.subscribe((data: any) => {
-      let condition;
-      const withUser = true;
-      this.mode = data['mode'];
-      switch (this.mode) {
-        case Mode.ALL:
-          this.articleService.get({}, withUser)
+    let condition;
+    const withUser = true;
+    switch (this.mode) {
+      case Mode.ALL:
+        this.articleService.get({}, withUser)
+        .subscribe(articles => {
+          this.articles = articles as Array<ArticleWithUserModel>;
+        });
+        break;
+      case Mode.FAVORITE:
+        if (!this.searchConditionComponent) {
+          return;
+        }
+        const cond = this.searchConditionComponent.createCondition();
+        this.articleService.get(
+          cond,
+          withUser)
+        .subscribe(articles => {
+          this.articles = articles as Array<ArticleWithUserModel>;
+        });
+        break;
+      case Mode.USER:
+        this.route.parent.params.subscribe( params => {
+          const userId = params['_userId'];
+          this.articleService.get(condition = {
+            author: { userId: userId }
+          }, withUser)
           .subscribe(articles => {
             this.articles = articles as Array<ArticleWithUserModel>;
           });
-          break;
-        case Mode.FAVORITE:
-          this.articleService.get(
-            // TODO 子コンポーネントから検索条件をもらう
-            // this.createCondition(),
-            {},
-            withUser)
-          .subscribe(articles => {
-            this.articles = articles as Array<ArticleWithUserModel>;
-          });
-          break;
-        case Mode.USER:
-          this.route.parent.params.subscribe( params => {
-            const userId = params['_userId'];
-            this.articleService.get(condition = {
-              author: { userId: userId }
-            }, withUser)
-            .subscribe(articles => {
-              this.articles = articles as Array<ArticleWithUserModel>;
-            });
-          });
-          break;
-      }
-    });
+        });
+        break;
+    }
   }
 
 
