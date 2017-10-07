@@ -13,6 +13,7 @@ import { UserModel } from '../../users/shared/user.model';
 import { SearchConditionDialogComponent } from './search-condition.dialog';
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 @Component({
   selector: 'app-search-condition',
@@ -172,13 +173,26 @@ export class SearchConditionComponent implements OnInit {
     });
   }
 
-  deleteCondition(id: string) {
-    this.searchConditionService
+  deleteCondition(id: string, name: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: '検索条件削除',
+        message: `「${name}」を削除しますか？`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.searchConditionService
       .delete(id)
       .subscribe(res => {
-        this.snackBar.open('お気に入り検索条件を削除しました。', null, {duration: 3000});
+        this.snackBar.open(`お気に入り検索条件「${name}」を削除しました。`, null, {duration: 3000});
           this.getSearchCondition();
       });
+    });
   }
 
   dateRangeDisp(condition: SearchConditionModel): string {
