@@ -1,5 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { MdSnackBar } from '@angular/material';
+import {
+  MdSnackBar,
+  MdDialog,
+} from '@angular/material';
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
@@ -8,7 +11,7 @@ import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
-
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 @Component({
   selector: 'app-comment-list',
@@ -31,6 +34,7 @@ export class CommentListComponent implements OnInit {
     public auth: AuthenticationService,
     private articleService: ArticleService,
     private commentService: CommentService,
+    public dialog: MdDialog,
   ) {
   }
 
@@ -84,11 +88,24 @@ export class CommentListComponent implements OnInit {
 
 
   deleteComment(commentId: String): void {
-    this.commentService
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'コメント削除',
+        message: `コメントを削除しますか？`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.commentService
       .delete(commentId)
       .subscribe(res => {
         this.snackBar.open('コメントを削除しました。', null, {duration: 3000});
         this.refreshComments();
       });
+    });
   }
 }
