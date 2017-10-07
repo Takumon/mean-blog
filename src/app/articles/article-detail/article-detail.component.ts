@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { MdSnackBar } from '@angular/material';
+import {
+  MdSnackBar,
+  MdDialog,
+} from '@angular/material';
 
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -10,6 +13,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 @Component({
   selector: 'app-article-detail',
@@ -32,6 +36,7 @@ export class ArticleDetailComponent implements OnInit {
     private routeNamesService: RouteNamesService,
     public auth: AuthenticationService,
     private articleService: ArticleService,
+    public dialog: MdDialog,
   ) {
   }
 
@@ -59,11 +64,24 @@ export class ArticleDetailComponent implements OnInit {
   }
 
   deleteArticle(): void {
-    this.articleService.delete(this.article._id)
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: '記事削除',
+        message: `記事を削除しますか？`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.articleService.delete(this.article._id)
       .subscribe(article => {
         this.snackBar.open('記事を削除しました。', null, {duration: 3000});
         this.goBack();
       });
+    });
   }
 
   registerVote(): void {
