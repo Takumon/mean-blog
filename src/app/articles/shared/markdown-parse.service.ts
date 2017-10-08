@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import marked from 'marked';
 import hljs from 'highlight.js';
 
+const MARKDOWN_HEADER_CLASS = 'markdown-header';
+
+export { MARKDOWN_HEADER_CLASS };
 
 @Injectable()
 export class MarkdownParseService {
@@ -33,7 +36,8 @@ export class MarkdownParseService {
       });
       if (baseUrl) {
         const url = `${baseUrl}#${encodedSlug}`;
-        return `<h${level} id="${slug}"><a href="${url}" class="anchor"><i class="fa fa-link"></i></a>${text}</h${level}>`;
+        const headerAnchor = `<a href="${url}" class="anchor"><i class="fa fa-link"></i></a>`;
+        return `<h${level} class="${MARKDOWN_HEADER_CLASS}" id="${slug}">${headerAnchor}${text}</h${level}>`;
       } else {
         return `<h${level}>${text}</h${level}>`;
       }
