@@ -160,7 +160,6 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit {
 
   scrollToAnchor(elementId: string): void {
     const element: any = document.querySelector('#' + elementId);
-    console.log(element);
     if (!element) {
       return;
     }
@@ -169,7 +168,10 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit {
     setTimeout(function() {
       // ヘッダー分下にずらす
       scrollContainer.scrollTop = element.offsetTop - 90;
-      element.classList.add('highlighted');
+      element.classList.remove('highlighted');
+      setTimeout(function() {
+        element.classList.add('highlighted');
+      }, 0);
     }, 0);
   }
 }
