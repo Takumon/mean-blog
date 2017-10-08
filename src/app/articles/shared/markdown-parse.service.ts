@@ -32,7 +32,8 @@ export class MarkdownParseService {
         title: text
       });
       if (baseUrl) {
-        return `<h${level} id="${slug}"><a href="${baseUrl}#${slug}" class="anchor"><i class="fa fa-link"></i></a>${text}</h${level}>`;
+        const url = `${baseUrl}#${encodedSlug}`;
+        return `<h${level} id="${slug}"><a href="${url}" class="anchor"><i class="fa fa-link"></i></a>${text}</h${level}>`;
       } else {
         return `<h${level}>${text}</h${level}>`;
       }
