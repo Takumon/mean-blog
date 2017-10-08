@@ -31,8 +31,8 @@ import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { SearchConditionService } from './shared/search-condition.service';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
+import { SafeHtmlPipe } from './shared/safe-html.pipe';
 import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
-
 
 
 import { ArticlesRoutingModule } from './articles-routing.module';
@@ -63,6 +63,7 @@ import { SearchConditionComponent } from './search-condition/search-condition.co
     ExcludeDeletedLeafCommentPipe,
     ExcludeDeletedCommentPipe,
     KeysPipe,
+    SafeHtmlPipe,
     ConfirmDialogComponent,
     AutofocusDirective,
   ],

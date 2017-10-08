@@ -59,7 +59,7 @@
           ></textarea>
       </div>
       <div [ngClass]="['markdonw-editor__preview', markdonwEditMode]" #syncScrollTarget>
-        <p [innerHTML]="body.value | toMarkdown" class="markdown-body"></p>
+        <p [innerHTML]="(body.value | toMarkdown).text" class="markdown-body"></p>
       </div>
     </div>
   </ng-template>

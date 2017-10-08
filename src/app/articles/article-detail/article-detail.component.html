@@ -1,6 +1,17 @@
 <div *ngIf="!article">
     <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>    
-</div>  
+</div>
+<div  *ngIf="toc" class="toc">
+  <div
+    class="toc__head"
+    *ngFor="let headInfo of toc"
+    [style.marginLeft.px]="calcMarginOfComment(headInfo.level)"
+    >
+    <a class="toc__head__link"
+      [routerLink]="['/', article.author.userId, 'articles', article._id]"
+      fragment="{{headInfo.slug}}">{{headInfo.title}}</a>
+  </div>
+</div>
 <div  *ngIf="article" class="article">
   <div class="article__header header">
     <div class="header__title-wrapper">
@@ -94,10 +105,13 @@
   <div class="article__main">
     <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
     <ng-template #markdown>
-      <p [innerHTML]="article.body | toMarkdown" class="markdown-body"></p>
+      <p
+        #markdownText
+        [innerHTML]="text | safeHtml" 
+        class="markdown-body"></p>
     </ng-template>
     <ng-template #plainText>
-      <pre [innerHTML]="article.body" class="plain-text-body"></pre>                
+      <pre [innerHTML]="text" class="plain-text-body"></pre>                
     </ng-template>
   </div>
 </div>

@@ -7,7 +7,7 @@ export class MarkdownParsePipe implements PipeTransform {
     private markdownParseService: MarkdownParseService,
   ) {}
 
-  transform(rawText: string): string {
+  transform(rawText: string): any {
     if (!rawText) {
       return '';
     }

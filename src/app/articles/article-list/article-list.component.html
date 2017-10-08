@@ -57,7 +57,7 @@
       <div class="article__main">
         <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
         <ng-template #markdown>
-          <p [innerHTML]="item.body | toMarkdown" class="markdown-body"></p>
+          <p [innerHTML]="(item.body | toMarkdown).text" class="markdown-body"></p>
         </ng-template>
         <ng-template #plainText>
           <pre [innerHTML]="item.body" class="plain-text-body"></pre>                

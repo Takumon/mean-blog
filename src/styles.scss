@@ -69,6 +69,49 @@ input,textarea {
 }
 
 
+
+.markdown-body {
+  h1, h2, h3, h4, h5, h6 {
+    position: relative;
+  }
+
+  h1 .fa.fa-link,
+  h2 .fa.fa-link,
+  h3 .fa.fa-link,
+  h4 .fa.fa-link,
+  h5 .fa.fa-link,
+  h6 .fa.fa-link {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: -28px;
+    margin-top: -18px;
+    padding: 10px 5px 10px 10px;
+    color: #555;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  h1:hover .fa.fa-link,
+  h2:hover .fa.fa-link,
+  h3:hover .fa.fa-link,
+  h4:hover .fa.fa-link,
+  h5:hover .fa.fa-link,
+  h6:hover .fa.fa-link {
+    display: block;
+  }
+
+  h1:hover .fa.fa-link:hover,
+  h2:hover .fa.fa-link:hover,
+  h3:hover .fa.fa-link:hover,
+  h4:hover .fa.fa-link:hover,
+  h5:hover .fa.fa-link:hover,
+  h6:hover .fa.fa-link:hover {
+    color: blue;
+  }
+
+}
+
 /* 
  * 一覧のMarkdownは限られたスペースで多くの情報を表示したいので
  * スタイルをスリムアップする

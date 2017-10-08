@@ -1,4 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ViewChildren,
+  ContentChild,
+  ContentChildren,
+  QueryList,
+  ElementRef
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -14,6 +24,7 @@ import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { MarkdownParseService } from '../shared/markdown-parse.service';
 
 @Component({
   selector: 'app-article-detail',
@@ -21,11 +32,15 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
   styleUrls: ['./article-detail.component.scss'],
   providers: [ ArticleService ]
 })
-export class ArticleDetailComponent implements OnInit {
+export class ArticleDetailComponent implements OnInit, AfterViewInit {
   @ViewChild(CommentListComponent)
   commentListComponent: CommentListComponent;
 
+  @ViewChildren('markdownText') markdownTexts: QueryList<ElementRef>;
+
   article: ArticleWithUserModel;
+  text: string;
+  toc: string;
 
   constructor(
     public snackBar: MdSnackBar,
@@ -37,6 +52,7 @@ export class ArticleDetailComponent implements OnInit {
     public auth: AuthenticationService,
     private articleService: ArticleService,
     public dialog: MdDialog,
+    private markdownParseService: MarkdownParseService,
   ) {
   }
 
@@ -45,6 +61,15 @@ export class ArticleDetailComponent implements OnInit {
     this.getArticle();
   }
 
+  // markdonwテキストが初期化時に
+  // ハッシュタグで指定したhタグまでスクロールする
+  ngAfterViewInit() {
+    this.markdownTexts.changes.subscribe((changes: any) => {
+      this.route.fragment.subscribe((fragment: string) => {
+        this.scrollToAnchor(fragment);
+      });
+    });
+  }
 
   getArticle(): void {
     this.route.params.subscribe( params => {
@@ -59,6 +84,14 @@ export class ArticleDetailComponent implements OnInit {
         }
 
         this.article = article as ArticleWithUserModel;
+        if (this.article.isMarkdown) {
+          const baseUrl = `/${article.author.userId}/articles/${article._id}`;
+          const parsed = this.markdownParseService.parse(this.article.body, baseUrl);
+          this.text = parsed.text;
+          this.toc = parsed.toc;
+        } else {
+          this.text = this.article.body;
+        }
       });
     });
   }
@@ -121,4 +154,21 @@ export class ArticleDetailComponent implements OnInit {
     this.location.back();
   }
 
+  calcMarginOfComment(level: number): number {
+    return level * 12;
+  }
+
+  scrollToAnchor(elementId: string): void {
+    const element: any = document.querySelector('#' + elementId);
+    console.log(element);
+    if (!element) {
+      return;
+    }
+
+    const scrollContainer = document.getElementsByTagName('html')[0];
+    setTimeout(function() {
+      // ヘッダー分下にずらす
+      scrollContainer.scrollTop = element.offsetTop - 90;
+    }, 0);
+  }
 }
