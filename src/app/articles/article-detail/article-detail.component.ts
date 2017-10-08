@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   ViewChild,
   ViewChildren,
   ContentChild,
@@ -15,7 +16,12 @@ import {
   MdSnackBar,
   MdDialog,
 } from '@angular/material';
-
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { asap } from 'rxjs/scheduler/asap';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/subscribeOn';
+import 'rxjs/add/operator/takeUntil';
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { ArticleService } from '../shared/article.service';
@@ -24,7 +30,9 @@ import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { MarkdownParseService } from '../shared/markdown-parse.service';
+import { MarkdownParseService, MARKDOWN_HEADER_CLASS } from '../shared/markdown-parse.service';
+import { TocService } from '../../shared/services/toc.service';
+import { ScrollService } from '../../shared/services/scroll.service';
 
 @Component({
   selector: 'app-article-detail',
@@ -32,12 +40,16 @@ import { MarkdownParseService } from '../shared/markdown-parse.service';
   styleUrls: ['./article-detail.component.scss'],
   providers: [ ArticleService ]
 })
-export class ArticleDetailComponent implements OnInit, AfterViewInit {
+export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+  // HTMLでコメント件数を参照する用
   @ViewChild(CommentListComponent)
   commentListComponent: CommentListComponent;
 
   @ViewChildren('markdownText') markdownTexts: QueryList<ElementRef>;
 
+  private onDestroy = new Subject();
+
+  activeIndex: number | null = null;
   article: ArticleWithUserModel;
   text: string;
   toc: string;
@@ -53,6 +65,8 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit {
     private articleService: ArticleService,
     public dialog: MdDialog,
     private markdownParseService: MarkdownParseService,
+    private tocService: TocService,
+    private scrollService: ScrollService,
   ) {
   }
 
@@ -64,12 +78,65 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit {
   // markdonwテキストが初期化時に
   // ハッシュタグで指定したhタグまでスクロールする
   ngAfterViewInit() {
-    this.markdownTexts.changes.subscribe((changes: any) => {
-      this.route.fragment.subscribe((fragment: string) => {
-        this.scrollToAnchor(fragment);
-      });
+    this.markdownTexts.changes
+    .takeUntil(this.onDestroy)
+    .subscribe((changes: any) => {
+      const _headings = document.querySelectorAll('.' + MARKDOWN_HEADER_CLASS);
+      const skipNoTocHeadings = (heading: HTMLHeadingElement) => !/(?:no-toc|notoc)/i.test(heading.className);
+      const headings = Array.prototype.filter.call(_headings, skipNoTocHeadings);
+      this.tocService.genToc(headings);
+
+      if (window.location.hash) {
+        // 一旦指定したタイトルにスクロールしてから
+        // スクロールイベントを開始する
+        let isFirst = true;
+        this.route.fragment
+          .takeUntil(this.onDestroy)
+          .subscribe((fragment: string) => {
+            this.scrollToAnchor(fragment);
+            if (isFirst) {
+              isFirst = false;
+              this.tocService.activeItemIndex
+              .takeUntil(this.onDestroy)
+              .subscribe(index => {
+                this.activeIndex = index;
+              });
+            }
+          });
+
+
+      } else {
+        // リロード前にスクロールしている場合
+        // 明示的に初期化する
+        this.scrollService.scrollToTop();
+        this.tocService.activeItemIndex
+          .takeUntil(this.onDestroy)
+          .subscribe(index => {
+            this.activeIndex = index;
+          });
+
+        this.route.fragment
+          .takeUntil(this.onDestroy)
+          .subscribe((fragment: string) => {
+            this.scrollToAnchor(fragment);
+          });
+      }
+
+      // ハッシュタグがある場合は一度指定したタイトルにスクロールしてから
+      // スクロールの監視を開始する
+
+
+
+
     });
   }
+
+
+  ngOnDestroy() {
+    this.tocService.reset();
+    this.onDestroy.next();
+  }
+
 
   getArticle(): void {
     this.route.params.subscribe( params => {
@@ -167,11 +234,12 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit {
     const scrollContainer = document.getElementsByTagName('html')[0];
     setTimeout(function() {
       // ヘッダー分下にずらす
-      scrollContainer.scrollTop = element.offsetTop - 90;
       element.classList.remove('highlighted');
       setTimeout(function() {
+        scrollContainer.scrollTop = element.offsetTop - 90;
         element.classList.add('highlighted');
       }, 0);
     }, 0);
   }
+
 }

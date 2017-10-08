@@ -111,11 +111,12 @@
           <div class="toc__title">記事の目次</div>
           <div
             class="toc__head"
-            *ngFor="let headInfo of toc"
+            *ngFor="let headInfo of toc; let index = index;"
             >
             <div class="toc__head__link"
               [style.paddingLeft.px]="calcMarginOfComment(headInfo.level)"
               [routerLink]="['/', article.author.userId, 'articles', article._id]"
+              [class.active]="index === activeIndex"
               fragment="{{headInfo.slug}}">{{headInfo.title}}</div>
           </div>
         </div>

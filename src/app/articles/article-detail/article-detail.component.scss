@@ -49,7 +49,22 @@
       box-sizing: border-box;
       
       &:hover {
-        color: #FD95B6;
+        color: #383838;
+        background: #E8E8E8;
+
+        &:before {
+          content: "";
+          left: -8px;
+          top: 0;
+          bottom: 0;
+          background: #717171;
+          position: absolute;
+          width: 4px;
+        }
+      }
+
+      &.active {
+        color: #ec407a;
         background: #FFEFF3;
 
         &:before {
