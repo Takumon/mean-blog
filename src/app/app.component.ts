@@ -6,6 +6,7 @@ import { AuthenticationService } from './shared/services/authentication.service'
 import { RouteNamesService } from './shared/services/route-names.service';
 import { UserModel } from './users/shared/user.model';
 import { NavLinkModel } from './shared/models/nav-link.model';
+import { ScrollService } from './shared/services/scroll.service';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     public routeNameService: RouteNamesService,
     public auth: AuthenticationService,
+    private scrollService: ScrollService,
   ) {
   }
 
@@ -37,7 +39,7 @@ export class AppComponent implements OnInit {
       this.refreshActiveNavbar();
       // 記事詳細はハッシュタグでスクロール制御するので除外
       if (!this.router.url.includes('/articles/')) {
-        window.scrollTo(0, 0);
+        this.scrollService.scrollToTop();
       }
     });
 
