@@ -24,6 +24,9 @@ import { JwtService } from './shared/services/jwt.service';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { LocalStrageService } from './shared/services/local-strage.service';
 import { AlertService } from './shared/services/alert.service';
+import { ScrollSpyService } from './shared/services/scroll-spy.service';
+import { ScrollService } from './shared/services/scroll.service';
+import { TocService } from './shared/services/toc.service';
 import { AuthGuard } from './shared/auth.guard';
 
 
@@ -49,6 +52,9 @@ import { AuthGuard } from './shared/auth.guard';
   ],
   providers: [
     AlertService,
+    ScrollSpyService,
+    ScrollService,
+    TocService,
     RouteNamesService,
     JwtService,
     AuthenticationService,
