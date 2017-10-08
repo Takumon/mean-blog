@@ -1,15 +1,78 @@
 .toc {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+
+  width: 300px;
+  top: 100px;
+  margin-left: 50px;
+  bottom: 48px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-left: 4px;  
+  padding-bottom: 42px;
+  max-height: 80vh;
+  color: #767575;  
+  font-size: 13px;
+  font-weight: bold;
+  
+  &__inner {
+    overflow-y: visible;
+    border-left: 4px solid #A9A9A9;
+    padding: 4px 4px 0 4px;
+  }
+
+  &__title {
+    padding: 4px;
+    font-weight: 100;
+    font-size: 24px;
+
+    &:after {
+      content: "";
+      display: block;
+      height: 1px;
+      width: 60%;
+      margin: 7px 0 4px 0;
+      background: #dbdbdb;
+      clear: both;
+    }
+
+  }
+
   &__head {
+    position: relative;
 
     &__link {
+      padding: 2px 4px;      
+      cursor: pointer;
+      width: 100%;
+      word-wrap: break-word;
+      box-sizing: border-box;
       
+      &:hover {
+        color: #FD95B6;
+        background: #FFEFF3;
+
+        &:before {
+          content: "";
+          left: -8px;
+          top: 0;
+          bottom: 0;
+          background: #ec407a;
+          position: absolute;
+          width: 4px;
+        }
+      }
+  
+      &:focus {
+        outline: 0;
+      }
     }
   }
 }
 
 .article {
-  width: 1114px;
-  margin: auto;
+  width: 980px;
+  margin-left: 44px;
   margin-top: 44px;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
   margin-bottom: 96px;
@@ -76,25 +139,36 @@
 
 
   &__main {
-    padding: 48px;
-    background: white;
-    color: #222;
-    -webkit-font-smoothing: antialiased;
-    
-    .plain-text-body {
-      white-space: pre;          
-      white-space: pre-wrap;
-      white-space: pre-line;
-      white-space: -pre-wrap;
-      white-space: -o-pre-wrap;
-      white-space: -moz-pre-wrap;
-      white-space: -hp-pre-wrap;
-      word-wrap: break-word;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-      font-size: 16px;
-      line-height: 1.5;
-      color: #24292e;
-    }    
+    display: flex;
+
+    &__content {
+      display: flex;
+      padding: 48px;
+      background: white;
+      color: #222;
+      -webkit-font-smoothing: antialiased;
+      box-sizing: border-box;
+      min-width: 100%;
+      
+      .markdown-body {
+        width: 100%;
+      }
+      .plain-text-body {
+        width: 100%;        
+        white-space: pre;          
+        white-space: pre-wrap;
+        white-space: pre-line;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -hp-pre-wrap;
+        word-wrap: break-word;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 16px;
+        line-height: 1.5;
+        color: #24292e;
+      }    
+    }
   }
 }
 
@@ -196,9 +270,9 @@
 
 
 .comments {
-  width: 1114px;
+  width: 980px;
+  margin-left: 44px;
   box-sizing: border-box;
-  margin: auto;
   box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
   padding: 48px;
   background: white;

@@ -1,17 +1,6 @@
 <div *ngIf="!article">
     <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>    
 </div>
-<div  *ngIf="toc" class="toc">
-  <div
-    class="toc__head"
-    *ngFor="let headInfo of toc"
-    [style.marginLeft.px]="calcMarginOfComment(headInfo.level)"
-    >
-    <a class="toc__head__link"
-      [routerLink]="['/', article.author.userId, 'articles', article._id]"
-      fragment="{{headInfo.slug}}">{{headInfo.title}}</a>
-  </div>
-</div>
 <div  *ngIf="article" class="article">
   <div class="article__header header">
     <div class="header__title-wrapper">
@@ -102,17 +91,37 @@
       </md-menu>
     </div>
   </div>
-  <div class="article__main">
-    <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
-    <ng-template #markdown>
-      <p
-        #markdownText
-        [innerHTML]="text | safeHtml" 
-        class="markdown-body"></p>
-    </ng-template>
-    <ng-template #plainText>
-      <pre [innerHTML]="text" class="plain-text-body"></pre>                
-    </ng-template>
+  <div class="article__main">   
+    <div class="article__main__content">
+      <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
+      <ng-template #markdown>
+        <p
+          #markdownText
+          [innerHTML]="text | safeHtml" 
+          class="markdown-body"></p>
+      </ng-template>
+      <ng-template #plainText>
+        <pre [innerHTML]="text" class="plain-text-body"></pre>                
+      </ng-template>
+    </div>
+
+    <div class="article__main__toc">
+      <div  *ngIf="toc" class="toc">
+        <div class="toc__inner">
+          <div class="toc__title">記事の目次</div>
+          <div
+            class="toc__head"
+            *ngFor="let headInfo of toc"
+            >
+            <div class="toc__head__link"
+              [style.paddingLeft.px]="calcMarginOfComment(headInfo.level)"
+              [routerLink]="['/', article.author.userId, 'articles', article._id]"
+              fragment="{{headInfo.slug}}">{{headInfo.title}}</div>
+          </div>
+        </div>
+      </div>                
+    </div> 
+
   </div>
 </div>
 
