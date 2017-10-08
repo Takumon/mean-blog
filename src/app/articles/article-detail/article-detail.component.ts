@@ -169,6 +169,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit {
     setTimeout(function() {
       // ヘッダー分下にずらす
       scrollContainer.scrollTop = element.offsetTop - 90;
+      element.classList.add('highlighted');
     }, 0);
   }
 }

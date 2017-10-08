@@ -35,7 +35,10 @@ export class AppComponent implements OnInit {
 
       this.refreshActiveHeader();
       this.refreshActiveNavbar();
-      window.scrollTo(0, 0);
+      // 記事詳細はハッシュタグでスクロール制御するので除外
+      if (!this.router.url.includes('/articles/')) {
+        window.scrollTo(0, 0);
+      }
     });
 
     this.routeNameService.name.subscribe(name => {

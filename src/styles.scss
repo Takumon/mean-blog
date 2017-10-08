@@ -75,6 +75,16 @@ input,textarea {
     position: relative;
   }
 
+  h1.highlighted,
+  h2.highlighted,
+  h3.highlighted,
+  h4.highlighted,
+  h5.highlighted,
+  h6.highlighted {
+    -webkit-animation: flash 2s;
+    animation: flash 2s;
+  }
+  
   h1 .fa.fa-link,
   h2 .fa.fa-link,
   h3 .fa.fa-link,
@@ -109,7 +119,25 @@ input,textarea {
   h6:hover .fa.fa-link:hover {
     color: blue;
   }
+}
 
+@-webkit-keyframes flash {
+  0% {
+    opacity: .4;
+    background-color: #ffc3d6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: .4;
+    background-color: #ffc3d6;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* 
