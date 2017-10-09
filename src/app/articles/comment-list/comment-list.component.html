@@ -55,13 +55,13 @@
         <img
           class="comment__author-icon"
           src="data:image/png;base64,{{comment.user.icon}}"
-          [routerLink]="['/', comment.user.userId, 'profile']"
+          [routerLink]="['/', comment.user.userId, 'articles']"
           >
         <div class="comment__main">
           <div class="comment__metadata">
             <div 
               class="comment__author"
-              [routerLink]="['/', comment.user.userId, 'profile']"
+              [routerLink]="['/', comment.user.userId, 'articles']"
               >{{comment.user.userId}}</div>
             <div class="comment__created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}<span> に{{comment.created == comment.updated ? "投稿" : "更新" }}</span></div>
           </div>

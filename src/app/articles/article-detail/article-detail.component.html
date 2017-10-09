@@ -55,7 +55,7 @@
             <img
               *ngIf="!voter.deleted"
               mdTooltip="{{voter.userId}}"
-              [routerLink]="['/', voter.userId, 'profile']"
+              [routerLink]="['/', voter.userId, 'articles']"
               class="info-summary__voter-icon"
               src="data:image/png;base64,{{voter.icon}}">
         </div>
@@ -66,11 +66,11 @@
     <img
       class="article__author-icon"
       src="data:image/png;base64,{{article.author.icon}}"
-      [routerLink]="['/', article.author.userId, 'profile']"
+      [routerLink]="['/', article.author.userId, 'articles']"
       >
     <div 
       class="article__author" 
-      [routerLink]="['/', article.author.userId, 'profile']">{{article.author.userId}}</div>
+      [routerLink]="['/', article.author.userId, 'articles']">{{article.author.userId}}</div>
     <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
     <div
       *ngIf="auth.loginUser.userId === article.author.userId"

@@ -11,12 +11,12 @@
           <img
             class="comment__article__author-icon"
             src="data:image/png;base64,{{comment.articleId.author.icon}}"
-            [routerLink]="['/', comment.articleId.author.userId, 'profile']"
+            [routerLink]="['/', comment.articleId.author.userId, 'articles']"
             >
           <div class="comment__article__author-wrapper">
             <span 
               class="comment__article__author"
-              [routerLink]="['/', comment.articleId.author.userId, 'profile']"
+              [routerLink]="['/', comment.articleId.author.userId, 'articles']"
               >{{comment.articleId.author.userId}}</span>
             <span>の投稿</span>
           </div>

@@ -37,11 +37,11 @@
             <img
               class="user__icon"
               src="data:image/png;base64,{{user.icon}}"
-              [routerLink]="['/', user.userId, 'profile']"
+              [routerLink]="['/', user.userId, 'articles']"
               >
             <p 
               class="user__userId"
-              [routerLink]="['/', user.userId, 'profile']"              
+              [routerLink]="['/', user.userId, 'articles']"              
               >{{user.userId}}</p>
           </div>
         </div>

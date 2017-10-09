@@ -16,11 +16,11 @@
         <img
           class="voter__icon"
           src="data:image/png;base64,{{voter.icon}}"
-          [routerLink]="['/', voter.userId, 'profile']"
+          [routerLink]="['/', voter.userId, 'articles']"
           (click)="close()">
         <p
           class="voter__userId"
-          [routerLink]="['/', voter.userId, 'profile']"
+          [routerLink]="['/', voter.userId, 'articles']"
           (click)="close()"
           >{{voter.userId}}</p>
       </md-list-item>
