@@ -95,18 +95,9 @@
       <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
       
       <ng-template #displayComment>
-        <div *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && item.vote.length > 0)" class="article__comments comments">
-          <div
-            *ngIf="!item.vote || item.vote.length < 1"
-            class="comments__count_vote">
-            <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>0<span class="comments__count-unit">人</span>
-          </div>
-          
-          <div
-            *ngIf="item.vote && item.vote.length > 0"
-            class="comments__count_vote_link"
-            (click)="openVotersList(item.vote)">
-            <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>{{ (item.vote | excludeDeletedVoter).length}}<span class="comments__count-unit">人</span>
+        <div *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)" class="article__comments comments">
+          <div class="comments__count_vote">
+            <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>{{ item.vote ? (item.vote | excludeDeletedVoter).length :0 }}<span class="comments__count-unit">人</span>
           </div>
           
           <div class="comments__count">

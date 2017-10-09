@@ -3,7 +3,6 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import {
   MdSnackBar,
-  MdDialog,
   MdInputModule,
 } from '@angular/material';
 import * as moment from 'moment';
@@ -14,7 +13,6 @@ import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
-import { VoterListComponent } from '../voter-list/voter-list.component';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 
@@ -49,7 +47,6 @@ export class ArticleListComponent implements OnInit {
     private commentService: CommentService,
     private articleService: ArticleService,
     public auth: AuthenticationService,
-    public dialog: MdDialog,
   ) {
   }
 
@@ -178,12 +175,5 @@ export class ArticleListComponent implements OnInit {
 
     const _idOfMine = this.auth.loginUser._id;
     return votes.some(v => _idOfMine === v._id);
-  }
-
-  openVotersList(voters: Array<UserModel>) {
-    const dialogRef = this.dialog.open(VoterListComponent, {
-      width: '360px',
-      data: { voters: voters }
-    });
   }
 }
