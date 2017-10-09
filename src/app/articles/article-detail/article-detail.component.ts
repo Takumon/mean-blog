@@ -53,6 +53,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   article: ArticleWithUserModel;
   text: string;
   toc: string;
+  baseUrl: string;
 
   constructor(
     public snackBar: MdSnackBar,
@@ -103,9 +104,10 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
               });
             }
           });
-
-
       } else {
+        // ハッシュタグがある場合は一度指定したタイトルにスクロールしてから
+        // スクロールの監視を開始する
+
         // リロード前にスクロールしている場合
         // 明示的に初期化する
         this.scrollService.scrollToTop();
@@ -121,13 +123,6 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
             this.scrollToAnchor(fragment);
           });
       }
-
-      // ハッシュタグがある場合は一度指定したタイトルにスクロールしてから
-      // スクロールの監視を開始する
-
-
-
-
     });
   }
 
@@ -152,8 +147,8 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
         this.article = article as ArticleWithUserModel;
         if (this.article.isMarkdown) {
-          const baseUrl = `/${article.author.userId}/articles/${article._id}`;
-          const parsed = this.markdownParseService.parse(this.article.body, baseUrl);
+          this.baseUrl = `/${article.author.userId}/articles/${article._id}`;
+          const parsed = this.markdownParseService.parse(this.article.body, this.baseUrl);
           this.text = parsed.text;
           this.toc = parsed.toc;
         } else {
@@ -233,10 +228,10 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const scrollContainer = document.getElementsByTagName('html')[0];
     setTimeout(function() {
-      // ヘッダー分下にずらす
       element.classList.remove('highlighted');
       setTimeout(function() {
-        scrollContainer.scrollTop = element.offsetTop - 90;
+        // 少し下にずらす
+        scrollContainer.scrollTop = element.offsetTop - 10;
         element.classList.add('highlighted');
       }, 0);
     }, 0);

@@ -3,7 +3,7 @@ import { PlatformLocation } from '@angular/common';
 import { DOCUMENT } from '@angular/platform-browser';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 
-export const topMargin = 40;
+export const topMargin = 12;
 /**
  * A service that scrolls document elements into view
  */
@@ -13,12 +13,9 @@ export class ScrollService {
   private _topOffset: number | null;
   private _topOfPageElement: Element;
 
-  // Offset from the top of the document to bottom of any static elements
-  // at the top (e.g. toolbar) + some margin
   get topOffset() {
     if (!this._topOffset) {
-      const toolbar = this.document.querySelector('md-toolbar.app-toolbar');
-      this._topOffset = (toolbar && toolbar.clientHeight || 0) + topMargin;
+      this._topOffset = topMargin;
     }
     return this._topOffset;
   }

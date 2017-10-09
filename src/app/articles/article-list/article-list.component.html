@@ -1,7 +1,6 @@
-<app-search-condition
-  *ngIf="mode && mode === Modes.FAVORITE"
-  (changeSeaerchCondition)="getArticles()"
-  ></app-search-condition>
+<div class="wrapper">
+
+
 <div class="message-area" *ngIf="(articles && articles.length === 0) && (!seaerchConditions || seaerchConditions.length < 1)">
   <div class="message-area__main">
     <div class="message-area__main__icon">
@@ -176,3 +175,12 @@
     </div>
   </div>
 </ng-container>
+
+
+<app-search-condition
+*ngIf="mode && mode === Modes.FAVORITE"
+(changeSeaerchCondition)="getArticles()"
+></app-search-condition>
+
+</div>
+

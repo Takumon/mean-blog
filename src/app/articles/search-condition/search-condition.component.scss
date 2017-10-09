@@ -1,14 +1,13 @@
 .search-condition {
-  position: fixed;
-  top: 90px;
-  right: 24px;
-  bottom: 24px;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 24px;
+  margin: 24px;
   width: 480px;
   border-radius: 2px;
   box-shadow: 1px 1px 10px -1px rgba(0, 0, 0, 0.4);
   padding: 12px;
   padding-top: 48px;
-
 
   &__header {
     display: flex;
@@ -39,8 +38,8 @@
 
   &__content {
     overflow-y: scroll;    
-    height: 100%;
-
+    max-height: 80vh;
+    
     $parent: &;
 
     &_noconditions {

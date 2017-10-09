@@ -119,8 +119,6 @@ export class ScrollSpiedElementGroup {
   }
 }
 
-// アプリの画面上部固定ヘッダを考慮する 余白をとりヘッダ下部からある程度下を基準点とする
-const APP_HEADER_HEIGHT = 64;
 
 @Injectable()
 export class ScrollSpyService {
@@ -177,7 +175,7 @@ export class ScrollSpyService {
   }
 
   private getTopOffset() {
-    return this.scrollService.topOffset + APP_HEADER_HEIGHT;
+    return this.scrollService.topOffset + 12;
   }
 
   private getViewportHeight() {

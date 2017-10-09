@@ -1,14 +1,14 @@
 .article-editor {
   position: fixed;
-  top: 5px;
+  top: 67px;
   right: 5px;
   bottom: 0;
   left: 5px;
 
   &__title {
     width: 100%;
+    top: 5px;
     position: absolute;
-    top: 67px;
 
     input {
       width: 100%;
@@ -28,7 +28,7 @@
     width: 100%;
     left: 0;
     right: 0;
-    top: 112px;
+    top: 50px;
     position: absolute;
     height: 40px;
     padding: 4px;
@@ -46,7 +46,7 @@
     width: 100%;
     left: 0;
     right: 0;
-    top: 162px;
+    top: 100px;
     position: absolute;
     bottom: 48px;  
   }

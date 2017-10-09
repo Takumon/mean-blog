@@ -3,7 +3,7 @@
   position: sticky;
 
   width: 300px;
-  top: 100px;
+  top: 24px;
   margin-left: 50px;
   bottom: 48px;
   overflow-y: scroll;
@@ -24,7 +24,15 @@
   &__title {
     padding: 4px;
     font-weight: 100;
-    font-size: 24px;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      color: #383838;
+      font-weight: bold;
+      background: #E8E8E8;
+    }
 
     &:after {
       content: "";
@@ -42,11 +50,14 @@
     position: relative;
 
     &__link {
-      padding: 2px 4px;      
+      padding: 2px 4px;
       cursor: pointer;
       width: 100%;
       word-wrap: break-word;
       box-sizing: border-box;
+      display: block;
+      text-decoration: none;
+      color: inherit;
       
       &:hover {
         color: #383838;
@@ -182,7 +193,7 @@
         font-size: 16px;
         line-height: 1.5;
         color: #24292e;
-      }    
+      }
     }
   }
 }

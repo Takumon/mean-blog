@@ -108,16 +108,20 @@
     <div class="article__main__toc">
       <div  *ngIf="toc" class="toc">
         <div class="toc__inner">
-          <div class="toc__title">記事の目次</div>
+          <a
+            class="toc__title"
+            [routerLink]="baseUrl"
+            (click)="scrollService.scrollToTop()"
+            >{{article.title}}</a>
           <div
             class="toc__head"
             *ngFor="let headInfo of toc; let index = index;"
             >
-            <div class="toc__head__link"
+            <a class="toc__head__link"
               [style.paddingLeft.px]="calcMarginOfComment(headInfo.level)"
-              [routerLink]="['/', article.author.userId, 'articles', article._id]"
+              href="{{baseUrl + '#' + headInfo.slug}}"
               [class.active]="index === activeIndex"
-              fragment="{{headInfo.slug}}">{{headInfo.title}}</div>
+              >{{headInfo.title}}</a>
           </div>
         </div>
       </div>                
