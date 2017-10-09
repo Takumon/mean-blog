@@ -1,3 +1,6 @@
+.wrapper {
+  display: flex;
+}
 .message-area {
   margin: 24px;
   border-radius: 4px;
@@ -101,10 +104,9 @@
   }
   
   &__avator-icon {
-    max-width: 42px;
-    max-height: 42px;
+    height: 42px;
+    width: 42px;
     background: white;
-    width: 100%;
     border-radius: 4px;
     image-rendering: -webkit-optimize-contrast;
   }
