@@ -36,9 +36,13 @@
             class="user">
             <img
               class="user__icon"
-              src="data:image/png;base64,{{user.icon}}">
+              src="data:image/png;base64,{{user.icon}}"
+              [routerLink]="['/', user.userId, 'profile']"
+              >
             <p 
-              class="user__userId">{{user.userId}}</p>
+              class="user__userId"
+              [routerLink]="['/', user.userId, 'profile']"              
+              >{{user.userId}}</p>
           </div>
         </div>
         <div

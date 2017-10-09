@@ -47,6 +47,13 @@
     border-radius: 4px;
     box-sizing: border-box;
     margin-top: 1px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+    &:focus {
+      outline: 0;
+    }
   }
 
   &__main {
@@ -66,10 +73,10 @@
     padding-right: 6px;
     cursor: pointer;
     &:hover {
-      color: #606DB0
+      color: #606DB0;
     }
     &:focus {
-      outline: 0
+      outline: 0;
     }
   }
   

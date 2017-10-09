@@ -14,6 +14,7 @@
 .comment {
   display: flex;
 
+
   &__author-icon {
     width: 36px;
     height: 36px;
@@ -36,6 +37,13 @@
       border-radius: 2px;
       box-sizing: border-box;
       margin-top: 1px;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.6;
+      }
+      &:focus {
+        outline: 0
+      }
     }
 
     &__author-wrapper {

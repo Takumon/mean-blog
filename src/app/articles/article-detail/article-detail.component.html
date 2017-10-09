@@ -63,7 +63,11 @@
     </div>
   </div>
   <div class="article__metadata">
-    <img class="article__author-icon" src="data:image/png;base64,{{article.author.icon}}">
+    <img
+      class="article__author-icon"
+      src="data:image/png;base64,{{article.author.icon}}"
+      [routerLink]="['/', article.author.userId, 'profile']"
+      >
     <div 
       class="article__author" 
       [routerLink]="['/', article.author.userId, 'profile']">{{article.author.userId}}</div>

@@ -137,12 +137,26 @@
     box-shadow: #2f2f2f 0 0 1px 0;
     image-rendering: -webkit-optimize-contrast;
     background: white;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+    &:focus {
+      outline: 0;
+    }
   }
 
   &__userId {
     width: 100%;
     margin: 0;
     padding: 8px 0;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+    &:focus {
+      outline: 0;
+    }
   }
 }
 

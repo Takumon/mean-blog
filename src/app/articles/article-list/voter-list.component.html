@@ -15,8 +15,14 @@
         class="voter">
         <img
           class="voter__icon"
-          src="data:image/png;base64,{{voter.icon}}">
-        <p class="voter__userId">{{voter.userId}}</p>
+          src="data:image/png;base64,{{voter.icon}}"
+          [routerLink]="['/', voter.userId, 'profile']"
+          (click)="close()">
+        <p
+          class="voter__userId"
+          [routerLink]="['/', voter.userId, 'profile']"
+          (click)="close()"
+          >{{voter.userId}}</p>
       </md-list-item>
     </md-list>
   </div>

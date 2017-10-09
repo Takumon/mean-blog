@@ -8,7 +8,11 @@
       <img class="comment__author-icon" src="data:image/png;base64,{{user.icon}}">
       <div class="comment__main">          
         <div class="comment__article">
-          <img class="comment__article__author-icon" src="data:image/png;base64,{{comment.articleId.author.icon}}">
+          <img
+            class="comment__article__author-icon"
+            src="data:image/png;base64,{{comment.articleId.author.icon}}"
+            [routerLink]="['/', comment.articleId.author.userId, 'profile']"
+            >
           <div class="comment__article__author-wrapper">
             <span 
               class="comment__article__author"

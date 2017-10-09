@@ -52,7 +52,11 @@
     </ng-template>
     <ng-template #displayComment>
       <div class="comment">
-        <img class="comment__author-icon" src="data:image/png;base64,{{comment.user.icon}}">
+        <img
+          class="comment__author-icon"
+          src="data:image/png;base64,{{comment.user.icon}}"
+          [routerLink]="['/', comment.user.userId, 'profile']"
+          >
         <div class="comment__main">
           <div class="comment__metadata">
             <div 
