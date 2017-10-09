@@ -92,7 +92,7 @@
         </button>
       </div>
       
-      <ng-container *ngIf="item.showCommentDetail; then displayCommentDetail else displayComment"></ng-container>
+      <ng-container *ngIf="item.showDetail; then displayCommentDetail else displayComment"></ng-container>
       
       <ng-template #displayComment>
         <div *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)" class="article__comments comments">
@@ -119,14 +119,14 @@
           <div class="comments__operation">
             <div class="comments__operation__spacer"></div>
             <button
-              *ngIf="item.comments && (item.comments | excludeDeletedComment).length > 0"
+              *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)"
               md-icon-button
               mdTooltip="コメント詳細を開く"
               mdTooltipPosition="above"
               mdTooltipShowDelay="500"
               type="button"
               class="comments__operation__show-detail-btn"
-              (click)="toggleCommentDetail(item)"><i class="fa fa-fw fa-chevron-down"></i></button>
+              (click)="toggleDetail(item)"><i class="fa fa-fw fa-chevron-down"></i></button>
           </div>
         </div>
         <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
@@ -154,13 +154,34 @@
 
       <ng-template #displayCommentDetail>
         <div class="article__comments-detail">
+          <button
+            md-icon-button
+            type="button"
+            mdTooltip="コメント詳細を閉じる"
+            mdTooltipPosition="above"
+            mdTooltipShowDelay="500"
+            class="article__comments-detail__close-btn_top"
+            (click)='toggleDetail(item)'
+            ><i class="fa fa-fw fa-chevron-up"></i>
+          </button>
+          <app-voter-list
+            [voters]="item.vote"
+          ></app-voter-list>
           <app-comment-list
-            [hasCloseBtn]="true"
             _idOfArticle="{{item._id}}"
             [comments]="item.comments"
             (refresh)="refreshComments(item, $event)"
-            (close)="toggleCommentDetail(item)"
           ></app-comment-list>
+          <button
+            md-icon-button
+            mdTooltip="コメント詳細を閉じる"
+            mdTooltipPosition="above"
+            mdTooltipShowDelay="500"
+            type="button"
+            class="article__comments-detail__close-btn_bottom"
+            (click)='toggleDetail(item)'
+            ><i class="fa fa-fw fa-chevron-up"></i>
+          </button>
         </div>
       </ng-template>
     </div>

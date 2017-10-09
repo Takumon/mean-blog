@@ -1,17 +1,17 @@
 <div class="voter-list">
   <div class="voter-list__count">
-    いいね{{(data.voters | excludeDeletedVoter).length}}件
+    いいね{{ voters ? (voters | excludeDeletedVoter).length :0 }}件
   </div>
-  <div *ngIf="data.voters" class="voter-list__content">
+  <div *ngIf="voters" class="voter-list__content">
     <div
-      *ngFor="let voter of (data.voters | excludeDeletedVoter)"
+      *ngFor="let voter of (voters | excludeDeletedVoter)"
       class="voter-list__voter">
       <img
         mdTooltip="{{voter.userId}}"
         class="voter-list__voter-icon"
         src="data:image/png;base64,{{voter.icon}}"
         [routerLink]="['/', voter.userId, 'articles']"
-        (click)="close()">
+        >
     </div>
   </div>
 </div>

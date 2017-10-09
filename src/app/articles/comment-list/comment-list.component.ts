@@ -24,8 +24,6 @@ export class CommentListComponent implements OnInit {
   @Input() replyCommentIndentLimit: Number = 4;
   @Input() _idOfArticle: string;
   @Input() comments: Array<CommentWithUserModel>;
-  @Input() hasCloseBtn: Boolean = false;
-  @Output() close = new EventEmitter();
   @Output() refresh = new EventEmitter();
 
 
@@ -57,10 +55,6 @@ export class CommentListComponent implements OnInit {
         this.comments = comments as Array<CommentWithUserModel>;
         this.refresh.emit({comments: comments});
       });
-  }
-
-  doClose() {
-    this.close.emit();
   }
 
   commentOfForm(commentWithUserModel: CommentWithUserModel = null, parentId: string = null): CommentModel {

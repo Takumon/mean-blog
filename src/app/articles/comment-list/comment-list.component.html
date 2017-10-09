@@ -5,15 +5,6 @@
   <div class="comment-list-header">
     <div class="comment-list-header__count" >コメント{{(comments | excludeDeletedComment).length}}件</div>
     <div class="comment-list-header__spacer"></div>
-    <button
-      *ngIf="hasCloseBtn"
-      md-icon-button
-      type="button"
-      mdTooltip="コメント詳細を閉じる"
-      mdTooltipPosition="above"
-      mdTooltipShowDelay="500"
-      class="comment-list-header__toggle-btn"
-      (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
   </div>
   <div
     *ngFor="let comment of (comments | excludeDeletedLeafComment)"
@@ -97,18 +88,6 @@
           ></app-comment-form>
       </div>
     </ng-template>
-  </div>
-  <div class="comment-list-footer">
-    <div class="comment-list-footer__spacer"></div>  
-    <button
-      *ngIf="hasCloseBtn"
-      md-icon-button
-      mdTooltip="コメント詳細を閉じる"
-      mdTooltipPosition="above"
-      mdTooltipShowDelay="500"
-      type="button"
-      class="comment-list-footer__toggle-btn"
-      (click)='doClose()'><i class="fa fa-fw fa-chevron-up"></i></button>
   </div>
   <div *ngIf="auth.loginUser">
       <app-comment-form 

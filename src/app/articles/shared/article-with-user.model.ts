@@ -16,5 +16,5 @@ export class ArticleWithUserModel {
   updated: string;
   deleted: string;
   // 表示制御用
-  showCommentDetail: boolean;
+  showDetail: boolean;
 }

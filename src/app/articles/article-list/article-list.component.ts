@@ -72,8 +72,8 @@ export class ArticleListComponent implements OnInit {
     item.comments = event.comments;
   }
 
-  toggleCommentDetail(item: ArticleWithUserModel) {
-    item.showCommentDetail = !item.showCommentDetail;
+  toggleDetail(item: ArticleWithUserModel) {
+    item.showDetail = !item.showDetail;
   }
 
   getArticles(): void {

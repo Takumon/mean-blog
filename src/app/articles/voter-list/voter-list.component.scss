@@ -1,5 +1,13 @@
 
 .voter-list {
+  padding-bottom: 6px;
+  border-bottom: 1px solid #d4d4d4;
+  margin-bottom: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding-left: 12px;
+  padding-right: 12px;
+
   &__count {
     margin-bottom: 12px;
     font-weight: bold;

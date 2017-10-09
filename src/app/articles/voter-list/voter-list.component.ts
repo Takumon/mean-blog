@@ -1,19 +1,13 @@
-import {Component, Inject} from '@angular/core';
-import {MdDialog, MdDialogRef, MD_DIALOG_DATA} from '@angular/material';
-
+import { Component, Input} from '@angular/core';
+import { UserModel } from '../../users/shared/user.model';
 
 @Component({
-  selector: 'app-voter-list-dialog',
+  selector: 'app-voter-list',
   templateUrl: './voter-list.component.html',
   styleUrls: ['./voter-list.component.scss'],
 })
 export class VoterListComponent {
+  @Input() voters: Array<UserModel>;
 
-  constructor(
-    public dialogRef: MdDialogRef<VoterListComponent>,
-    @Inject(MD_DIALOG_DATA) public data: any) { }
-
-  close(): void {
-    this.dialogRef.close();
-  }
+  constructor() { }
 }
