@@ -1,55 +1,26 @@
-.content {
-  position: relative;
-}
 
-.close-btn {
-  color: gray;
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  text-align: center;
-  right: 0;
-  cursor: pointer;  
-  &:hover {
-    opacity: 0.6;
-  }
-  &:focus {
-    outline: 0;
-  }
-}
-
-.voters {
-  color: gray;
-
+.voter-list {
   &__count {
-
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: gray;
   }
 
-  &__count-unit {
-    font-size: 0.7em;
+  &__content {
+    display: flex;
   }
-}
 
-.voter {
-  color: gray;
+  &__voter {
+  }
 
-  &__icon {
+  &__voter-icon {
     width: 36px;
     height: 36px;
     border-radius: 4px;
     margin-right: 12px;
     box-sizing: border-box;
     box-shadow: #2f2f2f 0 0 1px 0;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.6;
-    }  
-    &:focus {
-      outline: 0;
-    }
-  }
-
-  &__userId {
+    image-rendering: -webkit-optimize-contrast;
     cursor: pointer;
     &:hover {
       opacity: 0.6;

@@ -1,30 +1,18 @@
-<div class="content">
-  <div class="close-btn"
-    (click)="close()">
-      <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+<div class="voter-list">
+  <div class="voter-list__count">
+    いいね{{(data.voters | excludeDeletedVoter).length}}件
   </div>
-  <h1 md-dialog-title class="voters">
-      <i class="vorters__count-icon fa fa-fw fa-thumbs-up"></i>
-      {{(data.voters | excludeDeletedVoter).length}}
-      <span class="voters__count-unit">人</span>
-  </h1>
-  <div md-dialog-content>
-    <md-list>
-      <md-list-item
-        *ngFor="let voter of (data.voters | excludeDeletedVoter)"
-        class="voter">
-        <img
-          class="voter__icon"
-          src="data:image/png;base64,{{voter.icon}}"
-          [routerLink]="['/', voter.userId, 'articles']"
-          (click)="close()">
-        <p
-          class="voter__userId"
-          [routerLink]="['/', voter.userId, 'articles']"
-          (click)="close()"
-          >{{voter.userId}}</p>
-      </md-list-item>
-    </md-list>
+  <div *ngIf="data.voters" class="voter-list__content">
+    <div
+      *ngFor="let voter of (data.voters | excludeDeletedVoter)"
+      class="voter-list__voter">
+      <img
+        mdTooltip="{{voter.userId}}"
+        class="voter-list__voter-icon"
+        src="data:image/png;base64,{{voter.icon}}"
+        [routerLink]="['/', voter.userId, 'articles']"
+        (click)="close()">
+    </div>
   </div>
 </div>
 
