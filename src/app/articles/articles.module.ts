@@ -41,7 +41,7 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
-import { VoterListComponent } from './article-list/voter-list.component';
+import { VoterListComponent } from './voter-list/voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
 

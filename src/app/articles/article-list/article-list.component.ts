@@ -14,7 +14,7 @@ import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentModel } from '../shared/comment.model';
-import { VoterListComponent } from './voter-list.component';
+import { VoterListComponent } from '../voter-list/voter-list.component';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 
