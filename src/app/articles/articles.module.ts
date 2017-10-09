@@ -28,6 +28,7 @@ import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
 import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-comment.pipe';
 import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
+import { ExcludeDeletedVoterPipe } from './shared/exclude-deleted-voter.pipe';
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { SearchConditionService } from './shared/search-condition.service';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
@@ -62,6 +63,7 @@ import { SearchConditionComponent } from './search-condition/search-condition.co
     OrderByPipe,
     ExcludeDeletedLeafCommentPipe,
     ExcludeDeletedCommentPipe,
+    ExcludeDeletedVoterPipe,
     KeysPipe,
     SafeHtmlPipe,
     ConfirmDialogComponent,

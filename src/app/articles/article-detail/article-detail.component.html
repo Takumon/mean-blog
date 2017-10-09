@@ -12,7 +12,7 @@
         <div class="info-summary__factor_first">
           <div>
             <i class="info-summary__factor-icon fa fa-fw fa-thumbs-up"></i>
-            <span class="info-summary__factor-count">{{article.vote ? article.vote.length : 0}}</span>
+            <span class="info-summary__factor-count">{{article.vote ? (article.vote | excludeDeletedVoter).length : 0}}</span>
           </div>
           <div class="info-summary__factor-label">いいね</div>
         </div>
@@ -44,16 +44,10 @@
       </div>
       <div *ngIf="article.vote" class="info-summary__voter-icons">
         <div 
-          *ngFor="let voter of article.vote"
+          *ngFor="let voter of (article.vote | excludeDeletedVoter)"
           class="info-summary__voter-icon-wrapper"
           >
-            <img 
-              *ngIf="voter.deleted"
-              mdTooltip="いいねしたユーザは削除されました。"
-              class="info-summary__voter-icon"
-              src="assets/images/deleted-comment.png">
             <img
-              *ngIf="!voter.deleted"
               mdTooltip="{{voter.userId}}"
               [routerLink]="['/', voter.userId, 'articles']"
               class="info-summary__voter-icon"

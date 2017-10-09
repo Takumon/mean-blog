@@ -106,7 +106,7 @@
             *ngIf="item.vote && item.vote.length > 0"
             class="comments__count_vote_link"
             (click)="openVotersList(item.vote)">
-            <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>{{item.vote.length}}<span class="comments__count-unit">人</span>
+            <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>{{ (item.vote | excludeDeletedVoter).length}}<span class="comments__count-unit">人</span>
           </div>
           
           <div class="comments__count">

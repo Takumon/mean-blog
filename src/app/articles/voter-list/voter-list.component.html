@@ -5,13 +5,13 @@
   </div>
   <h1 md-dialog-title class="voters">
       <i class="vorters__count-icon fa fa-fw fa-thumbs-up"></i>
-      {{data.voters.length}}
+      {{(data.voters | excludeDeletedVoter).length}}
       <span class="voters__count-unit">人</span>
   </h1>
   <div md-dialog-content>
     <md-list>
       <md-list-item
-        *ngFor="let voter of data.voters"
+        *ngFor="let voter of (data.voters | excludeDeletedVoter)"
         class="voter">
         <img
           class="voter__icon"
