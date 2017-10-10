@@ -10,6 +10,7 @@ import { MONGO_URL, SECRET } from './config';
 import { authenticateRouter } from './routes/authenticate';
 import { authenticate } from './middleware/authenticate';
 import { articleRouter } from './routes/article';
+import { draftRouter } from './routes/draft';
 import { commentRouter } from './routes/comment';
 import { userRouter } from './routes/user';
 import { searchConditionRouter } from './routes/search-condition';
@@ -40,6 +41,7 @@ class App {
 
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);
+    this.express.use('/api/drafts', draftRouter);
     this.express.use('/api/comments', commentRouter);
     this.express.use('/api/searchconditions', searchConditionRouter);
 
