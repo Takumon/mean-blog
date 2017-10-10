@@ -34,18 +34,9 @@ router.get('/', (req, res, next) => {
     }
   }
 
-  if (req.query.withUser) {
-    Draft
-      .find(condition)
-      .populate('author', '-password')
-      .exec(cb);
-  } else {
-    Draft
-      .find(condition)
-      .exec(cb);
-  }
-
-  function cb(err, doc): void {
+  Draft
+  .find(condition)
+  .exec((err, doc) => {
     if (err) {
       return res.status(500).json({
         title: DEFAULT_ERR_MSG,
@@ -60,7 +51,7 @@ router.get('/', (req, res, next) => {
     }
 
     return res.status(200).json(doc);
-  }
+  });
 });
 
 
@@ -71,18 +62,9 @@ router.get('/:_id', (req, res, next) => {
     deleted: { $exists : false } // 削除記事は除外
   };
 
-  if (req.query.withUser) {
-    Draft
-      .find(condition)
-      .populate('author', '-password')
-      .exec(cb);
-  } else {
-    Draft
-      .find(condition)
-      .exec(cb);
-  }
-
-  function cb(err, doc): void {
+  Draft
+  .find(condition)
+  .exec((err, doc) => {
     if (err) {
       return res.status(500).json({
         title: DEFAULT_ERR_MSG,
@@ -97,7 +79,7 @@ router.get('/:_id', (req, res, next) => {
     }
 
     return res.status(200).json(doc[0]);
-  }
+  });
 });
 
 
