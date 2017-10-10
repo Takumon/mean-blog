@@ -24,19 +24,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ArticleService } from './shared/article.service';
 import { CommentService } from './shared/comment.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
+import { SearchConditionService } from './shared/search-condition.service';
+import { DraftService } from './shared/draft.service';
+
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
 import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-comment.pipe';
 import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from './shared/exclude-deleted-voter.pipe';
-import { AutofocusDirective } from '../shared/directives/autofocus.directive';
-import { SearchConditionService } from './shared/search-condition.service';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
+
+import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
-
-
-import { ArticlesRoutingModule } from './articles-routing.module';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
@@ -46,6 +46,7 @@ import { VoterListComponent } from './voter-list/voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
 
+import { ArticlesRoutingModule } from './articles-routing.module';
 
 
 
@@ -96,6 +97,7 @@ import { SearchConditionComponent } from './search-condition/search-condition.co
     CommentService,
     MarkdownParseService,
     SearchConditionService,
+    DraftService,
   ],
   entryComponents: [
     VoterListComponent,
