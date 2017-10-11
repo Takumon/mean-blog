@@ -108,9 +108,7 @@ router.put('/:_id', (req, res, next) => {
   const draft = req.body;
   draft.updated = new Date();
 
-  Draft.update({
-    _id: new mongoose.Types.ObjectId(req.params._id),
-  }, {$set: draft }, (err, result) => {
+  Draft.findByIdAndUpdate(req.params._id, {$set: draft }, (err, result) => {
 
     if (err) {
       return res.status(500).json({
