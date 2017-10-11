@@ -1,0 +1,68 @@
+<div class="wrapper">
+
+
+<div class="message-area" *ngIf="drafts && drafts.length === 0">
+  <div class="message-area__main">
+    <div class="message-area__main__icon">
+      <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
+    </div>
+    <div class="message-area__main__message">
+      下書きはまだ登録されていません。
+    </div>
+  </div>
+</div>
+
+<div class="prograss-bar" *ngIf="showPrograssBar" >
+  <md-spinner></md-spinner>
+</div>
+<ng-container *ngIf="drafts && drafts.length > 0">
+  <div class="draft-list">
+    <div
+      class="draft-list__item"
+      *ngFor="let item of drafts | orderby: ['-created']"
+      (click)="selectDraft(item)"
+      [class.selected]="isSelected(item._id)"
+      >
+        <div  class="draft-list__item__title">{{item.title}}</div>
+        <div class="draft-list__item__date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="draft-list__created-or-updated"> に{{item.created == item.updated ? "作成" : "更新" }}</span></div>
+    </div>
+  </div>
+
+  <div class="draft-detail" *ngIf="selectedDraft">
+    <div class="draft-detail__operation">
+      <button 
+        md-button
+        color="primary"
+        type="button"
+        [routerLink]="['/', drafts.userId, 'drafts', selectedDraft._id]"
+        >
+        <i class="fa fa-fw fa-pencil-square"></i> 編集
+      </button>
+      <div class="draft-detail__operation__spacer"></div>
+
+      <button 
+        md-button
+        type="button"
+        (click)="deleteDraft(selectedDraft)"
+        >
+        <i class="fa fa-fw fa-trash-o"></i> 削除
+      </button>
+    </div>
+    
+    <div class="draft-detail__header">
+      <div  class="draft-detail__title">{{selectedDraft.title}}</div>
+    </div>
+    <div class="draft-detail__main">
+    <div *ngIf="selectedDraft.isMarkdown; then markdown else plainText"></div>
+      <ng-template #markdown>
+        <p [innerHTML]="(selectedDraft.body | toMarkdown).text" class="markdown-body"></p>
+      </ng-template>
+      <ng-template #plainText>
+        <pre [innerHTML]="selectedDraft.body" class="plain-text-body"></pre>                
+      </ng-template>
+    </div>
+  </div>
+</ng-container>
+
+</div>
+

@@ -45,6 +45,7 @@ import { CommentFormComponent } from './comment-form/comment-form.component';
 import { VoterListComponent } from './voter-list/voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
+import { DraftListComponent } from './draft-list/draft-list.component';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
 
@@ -69,6 +70,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     SafeHtmlPipe,
     ConfirmDialogComponent,
     AutofocusDirective,
+    DraftListComponent,
   ],
   imports: [
     BrowserModule,

@@ -23,6 +23,8 @@ import { MdSnackBar } from '@angular/material';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
+import { DraftModel } from '../shared/draft.model';
+import { DraftService } from '../shared/draft.service';
 import { EditMode } from './edit-mode.enum';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -57,6 +59,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
 
     private articleService: ArticleService,
+    private draftService: DraftService,
     private auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
@@ -171,6 +174,22 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
           this.goToDetail();
         });
     }
+  }
+
+  upsertDraft(form: FormGroup): void {
+    const draft = new DraftModel();
+    draft.author = this.auth.loginUser._id;
+    draft.title = form.value['title'];
+    draft.isMarkdown = form.value['isMarkdown'];
+    draft.body = form.value['body'];
+
+    this.draftService
+      .create(draft)
+      .subscribe((res: any) => {
+
+        this.snackBar.open('下書きを保存しました。', null, {duration: 3000});
+        this.router.navigate(['drafts']);
+      });
   }
 
   cancel(): void {

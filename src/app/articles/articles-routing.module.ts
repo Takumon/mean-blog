@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
+import { DraftListComponent } from './draft-list/draft-list.component';
 import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
@@ -18,6 +19,11 @@ const routes: Routes = [
     path: 'articles',
     component: ArticleListComponent,
     data: {mode: ArticleListComponent.Mode.ALL},
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'drafts',
+    component: DraftListComponent,
     canActivate: [AuthGuard]
   },
   {

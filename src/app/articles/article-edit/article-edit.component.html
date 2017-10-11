@@ -84,10 +84,18 @@
     <div class="spacer"></div>  
     <button
       md-raised-button
+      color="accent"
+      type="button"
+      [disabled]="!form.valid"
+      id="registe-draft-btn"
+      (click)="upsertDraft(form)"
+      ><i class="fa fa-floppy-o"></i>  下書き保存</button>
+    <button
+      md-raised-button
       color="primary"
       type="submit"
       [disabled]="!form.valid"
-      id="registe-article-btn"><i class="fa fa-upload"></i>  {{action}}</button> 
+      id="registe-article-btn"><i class="fa fa-upload"></i>  {{action}}</button>
   </div>
 </form>
 

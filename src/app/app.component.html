@@ -74,6 +74,14 @@
           routerLinkActive="active">
           <i class="fa fa-fw fa-list"></i><span> 投稿一覧</span>        
         </button>
+
+        <button
+          md-menu-item
+          [routerLink]="['drafts']"
+          routerLinkActive="active">
+          <i class="fa fa-fw fa-files-o"></i><span> 下書き一覧</span>        
+        </button>
+
         <button
           md-menu-item
           [routerLink]="[auth.loginUser.userId, 'profile']"
