@@ -21,21 +21,12 @@ export class DraftService {
     private jwtService: JwtService,
   ) { }
 
-  get(condition): Observable<Array<DraftModel>> {
-    const modifiedCondition = {};
-    if (condition) {
-      if (condition.userId) {
-        modifiedCondition['userId'] = condition.userId;
-      }
-      if (condition.dateRangePatterns) {
-        modifiedCondition['userId'] = condition.userId;
-      }
-    }
-    const URL = this.baseUrl;
+  get(condition = {}): Observable<Array<DraftModel>> {
 
+    const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(modifiedCondition));
+    search.set('condition', JSON.stringify(condition));
 
     return this.http
       .get(URL, { headers, search })

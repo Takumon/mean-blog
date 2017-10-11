@@ -20,8 +20,8 @@
     <div
       class="draft-list__item"
       *ngFor="let item of drafts | orderby: ['-created']"
-      (click)="selectDraft(item)"
-      [class.selected]="isSelected(item._id)"
+      [routerLink]="['/', 'drafts', item._id ]"
+      routerLinkActive="active"
       >
         <div  class="draft-list__item__title">{{item.title}}</div>
         <div class="draft-list__item__date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="draft-list__created-or-updated"> に{{item.created == item.updated ? "作成" : "更新" }}</span></div>
@@ -34,7 +34,8 @@
         md-button
         color="primary"
         type="button"
-        [routerLink]="['/', drafts.userId, 'drafts', selectedDraft._id]"
+        [routerLink]="['/', 'drafts', selectedDraft._id, 'edit']"
+        [queryParams]="{'resume': true}"
         >
         <i class="fa fa-fw fa-pencil-square"></i> 編集
       </button>

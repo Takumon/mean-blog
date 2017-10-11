@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import {
   MdSnackBar,
+  MdDialog,
   MdInputModule,
 } from '@angular/material';
 
@@ -11,6 +12,7 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 import { ArticleService } from '../shared/article.service';
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 @Component({
   selector: 'app-draft-list',
@@ -33,6 +35,7 @@ export class DraftListComponent implements OnInit {
 
     private articleService: ArticleService,
     private draftService: DraftService,
+    public dialog: MdDialog,
   ) {
   }
 
@@ -49,25 +52,49 @@ export class DraftListComponent implements OnInit {
     return this.selectedDraft._id === draftId;
   }
 
-
   getDrafts(): void {
-    this.route.parent.params.subscribe( params => {
-      const userId = params['_userId'];
-      const condition = {
-        author: { userId: userId }
-      };
+    this.route.params.subscribe( params => {
+      const draftId = params['_id'];
+      const condition = { userId: this.auth.loginUser._id };
       this.draftService.get(condition)
       .subscribe(drafts => {
         this.drafts = drafts as Array<DraftModel>;
         if (drafts && drafts.length > 0) {
-          this.selectDraft(drafts[0]);
+          if (draftId) {
+            for (const draft of drafts) {
+              if (draft._id === draftId) {
+                this.selectDraft(draft);
+                break;
+              }
+            }
+          } else {
+            this.router.navigate(['drafts', drafts[0]._id]);
+          }
         }
       });
     });
   }
 
-  deleteDraft(): void {
+  deleteDraft(draft: DraftModel): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: '下書き削除',
+        message: `「${draft.title}」を削除しますか？`
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.draftService
+      .delete(draft._id)
+      .subscribe(res => {
+        this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, {duration: 3000});
+        this.getDrafts();
+      });
+    });
   }
 
 }

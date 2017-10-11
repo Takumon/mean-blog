@@ -27,18 +27,24 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: ':userId/articles/:_id',
-    component: ArticleDetailComponent,
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'drafts/new',
     component: ArticleEditComponent,
     canActivate: [AuthGuard]
   },
   {
+    path: 'drafts/:_id',
+    component: DraftListComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'drafts/:_id/edit',
     component: ArticleEditComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: ':userId/articles/:_id',
+    component: ArticleDetailComponent,
     canActivate: [AuthGuard]
   },
 ];

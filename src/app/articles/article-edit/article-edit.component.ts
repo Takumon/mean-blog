@@ -42,9 +42,12 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   action: String;
   // 更新の場合のみ保持する
   articleId: string;
+  draftId: string;
+
   MarkdownEditMode = EditMode;
   markdonwEditMode: String = EditMode[EditMode.harfPreviewing];
   form: FormGroup;
+  isResume: Boolean = false;
 
 
   @ViewChild('syncScrollTarget')
@@ -68,36 +71,69 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.createForm();
 
-    this.subscription = this.route.params.subscribe( params => {
-      if ( params['_id']) {
-        this.action = '更新';
+    this.route.queryParams
+    .subscribe(queryParams => {
+      this.isResume = queryParams['resume'];
 
-        const withUser = true;
-        this.articleService
-          .getOne(params['_id'], withUser)
-          .subscribe(article => {
-            if (article.author._id !== this.auth.loginUser._id) {
-              // TODO エラー処理か、他のユーザでも編集できる仕様にする
-            }
+      this.createForm();
 
-            this.articleId = article._id;
-            this.form.patchValue({
-              title: article.title,
-              isMarkdown: article.isMarkdown,
-              body: article.body,
+      this.subscription = this.route.params.subscribe( params => {
+
+        if (this.isResume) {
+          // 下書きは必ず更新
+          this.action = '更新';
+
+          const withUser = true;
+          this.draftService
+            .getById(params['_id'])
+            .subscribe(draft => {
+              if (draft.author !== this.auth.loginUser._id.toString()) {
+                // TODO エラー処理か、他のユーザでも編集できる仕様にする
+              }
+
+              this.draftId = draft._id;
+              this.articleId = draft.articleId;
+              this.form.patchValue({
+                title: draft.title,
+                isMarkdown: draft.isMarkdown,
+                body: draft.body,
+              });
+
             });
 
-          });
-      } else {
-        this.action = '投稿';
-        this.form.patchValue({
-          isMarkdown: true,
-        });
-      }
+          this.routeNamesService.name.next(`下書きを${this.action}する`);
+        } else {
+          if ( params['_id']) {
+            this.action = '更新';
 
-      this.routeNamesService.name.next(`記事を${this.action}する`);
+            const withUser = true;
+            this.articleService
+              .getOne(params['_id'], withUser)
+              .subscribe(article => {
+                if (article.author._id !== this.auth.loginUser._id) {
+                  // TODO エラー処理か、他のユーザでも編集できる仕様にする
+                }
+
+                this.articleId = article._id;
+                this.form.patchValue({
+                  title: article.title,
+                  isMarkdown: article.isMarkdown,
+                  body: article.body,
+                });
+
+              });
+          } else {
+            this.action = '投稿';
+            this.form.patchValue({
+              isMarkdown: true,
+            });
+          }
+
+          this.routeNamesService.name.next(`記事を${this.action}する`);
+        }
+      });
+
     });
   }
 
@@ -151,53 +187,99 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const article = new ArticleModel();
-    article.title = form.value['title'];
-    article.isMarkdown = form.value['isMarkdown'];
-    article.body = form.value['body'];
+    if (this.isResume) {
+      const draft = new DraftModel();
+      draft.title = form.value['title'];
+      draft.isMarkdown = form.value['isMarkdown'];
+      draft.body = form.value['body'];
 
-    if (this.isNew()) {
-      article.author = this.auth.loginUser._id;
-      this.articleService
-        .register(article)
+
+      draft._id = this.draftId;
+      draft.articleId = this.articleId;
+      this.draftService
+        .update(draft)
         .subscribe((res: any) => {
-
-          this.snackBar.open('記事を投稿しました。', null, {duration: 3000});
-          this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
+          this.snackBar.open('下書きを編集しました。', null, {duration: 3000});
+          this.goToDraft();
         });
     } else {
-      article._id = this.articleId;
-      this.articleService
-        .update(article)
-        .subscribe((res: any) => {
-          this.snackBar.open('記事を編集しました。', null, {duration: 3000});
-          this.goToDetail();
-        });
+
+      const article = new ArticleModel();
+      article.title = form.value['title'];
+      article.isMarkdown = form.value['isMarkdown'];
+      article.body = form.value['body'];
+
+      if (this.isNew()) {
+        article.author = this.auth.loginUser._id;
+        this.articleService
+          .register(article)
+          .subscribe((res: any) => {
+
+            this.snackBar.open('記事を投稿しました。', null, {duration: 3000});
+            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
+          });
+      } else {
+        article._id = this.articleId;
+        this.articleService
+          .update(article)
+          .subscribe((res: any) => {
+            this.snackBar.open('記事を編集しました。', null, {duration: 3000});
+            this.goToDetail();
+          });
+      }
     }
   }
 
   upsertDraft(form: FormGroup): void {
-    const draft = new DraftModel();
-    draft.author = this.auth.loginUser._id;
-    draft.title = form.value['title'];
-    draft.isMarkdown = form.value['isMarkdown'];
-    draft.body = form.value['body'];
+    // もともと下書きだった場合は更新
+    if (this.isResume) {
+      const draft = new DraftModel();
+      draft._id = this.draftId;
+      draft.author = this.auth.loginUser._id;
+      draft.title = form.value['title'];
+      draft.isMarkdown = form.value['isMarkdown'];
+      draft.body = form.value['body'];
 
-    this.draftService
-      .create(draft)
-      .subscribe((res: any) => {
+      this.draftService
+        .update(draft)
+        .subscribe((res: any) => {
+          this.snackBar.open('下書きを更新しました。', null, {duration: 3000});
+          this.router.navigate(['drafts', res.obj._id]);
+        });
+    } else {
+      // それ以外の場合は新規登録
+      const draft = new DraftModel();
+      draft.author = this.auth.loginUser._id;
+      draft.title = form.value['title'];
+      draft.isMarkdown = form.value['isMarkdown'];
+      draft.body = form.value['body'];
 
-        this.snackBar.open('下書きを保存しました。', null, {duration: 3000});
-        this.router.navigate(['drafts']);
-      });
+      this.draftService
+        .create(draft)
+        .subscribe((res: any) => {
+
+          this.snackBar.open('下書きを保村しました。', null, {duration: 3000});
+          this.router.navigate(['drafts', res.obj._id]);
+        });
+    }
   }
 
   cancel(): void {
-    if (this.isNew()) {
-      this.router.navigate(['/articles']);
+    if (this.isResume) {
+      this.goToDraft();
     } else {
-      this.goToDetail();
+      if (this.isNew()) {
+        this.router.navigate(['/articles']);
+      } else {
+        this.goToDetail();
+      }
     }
+
+  }
+
+
+  goToDraft() {
+    this.router.navigate(['drafts', this.draftId]);
   }
 
   goToDetail() {
