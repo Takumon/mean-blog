@@ -60,7 +60,9 @@ export class DraftListComponent implements OnInit, OnDestroy {
 
   getDrafts(isRefresh: boolean = false): void {
     if (this.route.firstChild) {
-      this.route.firstChild.params.subscribe( params => {
+      this.route.firstChild.params
+      .takeUntil(this.onDestroy)
+      .subscribe( params => {
         const condition = { userId: this.auth.loginUser._id };
         this.draftService.get(condition)
         .subscribe(drafts => {
