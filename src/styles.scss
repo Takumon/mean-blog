@@ -63,7 +63,12 @@ body * {
   /* 読みやすくするため透過率を上げる */
   background: rgba(97,97,97, 0.95);
 }
-/* TODO キャレットの色検討 */
+
+.mat-ripple {
+  position: relative;  
+}
+  
+/* キャレットの色検討 */
 input,textarea {
   caret-color: blue;
 }

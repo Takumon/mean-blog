@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import {
   MdSnackBar,
-  MdDialog,
   MdInputModule,
 } from '@angular/material';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -13,16 +14,18 @@ import { ArticleService } from '../shared/article.service';
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { SharedService } from '../shared/shared.service';
 
 @Component({
   selector: 'app-draft-list',
   templateUrl: './draft-list.component.html',
   styleUrls: ['./draft-list.component.scss'],
 })
-export class DraftListComponent implements OnInit {
+export class DraftListComponent implements OnInit, OnDestroy {
 
   drafts: Array<DraftModel>;
   selectedDraft: DraftModel;
+  private onDestroy = new Subject();
 
   constructor(
     public snackBar: MdSnackBar,
@@ -32,69 +35,48 @@ export class DraftListComponent implements OnInit {
 
     public auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
+    private sharedService: SharedService,
 
     private articleService: ArticleService,
     private draftService: DraftService,
-    public dialog: MdDialog,
   ) {
   }
 
   ngOnInit() {
     this.routeNamesService.name.next(`下書き一覧`);
+    this.sharedService.changeEmitted$
+    .takeUntil(this.onDestroy)
+    .subscribe(text => {
+      const isRefresh = true;
+      this.getDrafts(isRefresh);
+    });
     this.getDrafts();
   }
 
-  selectDraft(draft: DraftModel): void {
-    this.selectedDraft = draft;
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
-  isSelected(draftId: any): boolean {
-    return this.selectedDraft._id === draftId;
-  }
 
-  getDrafts(): void {
-    this.route.params.subscribe( params => {
-      const draftId = params['_id'];
+  getDrafts(isRefresh: boolean = false): void {
+    if (this.route.firstChild) {
+      this.route.firstChild.params.subscribe( params => {
+        const condition = { userId: this.auth.loginUser._id };
+        this.draftService.get(condition)
+        .subscribe(drafts => {
+          this.drafts = drafts as Array<DraftModel>;
+          if (isRefresh) {
+            this.router.navigate(['drafts', drafts[0]._id]);
+          }
+        });
+      });
+    } else {
       const condition = { userId: this.auth.loginUser._id };
       this.draftService.get(condition)
       .subscribe(drafts => {
-        this.drafts = drafts as Array<DraftModel>;
-        if (drafts && drafts.length > 0) {
-          if (draftId) {
-            for (const draft of drafts) {
-              if (draft._id === draftId) {
-                this.selectDraft(draft);
-                break;
-              }
-            }
-          } else {
-            this.router.navigate(['drafts', drafts[0]._id]);
-          }
-        }
+        this.drafts = drafts;
+        this.router.navigate(['drafts', drafts[0]._id]);
       });
-    });
+    }
   }
-
-  deleteDraft(draft: DraftModel): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: '下書き削除',
-        message: `「${draft.title}」を削除しますか？`
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
-        return;
-      }
-
-      this.draftService
-      .delete(draft._id)
-      .subscribe(res => {
-        this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, {duration: 3000});
-        this.getDrafts();
-      });
-    });
-  }
-
 }

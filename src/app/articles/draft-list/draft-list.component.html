@@ -18,6 +18,7 @@
 <ng-container *ngIf="drafts && drafts.length > 0">
   <div class="draft-list">
     <div
+      mat-ripple
       class="draft-list__item"
       *ngFor="let item of drafts | orderby: ['-created']"
       [routerLink]="['/', 'drafts', item._id ]"
@@ -28,41 +29,7 @@
     </div>
   </div>
 
-  <div class="draft-detail" *ngIf="selectedDraft">
-    <div class="draft-detail__operation">
-      <button 
-        md-button
-        color="primary"
-        type="button"
-        [routerLink]="['/', 'drafts', selectedDraft._id, 'edit']"
-        [queryParams]="{'resume': true}"
-        >
-        <i class="fa fa-fw fa-pencil-square"></i> 編集
-      </button>
-      <div class="draft-detail__operation__spacer"></div>
-
-      <button 
-        md-button
-        type="button"
-        (click)="deleteDraft(selectedDraft)"
-        >
-        <i class="fa fa-fw fa-trash-o"></i> 削除
-      </button>
-    </div>
-    
-    <div class="draft-detail__header">
-      <div  class="draft-detail__title">{{selectedDraft.title}}</div>
-    </div>
-    <div class="draft-detail__main">
-    <div *ngIf="selectedDraft.isMarkdown; then markdown else plainText"></div>
-      <ng-template #markdown>
-        <p [innerHTML]="(selectedDraft.body | toMarkdown).text" class="markdown-body"></p>
-      </ng-template>
-      <ng-template #plainText>
-        <pre [innerHTML]="selectedDraft.body" class="plain-text-body"></pre>                
-      </ng-template>
-    </div>
-  </div>
+  <router-outlet></router-outlet>  
 </ng-container>
 
 </div>

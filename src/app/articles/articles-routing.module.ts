@@ -5,6 +5,7 @@ import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { DraftListComponent } from './draft-list/draft-list.component';
+import { DraftDetailComponent } from './draft-detail/draft-detail.component';
 import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
@@ -22,19 +23,21 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'drafts',
-    component: DraftListComponent,
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'drafts/new',
     component: ArticleEditComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'drafts/:_id',
+    path: 'drafts',
     component: DraftListComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: ':_id',
+        component: DraftDetailComponent,
+        canActivate: [AuthGuard]
+      }
+    ]
   },
   {
     path: 'drafts/:_id/edit',

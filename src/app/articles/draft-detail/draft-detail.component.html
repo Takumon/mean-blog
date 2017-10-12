@@ -1,0 +1,36 @@
+
+<div class="draft-detail" *ngIf="draft">
+  <div class="draft-detail__operation">
+    <button 
+      md-button
+      color="primary"
+      type="button"
+      [routerLink]="['/', 'drafts', draft._id, 'edit']"
+      [queryParams]="{'resume': true}"
+      >
+      <i class="fa fa-fw fa-pencil-square"></i> 編集
+    </button>
+    <div class="draft-detail__operation__spacer"></div>
+
+    <button 
+      md-button
+      type="button"
+      (click)="deleteDraft(draft)"
+      >
+      <i class="fa fa-fw fa-trash-o"></i> 削除
+    </button>
+  </div>
+  
+  <div class="draft-detail__header">
+    <div  class="draft-detail__title">{{draft.title}}</div>
+  </div>
+  <div class="draft-detail__main">
+  <div *ngIf="draft.isMarkdown; then markdown else plainText"></div>
+    <ng-template #markdown>
+      <p [innerHTML]="(draft.body | toMarkdown).text" class="markdown-body"></p>
+    </ng-template>
+    <ng-template #plainText>
+      <pre [innerHTML]="draft.body" class="plain-text-body"></pre>                
+    </ng-template>
+  </div>
+</div>

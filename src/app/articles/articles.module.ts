@@ -16,6 +16,7 @@ import {
   MatCardModule,
   MatListModule,
   MatProgressSpinnerModule,
+  MatRippleModule,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,6 +27,7 @@ import { CommentService } from './shared/comment.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { SearchConditionService } from './shared/search-condition.service';
 import { DraftService } from './shared/draft.service';
+import { SharedService } from './shared/shared.service';
 
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
@@ -46,6 +48,7 @@ import { VoterListComponent } from './voter-list/voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
 import { DraftListComponent } from './draft-list/draft-list.component';
+import { DraftDetailComponent } from './draft-detail/draft-detail.component';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
 
@@ -71,6 +74,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     ConfirmDialogComponent,
     AutofocusDirective,
     DraftListComponent,
+    DraftDetailComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,6 +97,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     MatCardModule,
     MatListModule,
     MatProgressSpinnerModule,
+    MatRippleModule,
   ],
   providers: [
     ArticleService,
@@ -100,6 +105,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     MarkdownParseService,
     SearchConditionService,
     DraftService,
+    SharedService,
   ],
   entryComponents: [
     VoterListComponent,
