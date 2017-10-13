@@ -138,6 +138,7 @@ router.delete('/:_id', (req, res, next) => {
 
     return res.status(200).json({
       message: `${MODEL_NAME}を削除しました。`,
+      obj: result,
     });
   });
 });

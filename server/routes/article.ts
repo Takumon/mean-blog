@@ -186,9 +186,7 @@ articleRouter.put('/:_id', (req, res, next) => {
   const article = req.body;
   article.updated = new Date();
 
-  Article.update({
-    _id: req.params._id
-  }, {$set: article }, (err, result) => {
+  Article.findByIdAndUpdate(req.params._id, {$set: article }, (err, result) => {
 
     if (err) {
       return res.status(500).json({
@@ -207,33 +205,22 @@ articleRouter.put('/:_id', (req, res, next) => {
 
 // 論理削除
 articleRouter.delete('/:_id', (req, res, next) => {
-  Article.findOne({
-    _id: req.params._id
-  }, (err, model) => {
+  const sysdate = new Date();
 
+  Article.findByIdAndUpdate(req.params._id,
+  { $set: {
+    updated: sysdate,
+    deleted: sysdate
+  }}, (err, model) => {
     if (err) {
       return res.status(500).json({
-        title: '削除しようとした記事(_id=${req.params.id})が見つかりませんでした。',
-        error: err.message
+          title: 'エラーが発生しました。',
+          error: err.message
       });
     }
-    const sysdate = new Date();
-    model.update({
-      $set: {
-        updated: sysdate,
-        deleted: sysdate,
-      }
-    }, err2 => {
-      if (err2) {
-        return res.status(500).json({
-            title: 'エラーが発生しました。',
-            error: err.message
-        });
-      }
 
-      return res.status(200).json({
-        message: '記事を削除しました。',
-      });
+    return res.status(200).json({
+      message: '記事を削除しました。',
     });
   });
 });

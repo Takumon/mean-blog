@@ -195,13 +195,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         article._id = this.previousDraft.articleId;
         this.articleService
         .update(article)
-        .subscribe((res: any) => {
+        .subscribe((resOfModifiedArticle: any) => {
           // 記事を登録したら下書きは削除する
           this.draftService
           .delete(this.previousDraft._id)
           .subscribe(r => {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
-            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
+            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', resOfModifiedArticle.obj._id]);
           });
         });
       } else {
@@ -209,13 +209,13 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
         article.author = this.previousDraft.author;
         this.articleService
         .register(article)
-        .subscribe((res: any) => {
+        .subscribe((resOfModifiedArticle: any) => {
           // 記事を登録したら下書きは削除する
           this.draftService
           .delete(this.previousDraft._id)
           .subscribe(r => {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
-            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
+            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', resOfModifiedArticle.obj._id]);
           });
         });
       }
