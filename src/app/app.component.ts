@@ -70,7 +70,19 @@ export class AppComponent implements OnInit {
 
   isNotEditor(): Boolean {
     const url = this.router.url;
-    return !url.startsWith('/drafts/');
+
+    // 記事登録
+    if ( url.startsWith('/drafts/') && url.endsWith('/new')) {
+      return false;
+    }
+
+    // 記事編集
+    if ( url.startsWith('/drafts/') && url.includes('/edit')) {
+      return false;
+    }
+
+    // それ以外
+    return true;
   }
 
   refreshActiveHeader(): void {
