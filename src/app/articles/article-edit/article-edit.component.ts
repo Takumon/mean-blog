@@ -40,14 +40,13 @@ import { MessageService } from '../../shared/services/message.service';
 export class ArticleEditComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   action: String;
-  // 更新の場合のみ保持する
-  articleId: string;
-  draftId: string;
+  // 更新前の状態を保持する
+  previousArticle: ArticleWithUserModel;
+  previousDraft: DraftModel;
 
   MarkdownEditMode = EditMode;
   markdonwEditMode: String = EditMode[EditMode.harfPreviewing];
   form: FormGroup;
-  isResume: Boolean = false;
 
 
   @ViewChild('syncScrollTarget')
@@ -74,13 +73,11 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
     this.route.queryParams
     .subscribe(queryParams => {
-      this.isResume = queryParams['resume'];
-
       this.createForm();
 
       this.subscription = this.route.params.subscribe( params => {
 
-        if (this.isResume) {
+        if (queryParams['resume']) {
           // 下書きは必ず更新
           this.action = '更新';
 
@@ -92,8 +89,8 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
                 // TODO エラー処理か、他のユーザでも編集できる仕様にする
               }
 
-              this.draftId = draft._id;
-              this.articleId = draft.articleId;
+              // コンポーネント内での下書きかの判断はpreviousDraftにて実施
+              this.previousDraft = draft;
               this.form.patchValue({
                 title: draft.title,
                 isMarkdown: draft.isMarkdown,
@@ -115,7 +112,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
                   // TODO エラー処理か、他のユーザでも編集できる仕様にする
                 }
 
-                this.articleId = article._id;
+                this.previousArticle = article as ArticleWithUserModel;
                 this.form.patchValue({
                   title: article.title,
                   isMarkdown: article.isMarkdown,
@@ -168,10 +165,9 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
 
-  isNew() {
-    return !this.articleId;
+  isNew(): boolean {
+    return !this.previousArticle;
   }
-
 
   @HostListener('scroll', ['$event'])
   private syncScroll($event: Event): void {
@@ -182,60 +178,79 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     target.scrollTop = (target.scrollHeight - target.clientHeight) * ratio;
   }
 
-  onSubmit(form: FormGroup): void {
+  // 記事保存
+  upsertArticle(form: FormGroup): void {
     if (!form.valid ) {
       return;
     }
 
-    if (this.isResume) {
-      const draft = new DraftModel();
-      draft.title = form.value['title'];
-      draft.isMarkdown = form.value['isMarkdown'];
-      draft.body = form.value['body'];
+    const article = new ArticleModel();
+    article.title = form.value['title'];
+    article.isMarkdown = form.value['isMarkdown'];
+    article.body = form.value['body'];
 
-
-      draft._id = this.draftId;
-      draft.articleId = this.articleId;
-      this.draftService
-        .update(draft)
-        .subscribe((res: any) => {
-          this.snackBar.open('下書きを編集しました。', null, {duration: 3000});
-          this.goToDraft();
-        });
-    } else {
-
-      const article = new ArticleModel();
-      article.title = form.value['title'];
-      article.isMarkdown = form.value['isMarkdown'];
-      article.body = form.value['body'];
-
-      if (this.isNew()) {
-        article.author = this.auth.loginUser._id;
+    if (this.previousDraft) {
+      // 公開した記事の下書きの場合は記事を更新
+      if (this.previousDraft.published) {
+        article._id = this.previousDraft.articleId;
         this.articleService
-          .register(article)
-          .subscribe((res: any) => {
-
-            this.snackBar.open('記事を投稿しました。', null, {duration: 3000});
+        .update(article)
+        .subscribe((res: any) => {
+          // 記事を登録したら下書きは削除する
+          this.draftService
+          .delete(this.previousDraft._id)
+          .subscribe(r => {
+            this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
           });
+        });
       } else {
-        article._id = this.articleId;
+        // 未公開の場合は記事を登録
+        article.author = this.previousDraft.author;
+        this.articleService
+        .register(article)
+        .subscribe((res: any) => {
+          // 記事を登録したら下書きは削除する
+          this.draftService
+          .delete(this.previousDraft._id)
+          .subscribe(r => {
+            this.snackBar.open('記事を登録しました。', null, {duration: 3000});
+            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
+          });
+        });
+      }
+
+    } else {
+      if (this.previousArticle) {
+        // 記事　=> 記事　記事更新
+        article._id = this.previousArticle._id;
+
         this.articleService
           .update(article)
           .subscribe((res: any) => {
-            this.snackBar.open('記事を編集しました。', null, {duration: 3000});
-            this.goToDetail();
+            this.snackBar.open('記事を更新しました。', null, {duration: 3000});
+            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
+          });
+      } else {
+        // 記事登録
+        article.author = this.auth.loginUser._id;
+
+        this.articleService
+          .register(article)
+          .subscribe((res: any) => {
+            this.snackBar.open('記事を登録しました。', null, {duration: 3000});
+            this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', res.obj._id]);
           });
       }
     }
   }
 
+  // 下書き保存
   upsertDraft(form: FormGroup): void {
     // もともと下書きだった場合は更新
-    if (this.isResume) {
+    if (this.previousDraft) {
       const draft = new DraftModel();
-      draft._id = this.draftId;
-      draft.author = this.auth.loginUser._id;
+      draft._id = this.previousDraft._id;
       draft.title = form.value['title'];
       draft.isMarkdown = form.value['isMarkdown'];
       draft.body = form.value['body'];
@@ -254,10 +269,15 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       draft.isMarkdown = form.value['isMarkdown'];
       draft.body = form.value['body'];
 
+      // 公開済みの記事を下書き保存する場合
+      if (this.previousArticle) {
+        draft.articleId = this.previousArticle._id;
+        draft.published = true;
+      }
+
       this.draftService
         .create(draft)
         .subscribe((res: any) => {
-
           this.snackBar.open('下書きを保村しました。', null, {duration: 3000});
           this.router.navigate(['drafts', res.obj._id]);
         });
@@ -265,25 +285,25 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-    if (this.isResume) {
-      this.goToDraft();
+    if (this.previousDraft) {
+      this.goBackDraft();
     } else {
       if (this.isNew()) {
         this.router.navigate(['/articles']);
       } else {
-        this.goToDetail();
+        this.goBackDetail();
       }
     }
 
   }
 
 
-  goToDraft() {
-    this.router.navigate(['drafts', this.draftId]);
+  goBackDraft() {
+    this.router.navigate(['drafts', this.previousDraft._id]);
   }
 
-  goToDetail() {
-    this.router.navigate([`/${this.auth.loginUser.userId}`, 'articles', this.articleId]);
+  goBackDetail() {
+    this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', this.previousArticle._id]);
   }
 
 }

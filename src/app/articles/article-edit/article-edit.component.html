@@ -1,5 +1,4 @@
 <form 
-  (ngSubmit)="onSubmit(form)" 
   [formGroup]="form"
   class="article-editor"
   >
@@ -95,6 +94,7 @@
       color="primary"
       type="submit"
       [disabled]="!form.valid"
+      (click)="upsertArticle(form)"
       id="registe-article-btn"><i class="fa fa-upload"></i>  {{action}}</button>
   </div>
 </form>
