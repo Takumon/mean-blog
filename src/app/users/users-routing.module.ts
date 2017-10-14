@@ -11,12 +11,6 @@ import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'settings/profile',
-    component: UserEditComponent,
-    pathMatch: 'full',
-    canActivate: [AuthGuard]
-  },
-  {
     path: ':_userId',
     component: UserComponent,
     canActivate: [AuthGuard],
@@ -34,6 +28,10 @@ const routes: Routes = [
       {
         path: 'comments',
         component: CommentListComponent,
+      },
+      {
+        path: 'edit',
+        component: UserEditComponent,
       }
     ]
   },

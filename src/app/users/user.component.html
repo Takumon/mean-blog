@@ -28,7 +28,7 @@
     <a md-tab-link
       *ngIf="isMine" 
       class="sub-nav-bar__link"
-      [routerLink]="['/settings', 'profile']"
+      [routerLink]="['/', user.userId, 'edit']"
       routerLinkActive #rla4="routerLinkActive"
       [active]="rla4.isActive"
       [routerLinkActiveOptions]="{exact: true}"
