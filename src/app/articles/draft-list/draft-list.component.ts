@@ -24,6 +24,7 @@ interface GroupedDrafts {
 export class DraftListComponent implements OnInit, OnDestroy {
 
   groupedDrafts: GroupedDrafts;
+  notFound: boolean;
   private onDestroy = new Subject();
 
   constructor(
@@ -59,6 +60,13 @@ export class DraftListComponent implements OnInit, OnDestroy {
     const condition = { userId: this.auth.loginUser._id };
     this.draftService.get(condition)
     .subscribe(drafts => {
+      if (!drafts || drafts.length === 0) {
+        this.notFound = true;
+        this.groupedDrafts = null;
+        this.router.navigate(['drafts']);
+        return;
+      }
+
       this.groupedDrafts = this.grouping(drafts);
       if (!this.route.firstChild || isRefresh) {
         // 決め打ちで一番最初の下書きを選択する
