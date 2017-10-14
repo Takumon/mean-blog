@@ -88,6 +88,11 @@
     cursor: pointer;
     margin-top: -18px !important;
 
+    &:hover {
+      opacity: 0.6;
+      color: #F461B3;
+    }
+
     &_checked {
       color: #ec407a;
     }
@@ -127,6 +132,13 @@
   border-radius: 2px;
   margin-top: 8px;
   margin-left: 8px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:focus {
+    outline: 0;
+  }
 
   &__icon {
     width: 24px;
@@ -137,26 +149,12 @@
     box-shadow: #2f2f2f 0 0 1px 0;
     image-rendering: -webkit-optimize-contrast;
     background: white;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.6;
-    }
-    &:focus {
-      outline: 0;
-    }
   }
 
   &__userId {
     width: 100%;
     margin: 0;
     padding: 8px 0;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.6;
-    }
-    &:focus {
-      outline: 0;
-    }
   }
 }
 

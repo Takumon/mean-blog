@@ -104,8 +104,14 @@
     margin-left: 8px;
     width: 50%;
     background: #d4d4d4;
-    padding: 12px;
-    border-radius: 4px;
+
+    height: 46px;
+    line-height: 46px;
+    padding-left: 12px;
+
+    &:hover {
+      opacity: 0.8;
+    }
 
     &.checked {
       background: #ffc3d6;

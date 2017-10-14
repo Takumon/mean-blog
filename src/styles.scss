@@ -56,6 +56,12 @@ body * {
   transition-duration: 0.2s;
 }
 
+.mat-radio-button.full-width {
+  .mat-radio-label {
+    width: 100%;
+  }  
+}
+
 /* ツールバー */
 .mat-tooltip {
   /* 改行を表示する */

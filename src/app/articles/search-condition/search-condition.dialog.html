@@ -28,6 +28,7 @@
     <md-list *ngIf="form.checkUserList" class="data-wrapper">
       <md-list-item
         *ngFor="let checkinfo of form.checkUserList"
+        mat-ripple
         class="user" >
         <md-checkbox
           class="user__check"
@@ -59,7 +60,8 @@
         [(ngModel)]="form.dateSearchPattern"
         class="date-search-pattern">
         <md-radio-button
-          class="date-search-pattern__factor"
+          mat-ripple
+          class="date-search-pattern__factor full-width"
           *ngFor="let key of (dateRangePatterns | keys)"
           [class.checked]="form.dateSearchPattern === key"
           [value]="key"

@@ -40,6 +40,8 @@
       class="article-list__item article"
       *ngFor="let item of articles | orderby: ['-created']">
       <div class="article__header"
+        mat-ripple
+        matRippleColor="rgba(186, 191, 206, 0.37)"
         [routerLink]="['/', item.author.userId, 'articles', item._id]"
         routerLinkActive="active">
         <div class="article__avator">

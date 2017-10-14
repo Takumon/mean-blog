@@ -22,6 +22,7 @@
       [class.conditions__condition_checked]="condition.checked"
       *ngFor="let condition of seaerchConditions; let i = index">
       <div
+        mat-ripple
         (click)="selectCondition(condition._id)"
         class="condition__title"
         [class.condition__title_checked]="condition.checked">
@@ -33,16 +34,13 @@
           class="condition__users">
           <div
             *ngFor="let user of condition.users"
+            mat-ripple
+            [routerLink]="['/', user.userId, 'articles']"
             class="user">
             <img
               class="user__icon"
-              src="data:image/png;base64,{{user.icon}}"
-              [routerLink]="['/', user.userId, 'articles']"
-              >
-            <p 
-              class="user__userId"
-              [routerLink]="['/', user.userId, 'articles']"              
-              >{{user.userId}}</p>
+              src="data:image/png;base64,{{user.icon}}">
+            <p class="user__userId">{{user.userId}}</p>
           </div>
         </div>
         <div

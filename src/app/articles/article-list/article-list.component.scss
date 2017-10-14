@@ -68,32 +68,11 @@
     position: relative;
     color: white;
 
+    &:hover {
+      opacity: 0.9;
+    }
     &:focus {
       outline: 0;
-      background: rgba(94, 99, 113, 0.74);  
-    }
-
-    &:before,
-    &:after{
-      position: absolute;
-      bottom: 0;
-      content: "";
-      display: inline-block;
-      width: 0;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.11);
-      transition: 0.4s;
-    }
-    &:before{
-      left: 50%;
-    }
-    &:after{
-      right: 50%;
-    }
-    
-    &:hover:before,
-    &:hover:after{
-      width: 50%;
     }
   }
 
