@@ -66,7 +66,6 @@ export class DraftDetailComponent implements OnInit {
       .subscribe(res => {
         this.draft = null;
         this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, {duration: 3000});
-        this.router.navigate(['drafts']);
         this.sharedService.emitChange('Deleted draft');
       });
     });
