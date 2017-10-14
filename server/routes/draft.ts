@@ -18,20 +18,19 @@ router.get('/', (req, res, next) => {
     JSON.parse(query.condition) :
     {};
 
-  let condition = {};
+  const condition = {};
   const userIds = source && source.userId;
   if (userIds) {
-    if (userIds instanceof Array) {
-      condition = {
-        author: {
-          $in: userIds
-        }
-      };
-    } else {
-      condition = {
-        author: userIds
-      };
-    }
+    condition['author'] = userIds instanceof Array
+      ? { $in: userIds }
+      : userIds;
+  }
+
+  const articleIds = source && source.articleId;
+  if (articleIds) {
+    condition['articleId'] = articleIds instanceof Array
+      ? { $in: articleIds }
+      : articleIds;
   }
 
   Draft
@@ -41,12 +40,6 @@ router.get('/', (req, res, next) => {
       return res.status(500).json({
         title: DEFAULT_ERR_MSG,
         error: err.message
-      });
-    }
-
-    if (!doc[0]) {
-      return res.status(500).json({
-        title: `${MODEL_NAME}(_id=${req.params._id})が見つかりませんでした。`,
       });
     }
 
