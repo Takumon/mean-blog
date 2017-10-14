@@ -5,40 +5,32 @@ import {
   OnDestroy,
   ViewChild,
   ViewChildren,
-  ContentChild,
-  ContentChildren,
   QueryList,
-  ElementRef
+  ElementRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import {
   MdSnackBar,
   MdDialog,
 } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { asap } from 'rxjs/scheduler/asap';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/subscribeOn';
 import 'rxjs/add/operator/takeUntil';
 
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { ArticleService } from '../shared/article.service';
+
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
-import { CommentListComponent } from '../comment-list/comment-list.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { MarkdownParseService, MARKDOWN_HEADER_CLASS } from '../shared/markdown-parse.service';
-import { TocService } from '../../shared/services/toc.service';
-import { ScrollService } from '../../shared/services/scroll.service';
+import { UserModel } from '../../users/shared/user.model';
+import { ArticleWithUserModel } from '../shared/article-with-user.model';
+import { MarkdownParseService } from '../shared/markdown-parse.service';
+import { ArticleService } from '../shared/article.service';
+import { CommentListComponent } from '../comment-list/comment-list.component';
 
 @Component({
   selector: 'app-article-detail',
   templateUrl: './article-detail.component.html',
   styleUrls: ['./article-detail.component.scss'],
-  providers: [ ArticleService ]
 })
 export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   // HTMLでコメント件数を参照する用
@@ -48,26 +40,22 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChildren('markdownText') markdownTexts: QueryList<ElementRef>;
 
   private onDestroy = new Subject();
-
-  activeIndex: number | null = null;
-  article: ArticleWithUserModel;
-  text: string;
-  toc: string;
-  baseUrl: string;
+  private activeIndex: number | null = null;
+  private article: ArticleWithUserModel;
+  private text: string;
+  private showToc: Observable<Boolean> = Observable.of(false);
+  private toc: string;
+  private baseUrl: string;
 
   constructor(
-    public snackBar: MdSnackBar,
+    private snackBar: MdSnackBar,
+    private dialog: MdDialog,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location,
-
     private routeNamesService: RouteNamesService,
-    public auth: AuthenticationService,
-    private articleService: ArticleService,
-    public dialog: MdDialog,
+    private auth: AuthenticationService,
     private markdownParseService: MarkdownParseService,
-    private tocService: TocService,
-    private scrollService: ScrollService,
+    private articleService: ArticleService,
   ) {
   }
 
@@ -78,62 +66,19 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
   // markdonwテキストが初期化時に
   // ハッシュタグで指定したhタグまでスクロールする
-  ngAfterViewInit() {
-    this.markdownTexts.changes
-    .takeUntil(this.onDestroy)
-    .subscribe((changes: any) => {
-      const _headings = document.querySelectorAll('.' + MARKDOWN_HEADER_CLASS);
-      const skipNoTocHeadings = (heading: HTMLHeadingElement) => !/(?:no-toc|notoc)/i.test(heading.className);
-      const headings = Array.prototype.filter.call(_headings, skipNoTocHeadings);
-      this.tocService.genToc(headings);
-
-      if (window.location.hash) {
-        // 一旦指定したタイトルにスクロールしてから
-        // スクロールイベントを開始する
-        let isFirst = true;
-        this.route.fragment
-          .takeUntil(this.onDestroy)
-          .subscribe((fragment: string) => {
-            this.scrollToAnchor(fragment);
-            if (isFirst) {
-              isFirst = false;
-              this.tocService.activeItemIndex
-              .takeUntil(this.onDestroy)
-              .subscribe(index => {
-                this.activeIndex = index;
-              });
-            }
-          });
-      } else {
-        // ハッシュタグがある場合は一度指定したタイトルにスクロールしてから
-        // スクロールの監視を開始する
-
-        // リロード前にスクロールしている場合
-        // 明示的に初期化する
-        this.scrollService.scrollToTop();
-        this.tocService.activeItemIndex
-          .takeUntil(this.onDestroy)
-          .subscribe(index => {
-            this.activeIndex = index;
-          });
-
-        this.route.fragment
-          .takeUntil(this.onDestroy)
-          .subscribe((fragment: string) => {
-            this.scrollToAnchor(fragment);
-          });
-      }
-    });
+  ngAfterViewInit(): void {
+    this.showToc = this.markdownTexts.changes
+      .takeUntil(this.onDestroy)
+      .map((change: any) => !!change);
   }
 
 
-  ngOnDestroy() {
-    this.tocService.reset();
+  ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
 
-  getArticle(): void {
+  private getArticle(): void {
     this.route.params.subscribe( params => {
       const userId = params['userId'];
       const _idOfArticle = params['_id'];
@@ -158,7 +103,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  deleteArticle(): void {
+  private deleteArticle(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: '記事削除',
@@ -174,12 +119,12 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       this.articleService.delete(this.article._id)
       .subscribe(article => {
         this.snackBar.open('記事を削除しました。', null, {duration: 3000});
-        this.goBack();
+        this.router.navigate(['/']);
       });
     });
   }
 
-  registerVote(): void {
+  private registerVote(): void {
     this.articleService
       .registerVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
@@ -191,7 +136,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  deleteVote(): void {
+  private deleteVote(): void {
     this.articleService
       .deleteVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
@@ -203,7 +148,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  containMineVote(votes: Array<UserModel>): boolean {
+  private containMineVote(votes: Array<UserModel>): boolean {
     if (!votes) {
       return false;
     }
@@ -212,29 +157,8 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     return votes.some(v => _idOfMine === v._id);
   }
 
-  goBack(): void {
-    this.location.back();
-  }
-
-  calcMarginOfComment(level: number): number {
+  // TODO 共通化
+  private calcMarginOfComment(level: number): number {
     return level * 12;
   }
-
-  scrollToAnchor(elementId: string): void {
-    const element: any = document.querySelector('#' + elementId);
-    if (!element) {
-      return;
-    }
-
-    const scrollContainer = document.getElementsByTagName('html')[0];
-    setTimeout(function() {
-      element.classList.remove('highlighted');
-      setTimeout(function() {
-        // 少し下にずらす
-        scrollContainer.scrollTop = element.offsetTop - 10;
-        element.classList.add('highlighted');
-      }, 0);
-    }, 0);
-  }
-
 }

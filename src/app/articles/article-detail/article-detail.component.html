@@ -103,29 +103,13 @@
       </ng-template>
     </div>
 
-    <div class="article__main__toc">
-      <div  *ngIf="toc" class="toc">
-        <div class="toc__inner">
-          <a
-            class="toc__title"
-            mat-ripple
-            [routerLink]="baseUrl"
-            (click)="scrollService.scrollToTop()"
-            >{{article.title}}</a>
-          <div
-            class="toc__head"
-            *ngFor="let headInfo of toc; let index = index;"
-            >
-            <a class="toc__head__link"
-              mat-ripple
-              [style.paddingLeft.px]="calcMarginOfComment(headInfo.level)"
-              href="{{baseUrl + '#' + headInfo.slug}}"
-              [class.active]="index === activeIndex"
-              >{{headInfo.title}}</a>
-          </div>
-        </div>
-      </div>                
-    </div> 
+    <ng-container *ngIf="showToc">
+      <app-article-toc
+      [toc]="toc"
+      [title]="article.title"
+      [baseUrl]="baseUrl"
+      ></app-article-toc>
+    </ng-container>
 
   </div>
 </div>

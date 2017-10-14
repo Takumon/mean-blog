@@ -41,6 +41,7 @@ import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
+import { ArticleTocComponent } from './article-detail/article-toc.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
@@ -59,6 +60,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     ArticleListComponent,
     ArticleEditComponent,
     ArticleDetailComponent,
+    ArticleTocComponent,
     CommentListComponent,
     CommentFormComponent,
     VoterListComponent,
