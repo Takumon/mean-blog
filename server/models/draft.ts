@@ -22,7 +22,7 @@ const DraftSchema = new mongoose.Schema({
     ref: 'User'
   },
 
-  published: { type: Boolean, default: false},
+  posted: { type: Boolean, default: false},
   articleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Article'

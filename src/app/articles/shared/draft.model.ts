@@ -5,7 +5,7 @@ export class DraftModel {
   isMarkdown: boolean;
   author: string;
   articleId: string;
-  published: boolean;
+  posted: boolean;
   created: string;
   updated: string;
 }

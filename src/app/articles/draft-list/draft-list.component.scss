@@ -48,6 +48,13 @@
   box-shadow: 3px 0 6px rgba(0,0,0,.24);
   z-index: 1; /* 影を消さないため */
 
+  &__title {
+    padding: 6px 12px;
+    background: rgba(0,0,0,.32);
+    color: hsla(0,0%,100%,.87);
+    font-size: 14px;
+  }
+
   &__item {
     border-bottom: 1px solid #ccc;
     font-weight: 400;

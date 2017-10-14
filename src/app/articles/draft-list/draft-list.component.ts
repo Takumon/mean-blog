@@ -1,20 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import {
-  MdSnackBar,
-  MdInputModule,
-} from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
-import { ArticleService } from '../shared/article.service';
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { SharedService } from '../shared/shared.service';
+
+interface GroupedDrafts {
+  notPosted: Array<DraftModel>;
+  posted: Array<DraftModel>;
+}
 
 @Component({
   selector: 'app-draft-list',
@@ -23,21 +23,17 @@ import { SharedService } from '../shared/shared.service';
 })
 export class DraftListComponent implements OnInit, OnDestroy {
 
-  drafts: Array<DraftModel>;
-  selectedDraft: DraftModel;
+  groupedDrafts: GroupedDrafts;
   private onDestroy = new Subject();
 
   constructor(
-    public snackBar: MdSnackBar,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location,
 
     public auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
     private sharedService: SharedService,
 
-    private articleService: ArticleService,
     private draftService: DraftService,
   ) {
   }
@@ -58,15 +54,40 @@ export class DraftListComponent implements OnInit, OnDestroy {
   }
 
 
+  // TODO 0件時の処理
   getDrafts(isRefresh: boolean = false): void {
     const condition = { userId: this.auth.loginUser._id };
     this.draftService.get(condition)
     .subscribe(drafts => {
-      this.drafts = drafts as Array<DraftModel>;
+      this.groupedDrafts = this.grouping(drafts);
       if (!this.route.firstChild || isRefresh) {
         // 決め打ちで一番最初の下書きを選択する
-        this.router.navigate(['drafts', drafts[0]._id]);
+        const _id = this.groupedDrafts.notPosted.length > 0
+          ? this.groupedDrafts.notPosted[0]._id
+          : this.groupedDrafts.posted[0]._id;
+        this.router.navigate(['drafts', _id]);
       }
     });
+  }
+
+  grouping(drafts: Array<DraftModel>): GroupedDrafts {
+    const result = {
+      notPosted: [],
+      posted: []
+    };
+
+    if (!drafts || drafts.length === 0) {
+      return result;
+    }
+
+    drafts.forEach(d => {
+      if (d.posted) {
+        result.posted.push(d);
+      } else {
+        result.notPosted.push(d);
+      }
+    });
+
+    return result;
   }
 }

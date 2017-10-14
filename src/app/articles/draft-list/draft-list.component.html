@@ -12,25 +12,43 @@
   </div>
 </div>
 
+
 <div class="prograss-bar" *ngIf="showPrograssBar" >
   <md-spinner></md-spinner>
 </div>
-<ng-container *ngIf="drafts && drafts.length > 0">
-  <div class="draft-list">
+<div class="draft-list" *ngIf="groupedDrafts">
+
+  <div class="draft-list__title">未投稿 ({{groupedDrafts.notPosted.length}}件)</div>
+  <ng-container *ngIf="groupedDrafts.notPosted.length > 0">        
     <div
       mat-ripple
       class="draft-list__item"
-      *ngFor="let item of drafts | orderby: ['-created']"
+      *ngFor="let item of groupedDrafts.notPosted | orderby: ['-created']"
       [routerLink]="['/', 'drafts', item._id ]"
       routerLinkActive="active"
       >
         <div  class="draft-list__item__title">{{item.title}}</div>
         <div class="draft-list__item__date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="draft-list__created-or-updated"> に{{item.created == item.updated ? "作成" : "更新" }}</span></div>
     </div>
-  </div>
+  </ng-container>
 
-  <router-outlet></router-outlet>  
-</ng-container>
+  <div class="draft-list__title">投稿済み ({{groupedDrafts.posted.length}}件)</div>
+  <ng-container *ngIf="groupedDrafts.posted.length > 0">        
+    <div
+      mat-ripple
+      class="draft-list__item"
+      *ngFor="let item of groupedDrafts.posted | orderby: ['-created']"
+      [routerLink]="['/', 'drafts', item._id ]"
+      routerLinkActive="active"
+      >
+        <div  class="draft-list__item__title">{{item.title}}</div>
+        <div class="draft-list__item__date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="draft-list__created-or-updated"> に{{item.created == item.updated ? "作成" : "更新" }}</span></div>
+    </div>
+  </ng-container>
+
+</div>
+
+<router-outlet></router-outlet>  
 
 </div>
 

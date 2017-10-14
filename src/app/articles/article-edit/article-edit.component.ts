@@ -218,7 +218,7 @@ export class ArticleEditComponent implements OnInit {
 
     if (this.previousDraft) {
       // 公開した記事の下書きの場合は記事を更新
-      if (this.previousDraft.published) {
+      if (this.previousDraft.posted) {
         article._id = this.previousDraft.articleId;
         this.articleService
         .update(article)
@@ -299,7 +299,7 @@ export class ArticleEditComponent implements OnInit {
       // 公開済みの記事を下書き保存する場合
       if (this.previousArticle) {
         draft.articleId = this.previousArticle._id;
-        draft.published = true;
+        draft.posted = true;
       }
 
       this.draftService
