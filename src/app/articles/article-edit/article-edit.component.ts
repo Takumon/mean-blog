@@ -136,6 +136,7 @@ export class ArticleEditComponent implements OnInit {
               isMarkdown: drafts[0].isMarkdown,
               body: drafts[0].body,
             });
+            this.snackBar.open('編集中の下書きがあるのでそれを編集します。', null, {duration: 3000});
             this.routeNamesService.name.next(`下書きを${this.action}する`);
             return;
           }
