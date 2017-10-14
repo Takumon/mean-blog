@@ -15,7 +15,6 @@
       flex: 1 1 auto;
     }
   }
-
   
   &__header {
     padding: 24px;
@@ -36,8 +35,6 @@
   &__main {
     padding: 24px;
     -webkit-font-smoothing: antialiased;
-    max-height: 785px;
-    overflow-y: auto;
   }
 }
 
