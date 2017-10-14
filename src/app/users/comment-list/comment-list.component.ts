@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
 import { CommentService } from '../../articles/shared/comment.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../shared/user.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
 
 
 @Component({
@@ -16,40 +16,43 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
   styleUrls: ['./comment-list.component.scss'],
 })
 export class CommentListComponent implements OnInit, OnDestroy {
-  user: UserModel;
-  isMine: Boolean;
-  sub: Subscription;
-  comments: Array<CommentWithArticleModel>;
-
-
+  private onDestroy = new Subject();
+  private user: UserModel;
+  private isMine: Boolean;
+  private comments: Array<CommentWithArticleModel>;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    public auth: AuthenticationService,
+    private auth: AuthenticationService,
     private commentService: CommentService,
     private userService: UserService,
-    private routeNamesService: RouteNamesService,
   ) {
   }
 
   ngOnInit(): void {
-    this.getUser();
-  }
-
-  getUser(): void {
-    this.sub = this.route.parent.params.subscribe( params => {
+    this.route.parent.params
+    .takeUntil(this.onDestroy)
+    .subscribe( params => {
       const userId = params['_userId'];
-      this.userService.getById(userId).subscribe(user => {
-        this.isMine = user._id === this.auth.loginUser._id;
-        this.user = user as UserModel;
-        this.routeNamesService.name.next('');
-        this.getComments(this.user);
-      });
+      this.getUser(userId);
     });
   }
 
-  getComments(user: UserModel): void {
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
+
+  private getUser(userId: string): void {
+    this.userService.getById(userId).subscribe(user => {
+      this.isMine = user._id === this.auth.loginUser._id;
+      this.user = user as UserModel;
+      this.getComments(this.user);
+    });
+  }
+
+  private getComments(user: UserModel): void {
     const withUser = false;
     const withArticle = true;
     const condition = {
@@ -59,13 +62,9 @@ export class CommentListComponent implements OnInit, OnDestroy {
     };
 
     this.commentService
-      .get(condition, withUser, withArticle)
-      .subscribe(comments => {
-        this.comments = comments as Array<CommentWithArticleModel>;
-      });
-  }
-
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    .get(condition, withUser, withArticle)
+    .subscribe(comments => {
+      this.comments = comments as Array<CommentWithArticleModel>;
+    });
   }
 }

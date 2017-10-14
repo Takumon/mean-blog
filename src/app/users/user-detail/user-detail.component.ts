@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -13,36 +13,34 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
   styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
-  user: UserModel;
-  isMine: Boolean;
-  sub: Subscription;
+  private onDestroy = new Subject();
+  private user: UserModel;
+  private isMine: Boolean;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private auth: AuthenticationService,
     private userService: UserService,
-    private routeNamesService: RouteNamesService,
   ) {
   }
 
   ngOnInit(): void {
-    this.getUser();
-  }
-
-  getUser(): void {
-    this.sub = this.route.parent.params.subscribe( params => {
-
+    this.route.parent.params
+    .takeUntil(this.onDestroy)
+    .subscribe( params => {
       const userId = params['_userId'];
-      this.userService.getById(userId).subscribe(user => {
-        this.isMine = user._id === this.auth.loginUser._id;
-        this.user = user as UserModel;
-        this.routeNamesService.name.next('');
-      });
+      this.getUser(userId);
     });
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
+  private getUser(userId: string): void {
+    this.userService.getById(userId).subscribe(user => {
+      this.isMine = user._id === this.auth.loginUser._id;
+      this.user = user as UserModel;
+    });
   }
 }

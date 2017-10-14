@@ -12,14 +12,14 @@ import 'rxjs/add/operator/takeUntil';
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { SharedService } from '../shared/shared.service';
+import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
   selector: 'app-draft-detail',
   templateUrl: './draft-detail.component.html',
   styleUrls: ['./draft-detail.component.scss'],
 })
-export class DraftDetailComponent implements OnInit {
+export class DraftDetailComponent implements OnInit, OnDestroy {
   draft: DraftModel;
   private onDestroy = new Subject();
 
@@ -35,6 +35,10 @@ export class DraftDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDraft();
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
   }
 
   getDraft(): void {

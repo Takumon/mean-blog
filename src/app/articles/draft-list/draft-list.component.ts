@@ -9,7 +9,7 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { SharedService } from '../shared/shared.service';
+import { SharedService } from '../../shared/services/shared.service';
 
 interface GroupedDrafts {
   notPosted: Array<DraftModel>;

@@ -21,13 +21,11 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-
 import { ArticleService } from './shared/article.service';
 import { CommentService } from './shared/comment.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { SearchConditionService } from './shared/search-condition.service';
 import { DraftService } from './shared/draft.service';
-import { SharedService } from './shared/shared.service';
 
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
@@ -37,6 +35,7 @@ import { ExcludeDeletedVoterPipe } from './shared/exclude-deleted-voter.pipe';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
 
+import { SharedService } from '../shared/services/shared.service';
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
 import { ArticleListComponent } from './article-list/article-list.component';

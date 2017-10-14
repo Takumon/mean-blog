@@ -3,9 +3,9 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { MdSnackBar } from '@angular/material';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
+import { SharedService } from '../../shared/services/shared.service';
 import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -19,11 +19,10 @@ export class UserEditComponent implements OnInit {
     public snackBar: MdSnackBar,
     private router: Router,
     private route: ActivatedRoute,
-    private userService: UserService,
-    private routeNamesService: RouteNamesService,
     private auth: AuthenticationService,
+    private sharedService: SharedService,
+    private userService: UserService,
   ) {
-    this.routeNamesService.name.next('マイページ');
   }
 
   ngOnInit(): void {
@@ -34,8 +33,6 @@ export class UserEditComponent implements OnInit {
     this.user = this.auth.loginUser;
   }
 
-
-
   updateProfile(): void {
     // TODO 入力チェック
 
@@ -44,6 +41,7 @@ export class UserEditComponent implements OnInit {
       .subscribe((res: any) => {
         this.snackBar.open('プロフィールを編集しました。', null, {duration: 3000});
         this.router.navigate(['/', this.user.userId, 'profile']);
+        this.sharedService.emitChange('Change prifile');
       });
   }
 
