@@ -1,19 +1,5 @@
 <div class="wrapper">
-
-
-<div class="message-area" *ngIf="drafts && drafts.length === 0">
-  <div class="message-area__main">
-    <div class="message-area__main__icon">
-      <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
-    </div>
-    <div class="message-area__main__message">
-      下書きはまだ登録されていません。
-    </div>
-  </div>
-</div>
-
-
-<div class="prograss-bar" *ngIf="showPrograssBar" >
+<div class="prograss-bar" *ngIf="!notFound && !groupedDrafts" >
   <md-spinner></md-spinner>
 </div>
 <div class="message-wrapper" *ngIf="notFound">

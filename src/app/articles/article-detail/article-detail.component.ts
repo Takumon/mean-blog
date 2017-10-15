@@ -33,27 +33,26 @@ import { CommentListComponent } from '../comment-list/comment-list.component';
   styleUrls: ['./article-detail.component.scss'],
 })
 export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+  public article: ArticleWithUserModel;
+  public text: string;
+  public showToc: Observable<Boolean> = Observable.of(false);
+  public toc: string;
+  public baseUrl: string;
+
   // HTMLでコメント件数を参照する用
-  @ViewChild(CommentListComponent)
-  commentListComponent: CommentListComponent;
-
+  @ViewChild(CommentListComponent) commentListComponent: CommentListComponent;
   @ViewChildren('markdownText') markdownTexts: QueryList<ElementRef>;
-
   private onDestroy = new Subject();
   private activeIndex: number | null = null;
-  private article: ArticleWithUserModel;
-  private text: string;
-  private showToc: Observable<Boolean> = Observable.of(false);
-  private toc: string;
-  private baseUrl: string;
 
   constructor(
+    public auth: AuthenticationService,
+
     private snackBar: MdSnackBar,
     private dialog: MdDialog,
     private router: Router,
     private route: ActivatedRoute,
     private routeNamesService: RouteNamesService,
-    private auth: AuthenticationService,
     private markdownParseService: MarkdownParseService,
     private articleService: ArticleService,
   ) {

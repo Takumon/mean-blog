@@ -63,7 +63,7 @@ export class CommentFormComponent implements OnInit {
     });
   }
 
-  get commentText() { return this.form.get('commentText'); }
+  get commentText(): FormControl { return this.form.get('commentText') as FormControl; }
 
   hasError(validationName: string, control: FormControl): Boolean {
     return control.hasError(validationName) && control.dirty;

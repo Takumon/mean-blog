@@ -1,69 +1,68 @@
+<form 
+  (ngSubmit)="onSubmit(loginForm)" 
+  [formGroup]="loginForm"
+  class="form"
+  >
 
-  <form 
-    (ngSubmit)="onSubmit(loginForm)" 
-    [formGroup]="loginForm"
-    class="form"
-    >
-
-    <div class="form__content">
-      <md-input-container class="form__input-container">
-        <input
-          mdInput
-          type="text"
-          placeholder="ユーザID"
-          [errorStateMatcher]="errorStateMatcher"
-          formControlName="userId"
-          >
-          <md-error *ngIf="hasError('required', userId)">
-            {{ messageService.get('required',['ユーザID']) }}
-          </md-error>
-          <md-error *ngIf="hasError('minlength', userId)">
-            {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
-          </md-error>
-      </md-input-container>
-
-      <md-input-container class="form__input-container">
-        <input
-          mdInput
-          type="password"
-          placeholder="パスワード"
-          [errorStateMatcher]="errorStateMatcher"
-          formControlName="password"
-          >
-          <md-error *ngIf="hasError('required', password)">
-            {{ messageService.get('required',['パスワード']) }}
-          </md-error>
-          <md-error *ngIf="hasError('minlength', password)">
-            {{ messageService.get('minlength',['パスワード', password.getError('minlength').requiredLength]) }}
-          </md-error>
-      </md-input-container>
-
-      <div class="form__input-container">
-        <md-checkbox>パスワードを記録する</md-checkbox>
-      </div>
-    </div>
-    
-    <div class="form__operation">
-      <button
-        md-raised-button
-        color="primary"
-        type="submit"
-        id="registe-article-btn"
+  <div class="form__content">
+    <md-input-container class="form__input-container">
+      <input
+        mdInput
+        type="text"
+        placeholder="ユーザID"
+        [errorStateMatcher]="errorStateMatcher"
+        formControlName="userId"
         >
-        <i class="fa fa-fw fa-sign-in"></i>  ログイン
-      </button>
+        <md-error *ngIf="hasError('required', userId)">
+          {{ messageService.get('required',['ユーザID']) }}
+        </md-error>
+        <md-error *ngIf="hasError('minlength', userId)">
+          {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
+        </md-error>
+    </md-input-container>
+
+    <md-input-container class="form__input-container">
+      <input
+        mdInput
+        type="password"
+        placeholder="パスワード"
+        [errorStateMatcher]="errorStateMatcher"
+        formControlName="password"
+        >
+        <md-error *ngIf="hasError('required', password)">
+          {{ messageService.get('required',['パスワード']) }}
+        </md-error>
+        <md-error *ngIf="hasError('minlength', password)">
+          {{ messageService.get('minlength',['パスワード', password.getError('minlength').requiredLength]) }}
+        </md-error>
+    </md-input-container>
+
+    <div class="form__input-container">
+      <md-checkbox>パスワードを記録する</md-checkbox>
     </div>
-  </form>
-
-  <div class="form__footer">
-    <span class="spacer"></span>
-    <button
-      md-button
-      type="button"
-      id="registe-article-btn"
-      (click)="toLogin()"
-      >
-      <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録はこちら</button>
   </div>
+  
+  <div class="form__operation">
+    <button
+      md-raised-button
+      color="primary"
+      type="submit"
+      id="registe-article-btn"
+      >
+      <i class="fa fa-fw fa-sign-in"></i>  ログイン
+    </button>
+  </div>
+</form>
 
-  <p *ngIf="message">{{message}}</p>
+<div class="form__footer">
+  <span class="spacer"></span>
+  <button
+    md-button
+    type="button"
+    id="registe-article-btn"
+    (click)="toLogin()"
+    >
+    <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録はこちら</button>
+</div>
+
+<p *ngIf="message">{{message}}</p>

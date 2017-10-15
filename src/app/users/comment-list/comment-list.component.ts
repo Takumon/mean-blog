@@ -16,10 +16,11 @@ import { UserService } from '../shared/user.service';
   styleUrls: ['./comment-list.component.scss'],
 })
 export class CommentListComponent implements OnInit, OnDestroy {
+  public comments: Array<CommentWithArticleModel>;
+  public user: UserModel;
+
   private onDestroy = new Subject();
-  private user: UserModel;
   private isMine: Boolean;
-  private comments: Array<CommentWithArticleModel>;
 
   constructor(
     private router: Router,

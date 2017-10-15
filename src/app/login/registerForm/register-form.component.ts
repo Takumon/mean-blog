@@ -57,9 +57,9 @@ export class RegisterFormComponent implements OnInit {
     });
   }
 
-  get userId() { return this.registerForm.get('userId'); }
-  get password() { return this.registerForm.get('password'); }
-  get confirmPassword() { return this.registerForm.get('confirmPassword'); }
+  get userId(): FormControl { return this.registerForm.get('userId') as FormControl; }
+  get password(): FormControl { return this.registerForm.get('password') as FormControl; }
+  get confirmPassword(): FormControl { return this.registerForm.get('confirmPassword') as FormControl; }
 
 
   hasError(validationName: string, control: FormControl): Boolean {

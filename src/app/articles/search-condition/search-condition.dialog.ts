@@ -18,7 +18,7 @@ import { SearchConditionService } from '../shared/search-condition.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
-class MyDateAdapter extends NativeDateAdapter {
+export class MyDateAdapter extends NativeDateAdapter {
   getDateNames(): string[] {
     const dateNames: string[] = [];
     for (let i = 0; i < 31; i++) {

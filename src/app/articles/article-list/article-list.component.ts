@@ -20,9 +20,9 @@ import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 
 export enum Mode {
-  ALL,
-  FAVORITE,
-  USER,
+  ALL = 100,
+  FAVORITE = 200,
+  USER = 300,
 }
 
 @Component({
@@ -33,15 +33,14 @@ export enum Mode {
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleListComponent implements OnInit, OnDestroy {
-  private onDestroy = new Subject();
+  public seaerchConditions: any;
+  public articles: Observable<Array<ArticleWithUserModel>>;
+  public showPrograssBar: Boolean = false;
 
+  private onDestroy = new Subject();
   @ViewChild(SearchConditionComponent)
   private searchConditionComponent: SearchConditionComponent;
-
-  private Modes: typeof Mode = Mode;
   private mode;
-  private showPrograssBar: Boolean = false;
-  private articles: Observable<ArticleWithUserModel>;
 
   constructor(
     private router: Router,
@@ -90,8 +89,9 @@ export class ArticleListComponent implements OnInit, OnDestroy {
           return;
         }
 
+        this.seaerchConditions = this.searchConditionComponent.createCondition();
         this.articles = this.articleService
-        .get( this.searchConditionComponent.createCondition(), withUser)
+        .get( this.seaerchConditions, withUser)
         .do(() => { this.showPrograssBar = false; })
         .share();
         break;
@@ -107,5 +107,9 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         });
         break;
     }
+  }
+
+  isFavoriteMode(): boolean {
+    return this.mode && this.mode === Mode.FAVORITE;
   }
 }

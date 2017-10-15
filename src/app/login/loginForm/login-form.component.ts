@@ -49,8 +49,8 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  get userId() { return this.loginForm.get('userId'); }
-  get password() { return this.loginForm.get('password'); }
+  get userId(): FormControl { return this.loginForm.get('userId') as FormControl; }
+  get password(): FormControl { return this.loginForm.get('password') as FormControl; }
 
   hasError(validationName: string, control: FormControl): Boolean {
     return control.hasError(validationName) && control.dirty;

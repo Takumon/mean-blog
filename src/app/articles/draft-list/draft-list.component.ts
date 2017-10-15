@@ -22,19 +22,18 @@ interface GroupedDrafts {
   styleUrls: ['./draft-list.component.scss'],
 })
 export class DraftListComponent implements OnInit, OnDestroy {
+  public groupedDrafts: GroupedDrafts;
+  public notFound: boolean;
 
-  groupedDrafts: GroupedDrafts;
-  notFound: boolean;
   private onDestroy = new Subject();
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
 
-    public auth: AuthenticationService,
+    private auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
     private sharedService: SharedService,
-
     private draftService: DraftService,
   ) {
   }

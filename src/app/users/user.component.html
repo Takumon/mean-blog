@@ -2,7 +2,7 @@
   <div class="blog-title" >
     <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>      
   </div>
-      
+
   <nav md-tab-nav-bar class="sub-nav-bar ink-bar-pink">
     <a md-tab-link
       class="sub-nav-bar__link"
@@ -34,5 +34,5 @@
       [routerLinkActiveOptions]="{exact: true}"
       >プロフィール編集</a>
   </nav>
-  <router-outlet></router-outlet>  
+  <router-outlet></router-outlet>
 </ng-container>

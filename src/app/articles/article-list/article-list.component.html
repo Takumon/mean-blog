@@ -40,7 +40,6 @@
       class="article-list__item"
       *ngFor="let item of (articles | async | orderby: ['-created'])">
       <app-article [item]="item">
-        <md-spinner></md-spinner>
       </app-article>
     </div>
   </div>
@@ -48,7 +47,7 @@
 
 
 <app-search-condition
-*ngIf="mode && mode === Modes.FAVORITE"
+*ngIf="isFavoriteMode()"
 (changeSeaerchCondition)="getArticles()"
 ></app-search-condition>
 

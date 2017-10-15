@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
-import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
 
@@ -13,13 +12,12 @@ import { UserService } from '../shared/user.service';
   styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
+  public user: UserModel;
+
   private onDestroy = new Subject();
-  private user: UserModel;
-  private isMine: Boolean;
 
   constructor(
     private route: ActivatedRoute,
-    private auth: AuthenticationService,
     private userService: UserService,
   ) {
   }
@@ -39,7 +37,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
 
   private getUser(userId: string): void {
     this.userService.getById(userId).subscribe(user => {
-      this.isMine = user._id === this.auth.loginUser._id;
       this.user = user as UserModel;
     });
   }

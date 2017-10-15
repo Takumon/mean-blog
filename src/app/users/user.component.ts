@@ -15,10 +15,11 @@ import { UserService } from './shared/user.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, OnDestroy {
+  public user: UserModel;
+  public isMine: Boolean;
+
   private onDestroy = new Subject();
   private param_userId: string;
-  private user: UserModel;
-  private isMine: Boolean;
 
   constructor(
     private router: Router,
