@@ -39,6 +39,7 @@ import { SharedService } from '../shared/services/shared.service';
 import { AutofocusDirective } from '../shared/directives/autofocus.directive';
 import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
 import { ArticleListComponent } from './article-list/article-list.component';
+import { ArticleComponent } from './article-list/article.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { ArticleTocComponent } from './article-detail/article-toc.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
@@ -57,6 +58,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
 @NgModule({
   declarations: [
     ArticleListComponent,
+    ArticleComponent,
     ArticleEditComponent,
     ArticleDetailComponent,
     ArticleTocComponent,

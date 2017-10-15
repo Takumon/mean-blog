@@ -1,0 +1,150 @@
+<div class="article">
+  <div class="article__header"
+    mat-ripple
+    matRippleColor="rgba(186, 191, 206, 0.37)"
+    [routerLink]="['/', item.author.userId, 'articles', item._id]"
+    routerLinkActive="active">
+    <div class="article__avator">
+      <img class="article__avator-icon" src="data:image/png;base64,{{item.author.icon}}">
+    </div>
+    <div class="article__subtitle">
+      <div class="article__author-name">{{item.author.userId}}</div>
+      <div class="article__date">{{item.updated | date: 'yyyy/MM/dd HH:mm' }}<span class="article__created-or-updated"> に{{item.created == item.updated ? "投稿" : "更新" }}</span></div>
+    </div>
+    <div class="article__title-wrapper">
+      <div  class="article__title">{{item.title}}</div>
+    </div>
+  </div>
+  <div class="article__main">
+    <div *ngIf="item.isMarkdown; then markdown else plainText"></div>
+    <ng-template #markdown>
+      <p [innerHTML]="(item.body | toMarkdown).text" class="markdown-body"></p>
+    </ng-template>
+    <ng-template #plainText>
+      <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
+    </ng-template>
+  </div>
+
+  <div class="article__operation">
+    <button 
+      md-button
+      type="button"
+      class="article__operation-btn"
+      (click)="registerVote()"
+      *ngIf="!containMineVote()"
+      >
+      <i class="fa fa-fw fa-thumbs-up"></i> いいね!
+    </button>
+    <button 
+      md-button
+      type="button"
+      class="article__operation-btn"
+      (click)="deleteVote()"
+      *ngIf="containMineVote()"
+      >
+      <i class="fa fa-fw fa-check"></i> いいね済み
+    </button>
+    <button 
+      md-button
+      type="button"
+      class="article__operation-btn"
+      (click)="createNewComment()"
+      >
+      <i class="fa fa-fw fa-commenting"></i>コメントする
+    </button>
+  </div>
+  
+  <ng-container *ngIf="item.showDetail; then displayCommentDetail else displayComment"></ng-container>
+  
+  <ng-template #displayComment>
+    <div *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)" class="article__comments comments">
+      <div class="comments__count_vote">
+        <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>{{ item.vote ? (item.vote | excludeDeletedVoter).length :0 }}<span class="comments__count-unit">人</span>
+      </div>
+      
+      <div class="comments__count">
+        <i class="comments__count-icon fa fa-fw fa-commenting"></i>{{(item.comments | excludeDeletedComment).length}}<span class="comments__count-unit">件</span>
+      </div>
+      <div class="comments__main">
+        <div 
+          *ngFor="let comment of (item.comments | excludeDeletedComment)"
+          class="comments__comment"
+          >
+            <img
+              *ngIf="!comment.userDeleted && !comment.deleted"
+              mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
+              class="comments__comment__user"
+              src="data:image/png;base64,{{comment.user.icon}}">
+        </div>
+      </div>
+
+      <div class="comments__operation">
+        <div class="comments__operation__spacer"></div>
+        <button
+          *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)"
+          md-icon-button
+          mdTooltip="コメント詳細を開く"
+          mdTooltipPosition="above"
+          mdTooltipShowDelay="500"
+          type="button"
+          class="comments__operation__show-detail-btn"
+          (click)="toggleDetail()"><i class="fa fa-fw fa-chevron-down"></i></button>
+      </div>
+    </div>
+    <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
+      <img class="comment-editor__author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
+      <textarea
+        class="comment-editor__body"
+        appAutofocus
+        [(ngModel)]="item.newComment.text"
+        placeholder="コメントする..." ></textarea>
+      <button 
+        md-raised-button
+        type="button"
+        class="comment-editor__cancel-btn"
+        (click)="cancelNewComment()"><i class="fa fa-fw fa-times"></i>  キャンセル</button>
+
+      <button
+        md-raised-button
+        class="comment-editor__register-btn"
+        color="primary"
+        type="button"
+        id="registe-comment-btn"
+        (click)="registerComment(item.newComment)"><i class="fa fa-fw fa-commenting"></i>  追加</button>
+    </div>
+  </ng-template>
+
+  <ng-template #displayCommentDetail>
+    <div class="article__comments-detail">
+      <button
+        md-icon-button
+        type="button"
+        mdTooltip="コメント詳細を閉じる"
+        mdTooltipPosition="above"
+        mdTooltipShowDelay="500"
+        class="article__comments-detail__close-btn_top"
+        (click)='toggleDetail()'
+        ><i class="fa fa-fw fa-chevron-up"></i>
+      </button>
+      <app-voter-list
+        [voters]="item.vote"
+      ></app-voter-list>
+      <app-comment-list
+        _idOfArticle="{{item._id}}"
+        [comments]="item.comments"
+        (refresh)="refreshComments($event)"
+      ></app-comment-list>
+      <button
+        md-icon-button
+        mdTooltip="コメント詳細を閉じる"
+        mdTooltipPosition="above"
+        mdTooltipShowDelay="500"
+        type="button"
+        class="article__comments-detail__close-btn_bottom"
+        (click)='toggleDetail()'
+        ><i class="fa fa-fw fa-chevron-up"></i>
+      </button>
+    </div>
+  </ng-template>
+</div>
+

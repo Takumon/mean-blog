@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
-import { ArticleListComponent } from '../articles/article-list/article-list.component';
+import { ArticleListComponent, Mode } from '../articles/article-list/article-list.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { AuthGuard } from '../shared/auth.guard';
 
@@ -18,7 +18,7 @@ const routes: Routes = [
       {
         path: 'articles',
         component: ArticleListComponent,
-        data: {mode: ArticleListComponent.Mode.USER },
+        data: {mode: Mode.USER },
         canActivate: [AuthGuard]
       },
       {

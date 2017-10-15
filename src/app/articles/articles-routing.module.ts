@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ArticleListComponent } from './article-list/article-list.component';
+import { ArticleListComponent, Mode } from './article-list/article-list.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { DraftListComponent } from './draft-list/draft-list.component';
@@ -13,13 +13,13 @@ const routes: Routes = [
     path: '',
     component: ArticleListComponent,
     pathMatch: 'full',
-    data: {mode: ArticleListComponent.Mode.FAVORITE},
+    data: {mode: Mode.FAVORITE},
     canActivate: [AuthGuard]
   },
   {
     path: 'articles',
     component: ArticleListComponent,
-    data: {mode: ArticleListComponent.Mode.ALL},
+    data: {mode: Mode.ALL},
     canActivate: [AuthGuard]
   },
   {
