@@ -1,7 +1,17 @@
 .form {
   width: 100%;
   padding: 16px;
+  padding-top: 36px;
   box-sizing: border-box;
+
+  &__content {
+    &__error-message {
+      color: red;
+      width: 100%;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+  }
 
   &__input-container {
     width: 100%;
@@ -10,7 +20,8 @@
     line-height: 24px;
     position: relative;
     display: block;
-    margin: 16px 0;
+    margin: 0;
+    margin-bottom: 36px;
 
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0 30px white inset;
@@ -44,6 +55,6 @@
     button {
       flex:1;
     }
-  }  
+  }
 }
 

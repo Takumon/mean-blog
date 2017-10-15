@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import { UserModel } from '../../users/shared/user.model';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 
 import { JwtService } from './jwt.service';
 import { LocalStrageService, KEY } from './local-strage.service';
@@ -46,7 +47,8 @@ export class AuthenticationService {
 
     return this.http
       .post(URL, user)
-      .map( res => this.setToken(res) );
+      .map( res => this.setToken(res) )
+      .catch(res => Observable.throw(res.json()));
   }
 
   isLogin(): Boolean {

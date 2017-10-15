@@ -66,9 +66,9 @@ authenticateRouter.post('/register', (req, res) => {
     }
 
     if (user) {
-      return res.send({
+      return res.status(400).send({
         success: false,
-        message: '指定したuserIdは既に使用されています。'
+        message: ['指定したユーザIDは既に使用されています。']
       });
     }
 

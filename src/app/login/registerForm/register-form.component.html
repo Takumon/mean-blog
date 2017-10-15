@@ -1,16 +1,18 @@
-<form 
-  (ngSubmit)="onSubmit(registerForm)" 
-  [formGroup]="registerForm"
+<form
+  (ngSubmit)="onSubmit(form)"
+  *ngIf="form"
+  [formGroup]="form"
   class="form"
   >
-
   <div class="form__content">
+    <div class="form__content__error-message"*ngIf="message">{{message}}</div>
     <md-input-container class="form__input-container">
       <input
         mdInput
         type="text"
         placeholder="ユーザID"
         [errorStateMatcher]="errorStateMatcher"
+        maxlength="30"
         formControlName="userId"
         >
         <md-error *ngIf="hasError('required', userId)">
@@ -19,49 +21,59 @@
         <md-error *ngIf="hasError('minlength', userId)">
           {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
         </md-error>
-    </md-input-container>
-
-    <md-input-container class="form__input-container">
-      <input
-        mdInput
-        type="password"
-        placeholder="パスワード"
-        [errorStateMatcher]="errorStateMatcher"
-        formControlName="password"
-        >
-        <md-error *ngIf="hasError('required', password)">
-          {{ messageService.get('required',['パスワード']) }}
-        </md-error>
-        <md-error *ngIf="hasError('minlength', password)">
-          {{ messageService.get('minlength',['パスワード', password.getError('minlength').requiredLength]) }}
+        <md-error *ngIf="hasError('maxlength', userId)">
+            {{ messageService.get('maxlength',['ユーザID', userId.getError('maxlength').requiredLength]) }}
+          </md-error>
+        <md-error *ngIf="hasError('pattern', userId)">
+          {{ messageService.get('pattern_hankakueisuji',['ユーザID']) }}
         </md-error>
     </md-input-container>
 
-    <md-input-container class="form__input-container" >
-      <input
-        mdInput
-        type="password"
-        placeholder="確認用パスワード"
-        [errorStateMatcher]="errorStateMatcher"
-        formControlName="confirmPassword"
-        >
-        <md-error *ngIf="hasError('required', confirmPassword)">
-          {{ messageService.get('required',['確認用パスワード']) }}
-        </md-error>
-        <md-error *ngIf="hasError('minlength', confirmPassword)">
-          {{ messageService.get('minlength',['確認用パスワード', confirmPassword.getError('minlength').requiredLength]) }}
-        </md-error>
-    </md-input-container>
+    <ng-container formGroupName="passwordGroup">
+      <md-input-container class="form__input-container">
+        <input
+          mdInput
+          type="password"
+          placeholder="パスワード"
+          [errorStateMatcher]="errorStateMatcher"
+          maxlength="30"
+          formControlName="password"
+          >
+          <md-error *ngIf="hasError('required', password)">
+            {{ messageService.get('required',['パスワード']) }}
+          </md-error>
+          <md-error *ngIf="hasError('pattern', password)">
+            {{ messageService.get('pattern_password') }}
+          </md-error>
+      </md-input-container>
 
+      <md-input-container class="form__input-container" >
+        <input
+          mdInput
+          type="password"
+          placeholder="確認用パスワード"
+          [errorStateMatcher]="errorStateMatcherContainParentGroup"
+          maxlength="30"
+          formControlName="confirmPassword"
+          >
+          <md-error *ngIf="hasError('required', confirmPassword)">
+            {{ messageService.get('required',['確認用パスワード']) }}
+          </md-error>
+          <md-error *ngIf="hasError('passwordMatch', passwordGroup)">
+            {{ messageService.get('passwordMatch') }}
+          </md-error>
+      </md-input-container>
+    </ng-container>
   </div>
 
 
-  
+
   <div class="form__operation">
     <button
       md-raised-button
       color="primary"
       type="submit"
+      [disabled]="!form.valid"
       id="registe-article-btn">
       <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録
     </button>
@@ -80,5 +92,3 @@
     <i class="fa fa-fw fa-chevron-circle-left"></i>  ログイン画面に戻る
   </button>
 </div>
-
-<p *ngIf="message">{{message}}</p>

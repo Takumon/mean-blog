@@ -25,7 +25,13 @@ export class RegisterFormComponent implements OnInit {
   @Output() changeLoginMode = new EventEmitter();
   @Output() complete = new EventEmitter();
   message: String;
-  registerForm: FormGroup;
+  form: FormGroup;
+
+  static passwordMatchValidator(g: FormGroup) {
+    return g.get('password').value === g.get('confirmPassword').value
+        ? null
+        : {'passwordMatch': true};
+  }
 
   constructor(
     private auth: AuthenticationService,
@@ -40,29 +46,35 @@ export class RegisterFormComponent implements OnInit {
 
 
   createForm() {
-    // TODO 相関チェック
-    this.registerForm = this.fb.group({
-      userId: ['', [
-        Validators.required,
-        Validators.minLength(6)
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8)
-      ]],
-      confirmPassword: ['', [
-        Validators.required,
-        Validators.minLength(8)
-      ]],
+    const userId = this.fb.control('', [
+      Validators.required,
+      Validators.minLength(6),
+      Validators.maxLength(30),
+      Validators.pattern(MessageService.PATTERN_HANKAKUEISU),
+    ]);
+    const password = this.fb.control('', [
+      Validators.required,
+      Validators.pattern(MessageService.PATTERN_PASSWORD),
+    ]);
+    const confirmPassword = this.fb.control('', [
+      Validators.required,
+      Validators.pattern(MessageService.PATTERN_PASSWORD),
+    ]);
+
+
+    this.form = this.fb.group({
+      userId: userId,
+      passwordGroup: new FormGroup({ password, confirmPassword }, RegisterFormComponent.passwordMatchValidator)
     });
   }
 
-  get userId(): FormControl { return this.registerForm.get('userId') as FormControl; }
-  get password(): FormControl { return this.registerForm.get('password') as FormControl; }
-  get confirmPassword(): FormControl { return this.registerForm.get('confirmPassword') as FormControl; }
+  get userId(): FormControl { return this.form.get('userId') as FormControl; }
+  get passwordGroup(): FormGroup { return this.form.get('passwordGroup') as FormGroup; }
+    get password(): FormControl { return this.passwordGroup.get('password') as FormControl; }
+    get confirmPassword(): FormControl { return this.passwordGroup.get('confirmPassword') as FormControl; }
 
 
-  hasError(validationName: string, control: FormControl): Boolean {
+  hasError(validationName: string, control: FormControl | FormGroup): Boolean {
     return control.hasError(validationName) && control.dirty;
   }
 
@@ -71,29 +83,35 @@ export class RegisterFormComponent implements OnInit {
     return !!(control.invalid && (control.dirty || isSubmitted));
   }
 
+  // 親グループも含めてチェック
+  errorStateMatcherContainParentGroup(control: FormControl, form: FormGroupDirective | NgForm): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control.invalid || control.parent.invalid) && (control.dirty || isSubmitted);
+  }
+
   toRegister(): void {
     this.changeLoginMode.emit();
   }
 
 
-  onSubmit(registerForm: FormGroup) {
-    if (registerForm.invalid) {
+  onSubmit(form: FormGroup) {
+    if (form.invalid) {
       return;
     }
 
 
     this.auth
       .register({
-        userId: registerForm.value['userId'],
-        password: registerForm.value['password']
+        userId: form.value.userId,
+        password: form.value.passwordGroup.password
       } as UserModel)
       .subscribe( (res: any) => {
-        if (res.success !== true) {
-          this.message = res['message'];
+        this.complete.emit();
+      }, (error: any) => {
+        if (error.success !== true) {
+          this.message = error['message'];
           return;
         }
-
-        this.complete.emit();
       });
   }
 }
