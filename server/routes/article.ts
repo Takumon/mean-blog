@@ -142,7 +142,7 @@ articleRouter.get('/:_id', (req, res, next) => {
       .exec(cbFind);
   }
 
-  function cbFind(err, doc): void {
+  function cbFind(err, doc): any {
     if (err) {
       return res.status(500).json({
         title: 'エラーが発生しました。',
@@ -287,7 +287,7 @@ articleRouter.get('/:_id/vote', (req, res, next) => {
     .populate('vote', '-password')
     .exec(cbFind);
 
-  function cbFind(err, doc): void {
+  function cbFind(err, doc): any {
     if (err) {
       return res.status(500).json({
         title: 'エラーが発生しました。',

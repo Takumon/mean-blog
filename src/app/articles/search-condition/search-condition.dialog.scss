@@ -17,7 +17,7 @@
   }
 
   &__close-btn {
-    cursor: pointer;  
+    cursor: pointer;
     &:hover {
       opacity: 0.6;
     }
@@ -45,9 +45,9 @@
     height: 24px;
     line-height: 24px;
   }
-  
+
 }
-  
+
 .data {
   width: 100%;
 }
@@ -99,15 +99,24 @@
 
 
 .date-search-pattern {
+  display: flex;
+  flex-wrap: wrap;
+
+  &__factor-wrapper {
+    padding-top: 2px;
+    padding-left: 8px;
+    width: 33%;
+    box-sizing: border-box;
+  }
+
   &__factor {
-    margin-top: 8px;
-    margin-left: 8px;
-    width: 50%;
+    width: 100%;
     background: #d4d4d4;
 
     height: 46px;
     line-height: 46px;
     padding-left: 12px;
+    box-sizing: border-box;
 
     &:hover {
       opacity: 0.8;

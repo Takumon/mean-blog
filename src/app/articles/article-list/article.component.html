@@ -21,12 +21,12 @@
       <p [innerHTML]="(item.body | toMarkdown).text" class="markdown-body"></p>
     </ng-template>
     <ng-template #plainText>
-      <pre [innerHTML]="item.body" class="plain-text-body"></pre>                
+      <pre [innerHTML]="item.body" class="plain-text-body"></pre>
     </ng-template>
   </div>
 
   <div class="article__operation">
-    <button 
+    <button
       md-button
       type="button"
       class="article__operation-btn"
@@ -35,7 +35,7 @@
       >
       <i class="fa fa-fw fa-thumbs-up"></i> いいね!
     </button>
-    <button 
+    <button
       md-button
       type="button"
       class="article__operation-btn"
@@ -44,7 +44,7 @@
       >
       <i class="fa fa-fw fa-check"></i> いいね済み
     </button>
-    <button 
+    <button
       md-button
       type="button"
       class="article__operation-btn"
@@ -53,20 +53,20 @@
       <i class="fa fa-fw fa-commenting"></i>コメントする
     </button>
   </div>
-  
+
   <ng-container *ngIf="item.showDetail; then displayCommentDetail else displayComment"></ng-container>
-  
+
   <ng-template #displayComment>
     <div *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)" class="article__comments comments">
       <div class="comments__count_vote">
         <i class="comments__count-icon fa fa-fw fa-thumbs-up"></i>{{ item.vote ? (item.vote | excludeDeletedVoter).length :0 }}<span class="comments__count-unit">人</span>
       </div>
-      
+
       <div class="comments__count">
         <i class="comments__count-icon fa fa-fw fa-commenting"></i>{{(item.comments | excludeDeletedComment).length}}<span class="comments__count-unit">件</span>
       </div>
       <div class="comments__main">
-        <div 
+        <div
           *ngFor="let comment of (item.comments | excludeDeletedComment)"
           class="comments__comment"
           >
@@ -98,7 +98,7 @@
         appAutofocus
         [(ngModel)]="item.newComment.text"
         placeholder="コメントする..." ></textarea>
-      <button 
+      <button
         md-raised-button
         type="button"
         class="comment-editor__cancel-btn"
