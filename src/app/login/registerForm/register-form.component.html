@@ -27,6 +27,9 @@
         <md-error *ngIf="hasError('pattern', userId)">
           {{ messageService.get('pattern_hankakueisuji',['ユーザID']) }}
         </md-error>
+        <md-error *ngIf="hasError('remote', userId)">
+          {{ userId.getError('remote').msg }}
+        </md-error>
     </md-input-container>
 
     <ng-container formGroupName="passwordGroup">
@@ -45,6 +48,9 @@
           <md-error *ngIf="hasError('pattern', password)">
             {{ messageService.get('pattern_password') }}
           </md-error>
+          <md-error *ngIf="hasError('remote', password)">
+            {{ password.getError('remote').msg }}
+          </md-error>
       </md-input-container>
 
       <md-input-container class="form__input-container" >
@@ -59,8 +65,14 @@
           <md-error *ngIf="hasError('required', confirmPassword)">
             {{ messageService.get('required',['確認用パスワード']) }}
           </md-error>
+          <md-error *ngIf="hasError('remote', confirmPassword)">
+            {{ confirmPassword.getError('confirmPassword').msg }}
+          </md-error>
           <md-error *ngIf="hasError('passwordMatch', passwordGroup)">
             {{ messageService.get('passwordMatch') }}
+          </md-error>
+          <md-error *ngIf="hasError('remote', confirmPassword)">
+            {{ passwordGroup.getError('confirmPassword').msg }}
           </md-error>
       </md-input-container>
     </ng-container>

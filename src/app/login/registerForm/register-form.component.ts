@@ -108,10 +108,17 @@ export class RegisterFormComponent implements OnInit {
       .subscribe( (res: any) => {
         this.complete.emit();
       }, (error: any) => {
-        if (error.success !== true) {
-          this.message = error['message'];
-          return;
-        }
+        const errors = error['errors'];
+        Object.keys(errors).forEach(formName => {
+          // getterからformControllを取得
+          const control: FormControl = this[formName];
+          if (!control) {
+            return;
+          }
+
+          control.setErrors({remote: errors[formName]});
+        });
+
       });
   }
 }

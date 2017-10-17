@@ -2,6 +2,8 @@ import * as http from 'http';
 import { Router, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
+import { check, oneOf, body, validationResult } from 'express-validator/check';
+import { matchedData, sanitize } from 'express-validator/filter';
 
 import { User } from '../models/user';
 import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
@@ -54,9 +56,19 @@ authenticateRouter.post('/login', (req, res) => {
 });
 
 
-authenticateRouter.post('/register', (req, res) => {
-  const reqUser = req.body;
+authenticateRouter.post('/register', [
+  body('userId').exists().withMessage('ユーザIDを入力してください'),
+  body('userId').isLength({ min: 6 }).withMessage('ユーザIDは6桁以上にしてください'),
+  body('userId').isLength({ max: 30 }).withMessage('ユーザIDは30桁以下にしてください'),
+  body('userId').matches(/^[a-zA-Z\d]*$/).withMessage('ユーザIDは半角英数字で入力してください'),
+], (req, res) => {
+  const errors = validationResult(req);
+  console.log( errors.mapped());
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.mapped() });
+  }
 
+  const reqUser = req.body;
   User.findOne({
     userId: reqUser.userId,
     deleted: { $exists : false }
