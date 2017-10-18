@@ -58,7 +58,6 @@ export class RegisterFormComponent implements OnInit {
     ]);
     const confirmPassword = this.fb.control('', [
       Validators.required,
-      Validators.pattern(MessageService.PATTERN_PASSWORD),
     ]);
 
 
@@ -74,17 +73,16 @@ export class RegisterFormComponent implements OnInit {
     get confirmPassword(): FormControl { return this.passwordGroup.get('confirmPassword') as FormControl; }
 
 
-  hasError(validationName: string, control: FormControl | FormGroup): Boolean {
+  hasError(control: FormControl | FormGroup, validationName: string): Boolean {
     return control.hasError(validationName) && control.dirty;
   }
 
-  errorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control.invalid && (control.dirty || isSubmitted));
+  hasErrorWithoutDirty(control: FormControl | FormGroup, validationName: string): Boolean {
+    return control.hasError(validationName);
   }
 
   // 親グループも含めてチェック
-  errorStateMatcherContainParentGroup(control: FormControl, form: FormGroupDirective | NgForm): boolean {
+  errorStateMatcherContainParentGroup(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control.invalid || control.parent.invalid) && (control.dirty || isSubmitted);
   }
@@ -94,30 +92,35 @@ export class RegisterFormComponent implements OnInit {
   }
 
 
-  onSubmit(form: FormGroup) {
-    if (form.invalid) {
+  onSubmit() {
+    if (this.form.invalid) {
       return;
     }
 
 
     this.auth
       .register({
-        userId: form.value.userId,
-        password: form.value.passwordGroup.password
-      } as UserModel)
+        userId: this.userId.value,
+        password: this.password.value,
+        confirmPassword: this.confirmPassword.value,
+      })
       .subscribe( (res: any) => {
         this.complete.emit();
       }, (error: any) => {
-        const errors = error['errors'];
-        Object.keys(errors).forEach(formName => {
+        for (const e of error['errors']) {
           // getterからformControllを取得
-          const control: FormControl = this[formName];
+          const control: FormControl = this[e.param];
           if (!control) {
             return;
           }
 
-          control.setErrors({remote: errors[formName]});
-        });
+          const messages = control.getError('remote');
+          if (messages) {
+            messages.push(e.msg);
+          } else {
+            control.setErrors({remote: [e.msg]});
+          }
+        }
 
       });
   }

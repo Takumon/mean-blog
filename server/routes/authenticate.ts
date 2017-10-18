@@ -57,15 +57,21 @@ authenticateRouter.post('/login', (req, res) => {
 
 
 authenticateRouter.post('/register', [
-  body('userId').exists().withMessage('ユーザIDを入力してください'),
-  body('userId').isLength({ min: 6 }).withMessage('ユーザIDは6桁以上にしてください'),
-  body('userId').isLength({ max: 30 }).withMessage('ユーザIDは30桁以下にしてください'),
-  body('userId').matches(/^[a-zA-Z\d]*$/).withMessage('ユーザIDは半角英数字で入力してください'),
+  body('userId')
+    .not().isEmpty().withMessage('ユーザIDを入力してください')
+    .isLength({ min: 6 }).withMessage('ユーザIDは6桁以上にしてください')
+    .isLength({ max: 30 }).withMessage('ユーザIDは30桁以下にしてください')
+    .matches(/^[a-zA-Z\d]*$/).withMessage('ユーザIDは半角英数字で入力してください'),
+  body('password')
+    .not().isEmpty().withMessage('パスワードを入力してください')
+    .matches(/^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,30}$/i).withMessage('パスワードは半角英数字記号をそれぞれ1種類以上含む8文字以上30文字以下にしてください'),
+  body('confirmPassword')
+    .not().isEmpty().withMessage('確認用パスワードを入力してください')
+    .custom((value, {req}) => value === req.body.password).withMessage('パスワードと確認用パスワードが一致しません'),
 ], (req, res) => {
   const errors = validationResult(req);
-  console.log( errors.mapped());
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.mapped() });
+    return res.status(400).json({ errors: errors.array() });
   }
 
   const reqUser = req.body;
@@ -78,9 +84,14 @@ authenticateRouter.post('/register', [
     }
 
     if (user) {
+      // express-valiatorのレスポンスと合わせる
       return res.status(400).send({
-        success: false,
-        message: ['指定したユーザIDは既に使用されています。']
+        errors: [
+          {
+            param: 'userId',
+            msg: '指定したユーザIDは既に使用されています。'
+          }
+        ]
       });
     }
 
