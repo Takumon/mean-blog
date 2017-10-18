@@ -9,7 +9,7 @@ import {
   Validators,
   FormBuilder,
 } from '@angular/forms';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
@@ -35,7 +35,7 @@ export class CommentFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
 
     private commentService: CommentService,
     private articleService: ArticleService,

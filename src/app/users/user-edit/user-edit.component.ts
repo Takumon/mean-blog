@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { MdSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { SharedService } from '../../shared/services/shared.service';
@@ -16,7 +16,7 @@ export class UserEditComponent implements OnInit {
   user: UserModel;
 
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private auth: AuthenticationService,

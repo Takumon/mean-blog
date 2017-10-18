@@ -1,13 +1,13 @@
-<md-card class="login-box">
-  <md-toolbar class="login-title" color="primary">
+<mat-card class="login-box">
+  <mat-toolbar class="login-title" color="primary">
     <h1 class="title">Material Blog</h1>
-    <md-toolbar-row>
+    <mat-toolbar-row>
       <span *ngIf="isLoginMode" class="subtitle">ログイン</span>
       <span *ngIf="!isLoginMode" class="subtitle">ユーザ登録</span>
-    </md-toolbar-row>
-  </md-toolbar>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-  <app-login-form 
+  <app-login-form
     *ngIf="isLoginMode"
     (changeLoginMode)="setLoginMode(false)"
     (complete)="goNextPage()"
@@ -17,4 +17,4 @@
     (changeLoginMode)="setLoginMode(true)"
     (complete)="goNextPage()"
     ></app-register-form>
-</md-card>
+</mat-card>

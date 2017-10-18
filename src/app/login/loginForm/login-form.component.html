@@ -1,46 +1,44 @@
-<form 
-  (ngSubmit)="onSubmit(loginForm)" 
+<form
+  (ngSubmit)="onSubmit(loginForm)"
   [formGroup]="loginForm"
   class="form"
   >
 
   <div class="form__content">
-    <md-input-container class="form__input-container">
+    <mat-input-container class="form__input-container">
       <input
-        mdInput
+        matInput
         type="text"
         placeholder="ユーザID"
-        [errorStateMatcher]="errorStateMatcher"
         formControlName="userId"
         >
-        <md-error *ngIf="hasError('required', userId)">
+        <mat-error *ngIf="hasError('required', userId)">
           {{ messageService.get('required',['ユーザID']) }}
-        </md-error>
-        <md-error *ngIf="hasError('minlength', userId)">
+        </mat-error>
+        <mat-error *ngIf="hasError('minlength', userId)">
           {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
-        </md-error>
-    </md-input-container>
+        </mat-error>
+    </mat-input-container>
 
-    <md-input-container class="form__input-container">
+    <mat-input-container class="form__input-container">
       <input
-        mdInput
+        matInput
         type="password"
         placeholder="パスワード"
-        [errorStateMatcher]="errorStateMatcher"
         formControlName="password"
         >
-        <md-error *ngIf="hasError('required', password)">
+        <mat-error *ngIf="hasError('required', password)">
           {{ messageService.get('required',['パスワード']) }}
-        </md-error>
-        <md-error *ngIf="hasError('minlength', password)">
+        </mat-error>
+        <mat-error *ngIf="hasError('minlength', password)">
           {{ messageService.get('minlength',['パスワード', password.getError('minlength').requiredLength]) }}
-        </md-error>
-    </md-input-container>
+        </mat-error>
+    </mat-input-container>
   </div>
-  
+
   <div class="form__operation">
     <button
-      md-raised-button
+      mat-raised-button
       color="primary"
       type="submit"
       id="registe-article-btn"
@@ -53,7 +51,7 @@
 <div class="form__footer">
   <span class="spacer"></span>
   <button
-    md-button
+    mat-button
     type="button"
     id="registe-article-btn"
     (click)="toLogin()"

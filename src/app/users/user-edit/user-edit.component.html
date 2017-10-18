@@ -2,10 +2,10 @@
   <form class="profile profile-form" (ngSubmit)="updateProfile()">
     <h1 class="profile__title">基本情報</h1>
     <div class="profile__main">
-      <md-input-container class="data">
+      <mat-input-container class="data">
         <i class="data__icon fa fa-fw fa-id-card" #labelUserId [class.data__icon_focused]="labelUserId.focused"></i>
-        <input 
-          mdInput
+        <input
+          matInput
           type="text"
           id="userId"
           name="userId"
@@ -16,12 +16,12 @@
           required
           readonly
           >
-      </md-input-container>
+      </mat-input-container>
       <div class="data-list">
-        <md-input-container class="data-list__data data">
+        <mat-input-container class="data-list__data data">
           <i class="data__icon fa fa-fw fa-user" #labelUserName [class.data__icon_focused]="labelUserName.focused"></i>
           <input
-            mdInput
+            matInput
             type="text"
             id="lastName"
             name="lastName"
@@ -30,10 +30,10 @@
             [(ngModel)]="user.lastName"
             placeholder="氏"
             >
-        </md-input-container>
-        <md-input-container class="data-list__data data">
+        </mat-input-container>
+        <mat-input-container class="data-list__data data">
           <input
-            mdInput
+            matInput
             type="text"
             id="firstName"
             name="firstName"
@@ -42,12 +42,12 @@
             [(ngModel)]="user.firstName"
             placeholder="名"
             >
-        </md-input-container>
+        </mat-input-container>
       </div>
-      <md-input-container class="data">
+      <mat-input-container class="data">
         <i class="data__icon material-icons fw" #labelEmail [class.data__icon_focused]="labelEmail.focused">email</i>
         <input
-          mdInput
+          matInput
           type="text"
           id="email"
           name="email"
@@ -56,11 +56,11 @@
           [(ngModel)]="user.email"
           placeholder="メール"
           >
-      </md-input-container>
-      <md-input-container class="data">
+      </mat-input-container>
+      <mat-input-container class="data">
         <i class="data__icon fa fa-fw fa-flag" #labelBlogTitle [class.data__icon_focused]="labelBlogTitle.focused"></i>
         <input
-          mdInput
+          matInput
           type="text"
           id="blogTitle"
           name="blogTitle"
@@ -69,11 +69,11 @@
           [(ngModel)]="user.blogTitle"
           placeholder="ブログタイトル"
           >
-      </md-input-container>
-      <md-input-container class="data">
+      </mat-input-container>
+      <mat-input-container class="data">
         <i class="data__icon material-icons fw" #labelUserDescription #labelUserDescription [class.data__icon_focused]="labelUserDescription.focused">description</i>
         <input
-          mdInput
+          matInput
           type="text"
           id="userDescription"
           name="userDescription"
@@ -82,11 +82,11 @@
           [(ngModel)]="user.userDescription"
           placeholder="自己紹介"
           >
-      </md-input-container>
-      <md-input-container class="data">
+      </mat-input-container>
+      <mat-input-container class="data">
         <i class="data__icon fa fa-fw fa-certificate" #labelIsAdmin [class.data__icon_focused]="labelIsAdmin.focused"></i>
         <input
-          mdInput
+          matInput
           type="text"
           id="isAdmin"
           name="isAdmin"
@@ -97,7 +97,7 @@
           required
           readonly
           >
-      </md-input-container>
+      </mat-input-container>
     </div>
 
     <h1 class="profile__title">アバター</h1>
@@ -105,7 +105,7 @@
       <div class="data_image">
         <button
           type="button"
-          md-raised-button
+          mat-raised-button
           (click)="iconFileInput.click()">画像変更</button>
         <input
           hidden
@@ -122,7 +122,7 @@
 
     <div class="profile__operation">
       <button
-        md-raised-button
+        mat-raised-button
         color="primary"
         type="submit"
         id="update-profile-btn">

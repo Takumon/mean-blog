@@ -6,106 +6,106 @@
       (click)="close()">
         <i class="fa fa-fw fa-times" aria-hidden="true"></i>
     </div>
-  </div> 
-  <div md-dialog-content *ngIf="form">
-    <md-input-container class="data-wrapper">
-      <input 
-        mdInput
+  </div>
+  <div mat-dialog-content *ngIf="form">
+    <mat-input-container class="data-wrapper">
+      <input
+        matInput
         type="text"
         class="data"
         [(ngModel)]="form.name"
         placeholder="検索条件名"
         ngDefaultControl
         required >
-    </md-input-container>
+    </mat-input-container>
 
     <ng-container *ngIf="!form.checkUserList">
-      <md-progress-bar mode="indeterminate"></md-progress-bar>    
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </ng-container>
     <div *ngIf="form.checkUserList" class="data-label">
       <i class="fa fa-fw fa-user"></i> ユーザ
     </div>
-    <md-list *ngIf="form.checkUserList" class="data-wrapper">
-      <md-list-item
+    <mat-list *ngIf="form.checkUserList" class="data-wrapper">
+      <mat-list-item
         *ngFor="let checkinfo of form.checkUserList"
         mat-ripple
         class="user" >
-        <md-checkbox
+        <mat-checkbox
           class="user__check"
           [(ngModel)]="checkinfo.checked"
           ngDefaultControl >
-        </md-checkbox>
+        </mat-checkbox>
         <img
           (click)="checkinfo.checked = !checkinfo.checked"
           class="user__icon"
           src="data:image/png;base64,{{checkinfo.user.icon}}">
-        <p 
+        <p
           (click)="checkinfo.checked = !checkinfo.checked"
           class="user__userId">{{checkinfo.user.userId}}</p>
-      </md-list-item>
-    </md-list>
+      </mat-list-item>
+    </mat-list>
     <div class="data-label">
       <div><i class="fa fa-fw fa-calendar"></i> 投稿日</div>
       <div class="data-label__spacer"></div>
       <button
         class="data-label__clear-btn"
         *ngIf="form.dateSearchPattern"
-        md-button
+        mat-button
         (click)="resetDateSearchPattern()">
         <i class="fa fa-fw fa-times"></i> 選択を解除</button>
     </div>
     <div class="data-wrapper">
-      <md-radio-group
+      <mat-radio-group
         *ngIf="form"
         [(ngModel)]="form.dateSearchPattern"
         class="date-search-pattern">
-        <div 
+        <div
           class="date-search-pattern__factor-wrapper"
           *ngFor="let key of (dateRangePatterns | keys)">
-          <md-radio-button
+          <mat-radio-button
             mat-ripple
             class="date-search-pattern__factor full-width"
             [class.checked]="form.dateSearchPattern === key"
             [value]="key"
-            ngDefaultControl>{{dateRangePatterns[key]}}</md-radio-button>
+            ngDefaultControl>{{dateRangePatterns[key]}}</mat-radio-button>
         </div>
-      </md-radio-group>
+      </mat-radio-group>
     </div>
-    <div 
+    <div
       *ngIf="isSpecificDateRange(form.dateSearchPattern)"
       class="data-wrapper">
-      <md-form-field>
+      <mat-form-field>
           <input
-            mdInput
-            [mdDatepicker]="fromPicker"
-            [(ngModel)]="form.dateFrom" 
+            matInput
+            [matDatepicker]="fromPicker"
+            [(ngModel)]="form.dateFrom"
             ngDefaultControl
-            readonly          
+            readonly
             placeholder="開始日">
-          <md-datepicker-toggle mdSuffix [for]="fromPicker"></md-datepicker-toggle>
-          <md-datepicker #fromPicker></md-datepicker>
-      </md-form-field>
-      <md-form-field>
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
         <input
-          mdInput
-          [mdDatepicker]="toPicker"
-          [(ngModel)]="form.dateTo" 
+          matInput
+          [matDatepicker]="toPicker"
+          [(ngModel)]="form.dateTo"
           ngDefaultControl
-          readonly           
+          readonly
           placeholder="終了日">
-        <md-datepicker-toggle mdSuffix [for]="toPicker"></md-datepicker-toggle>
-        <md-datepicker #toPicker></md-datepicker>
-      </md-form-field>
+        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+        <mat-datepicker #toPicker></mat-datepicker>
+      </mat-form-field>
     </div>
   </div>
 
-  <div md-dialog-actions style="display:flex;">
+  <div mat-dialog-actions style="display:flex;">
     <div style="flex: 1 1 auto"></div>
-    <button md-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
+    <button mat-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
     <button
-      md-raised-button
+      mat-raised-button
       color="primary"
       (click)="setOutput()"
-      [md-dialog-close]="output">決定</button>
+      [mat-dialog-close]="output">決定</button>
   </div>
 </div>

@@ -1,19 +1,19 @@
 <div class="wrapper">
 <div class="prograss-bar" *ngIf="!notFound && !groupedDrafts" >
-  <md-spinner></md-spinner>
+  <mat-spinner></mat-spinner>
 </div>
 <div class="message-wrapper" *ngIf="notFound">
   <div class="message">
     <div class="massage__icon">
       <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
     </div>
-    <div class="message__text">下書きはまだ作成していません。</div>  
+    <div class="message__text">下書きはまだ作成していません。</div>
   </div>
 </div>
 <div class="draft-list" *ngIf="groupedDrafts">
 
   <div class="draft-list__title">未投稿 ({{groupedDrafts.notPosted.length}}件)</div>
-  <ng-container *ngIf="groupedDrafts.notPosted.length > 0">        
+  <ng-container *ngIf="groupedDrafts.notPosted.length > 0">
     <div
       mat-ripple
       class="draft-list__item"
@@ -27,7 +27,7 @@
   </ng-container>
 
   <div class="draft-list__title">投稿済み ({{groupedDrafts.posted.length}}件)</div>
-  <ng-container *ngIf="groupedDrafts.posted.length > 0">        
+  <ng-container *ngIf="groupedDrafts.posted.length > 0">
     <div
       mat-ripple
       class="draft-list__item"
@@ -42,7 +42,7 @@
 
 </div>
 
-<router-outlet></router-outlet>  
+<router-outlet></router-outlet>
 
 </div>
 

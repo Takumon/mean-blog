@@ -1,4 +1,4 @@
-<form 
+<form
   [formGroup]="form"
   class="article-editor"
   >
@@ -11,38 +11,38 @@
   </div>
 
   <div class="article-editor__format-operation">
-    <md-checkbox
+    <mat-checkbox
       formControlName="isMarkdown"
-      >Markdonw形式で書く</md-checkbox>
+      >Markdonw形式で書く</mat-checkbox>
 
-    <md-button-toggle-group 
+    <mat-button-toggle-group
       *ngIf="isMarkdown.value"
       [(ngModel)]="markdonwEditMode"
       [ngModelOptions]="{standalone: true}"
       class="select-format article-editor__select-format">
-      <md-button-toggle
+      <mat-button-toggle
         [value]="MarkdownEditMode[MarkdownEditMode.notPreviewing]"
-        mdTooltip="エディターのみ表示"
-        [mdTooltipShowDelay]="500"
+        matTooltip="エディターのみ表示"
+        [matTooltipShowDelay]="500"
         class="select-format__button"
         >
         <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i>
-      </md-button-toggle>
-      <md-button-toggle
+      </mat-button-toggle>
+      <mat-button-toggle
         [value]="MarkdownEditMode[MarkdownEditMode.harfPreviewing]"
-        mdTooltip="両方を表示"
-        [mdTooltipShowDelay]="500"
+        matTooltip="両方を表示"
+        [matTooltipShowDelay]="500"
         class="select-format__button_icon_twice">
         <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true"></i> | <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
-      </md-button-toggle>
-      <md-button-toggle
+      </mat-button-toggle>
+      <mat-button-toggle
         [value]="MarkdownEditMode[MarkdownEditMode.fullPreviewing]"
-        mdTooltip="プレビューのみ表示"
-        [mdTooltipShowDelay]="500"
+        matTooltip="プレビューのみ表示"
+        [matTooltipShowDelay]="500"
         class="select-format__button">
         <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
-      </md-button-toggle>
-    </md-button-toggle-group>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
 
 
@@ -51,7 +51,7 @@
     <div class="article-editor__main markdonw-editor" >
       <div [ngClass]="['markdonw-editor__row-text', markdonwEditMode]">
         <textarea
-          id="register-article-body" 
+          id="register-article-body"
           formControlName="body"
           (scroll)="syncScroll($event)"
           placeholder="本文"
@@ -66,23 +66,23 @@
       <div class="article-editor__main plain-text-editor">
         <div class="plain-text-editor__row-text">
           <textarea
-            id="register-article-body" 
+            id="register-article-body"
             formControlName="body"
             placeholder="本文"></textarea>
         </div>
-      </div>   
+      </div>
   </ng-template>
 
 
   <div class="article-editor__operation">
     <button
-      md-raised-button
+      mat-raised-button
       type="button"
       id="cancel-btn"
-      (click)='cancel(form.dirty)'><i class="fa fa-times"></i>  キャンセル</button> 
-    <div class="spacer"></div>  
+      (click)='cancel(form.dirty)'><i class="fa fa-times"></i>  キャンセル</button>
+    <div class="spacer"></div>
     <button
-      md-raised-button
+      mat-raised-button
       color="accent"
       type="button"
       [disabled]="!form.valid"
@@ -90,7 +90,7 @@
       (click)="upsertDraft(form)"
       ><i class="fa fa-floppy-o"></i>  下書き保存</button>
     <button
-      md-raised-button
+      mat-raised-button
       color="primary"
       type="submit"
       [disabled]="!form.valid"

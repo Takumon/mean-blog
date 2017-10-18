@@ -56,11 +56,6 @@ export class LoginFormComponent implements OnInit {
     return control.hasError(validationName) && control.dirty;
   }
 
-  errorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control.invalid && (control.dirty || isSubmitted));
-  }
-
   toLogin(): void {
     this.changeLoginMode.emit();
   }

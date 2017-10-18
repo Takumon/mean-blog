@@ -7,7 +7,7 @@
       *ngFor="let voter of (voters | excludeDeletedVoter)"
       class="voter-list__voter">
       <img
-        mdTooltip="{{voter.userId}}"
+        matTooltip="{{voter.userId}}"
         class="voter-list__voter-icon"
         src="data:image/png;base64,{{voter.icon}}"
         [routerLink]="['/', voter.userId, 'articles']"

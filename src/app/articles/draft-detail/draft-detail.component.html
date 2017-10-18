@@ -1,8 +1,8 @@
 
 <div class="draft-detail" *ngIf="draft">
   <div class="draft-detail__operation">
-    <button 
-      md-button
+    <button
+      mat-button
       color="primary"
       type="button"
       [routerLink]="['/', 'drafts', draft._id, 'edit']"
@@ -12,15 +12,15 @@
     </button>
     <div class="draft-detail__operation__spacer"></div>
 
-    <button 
-      md-button
+    <button
+      mat-button
       type="button"
       (click)="deleteDraft(draft)"
       >
       <i class="fa fa-fw fa-trash-o"></i> 削除
     </button>
   </div>
-  
+
   <div class="draft-detail__header">
     <div  class="draft-detail__title">{{draft.title}}</div>
   </div>
@@ -30,7 +30,7 @@
       <p [innerHTML]="(draft.body | toMarkdown).text" class="markdown-body"></p>
     </ng-template>
     <ng-template #plainText>
-      <pre [innerHTML]="draft.body" class="plain-text-body"></pre>                
+      <pre [innerHTML]="draft.body" class="plain-text-body"></pre>
     </ng-template>
   </div>
 </div>

@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit} from '@angular/core';
 import {
-  MdDialog,
-  MdDialogRef,
-  MD_DIALOG_DATA,
-  MdDatepickerModule,
-  MdNativeDateModule,
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDatepickerModule,
+  MatNativeDateModule,
   DateAdapter,
   NativeDateAdapter,
 } from '@angular/material';
@@ -42,8 +42,8 @@ export class SearchConditionDialogComponent implements OnInit {
   dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
-    public dialogRef: MdDialogRef<SearchConditionDialogComponent>,
-    @Inject(MD_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<SearchConditionDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public auth: AuthenticationService,
     private userService: UserService,
     private searchConditionService: SearchConditionService,

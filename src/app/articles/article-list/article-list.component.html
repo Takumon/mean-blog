@@ -13,7 +13,7 @@
   <div class="message-area__operation">
     <div class="message-area__operation__spacer"></div>
     <button
-      md-raised-button
+      mat-raised-button
       color="primary"
       routerLink="/drafts/new">
         <i class="fa fa-fw fa-pencil fa-2x"></i> 記事を投稿する
@@ -32,7 +32,7 @@
   </div>
 </div>
 <div class="prograss-bar" *ngIf="showPrograssBar" >
-  <md-spinner></md-spinner>
+  <mat-spinner></mat-spinner>
 </div>
 <ng-container *ngIf="(articles | async)?.length > 0">
   <div class="article-list">

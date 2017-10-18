@@ -42,7 +42,11 @@ export class AuthenticationService {
   }
 
 
-  register(user: UserModel): Observable<Object> {
+  register(user: {
+    userId: string,
+    password: string,
+    confirmPassword: string,
+  }): Observable<Object> {
     const URL = `${this.base_url}/register`;
 
     return this.http

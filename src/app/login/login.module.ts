@@ -5,6 +5,7 @@ import {
   MatInputModule,
   MatCardModule,
   MatToolbarModule,
+  MAT_PLACEHOLDER_GLOBAL_OPTIONS,
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -39,6 +40,7 @@ import { MessageService } from '../shared/services/message.service';
     AuthenticationService,
     IconGeneratorService,
     MessageService,
+    {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}
   ],
 })
 export class LoginModule { }

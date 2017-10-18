@@ -27,7 +27,7 @@
 
   <div class="article__operation">
     <button
-      md-button
+      mat-button
       type="button"
       class="article__operation-btn"
       (click)="registerVote()"
@@ -36,7 +36,7 @@
       <i class="fa fa-fw fa-thumbs-up"></i> いいね!
     </button>
     <button
-      md-button
+      mat-button
       type="button"
       class="article__operation-btn"
       (click)="deleteVote()"
@@ -45,7 +45,7 @@
       <i class="fa fa-fw fa-check"></i> いいね済み
     </button>
     <button
-      md-button
+      mat-button
       type="button"
       class="article__operation-btn"
       (click)="createNewComment()"
@@ -72,7 +72,7 @@
           >
             <img
               *ngIf="!comment.userDeleted && !comment.deleted"
-              mdTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
+              matTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
               class="comments__comment__user"
               src="data:image/png;base64,{{comment.user.icon}}">
         </div>
@@ -82,10 +82,10 @@
         <div class="comments__operation__spacer"></div>
         <button
           *ngIf="(item.comments && (item.comments | excludeDeletedComment).length > 0) || (item.vote && (item.vote | excludeDeletedVoter).length > 0)"
-          md-icon-button
-          mdTooltip="コメント詳細を開く"
-          mdTooltipPosition="above"
-          mdTooltipShowDelay="500"
+          mat-icon-button
+          matTooltip="コメント詳細を開く"
+          matTooltipPosition="above"
+          matTooltipShowDelay="500"
           type="button"
           class="comments__operation__show-detail-btn"
           (click)="toggleDetail()"><i class="fa fa-fw fa-chevron-down"></i></button>
@@ -99,13 +99,13 @@
         [(ngModel)]="item.newComment.text"
         placeholder="コメントする..." ></textarea>
       <button
-        md-raised-button
+        mat-raised-button
         type="button"
         class="comment-editor__cancel-btn"
         (click)="cancelNewComment()"><i class="fa fa-fw fa-times"></i>  キャンセル</button>
 
       <button
-        md-raised-button
+        mat-raised-button
         class="comment-editor__register-btn"
         color="primary"
         type="button"
@@ -117,11 +117,11 @@
   <ng-template #displayCommentDetail>
     <div class="article__comments-detail">
       <button
-        md-icon-button
+        mat-icon-button
         type="button"
-        mdTooltip="コメント詳細を閉じる"
-        mdTooltipPosition="above"
-        mdTooltipShowDelay="500"
+        matTooltip="コメント詳細を閉じる"
+        matTooltipPosition="above"
+        matTooltipShowDelay="500"
         class="article__comments-detail__close-btn_top"
         (click)='toggleDetail()'
         ><i class="fa fa-fw fa-chevron-up"></i>
@@ -135,10 +135,10 @@
         (refresh)="refreshComments($event)"
       ></app-comment-list>
       <button
-        md-icon-button
-        mdTooltip="コメント詳細を閉じる"
-        mdTooltipPosition="above"
-        mdTooltipShowDelay="500"
+        mat-icon-button
+        matTooltip="コメント詳細を閉じる"
+        matTooltipPosition="above"
+        matTooltipShowDelay="500"
         type="button"
         class="article__comments-detail__close-btn_bottom"
         (click)='toggleDetail()'

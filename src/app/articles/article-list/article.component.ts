@@ -6,9 +6,9 @@ import {
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import {
-  MdSnackBar,
-  MdDialog,
-  MdInputModule,
+  MatSnackBar,
+  MatDialog,
+  MatInputModule,
 } from '@angular/material';
 
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
@@ -29,8 +29,8 @@ export class ArticleComponent {
   @Input() item: ArticleWithUserModel;
 
   constructor(
-    private dialog: MdDialog,
-    private snackBar: MdSnackBar,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private auth: AuthenticationService,

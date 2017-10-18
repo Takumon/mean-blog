@@ -1,5 +1,5 @@
 <div *ngIf="!article">
-    <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>    
+    <mat-progress-bar class="content__progressbar" mode="indeterminate"></mat-progress-bar>
 </div>
 <div  *ngIf="article" class="article">
   <div class="article__header header">
@@ -24,10 +24,10 @@
           <div class="info-summary__factor-label">コメント</div>
         </div>
       </div>
-    
+
       <div class="info-summary__vote-button-wrapper">
         <button
-          md-raised-button
+          mat-raised-button
           color="primary"
           (click)="registerVote()"
           *ngIf="!containMineVote(article.vote)"
@@ -35,7 +35,7 @@
           <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
         </button>
         <button
-          md-raised-button
+          mat-raised-button
           (click)="deleteVote()"
           *ngIf="containMineVote(article.vote)"
           >
@@ -43,12 +43,12 @@
         </button>
       </div>
       <div *ngIf="article.vote" class="info-summary__voter-icons">
-        <div 
+        <div
           *ngFor="let voter of (article.vote | excludeDeletedVoter)"
           class="info-summary__voter-icon-wrapper"
           >
             <img
-              mdTooltip="{{voter.userId}}"
+              matTooltip="{{voter.userId}}"
               [routerLink]="['/', voter.userId, 'articles']"
               class="info-summary__voter-icon"
               src="data:image/png;base64,{{voter.icon}}">
@@ -62,44 +62,44 @@
       src="data:image/png;base64,{{article.author.icon}}"
       [routerLink]="['/', article.author.userId, 'articles']"
       >
-    <div 
-      class="article__author" 
+    <div
+      class="article__author"
       [routerLink]="['/', article.author.userId, 'articles']">{{article.author.userId}}</div>
     <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
     <div
       *ngIf="auth.loginUser.userId === article.author.userId"
       class="article__operation">
       <button
-        md-button
-        [routerLink]="['/drafts', article._id, 'edit']" 
+        mat-button
+        [routerLink]="['/drafts', article._id, 'edit']"
         routerLinkActive="active">
         <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
       </button>
       <span class="spacer"></span>
       <button
-        md-button
-        [mdMenuTriggerFor]="menu">
+        mat-button
+        [matMenuTriggerFor]="menu">
         <i class="fa fa-fw fa-cog"></i>  設定
       </button>
-      <md-menu #menu="mdMenu">
-        <div md-menu-item disabled></div>
-        <a md-menu-item (click)="deleteArticle()">
+      <mat-menu #menu="matMenu">
+        <div mat-menu-item disabled></div>
+        <a mat-menu-item (click)="deleteArticle()">
           <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
         </a>
-      </md-menu>
+      </mat-menu>
     </div>
   </div>
-  <div class="article__main">   
+  <div class="article__main">
     <div class="article__main__content">
       <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
       <ng-template #markdown>
         <p
           #markdownText
-          [innerHTML]="text | safeHtml" 
+          [innerHTML]="text | safeHtml"
           class="markdown-body"></p>
       </ng-template>
       <ng-template #plainText>
-        <pre [innerHTML]="text" class="plain-text-body"></pre>                
+        <pre [innerHTML]="text" class="plain-text-body"></pre>
       </ng-template>
     </div>
 

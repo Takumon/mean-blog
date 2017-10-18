@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {
-  MdSnackBar,
-  MdDialog,
+  MatSnackBar,
+  MatDialog,
 } from '@angular/material';
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -28,11 +28,11 @@ export class CommentListComponent implements OnInit {
 
 
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     public auth: AuthenticationService,
     private articleService: ArticleService,
     private commentService: CommentService,
-    public dialog: MdDialog,
+    public dialog: MatDialog,
   ) {
   }
 

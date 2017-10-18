@@ -1,12 +1,12 @@
 <ng-container *ngIf="!comments">
-    <md-progress-bar mode="indeterminate"></md-progress-bar>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </ng-container>
 
 <ng-container *ngIf="comments">
   <div class="comment-list">
     <div *ngFor="let comment of comments" class="comment-list__comment comment">
       <img class="comment__author-icon" src="data:image/png;base64,{{user.icon}}">
-      <div class="comment__main">          
+      <div class="comment__main">
         <div class="comment__article">
           <img
             class="comment__article__author-icon"
@@ -14,14 +14,14 @@
             [routerLink]="['/', comment.articleId.author.userId, 'articles']"
             >
           <div class="comment__article__author-wrapper">
-            <span 
+            <span
               class="comment__article__author"
               [routerLink]="['/', comment.articleId.author.userId, 'articles']"
               >{{comment.articleId.author.userId}}</span>
             <span>の投稿</span>
           </div>
           <div class="comment__article__title-wrapper">
-            <span 
+            <span
               class="comment__article__title"
               [routerLink]="['/', comment.articleId.author.userId, 'articles', comment.articleId._id]"
               >{{comment.articleId.title}}</span>
@@ -30,7 +30,7 @@
           <!-- TODO　記事が削除されている場合のスタイル -->
           <div class="comment__created">{{comment.articleId.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
         </div>
-        <pre [innerHTML]="comment.text" class="comment__text"></pre>          
+        <pre [innerHTML]="comment.text" class="comment__text"></pre>
       </div>
     </div>
   </div>

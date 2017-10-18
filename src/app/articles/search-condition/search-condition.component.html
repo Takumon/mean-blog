@@ -3,7 +3,7 @@
     <div class="search-condition__header__title">お気に入り検索条件</div>
     <div class="search-condition__header__spacer"></div>
     <button
-      md-button
+      mat-button
       type="button"
       class="search-condition__header__operation-btn"
       (click)="openSerchConditionDialog()">
@@ -17,7 +17,7 @@
   </div>
   <div class="search-condition__content conditions"
     *ngIf="seaerchConditions && seaerchConditions.length > 0">
-    <md-card
+    <mat-card
       class="conditions__condition condition"
       [class.conditions__condition_checked]="condition.checked"
       *ngFor="let condition of seaerchConditions; let i = index">
@@ -28,8 +28,8 @@
         [class.condition__title_checked]="condition.checked">
         {{condition.name ? condition.name : '検索条件' + (i + 1) }}
       </div>
-      <md-card-content>
-        <div 
+      <mat-card-content>
+        <div
           *ngIf="condition.users && condition.users.length > 0"
           class="condition__users">
           <div
@@ -49,20 +49,20 @@
           <i class="fa fa-fw fa-calendar"></i>
           <div class="condition__date__statement">{{dateRangeDisp(condition)}}</div>
         </div>
-      </md-card-content>
-      <md-card-actions>
-        <button 
-          md-button
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-button
           type="button"
           (click)="deleteCondition(condition._id.toString(), condition.name)"
           ><i class="fa fa-fw fa-trash"></i>  削除</button>
         <button
-          md-button
+          mat-button
           class="comment-editor__register-btn"
           type="button"
           (click)="openSerchConditionDialog(condition._id.toString())"
           ><i class="fa fa-fw fa-cog"></i>  条件変更</button>
-      </md-card-actions>
-    </md-card>
+      </mat-card-actions>
+    </mat-card>
   </div>
 </div>

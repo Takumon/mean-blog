@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  MdSnackBar,
-  MdDialog,
+  MatSnackBar,
+  MatDialog,
 } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -48,8 +48,8 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     public auth: AuthenticationService,
 
-    private snackBar: MdSnackBar,
-    private dialog: MdDialog,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private routeNamesService: RouteNamesService,

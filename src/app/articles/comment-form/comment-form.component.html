@@ -1,43 +1,41 @@
-<form 
-  (ngSubmit)="onSubmit(form)" 
+<form
+  (ngSubmit)="onSubmit(form)"
   [formGroup]="form"
   class="comment-form"
   >
   <div class="comment-form__header">
-    <img class="comment-form__author-icon" 
+    <img class="comment-form__author-icon"
       src="data:image/png;base64,{{ auth.loginUser.icon }}">
     <div class="comment-form__title">コメントを{{action}}する</div>
   </div>
-  <md-input-container class="comment-form__main">
+  <mat-input-container class="comment-form__main">
     <textarea
       *ngIf="isAuthfocuse"
-      mdInput
-      class="comment-form__textarea" 
-      [errorStateMatcher]="errorStateMatcher"
+      matInput
+      class="comment-form__textarea"
       formControlName="commentText"
       placeholder="コメント本文"
       appAutofocus
       ></textarea>
     <textarea
       *ngIf="!isAuthfocuse"
-      mdInput
-      class="comment-form__textarea" 
-      [errorStateMatcher]="errorStateMatcher"
+      matInput
+      class="comment-form__textarea"
       formControlName="commentText"
       placeholder="コメント本文"
       ></textarea>
-    <md-error *ngIf="hasError('required', commentText)">
+    <mat-error *ngIf="hasError('required', commentText)">
       {{ messageService.get('required',['コメント本文']) }}
-    </md-error>
-  </md-input-container>
+    </mat-error>
+  </mat-input-container>
   <div class="comment-form__operation">
-    <button 
+    <button
       *ngIf="hasCancelBtn"
-      md-raised-button
+      mat-raised-button
       type="button"
       (click)='onCancel();'><i class="fa fa-fw fa-times"></i>  キャンセル</button>
     <button
-      md-raised-button
+      mat-raised-button
       color="primary"
       type="submit"
       [disabled]="!form.valid"

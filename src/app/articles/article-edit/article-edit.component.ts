@@ -18,8 +18,8 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import {
-  MdSnackBar,
-  MdDialog,
+  MatSnackBar,
+  MatDialog,
 } from '@angular/material';
 
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -62,12 +62,12 @@ export class ArticleEditComponent implements OnInit {
 
 
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
     private fb: FormBuilder,
-    public dialog: MdDialog,
+    public dialog: MatDialog,
 
     private articleService: ArticleService,
     private draftService: DraftService,

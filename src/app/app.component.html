@@ -1,13 +1,13 @@
-<md-toolbar *ngIf="isActiveHeader" class="toolbar" color="primary">
+<mat-toolbar *ngIf="isActiveHeader" class="toolbar" color="primary">
   <button
-    md-button
+    mat-button
     class="toolbar__app-logo"
     [routerLink]="auth.loginUser ? '': 'articles'"
     routerLinkActive="active">{{title}}</button>
 
 
-  <nav *ngIf="isActiveNavbar" md-tab-nav-bar class="toolbar__tab navbar ink-bar-white">
-    <a md-tab-link
+  <nav *ngIf="isActiveNavbar" mat-tab-nav-bar class="toolbar__tab navbar ink-bar-white">
+    <a mat-tab-link
       *ngIf="auth.loginUser"
       class="navbar__link"
       routerLink=""
@@ -17,7 +17,7 @@
       >
       <i class="fa fa-fw fa-star"></i>  <span>お気に入り</span>
     </a>
-    <a md-tab-link
+    <a mat-tab-link
       class="navbar__link"
       routerLink="articles"
       routerLinkActive #rla2="routerLinkActive"
@@ -33,15 +33,15 @@
 
   <ng-container *ngIf="auth.isFinishedCheckState">
     <button
-      *ngIf="auth.loginUser && isNotEditor()" 
-      md-icon-button
-      mdTooltip="記事を投稿する"
+      *ngIf="auth.loginUser && isNotEditor()"
+      mat-icon-button
+      matTooltip="記事を投稿する"
       routerLink="/drafts/new">
         <i class="fa fa-fw fa-pencil fa-2x"></i>
     </button>
 
     <button
-      md-button
+      mat-button
       class="toolbar__btn_color_white"
       *ngIf="!auth.loginUser"
       [routerLink]="['login']"
@@ -51,7 +51,7 @@
     </button>
 
     <button
-      md-button
+      mat-button
       class="toolbar__btn"
       color="normal"
       *ngIf="!auth.loginUser"
@@ -63,49 +63,49 @@
     <div
       *ngIf="auth.loginUser"
       class="menu-btn"
-      [mdMenuTriggerFor]="menu">
+      [matMenuTriggerFor]="menu">
       <img class="menu-btn__icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
 
-      <md-menu #menu="mdMenu" class="menu-btn__menu">
-        <div md-menu-item disabled class="menu-btn__menu__description"><span class="menu-btn__menu__username">{{auth.loginUser.userId}}</span>としてログイン済</div>
+      <mat-menu #menu="matMenu" class="menu-btn__menu">
+        <div mat-menu-item disabled class="menu-btn__menu__description"><span class="menu-btn__menu__username">{{auth.loginUser.userId}}</span>としてログイン済</div>
         <button
-          md-menu-item
+          mat-menu-item
           [routerLink]="[auth.loginUser.userId, 'articles']"
           routerLinkActive="active">
-          <i class="fa fa-fw fa-list"></i><span> 投稿一覧</span>        
+          <i class="fa fa-fw fa-list"></i><span> 投稿一覧</span>
         </button>
 
         <button
-          md-menu-item
+          mat-menu-item
           [routerLink]="['drafts']"
           routerLinkActive="active">
-          <i class="fa fa-fw fa-files-o"></i><span> 下書き一覧</span>        
+          <i class="fa fa-fw fa-files-o"></i><span> 下書き一覧</span>
         </button>
 
         <button
-          md-menu-item
+          mat-menu-item
           [routerLink]="[auth.loginUser.userId, 'profile']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-user-circle"></i><span> プロフィール</span>
         </button>
         <button
-          md-menu-item
-          routerLink="/login" 
+          mat-menu-item
+          routerLink="/login"
           routerLinkActive="active">
           <i class="fa fa-fw fa-sign-out"></i><span> ログアウト</span>
         </button>
-      </md-menu>
+      </mat-menu>
     </div>
   </ng-container>
 
-</md-toolbar>
+</mat-toolbar>
 
 <div class="content">
   <ng-container *ngIf="isLoginPage() || auth.isFinishedCheckState">
     <router-outlet></router-outlet>
-  </ng-container> 
+  </ng-container>
   <ng-container *ngIf="!isLoginPage() && !auth.isFinishedCheckState">
-    <md-progress-bar class="content__progressbar" mode="indeterminate"></md-progress-bar>
+    <mat-progress-bar class="content__progressbar" mode="indeterminate"></mat-progress-bar>
   </ng-container>
 </div>
 

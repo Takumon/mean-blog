@@ -1,32 +1,32 @@
 <ng-container *ngIf="user">
   <div class="blog-title" >
-    <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>      
+    <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
   </div>
 
-  <nav md-tab-nav-bar class="sub-nav-bar ink-bar-pink">
-    <a md-tab-link
+  <nav mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
+    <a mat-tab-link
       class="sub-nav-bar__link"
       [routerLink]="['/', user.userId, 'articles']"
       routerLinkActive #rla2="routerLinkActive"
       [active]="rla2.isActive"
       [routerLinkActiveOptions]="{exact: true}"
       >記事</a>
-    <a md-tab-link
+    <a mat-tab-link
       class="sub-nav-bar__link"
       [routerLink]="['/', user.userId, 'comments']"
       routerLinkActive #rla3="routerLinkActive"
       [active]="rla3.isActive"
       [routerLinkActiveOptions]="{exact: true}"
       >コメント</a>
-    <a md-tab-link
+    <a mat-tab-link
       class="sub-nav-bar__link"
       [routerLink]="['/', user.userId, 'profile']"
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
       [routerLinkActiveOptions]="{exact: true}"
       >プロフィール</a>
-    <a md-tab-link
-      *ngIf="isMine" 
+    <a mat-tab-link
+      *ngIf="isMine"
       class="sub-nav-bar__link"
       [routerLink]="['/', user.userId, 'edit']"
       routerLinkActive #rla4="routerLinkActive"

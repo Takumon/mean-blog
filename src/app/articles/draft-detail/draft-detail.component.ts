@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  MdSnackBar,
-  MdDialog,
-  MdInputModule,
+  MatSnackBar,
+  MatDialog,
+  MatInputModule,
 } from '@angular/material';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -26,9 +26,9 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private draftService: DraftService,
-    public dialog: MdDialog,
+    public dialog: MatDialog,
     private sharedService: SharedService,
   ) {
   }

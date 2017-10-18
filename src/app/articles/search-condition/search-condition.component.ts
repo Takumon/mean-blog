@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import {
-  MdSnackBar,
-  MdDialog,
-  MdInputModule,
+  MatSnackBar,
+  MatDialog,
+  MatInputModule,
 } from '@angular/material';
 import * as moment from 'moment';
 
@@ -27,11 +27,11 @@ export class SearchConditionComponent implements OnInit {
   dateRange = DateRange;
 
   constructor(
-    public snackBar: MdSnackBar,
+    public snackBar: MatSnackBar,
     private localStrageService: LocalStrageService,
     private searchConditionService: SearchConditionService,
     public auth: AuthenticationService,
-    public dialog: MdDialog,
+    public dialog: MatDialog,
   ) {
   }
 

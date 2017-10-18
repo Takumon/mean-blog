@@ -1,6 +1,6 @@
 <ng-container *ngIf="!comments">
-    <md-progress-bar mode="indeterminate"></md-progress-bar>
-</ng-container>    
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</ng-container>
 <ng-container *ngIf="comments">
   <div class="comment-list-header">
     <div class="comment-list-header__count" >コメント{{(comments | excludeDeletedComment).length}}件</div>
@@ -9,7 +9,7 @@
   <div
     *ngFor="let comment of (comments | excludeDeletedLeafComment)"
     class="comment-list-content"
-    [style.marginLeft.px]="calcMarginOfComment(comment.depth)" 
+    [style.marginLeft.px]="calcMarginOfComment(comment.depth)"
     >
 
     <div *ngIf=" comment.userDeleted;                                            then displayDeletedUserComment"></div>
@@ -33,7 +33,7 @@
       </div>
     </ng-template>
     <ng-template #editComment>
-      <app-comment-form 
+      <app-comment-form
         [commentModel]="commentOfForm(comment)"
         [hasCancelBtn]="true"
         [isAuthfocuse]="true"
@@ -50,27 +50,27 @@
           >
         <div class="comment__main">
           <div class="comment__metadata">
-            <div 
+            <div
               class="comment__author"
               [routerLink]="['/', comment.user.userId, 'articles']"
               >{{comment.user.userId}}</div>
             <div class="comment__created">{{comment.updated | date: 'yyyy/MM/dd HH:mm' }}<span> に{{comment.created == comment.updated ? "投稿" : "更新" }}</span></div>
           </div>
-          <pre [innerHTML]="comment.text" class="comment__text"></pre>                
+          <pre [innerHTML]="comment.text" class="comment__text"></pre>
           <div class="comment__operation">
             <button
-              md-button
+              mat-button
               (click)="comment.addReply = true; comment.isEditable = false;">
               <i class="fa fa-fw fa-reply"></i><span>  返信</span>
             </button>
-            <button 
-              md-button 
+            <button
+              mat-button
               *ngIf="auth.loginUser._id === comment.user._id"
               (click)="comment.isEditable = true; comment.addReply = false">
               <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
             </button>
             <button
-              md-button
+              mat-button
               *ngIf="auth.loginUser._id === comment.user._id"
               (click)="deleteComment(comment._id)">
               <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
@@ -79,7 +79,7 @@
         </div>
       </div>
       <div *ngIf="comment.addReply" class="reply">
-        <app-comment-form  
+        <app-comment-form
           [commentModel]="commentOfForm(null, comment._id)"
           [hasCancelBtn]="true"
           [isAuthfocuse]="true"
@@ -90,7 +90,7 @@
     </ng-template>
   </div>
   <div *ngIf="auth.loginUser">
-      <app-comment-form 
+      <app-comment-form
         [commentModel]="commentOfForm()"
         [hasCancelBtn]="false"
         [isAuthfocuse]="false"
