@@ -9,6 +9,7 @@ import { User } from '../models/user';
 import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
 import { authenticate } from '../middleware/authenticate';
 import { PasswordManager } from '../helpers/password-manager';
+import { validateHelper as v } from '../helpers/validate-helper';
 
 const authenticateRouter: Router = Router();
 
@@ -55,19 +56,32 @@ authenticateRouter.post('/login', (req, res) => {
   });
 });
 
+function isAllreadyUsed(userId: String): Promise<boolean> {
+  return User
+  .findOne({ userId: userId, deleted: { $exists : false }})
+  .exec()
+  .then(user => {
+    if (user) {
+      return Promise.reject(true);
+    }
+    // チェックOK
+    return Promise.resolve(true);
+  }).catch(err => Promise.reject(false));
+}
 
 authenticateRouter.post('/register', [
   body('userId')
-    .not().isEmpty().withMessage('ユーザIDを入力してください')
-    .isLength({ min: 6 }).withMessage('ユーザIDは6桁以上にしてください')
-    .isLength({ max: 30 }).withMessage('ユーザIDは30桁以下にしてください')
-    .matches(/^[a-zA-Z\d]*$/).withMessage('ユーザIDは半角英数字で入力してください'),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['ユーザID']))
+    .isLength({ min: 6 }).withMessage(v.message(v.MESSAGE.minlength, ['ユーザID', '6']))
+    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE.maxlength, ['ユーザID', '30']))
+    .matches(v.PATTERN.HANKAKUEISU).withMessage(v.message(v.MESSAGE.pattern_hankakueisuji, ['ユーザID']))
+    .custom(isAllreadyUsed).withMessage(v.message(v.MESSAGE.allready_existed, ['ユーザID'])),
   body('password')
-    .not().isEmpty().withMessage('パスワードを入力してください')
-    .matches(/^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,30}$/i).withMessage('パスワードは半角英数字記号をそれぞれ1種類以上含む8文字以上30文字以下にしてください'),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['パスワード']))
+    .matches(v.PATTERN.PASSWORD).withMessage(v.message(v.MESSAGE.pattern_password, ['パスワード'])),
   body('confirmPassword')
-    .not().isEmpty().withMessage('確認用パスワードを入力してください')
-    .custom((value, {req}) => value === req.body.password).withMessage('パスワードと確認用パスワードが一致しません'),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['確認用パスワード']))
+    .custom((value, {req}) => value === req.body.password).withMessage(v.message(v.MESSAGE.different, ['パスワード', '確認用パスワード'])),
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -81,18 +95,6 @@ authenticateRouter.post('/register', [
   }, (err, user) => {
     if (err) {
       throw err;
-    }
-
-    if (user) {
-      // express-valiatorのレスポンスと合わせる
-      return res.status(400).send({
-        errors: [
-          {
-            param: 'userId',
-            msg: '指定したユーザIDは既に使用されています。'
-          }
-        ]
-      });
     }
 
     const newUser = new User();
