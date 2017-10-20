@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 import { AuthenticationService } from '../shared/services/authentication.service';
 
@@ -13,6 +14,7 @@ export class LoginComponent implements OnInit {
   private returnUrl: string;
 
   constructor(
+    private snackBar: MatSnackBar,
     private authenticationService: AuthenticationService,
     private route: ActivatedRoute,
     private router: Router,
@@ -33,6 +35,7 @@ export class LoginComponent implements OnInit {
 
 
   private goNextPage() {
+    this.snackBar.open('ログインしました。', null, {duration: 3000});
     this.router.navigate([this.returnUrl]);
   }
 

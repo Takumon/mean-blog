@@ -41,7 +41,8 @@ export class AuthenticationService {
 
     return this.http
       .post(URL, user)
-      .map( res => this.setToken(res) );
+      .map( res => this.setToken(res) )
+      .catch(res => Observable.throw(res.json()));
   }
 
 

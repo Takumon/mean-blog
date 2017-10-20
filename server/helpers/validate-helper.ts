@@ -15,6 +15,7 @@
     pattern_password: '{0}は半角英数字記号をそれぞれ1種類以上含む8文字以上30文字以下にしてください',
     allready_existed: '指定した{0}は既に使用されています',
     different: '{0}と{1}が一致しません',
+    login_error: 'ユーザIDかパスワードが正しくありません'
   };
 
   message(validationName: string, replacements: Array<string> = []): string {

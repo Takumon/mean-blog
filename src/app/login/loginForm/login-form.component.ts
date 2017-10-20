@@ -60,7 +60,6 @@ export class LoginFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.invalid) {
-      // TODO エラーメッセージ
       return;
     }
 
@@ -74,7 +73,7 @@ export class LoginFormComponent implements OnInit {
       }, (error: any) => {
         for (const e of error['errors']) {
           // getterからformControllを取得
-          const control: FormControl | FormGroup = this[e.param];
+          const control: FormControl | FormGroup = e.param === 'common' ? this.form : this[e.param];
           if (!control) {
             return;
           }

@@ -6,7 +6,7 @@
   >
 
   <div class="form__content">
-    <div class="common-error" *ngIf="messageService.hasErrorWithoutDirty(form, 'remote')">
+    <div class="form__content__error-message" *ngIf="messageService.hasErrorWithoutDirty(form, 'remote')">
       <ng-container *ngFor="let msg of form.getError('remote')">
         {{msg}}<br>
       </ng-container>
@@ -24,6 +24,11 @@
         <mat-error *ngIf="messageService.hasError(userId, 'required')">
           {{ messageService.get('required',['ユーザID']) }}
         </mat-error>
+        <mat-error *ngIf="messageService.hasErrorWithoutDirty(userId, 'remote')">
+          <ng-container *ngFor="let msg of userId.getError('remote')">
+            {{msg}}<br>
+          </ng-container>
+        </mat-error>
     </mat-input-container>
 
     <mat-input-container class="form__input-container">
@@ -36,6 +41,11 @@
         >
         <mat-error *ngIf="messageService.hasError(password, 'required')">
           {{ messageService.get('required',['パスワード']) }}
+        </mat-error>
+        <mat-error *ngIf="messageService.hasErrorWithoutDirty(password, 'remote')">
+          <ng-container *ngFor="let msg of password.getError('remote')">
+            {{msg}}<br>
+          </ng-container>
         </mat-error>
     </mat-input-container>
   </div>

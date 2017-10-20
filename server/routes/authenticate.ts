@@ -13,7 +13,16 @@ import { validateHelper as v } from '../helpers/validate-helper';
 
 const authenticateRouter: Router = Router();
 
-authenticateRouter.post('/login', (req, res) => {
+authenticateRouter.post('/login', [
+  body('userId')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['ユーザID'])),
+  body('password')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['パスワード'])),
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   const reqUser = req.body;
   User.findOne({
@@ -25,19 +34,13 @@ authenticateRouter.post('/login', (req, res) => {
     }
 
     if (!user) {
-      res.json({
-        success: false,
-        message: '認証に失敗しました。'
-      });
-      return;
+      console.log('ユーザが存在しません');
+      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE.login_error)}] });
     }
 
     if (!PasswordManager.compare(reqUser.password, user.password)) {
-      res.json({
-        success: false,
-        message: '認証に失敗しました。'
-      });
-      return;
+      console.log('パスワードが正しくありません');
+      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE.login_error)}] });
     }
 
     const token = jwt.sign({ _id: user._id }, SECRET, {
