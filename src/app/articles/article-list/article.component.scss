@@ -28,7 +28,7 @@
     margin: 12px;
     box-sizing: border-box;
   }
-  
+
   &__avator-icon {
     height: 42px;
     width: 42px;
@@ -83,20 +83,20 @@
       z-index  : 1;
       left     : 0;
       pointer-events   : none;
-      background-image : linear-gradient(to bottom, 
-                        rgba(255,255,255, 0), 
+      background-image : linear-gradient(to bottom,
+                        rgba(255,255,255, 0),
                         rgba(255,255,255, 1) 90%);
       width    : 100%;
       height: 4em;
       bottom   : 0;
-    } 
+    }
   }
 
   &__operation {
     margin: 0 8px;
     border-top: #d4d4d4 1px solid;
   }
-  
+
   &__operation-btn {
     color: #606060;
     font-weight: bold;
@@ -107,7 +107,7 @@
 
   &__comments {
     width: 100%;
-    border-top: 1px solid #d4d4d4;    
+    border-top: 1px solid #d4d4d4;
   }
 
   &__comments-detail {
@@ -144,7 +144,7 @@
         }
       }
     }
-  }  
+  }
 
   &__comment-editor {
     width: 100%;
@@ -154,7 +154,7 @@
 
 
 .plain-text-body {
-  white-space: pre;          
+  white-space: pre;
   white-space: pre-wrap;
   white-space: pre-line;
   white-space: -pre-wrap;
@@ -195,14 +195,14 @@
       @extend #{$parent};
       border-right: 1px solid #d4d4d4;
 
-      $parent: &;      
+      $parent: &;
       &_link {
         @extend #{$parent};
         color: #3f51b5;
         &:hover {
           cursor: pointer;
           text-decoration: underline;
-        }          
+        }
       }
     }
   }
@@ -210,7 +210,7 @@
   &__count-unit {
     font-size: 0.7em;
   }
-  
+
   &__main {
     display: flex;
     flex-wrap: wrap;
@@ -220,7 +220,7 @@
   &__comment {
     margin-top: 12px;
     line-height: 0;
-    
+
     &__user {
       width: 24px;
       height: 24px;
@@ -239,7 +239,7 @@
     display: flex;
 
     &__spacer {
-      flex: 1 1 auto;  
+      flex: 1 1 auto;
     }
     &__show-editor-btn {
       line-height: 1;
@@ -265,11 +265,12 @@
 
 .comment-editor {
   background: #fdfdfd;
-  height: 62px;
+  height: 106px;
   padding: 12px;
   box-sizing: border-box;
   border-top: 1px #d4d4d4 solid;
   display: flex;
+  position: relative;
 
   &__author-icon {
     width: 36px;
@@ -278,23 +279,41 @@
     margin-right: 12px;
     box-sizing: border-box;
     box-shadow: #2f2f2f 0 0 1px 0;
+    align-self: flex-start;
   }
 
   &__body {
     flex: 1;
-    height: 36px;
-    box-sizing: border-box;
+    align-self: flex-start;
     font-size: 12px;
-    line-height: 25px;
-    border: solid 1px #d4d4d4;
-    outline: 0;
+
+    &__textarea {
+      box-sizing: border-box;
+      height: 60px;
+      line-height: 16px;
+      padding: 4px;
+      background: white;
+      resize: none;
+    }
   }
 
   &__cancel-btn {
-    margin-left: 8px;  
+    color: #3f51b5;
+    height: 24px;
+    width: 24px;
+    line-height: 0;
+    align-self: flex-end;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    &:hover {
+      background-color: #B8BFE0;
+    }
   }
   &__register-btn {
     margin-left: 8px;
+    height: 36px;
+    align-self: flex-end;
   }
 }
 

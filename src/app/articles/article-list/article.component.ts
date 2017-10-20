@@ -13,6 +13,8 @@ import {
 
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { AuthenticationService } from '../../shared/services/authentication.service';
+import { MessageService } from '../../shared/services/message.service';
+
 import { UserModel } from '../../users/shared/user.model';
 
 import { ArticleService } from '../shared/article.service';
@@ -31,6 +33,8 @@ export class ArticleComponent {
 
   constructor(
     public auth: AuthenticationService,
+    public messageService: MessageService,
+
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private router: Router,

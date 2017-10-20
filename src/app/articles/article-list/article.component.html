@@ -93,24 +93,32 @@
     </div>
     <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
       <img class="comment-editor__author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
-      <textarea
-        class="comment-editor__body"
-        appAutofocus
-        [(ngModel)]="item.newComment.text"
-        placeholder="コメントする..." ></textarea>
-      <button
-        mat-raised-button
-        type="button"
-        class="comment-editor__cancel-btn"
-        (click)="cancelNewComment()"><i class="fa fa-fw fa-times"></i>  キャンセル</button>
+      <mat-input-container class="comment-editor__body">
+        <textarea
+          matInput
+          appAutofocus
+          class="comment-editor__body__textarea"
+          [(ngModel)]="item.newComment.text"
+          required
+          placeholder="コメントする"
+          #newComment="ngModel"
+        ></textarea>
+      </mat-input-container>
 
       <button
         mat-raised-button
         class="comment-editor__register-btn"
         color="primary"
         type="button"
+        [disabled]="newComment.hasError('required')"
         id="registe-comment-btn"
         (click)="registerComment(item.newComment)"><i class="fa fa-fw fa-commenting"></i>  追加</button>
+      <button
+        mat-icon-button
+        type="button"
+        class="comment-editor__cancel-btn"
+        (click)="cancelNewComment()"><i class="fa fa-fw fa-times"></i></button>
+
     </div>
   </ng-template>
 
