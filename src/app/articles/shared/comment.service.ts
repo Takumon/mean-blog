@@ -4,9 +4,9 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
-import { CommentModel } from './comment.model';
 import { JwtService } from '../../shared/services/jwt.service';
 
+import { CommentModel } from './comment.model';
 
 @Injectable()
 export class CommentService {

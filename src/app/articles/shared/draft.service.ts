@@ -8,13 +8,13 @@ import {
 } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { DraftModel } from './draft.model';
 import { JwtService } from '../../shared/services/jwt.service';
 
+import { DraftModel } from './draft.model';
 
 @Injectable()
 export class DraftService {
-  baseUrl = '/api/drafts';
+  private baseUrl = '/api/drafts';
 
   constructor(
     private http: Http,

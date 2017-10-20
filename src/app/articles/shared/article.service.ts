@@ -4,9 +4,10 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import { JwtService } from '../../shared/services/jwt.service';
+
 import { ArticleModel } from './article.model';
 import { CommentModel } from './comment.model';
-import { JwtService } from '../../shared/services/jwt.service';
 
 
 @Injectable()
@@ -18,8 +19,6 @@ export class ArticleService {
     private http: Http,
     private jwtService: JwtService
   ) {}
-
-  /* 記事 */
 
   // 複数件取得
   get(condition: Object, withUser: Boolean = false): Observable<any> {

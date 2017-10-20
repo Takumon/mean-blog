@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { UserModel } from '../../users/shared/user.model';
 
 // いいねしたユーザリストから削除済みユーザを除外

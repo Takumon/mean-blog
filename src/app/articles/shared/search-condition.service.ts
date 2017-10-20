@@ -3,14 +3,14 @@ import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angul
 import { Observable } from 'rxjs/Observable';
 
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
-import { SearchConditionModel } from './search-condition.model';
 import { JwtService } from '../../shared/services/jwt.service';
 
+import { SearchConditionModel } from './search-condition.model';
 
 @Injectable()
 export class SearchConditionService {
-  baseUrl = '/api/searchconditions';
-  dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
+  private baseUrl = '/api/searchconditions';
+  private dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
     private http: Http,

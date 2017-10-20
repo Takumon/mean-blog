@@ -1,15 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {
-  MatButtonModule,
-  MatTabsModule,
-  MatInputModule,
-  MatProgressBarModule,
-  MatSnackBarModule,
-} from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
+import { SharedModule } from '../shared/shared.module';
 
 import { UsersRoutingModule } from './users-routing.module';
 import { UserComponent } from './user.component';
@@ -30,11 +24,8 @@ import { UserService } from './shared/user.service';
     UsersRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    MatButtonModule,
-    MatTabsModule,
-    MatInputModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
+
+    SharedModule,
   ],
   providers: [
     UserService,

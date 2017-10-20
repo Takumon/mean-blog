@@ -8,7 +8,7 @@ import { JwtService } from '../../shared/services/jwt.service';
 
 @Injectable()
 export class UserService {
-  baseUrl = '/api/users';
+  private baseUrl = '/api/users';
 
   constructor(
     private http: Http,

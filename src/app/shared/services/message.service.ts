@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import {
+  FormGroup,
+  FormGroupDirective,
+  FormControl,
+  NgForm,
+} from '@angular/forms';
+
 
 @Injectable()
 export class MessageService {
@@ -27,5 +34,19 @@ export class MessageService {
     });
 
     return messageTemplate;
+  }
+
+  hasError(control: FormControl, validationName: string): Boolean {
+    return control.hasError(validationName) && control.dirty;
+  }
+
+  hasErrorWithoutDirty(control: FormControl | FormGroup, validationName: string): Boolean {
+    return control.hasError(validationName);
+  }
+
+  // 親グループも含めてチェック
+  errorStateMatcherContainParentGroup(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control.invalid || control.parent.invalid) && (control.dirty || isSubmitted);
   }
 }

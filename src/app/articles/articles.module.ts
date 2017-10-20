@@ -1,25 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {
-  MatButtonModule,
-  MatCheckboxModule,
-  MatMenuModule,
-  MatTabsModule,
-  MatInputModule,
-  MatRadioModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatButtonToggleModule,
-  MatTooltipModule,
-  MatDialogModule,
-  MatSnackBarModule,
-  MatCardModule,
-  MatListModule,
-  MatProgressSpinnerModule,
-  MatRippleModule,
-} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DateAdapter } from '@angular/material';
+
+import { SharedModule } from '../shared/shared.module';
 
 import { ArticleService } from './shared/article.service';
 import { CommentService } from './shared/comment.service';
@@ -27,17 +12,22 @@ import { MarkdownParseService } from './shared/markdown-parse.service';
 import { SearchConditionService } from './shared/search-condition.service';
 import { DraftService } from './shared/draft.service';
 
+import { AppDateAdapter } from '../shared/app-date-adapter';
+import { KeysPipe } from '../shared/pipes/keys.pipe';
+import { SharedService } from '../shared/services/shared.service';
+import { MessageService } from '../shared/services/message.service';
+import { AuthenticationService } from '../shared/services/authentication.service';
+import { RouteNamesService } from '../shared/services/route-names.service';
+
+
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
 import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-comment.pipe';
 import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from './shared/exclude-deleted-voter.pipe';
-import { KeysPipe } from '../shared/pipes/keys.pipe';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
 
-import { SharedService } from '../shared/services/shared.service';
-import { AutofocusDirective } from '../shared/directives/autofocus.directive';
-import { ConfirmDialogComponent } from '../shared/components/confirm.dialog';
+
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleComponent } from './article-list/article.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
@@ -52,6 +42,7 @@ import { DraftListComponent } from './draft-list/draft-list.component';
 import { DraftDetailComponent } from './draft-detail/draft-detail.component';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
+
 
 
 
@@ -74,8 +65,6 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     ExcludeDeletedVoterPipe,
     KeysPipe,
     SafeHtmlPipe,
-    ConfirmDialogComponent,
-    AutofocusDirective,
     DraftListComponent,
     DraftDetailComponent,
   ],
@@ -85,35 +74,25 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MatMenuModule,
-    MatTabsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatInputModule,
-    MatRadioModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatButtonToggleModule,
-    MatTooltipModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatCardModule,
-    MatListModule,
-    MatProgressSpinnerModule,
-    MatRippleModule,
+
+    SharedModule,
   ],
   providers: [
+    SharedService,
+    MessageService,
+    AuthenticationService,
+    RouteNamesService,
+
     ArticleService,
     CommentService,
     MarkdownParseService,
     SearchConditionService,
     DraftService,
-    SharedService,
+    { provide: DateAdapter, useClass: AppDateAdapter },
   ],
   entryComponents: [
     VoterListComponent,
     SearchConditionDialogComponent,
-    ConfirmDialogComponent,
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })

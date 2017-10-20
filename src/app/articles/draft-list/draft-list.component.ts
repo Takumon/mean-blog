@@ -6,10 +6,11 @@ import 'rxjs/add/operator/takeUntil';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
-import { DraftService } from '../shared/draft.service';
-import { DraftModel } from '../shared/draft.model';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { SharedService } from '../../shared/services/shared.service';
+
+import { DraftService } from '../shared/draft.service';
+import { DraftModel } from '../shared/draft.model';
 
 interface GroupedDrafts {
   notPosted: Array<DraftModel>;

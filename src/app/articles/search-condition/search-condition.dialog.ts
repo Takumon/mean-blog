@@ -11,35 +11,25 @@ import {
 import * as moment from 'moment';
 
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
-import { UserModel } from '../../users/shared/user.model';
-import { UserService } from '../../users/shared/user.service';
-import { SearchConditionModel } from '../shared/search-condition.model';
-import { SearchConditionService } from '../shared/search-condition.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
-export class MyDateAdapter extends NativeDateAdapter {
-  getDateNames(): string[] {
-    const dateNames: string[] = [];
-    for (let i = 0; i < 31; i++) {
-      dateNames[i] = String(i + 1);
-    }
-    return dateNames;
-  }
-}
+import { UserModel } from '../../users/shared/user.model';
+import { UserService } from '../../users/shared/user.service';
 
+import { SearchConditionModel } from '../shared/search-condition.model';
+import { SearchConditionService } from '../shared/search-condition.service';
 
 @Component({
   selector: 'app-search-condition-dialog',
   templateUrl: './search-condition.dialog.html',
   styleUrls: ['./search-condition.dialog.scss'],
-  providers: [ { provide: DateAdapter, useClass: MyDateAdapter }]
 })
 export class SearchConditionDialogComponent implements OnInit {
   // formグループ化したい
-  form: any;
-  output: any = {};
-  dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
+  public form: any;
+  public output: any = {};
+  public dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
     public dialogRef: MatDialogRef<SearchConditionDialogComponent>,
@@ -47,12 +37,9 @@ export class SearchConditionDialogComponent implements OnInit {
     public auth: AuthenticationService,
     private userService: UserService,
     private searchConditionService: SearchConditionService,
-    dateAdapter: DateAdapter<NativeDateAdapter>) {
+    private dateAdapter: DateAdapter<NativeDateAdapter>) {
       dateAdapter.setLocale('ja');
   }
-
-
-
 
   ngOnInit() {
     this.cerateForm();

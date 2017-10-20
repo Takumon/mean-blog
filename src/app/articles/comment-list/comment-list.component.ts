@@ -4,20 +4,21 @@ import {
   MatDialog,
 } from '@angular/material';
 
+import { AuthenticationService } from '../../shared/services/authentication.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+
+import { UserModel } from '../../users/shared/user.model';
+
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 @Component({
   selector: 'app-comment-list',
   templateUrl: './comment-list.component.html',
   styleUrls: ['./comment-list.component.scss'],
-  providers: [ ArticleService ]
 })
 export class CommentListComponent implements OnInit {
   @Input() replyCommentIndentMargin: Number = 42;

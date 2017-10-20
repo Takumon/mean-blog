@@ -1,23 +1,16 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {
-  MatButtonModule,
-  MatInputModule,
-  MatCardModule,
-  MatToolbarModule,
-  MAT_PLACEHOLDER_GLOBAL_OPTIONS,
-} from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { SharedModule } from '../shared/shared.module';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
 import { LoginFormComponent } from './loginForm/login-form.component';
 import { RegisterFormComponent } from './registerForm/register-form.component';
-import { AuthenticationService } from '../shared/services/authentication.service';
-import { IconGeneratorService } from '../shared/services/icon-generator.service';
-import { MessageService } from '../shared/services/message.service';
+
+
 
 @NgModule({
   declarations: [
@@ -31,16 +24,8 @@ import { MessageService } from '../shared/services/message.service';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MatButtonModule,
-    MatInputModule,
-    MatCardModule,
-    MatToolbarModule,
-  ],
-  providers: [
-    AuthenticationService,
-    IconGeneratorService,
-    MessageService,
-    {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}}
+
+    SharedModule,
   ],
 })
 export class LoginModule { }

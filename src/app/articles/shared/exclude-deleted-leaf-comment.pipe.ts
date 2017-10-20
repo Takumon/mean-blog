@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { CommentWithUserModel } from './comment-with-user.model';
 
 @Pipe({ name: 'excludeDeletedLeafComment'})

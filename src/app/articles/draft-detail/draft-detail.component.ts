@@ -8,11 +8,11 @@ import {
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { SharedService } from '../../shared/services/shared.service';
 
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { SharedService } from '../../shared/services/shared.service';
 
 @Component({
   selector: 'app-draft-detail',

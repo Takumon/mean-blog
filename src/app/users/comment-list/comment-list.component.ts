@@ -3,9 +3,10 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { AuthenticationService } from '../../shared/services/authentication.service';
+
 import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
 import { CommentService } from '../../articles/shared/comment.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../shared/user.service';
 

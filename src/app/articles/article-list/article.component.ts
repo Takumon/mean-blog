@@ -14,6 +14,7 @@ import {
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
+
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -29,11 +30,11 @@ export class ArticleComponent {
   @Input() item: ArticleWithUserModel;
 
   constructor(
+    public auth: AuthenticationService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
-    private auth: AuthenticationService,
     private commentService: CommentService,
     private articleService: ArticleService,
   ) {

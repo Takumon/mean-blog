@@ -4,15 +4,12 @@ import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatButtonModule,
-  MatToolbarModule,
-  MatTabsModule,
-  MatMenuModule,
-  MatProgressBarModule,
   ErrorStateMatcher,
 } from '@angular/material';
 import { Router } from '@angular/router';
 import 'hammerjs';
+
+import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -31,7 +28,6 @@ import { TocService } from './shared/services/toc.service';
 import { AuthGuard } from './shared/auth.guard';
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,15 +38,13 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+
+    SharedModule,
+
     AppRoutingModule,
     LoginModule,
     ArticlesModule,
     UsersModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatTabsModule,
-    MatMenuModule,
-    MatProgressBarModule,
   ],
   providers: [
     AlertService,

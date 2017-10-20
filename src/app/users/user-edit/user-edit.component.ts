@@ -13,7 +13,7 @@ import { UserService } from '../shared/user.service';
   styleUrls: ['./user-edit.component.scss'],
 })
 export class UserEditComponent implements OnInit {
-  user: UserModel;
+  public user: UserModel;
 
   constructor(
     public snackBar: MatSnackBar,

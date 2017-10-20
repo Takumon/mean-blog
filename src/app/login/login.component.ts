@@ -9,8 +9,8 @@ import { AuthenticationService } from '../shared/services/authentication.service
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  returnUrl: string;
-  isLoginMode: Boolean;
+  public isLoginMode: Boolean;
+  private returnUrl: string;
 
   constructor(
     private authenticationService: AuthenticationService,

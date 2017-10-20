@@ -29,7 +29,6 @@ export enum Mode {
   selector: 'app-article-list',
   templateUrl: './article-list.component.html',
   styleUrls: ['./article-list.component.scss'],
-  providers: [ ArticleService ],
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleListComponent implements OnInit, OnDestroy {

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { AuthenticationService } from '../shared/services/authentication.service';
 import { RouteNamesService } from '../shared/services/route-names.service';
 import { SharedService } from '../shared/services/shared.service';
+
 import { UserModel } from './shared/user.model';
 import { UserService } from './shared/user.service';
 

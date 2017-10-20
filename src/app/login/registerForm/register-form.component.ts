@@ -10,10 +10,10 @@ import {
   FormBuilder,
 } from '@angular/forms';
 
-
-import { UserModel } from '../../users/shared/user.model';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
+
+import { UserModel } from '../../users/shared/user.model';
 
 
 @Component({
@@ -24,8 +24,7 @@ import { MessageService } from '../../shared/services/message.service';
 export class RegisterFormComponent implements OnInit {
   @Output() changeLoginMode = new EventEmitter();
   @Output() complete = new EventEmitter();
-  message: String;
-  form: FormGroup;
+  public form: FormGroup;
 
   static passwordMatchValidator(g: FormGroup) {
     return g.get('password').value === g.get('confirmPassword').value
@@ -73,20 +72,6 @@ export class RegisterFormComponent implements OnInit {
     get confirmPassword(): FormControl { return this.passwordGroup.get('confirmPassword') as FormControl; }
 
 
-  hasError(control: FormControl | FormGroup, validationName: string): Boolean {
-    return control.hasError(validationName) && control.dirty;
-  }
-
-  hasErrorWithoutDirty(control: FormControl | FormGroup, validationName: string): Boolean {
-    return control.hasError(validationName);
-  }
-
-  // 親グループも含めてチェック
-  errorStateMatcherContainParentGroup(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control.invalid || control.parent.invalid) && (control.dirty || isSubmitted);
-  }
-
   toRegister(): void {
     this.changeLoginMode.emit();
   }
@@ -109,7 +94,7 @@ export class RegisterFormComponent implements OnInit {
       }, (error: any) => {
         for (const e of error['errors']) {
           // getterからformControllを取得
-          const control: FormControl = this[e.param];
+          const control: FormControl | FormGroup = this[e.param];
           if (!control) {
             return;
           }

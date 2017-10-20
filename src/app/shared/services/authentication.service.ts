@@ -33,7 +33,10 @@ export class AuthenticationService {
     this.isFinishedCheckState = false;
   }
 
-  login(user: UserModel): Observable<Object> {
+  login(user: {
+    userId: string,
+    password: string,
+  }): Observable<Object> {
     const URL = `${this.base_url}/login`;
 
     return this.http

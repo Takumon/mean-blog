@@ -1,32 +1,33 @@
 <form
-  (ngSubmit)="onSubmit(form)"
   *ngIf="form"
+  (ngSubmit)="onSubmit()"
   [formGroup]="form"
   class="form"
   >
   <div class="form__content">
-    <div class="form__content__error-message"*ngIf="message">{{message}}</div>
     <mat-input-container class="form__input-container">
       <input
+        *ngIf="form"
         matInput
         type="text"
         placeholder="ユーザID"
         maxlength="30"
         formControlName="userId"
+        appAutofocus
         >
-        <mat-error *ngIf="hasError(userId, 'required')">
+        <mat-error *ngIf="messageService.hasError(userId, 'required')">
           {{ messageService.get('required',['ユーザID']) }}
         </mat-error>
-        <mat-error *ngIf="hasError(userId, 'minlength')">
+        <mat-error *ngIf="messageService.hasError(userId, 'minlength')">
           {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
         </mat-error>
-        <mat-error *ngIf="hasError(userId, 'maxlength')">
+        <mat-error *ngIf="messageService.hasError(userId, 'maxlength')">
             {{ messageService.get('maxlength',['ユーザID', userId.getError('maxlength').requiredLength]) }}
           </mat-error>
-        <mat-error *ngIf="hasError(userId, 'pattern')">
+        <mat-error *ngIf="messageService.hasError(userId, 'pattern')">
           {{ messageService.get('pattern_hankakueisuji',['ユーザID']) }}
         </mat-error>
-        <mat-error *ngIf="hasErrorWithoutDirty(userId, 'remote')">
+        <mat-error *ngIf="messageService.hasErrorWithoutDirty(userId, 'remote')">
           <ng-container *ngFor="let msg of userId.getError('remote')">
             {{msg}}<br>
           </ng-container>
@@ -42,13 +43,13 @@
           maxlength="30"
           formControlName="password"
           >
-          <mat-error *ngIf="hasError(password, 'required')">
+          <mat-error *ngIf="messageService.hasError(password, 'required')">
             {{ messageService.get('required',['パスワード']) }}
           </mat-error>
-          <mat-error *ngIf="hasError(password, 'pattern')">
+          <mat-error *ngIf="messageService.hasError(password, 'pattern')">
             {{ messageService.get('pattern_password') }}
           </mat-error>
-          <mat-error *ngIf="hasErrorWithoutDirty(password, 'remote')">
+          <mat-error *ngIf="messageService.hasErrorWithoutDirty(password, 'remote')">
             <ng-container *ngFor="let msg of password.getError('remote')">
               {{msg}}<br>
             </ng-container>
@@ -63,18 +64,18 @@
           maxlength="30"
           formControlName="confirmPassword"
           >
-          <mat-error *ngIf="hasError(confirmPassword, 'required')">
+          <mat-error *ngIf="messageService.hasError(confirmPassword, 'required')">
             {{ messageService.get('required',['確認用パスワード']) }}
           </mat-error>
-          <mat-error *ngIf="hasErrorWithoutDirty(confirmPassword, 'remote')">
+          <mat-error *ngIf="messageService.hasErrorWithoutDirty(confirmPassword, 'remote')">
             <ng-container *ngFor="let msg of confirmPassword.getError('remote')">
               {{msg}}<br>
             </ng-container>
           </mat-error>
-          <mat-error *ngIf="hasError(confirmPassword, 'passwordMatch')">
+          <mat-error *ngIf="messageService.hasError(confirmPassword, 'passwordMatch')">
             {{ messageService.get('passwordMatch') }}
           </mat-error>
-          <mat-error *ngIf="hasErrorWithoutDirty(passwordGroup, 'remote')">
+          <mat-error *ngIf="messageService.hasErrorWithoutDirty(passwordGroup, 'remote')">
             <ng-container *ngFor="let msg of passwordGroup.getError('remote')">
               {{msg}}<br>
             </ng-container>
@@ -90,7 +91,7 @@
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="!form.valid"
+      [disabled]="form.invalid"
       id="registe-article-btn">
       <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録
     </button>

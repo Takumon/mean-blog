@@ -1,5 +1,6 @@
 import { DomSanitizer } from '@angular/platform-browser';
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { MarkdownParseService } from '../shared/markdown-parse.service';
 
 @Pipe({ name: 'safeHtml'})

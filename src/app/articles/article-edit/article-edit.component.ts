@@ -22,16 +22,18 @@ import {
   MatDialog,
 } from '@angular/material';
 
+import { AuthenticationService } from '../../shared/services/authentication.service';
+import { RouteNamesService } from '../../shared/services/route-names.service';
+import { MessageService } from '../../shared/services/message.service';
+import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 import { DraftModel } from '../shared/draft.model';
 import { DraftService } from '../shared/draft.service';
+
 import { EditMode } from './edit-mode.enum';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
-import { MessageService } from '../../shared/services/message.service';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 const IS_RESUME = 'resume';
 
@@ -40,7 +42,6 @@ const IS_RESUME = 'resume';
   selector: 'app-article-edit',
   templateUrl: './article-edit.component.html',
   styleUrls: ['./article-edit.component.scss'],
-  providers: [ ArticleService ]
 })
 export class ArticleEditComponent implements OnInit {
   action: String;

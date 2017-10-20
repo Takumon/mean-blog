@@ -1,22 +1,28 @@
 <form
-  (ngSubmit)="onSubmit(loginForm)"
-  [formGroup]="loginForm"
+  *ngIf="form"
+  (ngSubmit)="onSubmit()"
+  [formGroup]="form"
   class="form"
   >
 
   <div class="form__content">
+    <div class="common-error" *ngIf="messageService.hasErrorWithoutDirty(form, 'remote')">
+      <ng-container *ngFor="let msg of form.getError('remote')">
+        {{msg}}<br>
+      </ng-container>
+    </div>
     <mat-input-container class="form__input-container">
       <input
+        *ngIf="form"
         matInput
         type="text"
         placeholder="ユーザID"
+        maxlength="30"
         formControlName="userId"
+        appAutofocus
         >
-        <mat-error *ngIf="hasError('required', userId)">
+        <mat-error *ngIf="messageService.hasError(userId, 'required')">
           {{ messageService.get('required',['ユーザID']) }}
-        </mat-error>
-        <mat-error *ngIf="hasError('minlength', userId)">
-          {{ messageService.get('minlength',['ユーザID', userId.getError('minlength').requiredLength]) }}
         </mat-error>
     </mat-input-container>
 
@@ -25,13 +31,11 @@
         matInput
         type="password"
         placeholder="パスワード"
+        maxlength="30"
         formControlName="password"
         >
-        <mat-error *ngIf="hasError('required', password)">
+        <mat-error *ngIf="messageService.hasError(password, 'required')">
           {{ messageService.get('required',['パスワード']) }}
-        </mat-error>
-        <mat-error *ngIf="hasError('minlength', password)">
-          {{ messageService.get('minlength',['パスワード', password.getError('minlength').requiredLength]) }}
         </mat-error>
     </mat-input-container>
   </div>
@@ -41,6 +45,7 @@
       mat-raised-button
       color="primary"
       type="submit"
+      [disabled]="form.invalid"
       id="registe-article-btn"
       >
       <i class="fa fa-fw fa-sign-in"></i>  ログイン
@@ -58,5 +63,3 @@
     >
     <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録はこちら</button>
 </div>
-
-<p *ngIf="message">{{message}}</p>

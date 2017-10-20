@@ -21,7 +21,9 @@ import 'rxjs/add/operator/takeUntil';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+
 import { UserModel } from '../../users/shared/user.model';
+
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { MarkdownParseService } from '../shared/markdown-parse.service';
 import { ArticleService } from '../shared/article.service';
