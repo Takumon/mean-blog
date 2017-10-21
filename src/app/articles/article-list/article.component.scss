@@ -265,12 +265,16 @@
 
 .comment-editor {
   background: #fdfdfd;
-  height: 106px;
   padding: 12px;
   box-sizing: border-box;
   border-top: 1px #d4d4d4 solid;
   display: flex;
+  flex-direction: column;
   position: relative;
+
+  &__main {
+    display: flex;
+  }
 
   &__author-icon {
     width: 36px;
@@ -282,38 +286,34 @@
     align-self: flex-start;
   }
 
-  &__body {
+  &__textarea-wrapper {
     flex: 1;
-    align-self: flex-start;
-    font-size: 12px;
+    font-size: 14px;
+    margin-bottom: -12px;
 
     &__textarea {
+      font-size: 12px;
       box-sizing: border-box;
-      height: 60px;
       line-height: 16px;
       padding: 4px;
-      background: white;
+      background: #fbfbfb;
       resize: none;
+
+      height: 60px;
     }
   }
 
-  &__cancel-btn {
-    color: #3f51b5;
-    height: 24px;
-    width: 24px;
-    line-height: 0;
-    align-self: flex-end;
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    &:hover {
-      background-color: #B8BFE0;
+  &__operation {
+    display: flex;
+
+    &__spacer {
+      flex: 1 1 auto;
     }
-  }
-  &__register-btn {
-    margin-left: 8px;
-    height: 36px;
-    align-self: flex-end;
+    &__cancel-btn {
+      margin-right: 12px;
+    }
+    &__register-btn {
+    }
   }
 }
 

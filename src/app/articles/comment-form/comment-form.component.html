@@ -3,32 +3,32 @@
   [formGroup]="form"
   class="comment-form"
   >
-  <div class="comment-form__header">
+  <div class="comment-form__main">
     <img class="comment-form__author-icon"
       src="data:image/png;base64,{{ auth.loginUser.icon }}">
-    <div class="comment-form__title">コメントを{{action}}する</div>
+    <mat-input-container class="comment-form__textarea-wrapper">
+      <textarea
+        *ngIf="isAuthfocuse"
+        matInput
+        class="comment-form__textarea"
+        formControlName="commentText"
+        placeholder="コメントを{{action}}する"
+        appAutofocus
+        ></textarea>
+      <textarea
+        *ngIf="!isAuthfocuse"
+        matInput
+        class="comment-form__textarea"
+        formControlName="commentText"
+        placeholder="コメントを{{action}}する"
+        ></textarea>
+      <mat-error *ngIf="hasError('required', commentText)">
+        {{ messageService.get('required',['コメント']) }}
+      </mat-error>
+    </mat-input-container>
   </div>
-  <mat-input-container class="comment-form__main">
-    <textarea
-      *ngIf="isAuthfocuse"
-      matInput
-      class="comment-form__textarea"
-      formControlName="commentText"
-      placeholder="コメント本文"
-      appAutofocus
-      ></textarea>
-    <textarea
-      *ngIf="!isAuthfocuse"
-      matInput
-      class="comment-form__textarea"
-      formControlName="commentText"
-      placeholder="コメント本文"
-      ></textarea>
-    <mat-error *ngIf="hasError('required', commentText)">
-      {{ messageService.get('required',['コメント本文']) }}
-    </mat-error>
-  </mat-input-container>
   <div class="comment-form__operation">
+    <div class="comment-form__operation__spacer"></div>
     <button
       *ngIf="hasCancelBtn"
       mat-raised-button

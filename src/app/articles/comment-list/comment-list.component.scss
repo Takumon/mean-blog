@@ -1,5 +1,5 @@
 .comment-list-header {
-  display: flex;  
+  display: flex;
 
   &__count {
     margin-bottom: 12px;
@@ -20,7 +20,7 @@
     &:hover {
       background-color: #B8BFE0;
     }
-  }   
+  }
 }
 
 .comment-list-content {
@@ -79,7 +79,7 @@
       outline: 0;
     }
   }
-  
+
   &__created {
     white-space: nowrap;
     color: #A4A2A2;
@@ -90,7 +90,7 @@
   }
 
   &__text {
-    white-space: pre;          
+    white-space: pre;
     white-space: pre-wrap;
     white-space: pre-line;
     white-space: -pre-wrap;
@@ -109,7 +109,7 @@
       @extend #{$parent};
       color: gray;
       line-height: 36px;
-      height: 36px;       
+      height: 36px;
     }
   }
 
@@ -147,3 +147,6 @@
   border-top: 1px solid #eaeaea;
 }
 
+.new-comment {
+  margin-top: 24px;
+}

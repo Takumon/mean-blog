@@ -89,7 +89,7 @@
       </div>
     </ng-template>
   </div>
-  <div *ngIf="auth.loginUser">
+  <div class="new-comment" *ngIf="auth.loginUser">
       <app-comment-form
         [commentModel]="commentOfForm()"
         [hasCancelBtn]="false"
