@@ -72,6 +72,10 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
+  trackByArticleId(index: number, item: ArticleWithUserModel): string {
+    return item._id;
+  }
+
   getArticles(): void {
     this.showPrograssBar = true;
     const withUser = true;
