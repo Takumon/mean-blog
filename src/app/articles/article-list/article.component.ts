@@ -3,8 +3,6 @@ import {
   Input,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Location } from '@angular/common';
 import {
   MatSnackBar,
   MatDialog,
@@ -37,8 +35,6 @@ export class ArticleComponent {
 
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private router: Router,
-    private route: ActivatedRoute,
     private commentService: CommentService,
     private articleService: ArticleService,
   ) {
