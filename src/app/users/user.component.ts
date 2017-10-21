@@ -18,6 +18,7 @@ import { UserService } from './shared/user.service';
 export class UserComponent implements OnInit, OnDestroy {
   public user: UserModel;
   public isMine: Boolean;
+  public editMode: Boolean = false;
 
   private onDestroy = new Subject();
   private param_userId: string;

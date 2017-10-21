@@ -47,7 +47,7 @@ body * {
 .mat-raised-button:hover,
 .mat-fab:hover,
 .mat-mini-fab:hover {
-  box-shadow: 0 25px 55px 0 rgba(0, 0, 0, 0.21), 0 16px 28px 0 rgba(0, 0, 0, 0.22);
+  box-shadow: 0 25px 55px 0 hsla(0, 0%, 0%, 0.21), 0 16px 28px 0 rgba(0, 0, 0, 0.22) !important;
   -webkit-transition-duration: 0.2s;
   -moz-transition-duration: 0.2s;
   -ms-transition-duration: 0.2s;
@@ -59,7 +59,7 @@ body * {
 .mat-radio-button.full-width {
   .mat-radio-label {
     width: 100%;
-  }  
+  }
 }
 
 /* ツールバー */
@@ -71,9 +71,9 @@ body * {
 }
 
 .mat-ripple {
-  position: relative;  
+  position: relative;
 }
-  
+
 /* キャレットの色検討 */
 input,textarea {
   caret-color: blue;
@@ -95,7 +95,7 @@ input,textarea {
     -webkit-animation: flash 1s;
     animation: flash 1s;
   }
-  
+
   h1 .fa.fa-link,
   h2 .fa.fa-link,
   h3 .fa.fa-link,
@@ -151,7 +151,7 @@ input,textarea {
   }
 }
 
-/* 
+/*
  * 一覧のMarkdownは限られたスペースで多くの情報を表示したいので
  * スタイルをスリムアップする
  */
@@ -170,7 +170,7 @@ input,textarea {
     border-bottom: 1px solid #eaecef;
     color: rgba(36, 41, 46, 0.9);
   }
-  
+
   h2 {
     padding-bottom: 0.2em;
     margin: 0 0.2em 0.6em 0;
@@ -178,7 +178,7 @@ input,textarea {
     border-bottom: 1px solid #eaecef;
     color: rgba(36, 41, 46, 0.9);
   }
-  
+
   h3 {
     padding-bottom: 0.2em;
     margin: 0 0.2em 0.6em 0;

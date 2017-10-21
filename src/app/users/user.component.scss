@@ -1,10 +1,11 @@
 .blog-title {
-  height: 254px;
+  height: 340px;
   width: 100%;
   display: flex;
   align-items: center;
-  background: #3f51b5;
+  background: #0F132B;
   color: white;
+  position: relative;
 
   h1 {
     margin: 0 auto;
@@ -24,76 +25,115 @@
     opacity: 1;
 
     &:hover {
-      background: #ededed;      
+      background: #ededed;
     }
   }
 }
 
 .profile {
-  width: 940px;
-  margin: 64px auto 120px;
-  box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
-  padding: 80px 120px;
-  background: white;
+  position: absolute;
+  font-size: 14px;
+  color: #464449;
+  width: 300px;
+  z-index: 1;
+  margin-top: 24px;
+  margin-left: 36px;
+  padding: 24px;
   box-sizing: border-box;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+  background: white;
+  border-radius: 2px;
 
-
-  &__title {
-    color: #3f51b5;
-    font-weight: 300;      
+  &__icon {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: black 0 0 8px -1px;
+    image-rendering: -webkit-optimize-contrast;
+    background: white;
+    top: -162px;
+    left: 0;
   }
 
-  &__main {
-    padding-bottom: 24px;    
-  }
-}
+  &__operation {
+    display: flex;
+    height: 36px;
+    margin: -24px;
+    margin-top: 24px;
+    padding: 8px;
+    background: #eaeaea;
 
-.data-list {
-  display: flex;
+    &__spacer {
+      flex: 1 1 auto;
+    }
 
-  &__data {
-    flex: 1;
-    padding-left: 16px;  
-
-    &:first-child {
-      padding-left: 60px;
-    }    
+    button {
+      margin-right: 12px;
+    }
   }
 }
 
 .data {
-  position: relative;
-  padding-left: 60px;
-  display: block;
+  display: flex;
+  padding: 0;
   margin-bottom: 16px;
+  width: 100%;
+  $parent: &;
+
+  &_image {
+    @extend #{$parent};
+    padding-left: 0;
+    display: flex;
+    align-items: start;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #d8d7d7;
+  }
+
 
   &__icon {
-    position: absolute;
-    left: 0px;
     display: block;
     bottom: 6px;
     font-size: 24px;
     color: #737373;
+    margin-right: 18px;
+    padding-top: 18px;
+
+    &_focused {
+      color: #3f51b5;
+    }
   }
 
-  &__label {
-    color: #3f51b5;
-  }
-    
-  &__value {
-    padding-top: 2px;
-    min-height: 2em;
-    border-bottom: 1px solid #e0dede;
-  }
-  
-}
+  &__input {
+    flex: 1;
 
-.avator-icon {
-  width: 150px;
-  height: 150px;
-  border-radius: 8px;
-  box-shadow: black 0 0 8px -1px;
-  margin-left: 16px;
-  image-rendering: -webkit-optimize-contrast;
-  background: white;
+    &__textarea {
+      height: 100px;
+      resize: no;
+    }
+  }
+
+  &__output {
+    flex: 1;
+
+    &__label {
+      font-size: 10px;
+      color: #6d6d6d;
+      margin-bottom: 2px;
+    }
+
+    &__value {
+      min-height: 24px;
+      color: #3F3F3F;
+      padding-bottom: 2px;
+      border-bottom: 1px solid #949494;
+
+      $parent: &;
+      &_textarea {
+        @extend #{$parent};
+        margin: 0;
+        height: 100px;
+      }
+    }
+  }
 }

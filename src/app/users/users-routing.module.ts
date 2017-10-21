@@ -16,22 +16,24 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: '',
+        redirectTo: 'articles',
+        pathMatch: 'full'
+      },
+      {
         path: 'articles',
         component: ArticleListComponent,
         data: {mode: Mode.USER },
         canActivate: [AuthGuard]
       },
       {
-        path: 'profile',
-        component: UserDetailComponent,
-      },
-      {
         path: 'comments',
         component: CommentListComponent,
       },
       {
-        path: 'edit',
-        component: UserEditComponent,
+        path: 'votes',
+        // TODO いいね一覧に変える
+        component: CommentListComponent,
       }
     ]
   },

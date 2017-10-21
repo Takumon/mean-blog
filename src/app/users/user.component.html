@@ -1,38 +1,175 @@
 <ng-container *ngIf="user">
-  <div class="blog-title" >
-    <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
-  </div>
+  <form>
+    <div class="blog-title" >
+      <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
+    </div>
 
-  <nav mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
-    <a mat-tab-link
-      class="sub-nav-bar__link"
-      [routerLink]="['/', user.userId, 'articles']"
-      routerLinkActive #rla2="routerLinkActive"
-      [active]="rla2.isActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      >記事</a>
-    <a mat-tab-link
-      class="sub-nav-bar__link"
-      [routerLink]="['/', user.userId, 'comments']"
-      routerLinkActive #rla3="routerLinkActive"
-      [active]="rla3.isActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      >コメント</a>
-    <a mat-tab-link
-      class="sub-nav-bar__link"
-      [routerLink]="['/', user.userId, 'profile']"
-      routerLinkActive #rla1="routerLinkActive"
-      [active]="rla1.isActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      >プロフィール</a>
-    <a mat-tab-link
-      *ngIf="isMine"
-      class="sub-nav-bar__link"
-      [routerLink]="['/', user.userId, 'edit']"
-      routerLinkActive #rla4="routerLinkActive"
-      [active]="rla4.isActive"
-      [routerLinkActiveOptions]="{exact: true}"
-      >プロフィール編集</a>
-  </nav>
+    <nav mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
+      <a mat-tab-link
+        class="sub-nav-bar__link"
+        [routerLink]="['/', user.userId, 'articles']"
+        routerLinkActive #rla1="routerLinkActive"
+        [active]="rla1.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >記事</a>
+      <a mat-tab-link
+        class="sub-nav-bar__link"
+        [routerLink]="['/', user.userId, 'comments']"
+        routerLinkActive #rla2="routerLinkActive"
+        [active]="rla2.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >コメント</a>
+      <a mat-tab-link
+        class="sub-nav-bar__link"
+        [routerLink]="['/', user.userId, 'votes']"
+        routerLinkActive #rla3="routerLinkActive"
+        [active]="rla3.isActive"
+        [routerLinkActiveOptions]="{exact: true}"
+        >いいね</a>
+      </nav>
+
+    <div class="profile">
+      <ng-container *ngIf="editMode">
+        <img class="profile__icon" src="data:image/png;base64,{{user.icon}}">
+
+        <div class="data">
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="userId"
+              name="userId"
+              [(ngModel)]="user.userId"
+              placeholder="ユーザID"
+              disabled
+              >
+          </mat-input-container>
+        </div>
+
+        <div class="data">
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="lastName"
+              name="lastName"
+              [(ngModel)]="user.lastName"
+              placeholder="氏"
+              >
+          </mat-input-container>
+        </div>
+        <div class="data">
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="firstName"
+              name="firstName"
+              [(ngModel)]="user.firstName"
+              placeholder="名"
+              >
+          </mat-input-container>
+        </div>
+
+        <div class="data">
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="email"
+              name="email"
+              [(ngModel)]="user.email"
+              placeholder="メール"
+              >
+          </mat-input-container>
+        </div>
+
+        <div class="data">
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="blogTitle"
+              name="blogTitle"
+              [(ngModel)]="user.blogTitle"
+              placeholder="ブログタイトル"
+              >
+          </mat-input-container>
+        </div>
+
+        <div class="data">
+          <mat-input-container class="data__input">
+            <textarea
+              matInput
+              type="text"
+              id="userDescription"
+              class="data__input__textarea"
+              name="userDescription"
+              [(ngModel)]="user.userDescription"
+              placeholder="自己紹介"
+              ></textarea>
+          </mat-input-container>
+        </div>
+
+        <div *ngIf="isMine" class="profile__operation">
+          <button
+            mat-button
+            (click)="editMode = false"
+            ><i class="fa fa-fw fa-times"></i> キャンセル</button>
+          <button
+            mat-button
+            color="primary"
+            (click)="editMode = false"
+            ><i class="fa fa-fw fa-pencil"></i> 更新する</button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!editMode">
+        <img class="profile__icon" src="data:image/png;base64,{{user.icon}}">
+
+        <div class="data">
+          <div class="data__output">
+            <div class="data__output__label">ユーザID</div>
+            <div  class="data__output__value">{{user.userId}}</div>
+          </div>
+        </div>
+
+        <div class="data">
+          <div class="data__output">
+            <div class="data__output__label">氏</div>
+            <div  class="data__output__value">{{user.lastName}}</div>
+          </div>
+        </div>
+        <div class="data">
+          <div class="data__output">
+            <div class="data__output__label">名</div>
+            <div  class="data__output__value">{{user.firstName}}</div>
+          </div>
+        </div>
+
+        <div class="data">
+          <div class="data__output">
+            <div class="data__output__label">Main</div>
+            <div  class="data__output__value">{{user.email}}</div>
+          </div>
+        </div>
+
+        <div class="data">
+          <div class="data__output">
+            <div class="data__output__label">自己紹介</div>
+            <pre class="data__output__value_textarea">{{user.userDescription}}</pre>
+          </div>
+        </div>
+
+        <div *ngIf="isMine" class="profile__operation">
+          <button
+            mat-button
+            color="primary"
+            (click)="editMode = true"
+            ><i class="fa fa-fw fa-pencil"></i> 編集する</button>
+        </div>
+      </ng-container>
+    </div>
+  </form>
   <router-outlet></router-outlet>
 </ng-container>

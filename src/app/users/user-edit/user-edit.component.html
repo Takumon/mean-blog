@@ -1,103 +1,118 @@
 <ng-container *ngIf="user">
   <form class="profile profile-form" (ngSubmit)="updateProfile()">
+
     <h1 class="profile__title">基本情報</h1>
     <div class="profile__main">
-      <mat-input-container class="data">
-        <i class="data__icon fa fa-fw fa-id-card" #labelUserId [class.data__icon_focused]="labelUserId.focused"></i>
-        <input
-          matInput
-          type="text"
-          id="userId"
-          name="userId"
-          (focus)="labelUserId.focused = true"
-          (blur)="labelUserId.focused = false"
-          [(ngModel)]="user.userId"
-          placeholder="ユーザID"
-          required
-          readonly
-          >
-      </mat-input-container>
       <div class="data-list">
-        <mat-input-container class="data-list__data data">
+        <div class="data">
+          <i class="data__icon fa fa-fw fa-id-card"></i>
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="userId"
+              name="userId"
+              [(ngModel)]="user.userId"
+              placeholder="ユーザID (変更不可)"
+              disabled
+              >
+          </mat-input-container>
+        </div>
+        <div class="data">
+
+          <i class="data__icon fa fa-fw fa-shield"></i>
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="isAdmin"
+              name="isAdmin"
+              value="{{user.isAdmin ? '管理者' : '一般ユーザ'}}"
+              placeholder="権限 (変更不可)"
+              disabled
+              >
+          </mat-input-container>
+        </div>
+      </div>
+      <div class="data-list">
+        <div class="data">
           <i class="data__icon fa fa-fw fa-user" #labelUserName [class.data__icon_focused]="labelUserName.focused"></i>
+
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="lastName"
+              name="lastName"
+              (focus)="labelUserName.focused = true"
+              (blur)="labelUserName.focused = false"
+              [(ngModel)]="user.lastName"
+              placeholder="氏"
+              >
+          </mat-input-container>
+        </div>
+        <div class="data">
+          <mat-input-container class="data__input">
+            <input
+              matInput
+              type="text"
+              id="firstName"
+              name="firstName"
+              (focus)="labelUserName.focused = true"
+              (blur)="labelUserName.focused = false"
+              [(ngModel)]="user.firstName"
+              placeholder="名"
+              >
+          </mat-input-container>
+        </div>
+      </div>
+
+      <div class="data">
+        <i class="data__icon material-icons fw" #labelEmail [class.data__icon_focused]="labelEmail.focused">email</i>
+        <mat-input-container class="data__input">
           <input
             matInput
             type="text"
-            id="lastName"
-            name="lastName"
-            (focus)="labelUserName.focused = true"
-            (blur)="labelUserName.focused = false"
-            [(ngModel)]="user.lastName"
-            placeholder="氏"
-            >
-        </mat-input-container>
-        <mat-input-container class="data-list__data data">
-          <input
-            matInput
-            type="text"
-            id="firstName"
-            name="firstName"
-            (focus)="labelUserName.focused = true"
-            (blur)="labelUserName.focused = false"
-            [(ngModel)]="user.firstName"
-            placeholder="名"
+            id="email"
+            name="email"
+            (focus)="labelEmail.focused = true"
+            (blur)="labelEmail.focused = false"
+            [(ngModel)]="user.email"
+            placeholder="メール"
             >
         </mat-input-container>
       </div>
-      <mat-input-container class="data">
-        <i class="data__icon material-icons fw" #labelEmail [class.data__icon_focused]="labelEmail.focused">email</i>
-        <input
-          matInput
-          type="text"
-          id="email"
-          name="email"
-          (focus)="labelEmail.focused = true"
-          (blur)="labelEmail.focused = false"
-          [(ngModel)]="user.email"
-          placeholder="メール"
-          >
-      </mat-input-container>
-      <mat-input-container class="data">
+      <div class="data">
         <i class="data__icon fa fa-fw fa-flag" #labelBlogTitle [class.data__icon_focused]="labelBlogTitle.focused"></i>
-        <input
-          matInput
-          type="text"
-          id="blogTitle"
-          name="blogTitle"
-          (focus)="labelBlogTitle.focused = true"
-          (blur)="labelBlogTitle.focused = false"
-          [(ngModel)]="user.blogTitle"
-          placeholder="ブログタイトル"
-          >
-      </mat-input-container>
-      <mat-input-container class="data">
+        <mat-input-container class="data__input">
+          <input
+            matInput
+            type="text"
+            id="blogTitle"
+            name="blogTitle"
+            (focus)="labelBlogTitle.focused = true"
+            (blur)="labelBlogTitle.focused = false"
+            [(ngModel)]="user.blogTitle"
+            placeholder="ブログタイトル"
+            >
+        </mat-input-container>
+      </div>
+      <div class="data">
         <i class="data__icon material-icons fw" #labelUserDescription #labelUserDescription [class.data__icon_focused]="labelUserDescription.focused">description</i>
-        <input
-          matInput
-          type="text"
-          id="userDescription"
-          name="userDescription"
-          (focus)="labelUserDescription.focused = true"
-          (blur)="labelUserDescription.focused = false"
-          [(ngModel)]="user.userDescription"
-          placeholder="自己紹介"
-          >
-      </mat-input-container>
-      <mat-input-container class="data">
-        <i class="data__icon fa fa-fw fa-certificate" #labelIsAdmin [class.data__icon_focused]="labelIsAdmin.focused"></i>
-        <input
-          matInput
-          type="text"
-          id="isAdmin"
-          name="isAdmin"
-          (focus)="labelIsAdmin.focused = true"
-          (blur)="labelIsAdmin.focused = false"
-          value="{{user.isAdmin ? '管理者' : '一般ユーザ'}}"
-          placeholder="権限"
-          required
-          readonly
-          >
-      </mat-input-container>
+        <mat-input-container class="data__input">
+          <textarea
+            matInput
+            type="text"
+            id="userDescription"
+            class="data__input__textarea"
+            name="userDescription"
+            (focus)="labelUserDescription.focused = true"
+            (blur)="labelUserDescription.focused = false"
+            [(ngModel)]="user.userDescription"
+            placeholder="自己紹介"
+            ></textarea>
+        </mat-input-container>
+      </div>
     </div>
 
     <h1 class="profile__title">アバター</h1>

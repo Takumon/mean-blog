@@ -4,7 +4,7 @@
 .message-area {
   margin: 24px;
   border-radius: 4px;
-  width: 700px;
+  width: 720px;
   color: #464545;
   background: #d2d2d2;
   padding: 24px;
@@ -25,27 +25,27 @@
 
   &__operation {
     margin-top: 24px;
-    display: flex;   
-    
+    display: flex;
+
     &__spacer {
       flex: 1 1 auto;
-    }      
+    }
   }
 }
 
 .prograss-bar {
-  width: 810px;
+  width: 720px;
   margin: 24px auto 72px;
   display: flex;
   justify-content: center;
 }
 
 .article-list {
-  width: 810px;
+  width: 720px;
   margin: 24px auto 72px;
 
-  &__item {    
+  &__item {
     margin-bottom: 24px;
   }
-  
+
 }
