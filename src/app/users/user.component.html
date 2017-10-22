@@ -1,127 +1,131 @@
 <ng-container *ngIf="user">
-  <form>
-    <div class="blog-title" >
-      <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
-    </div>
+  <div class="blog-title" >
+    <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
+  </div>
 
-    <nav mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
-      <a mat-tab-link
-        class="sub-nav-bar__link"
-        [routerLink]="['/', user.userId, 'articles']"
-        routerLinkActive #rla1="routerLinkActive"
-        [active]="rla1.isActive"
-        [routerLinkActiveOptions]="{exact: true}"
-        >記事</a>
-      <a mat-tab-link
-        class="sub-nav-bar__link"
-        [routerLink]="['/', user.userId, 'comments']"
-        routerLinkActive #rla2="routerLinkActive"
-        [active]="rla2.isActive"
-        [routerLinkActiveOptions]="{exact: true}"
-        >コメント</a>
-      <a mat-tab-link
-        class="sub-nav-bar__link"
-        [routerLink]="['/', user.userId, 'votes']"
-        routerLinkActive #rla3="routerLinkActive"
-        [active]="rla3.isActive"
-        [routerLinkActiveOptions]="{exact: true}"
-        >いいね</a>
-      </nav>
+  <nav mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
+    <a mat-tab-link
+      class="sub-nav-bar__link"
+      [routerLink]="['/', user.userId, 'articles']"
+      routerLinkActive #rla1="routerLinkActive"
+      [active]="rla1.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >記事</a>
+    <a mat-tab-link
+      class="sub-nav-bar__link"
+      [routerLink]="['/', user.userId, 'comments']"
+      routerLinkActive #rla2="routerLinkActive"
+      [active]="rla2.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >コメント</a>
+    <a mat-tab-link
+      class="sub-nav-bar__link"
+      [routerLink]="['/', user.userId, 'votes']"
+      routerLinkActive #rla3="routerLinkActive"
+      [active]="rla3.isActive"
+      [routerLinkActiveOptions]="{exact: true}"
+      >いいね</a>
+  </nav>
+
+  <div class="content">
+    <div class="content_profile">
 
     <div class="profile">
       <ng-container *ngIf="editMode">
-        <img class="profile__icon" src="data:image/png;base64,{{user.icon}}">
+        <form>
+          <img class="profile__icon" src="data:image/png;base64,{{user.icon}}">
 
-        <div class="data">
-          <mat-input-container class="data__input">
-            <input
-              matInput
-              type="text"
-              id="userId"
-              name="userId"
-              [(ngModel)]="user.userId"
-              placeholder="ユーザID"
-              disabled
-              >
-          </mat-input-container>
-        </div>
+          <div class="data">
+            <mat-input-container class="data__input">
+              <input
+                matInput
+                type="text"
+                id="userId"
+                name="userId"
+                [(ngModel)]="user.userId"
+                placeholder="ユーザID"
+                disabled
+                >
+            </mat-input-container>
+          </div>
 
-        <div class="data">
-          <mat-input-container class="data__input">
-            <input
-              matInput
-              type="text"
-              id="lastName"
-              name="lastName"
-              [(ngModel)]="user.lastName"
-              placeholder="氏"
-              >
-          </mat-input-container>
-        </div>
-        <div class="data">
-          <mat-input-container class="data__input">
-            <input
-              matInput
-              type="text"
-              id="firstName"
-              name="firstName"
-              [(ngModel)]="user.firstName"
-              placeholder="名"
-              >
-          </mat-input-container>
-        </div>
+          <div class="data">
+            <mat-input-container class="data__input">
+              <input
+                matInput
+                type="text"
+                id="lastName"
+                name="lastName"
+                [(ngModel)]="user.lastName"
+                placeholder="氏"
+                >
+            </mat-input-container>
+          </div>
+          <div class="data">
+            <mat-input-container class="data__input">
+              <input
+                matInput
+                type="text"
+                id="firstName"
+                name="firstName"
+                [(ngModel)]="user.firstName"
+                placeholder="名"
+                >
+            </mat-input-container>
+          </div>
 
-        <div class="data">
-          <mat-input-container class="data__input">
-            <input
-              matInput
-              type="text"
-              id="email"
-              name="email"
-              [(ngModel)]="user.email"
-              placeholder="メール"
-              >
-          </mat-input-container>
-        </div>
+          <div class="data">
+            <mat-input-container class="data__input">
+              <input
+                matInput
+                type="text"
+                id="email"
+                name="email"
+                [(ngModel)]="user.email"
+                placeholder="メール"
+                >
+            </mat-input-container>
+          </div>
 
-        <div class="data">
-          <mat-input-container class="data__input">
-            <input
-              matInput
-              type="text"
-              id="blogTitle"
-              name="blogTitle"
-              [(ngModel)]="user.blogTitle"
-              placeholder="ブログタイトル"
-              >
-          </mat-input-container>
-        </div>
+          <div class="data">
+            <mat-input-container class="data__input">
+              <input
+                matInput
+                type="text"
+                id="blogTitle"
+                name="blogTitle"
+                [(ngModel)]="user.blogTitle"
+                placeholder="ブログタイトル"
+                >
+            </mat-input-container>
+          </div>
 
-        <div class="data">
-          <mat-input-container class="data__input">
-            <textarea
-              matInput
-              type="text"
-              id="userDescription"
-              class="data__input__textarea"
-              name="userDescription"
-              [(ngModel)]="user.userDescription"
-              placeholder="自己紹介"
-              ></textarea>
-          </mat-input-container>
-        </div>
+          <div class="data">
+            <mat-input-container class="data__input">
+              <textarea
+                matInput
+                type="text"
+                id="userDescription"
+                class="data__input__textarea"
+                name="userDescription"
+                [(ngModel)]="user.userDescription"
+                placeholder="自己紹介"
+                ></textarea>
+            </mat-input-container>
+          </div>
 
-        <div *ngIf="isMine" class="profile__operation">
-          <button
-            mat-button
-            (click)="editMode = false"
-            ><i class="fa fa-fw fa-times"></i> キャンセル</button>
-          <button
-            mat-button
-            color="primary"
-            (click)="editMode = false"
-            ><i class="fa fa-fw fa-pencil"></i> 更新する</button>
-        </div>
+          <div *ngIf="isMine" class="profile__operation">
+            <button
+              mat-button
+              (click)="editMode = false"
+              ><i class="fa fa-fw fa-times"></i> キャンセル</button>
+            <button
+              mat-button
+              color="primary"
+              (click)="editMode = false"
+              ><i class="fa fa-fw fa-pencil"></i> 更新する</button>
+          </div>
+        </form>
       </ng-container>
 
       <ng-container *ngIf="!editMode">
@@ -149,7 +153,7 @@
 
         <div class="data">
           <div class="data__output">
-            <div class="data__output__label">Main</div>
+            <div class="data__output__label">Mail</div>
             <div  class="data__output__value">{{user.email}}</div>
           </div>
         </div>
@@ -170,6 +174,11 @@
         </div>
       </ng-container>
     </div>
-  </form>
-  <router-outlet></router-outlet>
+
+    </div>
+    <div class="content__main">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
 </ng-container>
