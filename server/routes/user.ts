@@ -76,7 +76,7 @@ userRouter.get('/:userId', (req, res, next) => {
 });
 
 // 入力チェック用
-function isNotExistedUser(_id: String): Promise<boolean> {
+function isNotExisted(_id: String): Promise<boolean> {
   return User
   .findOne({ _id: _id, deleted: { $exists : false }})
   .exec()
@@ -90,7 +90,7 @@ function isNotExistedUser(_id: String): Promise<boolean> {
 }
 
 // 入力チェック用
-function isNotDeletedUser(_id: String): Promise<boolean> {
+function isNotDeleted(_id: String): Promise<boolean> {
   return User
   .findOne({ _id: _id, deleted: { $exists : false }})
   .exec()
@@ -108,7 +108,7 @@ function isNotDeletedUser(_id: String): Promise<boolean> {
 userRouter.put('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(isNotExistedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(isNotExisted).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
   body('email').optional({ checkFalsy : true})
     .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE.maxlength, ['Eメール', '50']))
     .isEmail().withMessage(v.message(v.MESSAGE.pattern_email, ['Eメール'])),
@@ -157,7 +157,7 @@ userRouter.put('/:_id', [
 userRouter.delete('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(isNotDeletedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(isNotDeleted).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

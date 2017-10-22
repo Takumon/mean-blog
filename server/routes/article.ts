@@ -1,13 +1,16 @@
 import * as mongoose from 'mongoose';
 import * as http from 'http';
 import { Router, Response } from 'express';
+import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
+
+import { validateHelper as v } from '../helpers/validate-helper';
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
 import { CommentTree } from '../helpers/comment-tree';
 import { User } from '../models/user';
 
-
+const MODEL_NAME = '記事';
 const articleRouter: Router = Router();
 
 // 複数件検索
@@ -16,7 +19,7 @@ articleRouter.get('/', (req, res, next) => {
   getCondition(req, function(error, condition) {
     if (error) {
       return res.status(500).json({
-        title: 'エラーが発生しました。',
+        title: v.MESSAGE.default,
         error: error.message
       });
     }
@@ -25,7 +28,7 @@ articleRouter.get('/', (req, res, next) => {
     CommentTree.getArticlesWithCommentOfTree(condition, withUser, (err, doc) => {
       if (err) {
         return res.status(500).json({
-          title: 'エラーが発生しました。',
+          title: v.MESSAGE.default,
           error: err.message
         });
       }
@@ -145,7 +148,7 @@ articleRouter.get('/:_id', (req, res, next) => {
   function cbFind(err, doc): any {
     if (err) {
       return res.status(500).json({
-        title: 'エラーが発生しました。',
+        title: v.MESSAGE.default,
         error: err.message
       });
     }
@@ -162,65 +165,140 @@ articleRouter.get('/:_id', (req, res, next) => {
 
 
 // 登録
-articleRouter.post('/', (req, res, next) => {
-  const article = new Article(req.body);
+articleRouter.post('/', [
+  body('title')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
+  body('isMarkdown')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['記事形式'])),
+  body('body')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['本文']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['本文', '10000'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-  article.save((err, result) => {
+  const article = new Article();
+  article.title = req.body.title;
+  article.isMarkdown = req.body.isMarkdown;
+  article.body = req.body.body;
+  article.created = new Date();
+
+  article.save((err, target) => {
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: err.message
       });
     }
 
     return res.status(200).json({
-      message: '記事を登録しました。',
-      obj: result
+      message: `${MODEL_NAME}を登録しました。`,
+      obj: target
     });
   });
 });
 
 
+// 入力チェック用
+function isNotExisted(_id: String): Promise<boolean> {
+  return Article
+  .findOne({ _id: _id, deleted: { $exists : false }})
+  .exec()
+  .then(user => {
+    if (user) {
+      // チェックOK
+      return Promise.resolve(true);
+    }
+    return Promise.reject(false);
+  }).catch(err => Promise.reject(false));
+}
+
+// 入力チェック用
+function isNotDeleted(_id: String): Promise<boolean> {
+  return Article
+  .findOne({ _id: _id, deleted: { $exists : false }})
+  .exec()
+  .then(user => {
+    // 削除されてないものが存在すればOK
+    if (user && !user.deleted) {
+      return Promise.resolve(true);
+    }
+    return Promise.reject(false);
+  }).catch(err => Promise.reject(false));
+}
+
+
+
+
 // 更新（差分更新）
-articleRouter.put('/:_id', (req, res, next) => {
+articleRouter.put('/:_id', [
+  // 形式チェックは行わず存在するかだけを確認する
+  param('_id')
+    .custom(isNotExisted).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
+  body('title')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
+  body('isMarkdown')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['記事形式'])),
+  body('body')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['本文']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['本文', '10000'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const article = req.body;
+  delete article.created;
   article.updated = new Date();
 
-  Article.findByIdAndUpdate(req.params._id, {$set: article }, (err, result) => {
+  Article.findByIdAndUpdate(req.params._id, {$set: article }, {new: true}, (err, target) => {
+    // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: err.message
       });
     }
 
     return res.status(200).json({
-      message: '記事を更新しました。',
-      obj: result
+      message: `${MODEL_NAME}を更新しました。`,
+      obj: target
     });
   });
 });
 
 
 // 論理削除
-articleRouter.delete('/:_id', (req, res, next) => {
-  const sysdate = new Date();
+articleRouter.delete('/:_id', [
+  // ユーザIDの形式チェックは行わず存在するかだけを確認する
+  param('_id')
+    .custom(isNotDeleted).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-  Article.findByIdAndUpdate(req.params._id,
-  { $set: {
-    updated: sysdate,
-    deleted: sysdate
-  }}, (err, model) => {
+  const sysdate = new Date();
+  Article.findByIdAndUpdate(req.params._id, {$set: {updated: sysdate, deleted: sysdate }}, {new: true}, (err, target) => {
+    // 削除対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
+
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: err.message
       });
     }
 
     return res.status(200).json({
-      message: '記事を削除しました。',
+      message: `${MODEL_NAME}を削除しました。`,
+      obj: target
     });
   });
 });
@@ -238,8 +316,8 @@ articleRouter.post('/:_id/vote', (req, res, next) => {
 
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: err.message
       });
     }
 
@@ -261,8 +339,8 @@ articleRouter.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
 
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: err.message
       });
     }
 
@@ -290,7 +368,7 @@ articleRouter.get('/:_id/vote', (req, res, next) => {
   function cbFind(err, doc): any {
     if (err) {
       return res.status(500).json({
-        title: 'エラーが発生しました。',
+        title: v.MESSAGE.default,
         error: err.message
       });
     }
