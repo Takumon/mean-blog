@@ -33,6 +33,9 @@ const UserSchema = new mongoose.Schema({
   icon: {
     type: String
   },
+  blogTitleBackground: {
+    type: String
+  },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   deleted: { type: Date },

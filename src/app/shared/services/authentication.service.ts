@@ -41,8 +41,8 @@ export class AuthenticationService {
 
     return this.http
       .post(URL, user)
-      .map( res => this.setToken(res) )
-      .catch(res => Observable.throw(res.json()));
+      .map((res: Response) => this.setToken(res) )
+      .catch((res: Response) => Observable.throw(res.json()));
   }
 
 
@@ -55,8 +55,8 @@ export class AuthenticationService {
 
     return this.http
       .post(URL, user)
-      .map( res => this.setToken(res) )
-      .catch(res => Observable.throw(res.json()));
+      .map((res: Response) => this.setToken(res) )
+      .catch((res: Response) => Observable.throw(res.json()));
   }
 
   isLogin(): Boolean {
@@ -68,7 +68,8 @@ export class AuthenticationService {
 
     return this.http
       .get(URL, this.jwtService.getRequestOptions())
-      .map( res => this.setToken(res));
+      .map((res: Response) => this.setToken(res) )
+      .catch((res: Response) => Observable.throw(res.json()));
   }
 
 

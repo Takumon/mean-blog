@@ -9,6 +9,7 @@ export class UserModel {
   blogTitle: string;
   userDescription: string;
   icon: string;
+  blogTitleBackground: string;
   created: string;
   updated: string;
   deleted: string;

@@ -1,9 +1,34 @@
 <ng-container *ngIf="user">
   <div class="blog-title" >
-    <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
+    <ng-container *ngIf="!editMode">
+      <img *ngIf="user.blogTitleBackground" class="blog-title__background" src="data:image/png;base64,{{user.blogTitleBackground}}">
+      <h1>{{user.blogTitle ? user.blogTitle : user.userId + " のブログ"}}</h1>
+    </ng-container>
+    <ng-container *ngIf="editMode">
+      <div class="background-editor">
+        <div
+          class="background-editor__overlay"
+          mat-ripple
+          matRippleColor="rgba(186, 191, 206, 0.37)"
+          (click)="backgroundFileInput.click()">
+          <i class="background-editor__overlay__image fa fa-fw fa-image"></i>
+          <div class="background-editor__overlay__discription">タイトル背景を変更</div>
+        </div>
+        <input
+          hidden
+          #backgroundFileInput
+          type="file"
+          accept="image/*"
+          id="icon"
+          name="icon"
+          (change)="onChangeBackgroundFile($event)"
+          >
+        <img *ngIf="blogTitleBackground.value" class="background-editor__icon" src="data:image/png;base64,{{blogTitleBackground.value}}">
+      </div>
+    </ng-container>
   </div>
 
-  <nav mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
+  <nav class="sub-nav-bar" [class.sub-nav-bar_edit]="editMode" mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
     <a mat-tab-link
       class="sub-nav-bar__link"
       [routerLink]="['/', user.userId, 'articles']"
@@ -27,13 +52,49 @@
       >いいね</a>
   </nav>
 
-  <div class="content">
+  <div class="content" [class.content_edit]="editMode">
     <div class="content_profile">
 
-    <div class="profile">
+    <div class="profile" [class.profile_edit]="editMode">
       <ng-container *ngIf="editMode">
-        <form>
-          <img class="profile__icon" src="data:image/png;base64,{{user.icon}}">
+        <form
+          *ngIf="form"
+          (ngSubmit)="onSubmit()"
+          [formGroup]="form"
+          >
+
+          <div class="icon-editor">
+            <div
+              class="icon-editor__overlay"
+              mat-ripple
+              matRippleColor="rgba(186, 191, 206, 0.37)"
+              (click)="iconFileInput.click()">
+              <i class="icon-editor__overlay__image fa fa-fw fa-image"></i>
+              <div class="icon-editor__overlay__discription">プロフィール画像を変更</div>
+            </div>
+            <input
+              hidden
+              #iconFileInput
+              type="file"
+              accept="image/*"
+              id="icon"
+              name="icon"
+              (change)="onChangeIconFile($event)"
+              >
+            <img class="icon-editor__icon" src="data:image/png;base64,{{icon.value}}">
+          </div>
+
+          <div *ngIf="isMine" class="profile__operation">
+            <button
+              mat-button
+              (click)="cancelEdit()"
+              ><i class="fa fa-fw fa-times"></i> キャンセル</button>
+            <button
+              mat-button
+              color="primary"
+              [disabled]="form.invalid"
+              ><i class="fa fa-fw fa-pencil"></i> 更新する</button>
+          </div>
 
           <div class="data">
             <mat-input-container class="data__input">
@@ -42,9 +103,8 @@
                 type="text"
                 id="userId"
                 name="userId"
-                [(ngModel)]="user.userId"
+                formControlName="userId"
                 placeholder="ユーザID"
-                disabled
                 >
             </mat-input-container>
           </div>
@@ -56,9 +116,17 @@
                 type="text"
                 id="lastName"
                 name="lastName"
-                [(ngModel)]="user.lastName"
+                formControlName="lastName"
                 placeholder="氏"
                 >
+                <mat-error *ngIf="messageService.hasError(lastName, 'maxlength')">
+                  {{ messageService.get('maxlength',['氏' , lastName.getError('maxlength').requiredLength]) }}
+                </mat-error>
+                <mat-error *ngIf="messageService.hasErrorWithoutDirty(lastName, 'remote')">
+                  <ng-container *ngFor="let msg of lastName.getError('remote')">
+                    {{msg}}<br>
+                  </ng-container>
+                </mat-error>
             </mat-input-container>
           </div>
           <div class="data">
@@ -68,9 +136,17 @@
                 type="text"
                 id="firstName"
                 name="firstName"
-                [(ngModel)]="user.firstName"
+                formControlName="firstName"
                 placeholder="名"
                 >
+                <mat-error *ngIf="messageService.hasError(firstName, 'maxlength')">
+                  {{ messageService.get('maxlength',['名' , firstName.getError('maxlength').requiredLength ]) }}
+                </mat-error>
+                <mat-error *ngIf="messageService.hasErrorWithoutDirty(firstName, 'remote')">
+                  <ng-container *ngFor="let msg of firstName.getError('remote')">
+                    {{msg}}<br>
+                  </ng-container>
+                </mat-error>
             </mat-input-container>
           </div>
 
@@ -81,9 +157,20 @@
                 type="text"
                 id="email"
                 name="email"
-                [(ngModel)]="user.email"
+                formControlName="email"
                 placeholder="メール"
                 >
+                <mat-error *ngIf="messageService.hasError(email, 'maxlength')">
+                  {{ messageService.get('maxlength',['メール' , email.getError('maxlength').requiredLength ]) }}
+                </mat-error>
+                <mat-error *ngIf="messageService.hasError(email, 'pattern')">
+                  {{ messageService.get('pattern_email',['メール']) }}
+                </mat-error>
+                <mat-error *ngIf="messageService.hasErrorWithoutDirty(email, 'remote')">
+                  <ng-container *ngFor="let msg of email.getError('remote')">
+                    {{msg}}<br>
+                  </ng-container>
+                </mat-error>
             </mat-input-container>
           </div>
 
@@ -94,9 +181,17 @@
                 type="text"
                 id="blogTitle"
                 name="blogTitle"
-                [(ngModel)]="user.blogTitle"
+                formControlName="blogTitle"
                 placeholder="ブログタイトル"
                 >
+                <mat-error *ngIf="messageService.hasError(blogTitle, 'maxlength')">
+                  {{ messageService.get('maxlength',['ブログタイトル', blogTitle.getError('maxlength').requiredLength ]) }}
+                </mat-error>
+                <mat-error *ngIf="messageService.hasErrorWithoutDirty(blogTitle, 'remote')">
+                  <ng-container *ngFor="let msg of blogTitle.getError('remote')">
+                    {{msg}}<br>
+                  </ng-container>
+                </mat-error>
             </mat-input-container>
           </div>
 
@@ -108,28 +203,33 @@
                 id="userDescription"
                 class="data__input__textarea"
                 name="userDescription"
-                [(ngModel)]="user.userDescription"
+                formControlName="userDescription"
                 placeholder="自己紹介"
                 ></textarea>
+                <mat-error *ngIf="messageService.hasError(userDescription, 'maxlength')">
+                  {{ messageService.get('maxlength',['自己紹介' , userDescription.getError('maxlength').requiredLength ]) }}
+                </mat-error>
+                <mat-error *ngIf="messageService.hasErrorWithoutDirty(userDescription, 'remote')">
+                  <ng-container *ngFor="let msg of userDescription.getError('remote')">
+                    {{msg}}<br>
+                  </ng-container>
+                </mat-error>
             </mat-input-container>
           </div>
 
-          <div *ngIf="isMine" class="profile__operation">
-            <button
-              mat-button
-              (click)="editMode = false"
-              ><i class="fa fa-fw fa-times"></i> キャンセル</button>
-            <button
-              mat-button
-              color="primary"
-              (click)="editMode = false"
-              ><i class="fa fa-fw fa-pencil"></i> 更新する</button>
-          </div>
         </form>
       </ng-container>
 
       <ng-container *ngIf="!editMode">
         <img class="profile__icon" src="data:image/png;base64,{{user.icon}}">
+
+        <div *ngIf="isMine" class="profile__operation">
+          <button
+            mat-button
+            color="primary"
+            (click)="editUser()"
+            ><i class="fa fa-fw fa-pencil"></i> 編集する</button>
+        </div>
 
         <div class="data">
           <div class="data__output">
@@ -165,18 +265,11 @@
           </div>
         </div>
 
-        <div *ngIf="isMine" class="profile__operation">
-          <button
-            mat-button
-            color="primary"
-            (click)="editMode = true"
-            ><i class="fa fa-fw fa-pencil"></i> 編集する</button>
-        </div>
       </ng-container>
     </div>
 
     </div>
-    <div class="content__main">
+    <div class="content__main" [class.content__main_edit]="editMode">
       <router-outlet></router-outlet>
     </div>
   </div>

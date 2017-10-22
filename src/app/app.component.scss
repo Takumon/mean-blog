@@ -22,7 +22,7 @@
   }
 
   &__spacer {
-    flex: 1 1 auto;    
+    flex: 1 1 auto;
   }
 
   &__btn {
@@ -39,7 +39,7 @@
 
 
 .navbar {
-  
+
   &__link {
     opacity: 1;
     color: #e6e8f5;
@@ -50,7 +50,7 @@
     -webkit-font-smoothing: antialiased;
 
     i {
-      margin-right: 4px;      
+      margin-right: 4px;
     }
   }
 }
@@ -80,11 +80,11 @@
   &__menu {
 
     &__description {
-      border-bottom: #e4e4e4 1px solid;    
+      border-bottom: #e4e4e4 1px solid;
     }
-  
+
     &__username {
-      font-weight: bold;    
+      font-weight: bold;
     }
   }
 }

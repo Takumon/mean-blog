@@ -9,6 +9,7 @@ import {
 
 @Injectable()
 export class MessageService {
+  static PATTERN_EMAIL: RegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   static PATTERN_HANKAKUEISU: RegExp = /^[a-zA-Z\d]*$/;
   static PATTERN_PASSWORD: RegExp = /^(?=.*?[a-z])(?=.*?\d)(?=.*?[!-\/:-@[-`{-~])[!-~]{8,30}$/i;
 
@@ -19,6 +20,7 @@ export class MessageService {
     passwordMatch: 'パスワードと確認用パスワードが一致しません',
     pattern_hankakueisuji: '{0}は半角英数字で入力してください',
     pattern_password: 'パスワードは半角英数字記号をそれぞれ1種類以上含む8文字以上30文字以下にしてください',
+    pattern_email: 'メール形式で入力してください'
   };
 
   get(validationName: string, replacements: Array<string> = []): string {
