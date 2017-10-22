@@ -32,11 +32,8 @@ export class ArticleService {
 
     return this.http
         .get(URL, { headers, search })
-        .map((response: Response) => {
-          const result = response.json();
-          return result;
-        })
-      .catch((error: Response) => Observable.throw(error.json()));
+        .map((res: Response) => res.json())
+        .catch((error: Response) => Observable.throw(error.json()));
   }
 
   // １件取得
@@ -50,11 +47,8 @@ export class ArticleService {
 
     return this.http
         .get(URL, { headers, search })
-        .map((response: Response) => {
-          const result = response.json();
-          return result;
-        })
-      .catch((error: Response) => Observable.throw(error.json()));
+        .map((res: Response) => res.json())
+        .catch((error: Response) => Observable.throw(error.json()));
   }
 
   // 更新
@@ -63,10 +57,7 @@ export class ArticleService {
 
     return this.http
       .put(URL, article, this.jwtService.getRequestOptions())
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
+      .map((res: Response) => res.json())
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
@@ -76,10 +67,7 @@ export class ArticleService {
 
     return this.http
       .post(URL, article, this.jwtService.getRequestOptions())
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
+      .map((res: Response) => res.json())
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
@@ -89,11 +77,8 @@ export class ArticleService {
 
     return this.http
         .delete(URL, this.jwtService.getRequestOptions())
-        .map((response: Response) => {
-          const result = response.json();
-          return result;
-        })
-      .catch((error: Response) => Observable.throw(error.json()));
+        .map((res: Response) => res.json())
+        .catch((error: Response) => Observable.throw(error.json()));
   }
 
 
@@ -109,11 +94,8 @@ export class ArticleService {
 
     return this.http
         .post(URL, {'voter': _idOfUser}, options)
-        .map((response: Response) => {
-          const result = response.json();
-          return result;
-        })
-      .catch((error: Response) => Observable.throw(error.json()));
+        .map((res: Response) => res.json())
+        .catch((error: Response) => Observable.throw(error.json()));
   }
 
   // 削除
@@ -122,11 +104,8 @@ export class ArticleService {
 
     return this.http
         .delete(URL, this.jwtService.getRequestOptions())
-        .map((response: Response) => {
-          const result = response.json();
-          return result;
-        })
-      .catch((error: Response) => Observable.throw(error.json()));
+        .map((res: Response) => res.json())
+        .catch((error: Response) => Observable.throw(error.json()));
   }
 
   // １件取得
@@ -135,10 +114,7 @@ export class ArticleService {
 
     return this.http
         .get(URL, this.jwtService.getRequestOptions())
-        .map((response: Response) => {
-          const result = response.json();
-          return result;
-        })
-      .catch((error: Response) => Observable.throw(error.json()));
+        .map((res: Response) => res.json())
+        .catch((error: Response) => Observable.throw(error.json()));
   }
 }

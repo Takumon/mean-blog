@@ -63,7 +63,7 @@ export class ArticleEditComponent implements OnInit {
 
 
   constructor(
-    public snackBar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
@@ -170,11 +170,12 @@ export class ArticleEditComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', [
         Validators.required,
+        Validators.maxLength(100),
       ]],
-      isMarkdown: ['', [
-      ]],
+      isMarkdown: '',
       body: ['', [
         Validators.required,
+        Validators.maxLength(10000),
       ]],
     });
   }

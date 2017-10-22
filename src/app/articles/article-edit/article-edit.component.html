@@ -8,6 +8,21 @@
       id="register-article-title"
       formControlName="title"
       placeholder="タイトル" />
+    <div
+      *ngIf="messageService.hasError(title, 'required') || messageService.hasError(title, 'maxlength') || messageService.hasErrorWithoutDirty(title, 'remote')"
+      class="register-article-title__messages">
+      <mat-error *ngIf="messageService.hasError(title, 'required')">
+        {{ messageService.get('required',['タイトル']) }}
+      </mat-error>
+      <mat-error *ngIf="messageService.hasError(title, 'maxlength')">
+        {{ messageService.get('maxlength',['タイトル' , title.getError('maxlength').requiredLength]) }}
+      </mat-error>
+      <mat-error *ngIf="messageService.hasErrorWithoutDirty(title, 'remote')">
+        <ng-container *ngFor="let msg of title.getError('remote')">
+          {{msg}}<br>
+        </ng-container>
+      </mat-error>
+    </div>
   </div>
 
   <div class="article-editor__format-operation">
@@ -63,14 +78,14 @@
     </div>
   </ng-template>
   <ng-template #bodyPlainText>
-      <div class="article-editor__main plain-text-editor">
-        <div class="plain-text-editor__row-text">
-          <textarea
-            id="register-article-body"
-            formControlName="body"
-            placeholder="本文"></textarea>
-        </div>
+    <div class="article-editor__main plain-text-editor">
+      <div class="plain-text-editor__row-text">
+        <textarea
+          id="register-article-body"
+          formControlName="body"
+          placeholder="本文"></textarea>
       </div>
+    </div>
   </ng-template>
 
 
@@ -81,6 +96,23 @@
       id="cancel-btn"
       (click)='cancel(form.dirty)'><i class="fa fa-times"></i>  キャンセル</button>
     <div class="spacer"></div>
+
+    <div
+      *ngIf="messageService.hasError(body, 'required') || messageService.hasError(body, 'maxlength') || messageService.hasErrorWithoutDirty(body, 'remote')"
+      class="register-article-body__messages">
+
+      <mat-error *ngIf="messageService.hasError(body, 'required')">
+        {{ messageService.get('required',['本文']) }}
+      </mat-error>
+      <mat-error *ngIf="messageService.hasError(body, 'maxlength')">
+        {{ messageService.get('maxlength',['本文' , body.getError('maxlength').requiredLength]) }}
+      </mat-error>
+      <mat-error *ngIf="messageService.hasErrorWithoutDirty(body, 'remote')">
+        <ng-container *ngFor="let msg of body.getError('remote')">
+          {{msg}}<br>
+        </ng-container>
+      </mat-error>
+    </div>
     <button
       mat-raised-button
       color="accent"

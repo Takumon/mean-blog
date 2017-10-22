@@ -20,7 +20,11 @@
       padding: 4px;
       color: #222;
       -webkit-font-smoothing: antialiased;
-    }    
+
+      &:focus {
+        outline: 0;
+      }
+    }
   }
 
   &__format-operation {
@@ -38,7 +42,7 @@
   }
 
   &__select-format {
-    margin-left: 2em;    
+    margin-left: 2em;
   }
 
   &__main {
@@ -48,7 +52,7 @@
     right: 0;
     top: 100px;
     position: absolute;
-    bottom: 48px;  
+    bottom: 48px;
   }
 
   &__operation {
@@ -60,7 +64,7 @@
     position: fixed;
     left: 5px;
     right: 5px;
-    
+
     .spacer {
       flex: 1 1 auto;
     }
@@ -70,18 +74,79 @@
   }
 }
 
+.register-article-title
+{
+  &__messages {
+    position: absolute;
+    background: #cccccc;
+    border-radius: 2px;
+    right: 2px;
+    top: 46px;
+    width: 50%;
+    z-index: 1;
+    padding: 8px;
+    box-sizing: border-box;
+
+    &:before {
+      display: block;
+      position: absolute;
+      z-index: 2;
+      content: '';
+      top: -23px;
+      left: 12px;
+      width: 24px;
+      height: 24px;
+      box-sizing: border-box;
+      border-bottom: 14px solid #cccccc;
+      border-right: 12px solid transparent;
+      border-left: 12px solid transparent;
+    }
+  }
+}
+
+
+.register-article-body
+{
+  &__messages {
+    position: relative;
+    background: #cccccc;
+    border-radius: 2px;
+    right: 2px;
+    width: 50%;
+    z-index: 1;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-right: 12px;
+
+    &:before {
+      display: block;
+      position: absolute;
+      z-index: 2;
+      content: '';
+      top: -23px;
+      left: 12px;
+      width: 24px;
+      height: 24px;
+      box-sizing: border-box;
+      border-bottom: 14px solid #cccccc;
+      border-right: 12px solid transparent;
+      border-left: 12px solid transparent;
+    }
+  }
+}
+
 .select-format {
   /* Angular Materialでトグルボタン選択時のスタイル */
   .mat-button-toggle-checked {
     background-color: rgba(255, 64, 129, 0.83);
-  }  
+  }
 
   &__button {
     font-size: 1em;
 
     &_icon_twice {
       font-size: 0.6em;
-    }  
+    }
   }
 }
 
@@ -98,12 +163,12 @@
       font-size: 14px;
       line-height: 20px;
       padding: 12px;
-    
+
       color: #222;
       -webkit-font-smoothing: antialiased;
-    
+
       &:focus {
-        outline: 0;      
+        outline: 0;
       }
     }
 
@@ -114,7 +179,7 @@
     &.harfPreviewing {
       width: 50%;
     }
-    
+
     &.fullPreviewing {
       display: none;
     }
@@ -129,10 +194,10 @@
     border-radius: 0 4px 4px 0;
     border: 1px #afafaf solid;
     position: relative;
-  
+
     color: #222;
     -webkit-font-smoothing: antialiased;
-  
+
     &:before {
       font: normal normal normal 14px/1 FontAwesome;
       content: "\F06E";
@@ -156,11 +221,11 @@
     &.harfPreviewing {
       width: 50%;
     }
-    
+
     &.fullPreviewing {
       width: 100%;
     }
-  }  
+  }
 }
 
 
@@ -177,12 +242,12 @@
       font-size: 14px;
       line-height: 20px;
       padding: 12px;
-    
+
       color: #222;
       -webkit-font-smoothing: antialiased;
-    
+
       &:focus {
-        outline: 0;      
+        outline: 0;
       }
     }
   }
