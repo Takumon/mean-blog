@@ -11,10 +11,10 @@ import { CommentTree } from '../helpers/comment-tree';
 import { User } from '../models/user';
 
 const MODEL_NAME = '記事';
-const articleRouter: Router = Router();
+const router: Router = Router();
 
 // 複数件検索
-articleRouter.get('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
 
   getCondition(req, function(error, condition) {
     if (error) {
@@ -127,7 +127,7 @@ function getCondition(req: any, cb: Function): void {
 
 
 // 一件検索
-articleRouter.get('/:_id', (req, res, next) => {
+router.get('/:_id', (req, res, next) => {
   const condition = {
     _id: req.params._id,
     deleted: { $exists : false } // 削除記事は除外
@@ -165,7 +165,7 @@ articleRouter.get('/:_id', (req, res, next) => {
 
 
 // 登録
-articleRouter.post('/', [
+router.post('/', [
   body('title')
     .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
@@ -202,42 +202,11 @@ articleRouter.post('/', [
 });
 
 
-// 入力チェック用
-function isNotExisted(_id: String): Promise<boolean> {
-  return Article
-  .findOne({ _id: _id, deleted: { $exists : false }})
-  .exec()
-  .then(user => {
-    if (user) {
-      // チェックOK
-      return Promise.resolve(true);
-    }
-    return Promise.reject(false);
-  }).catch(err => Promise.reject(false));
-}
-
-// 入力チェック用
-function isNotDeleted(_id: String): Promise<boolean> {
-  return Article
-  .findOne({ _id: _id, deleted: { $exists : false }})
-  .exec()
-  .then(user => {
-    // 削除されてないものが存在すればOK
-    if (user && !user.deleted) {
-      return Promise.resolve(true);
-    }
-    return Promise.reject(false);
-  }).catch(err => Promise.reject(false));
-}
-
-
-
-
 // 更新（差分更新）
-articleRouter.put('/:_id', [
+router.put('/:_id', [
   // 形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(isNotExisted).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
+    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
   body('title')
     .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
@@ -275,10 +244,10 @@ articleRouter.put('/:_id', [
 
 
 // 論理削除
-articleRouter.delete('/:_id', [
+router.delete('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(isNotDeleted).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
+    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -305,7 +274,7 @@ articleRouter.delete('/:_id', [
 
 
 // いいね登録
-articleRouter.post('/:_id/vote', (req, res, next) => {
+router.post('/:_id/vote', (req, res, next) => {
   const _idOfUser = req.body.voter;
 
   Article.update({
@@ -329,7 +298,7 @@ articleRouter.post('/:_id/vote', (req, res, next) => {
 });
 
 // いいね削除
-articleRouter.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
+router.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
 
   Article.update({
     _id: req.params._id
@@ -353,7 +322,7 @@ articleRouter.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
 
 
 // 複数件検索
-articleRouter.get('/:_id/vote', (req, res, next) => {
+router.get('/:_id/vote', (req, res, next) => {
 
   const condition = {
     _id: req.params._id,
@@ -383,4 +352,4 @@ articleRouter.get('/:_id/vote', (req, res, next) => {
   }
 });
 
-export { articleRouter };
+export { router as articleRouter };

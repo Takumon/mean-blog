@@ -219,6 +219,7 @@ export class ArticleEditComponent implements OnInit {
     article.body = form.value['body'];
 
     if (this.previousDraft) {
+      // TODO トランザクション
       // 公開した記事の下書きの場合は記事を更新
       if (this.previousDraft.posted) {
         article._id = this.previousDraft.articleId;
@@ -231,7 +232,42 @@ export class ArticleEditComponent implements OnInit {
           .subscribe(r => {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.goToArticle(resOfModifiedArticle.obj._id);
+          }, (error: any) => {
+            for (const e of error['errors']) {
+              // getterからformControllを取得
+              const control: FormControl | FormGroup = this[e.param];
+              if (!control) {
+                return;
+              }
+
+              const messages = control.getError('remote');
+              if (messages) {
+                messages.push(e.msg);
+              } else {
+                control.setErrors({remote: [e.msg]});
+              }
+            }
+
           });
+
+
+
+        }, (error: any) => {
+          for (const e of error['errors']) {
+            // getterからformControllを取得
+            const control: FormControl | FormGroup = this[e.param];
+            if (!control) {
+              return;
+            }
+
+            const messages = control.getError('remote');
+            if (messages) {
+              messages.push(e.msg);
+            } else {
+              control.setErrors({remote: [e.msg]});
+            }
+          }
+
         });
       } else {
         // 未公開の場合は記事を登録
@@ -245,6 +281,22 @@ export class ArticleEditComponent implements OnInit {
           .subscribe(r => {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
             this.goToArticle(resOfModifiedArticle.obj._id);
+          }, (error: any) => {
+            for (const e of error['errors']) {
+              // getterからformControllを取得
+              const control: FormControl | FormGroup = this[e.param];
+              if (!control) {
+                return;
+              }
+
+              const messages = control.getError('remote');
+              if (messages) {
+                messages.push(e.msg);
+              } else {
+                control.setErrors({remote: [e.msg]});
+              }
+            }
+
           });
         });
       }
@@ -259,6 +311,22 @@ export class ArticleEditComponent implements OnInit {
           .subscribe((res: any) => {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.goToArticle(res.obj._id);
+          }, (error: any) => {
+            for (const e of error['errors']) {
+              // getterからformControllを取得
+              const control: FormControl | FormGroup = this[e.param];
+              if (!control) {
+                return;
+              }
+
+              const messages = control.getError('remote');
+              if (messages) {
+                messages.push(e.msg);
+              } else {
+                control.setErrors({remote: [e.msg]});
+              }
+            }
+
           });
       } else {
         // 記事登録
@@ -269,6 +337,22 @@ export class ArticleEditComponent implements OnInit {
           .subscribe((res: any) => {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
             this.goToArticle(res.obj._id);
+          }, (error: any) => {
+            for (const e of error['errors']) {
+              // getterからformControllを取得
+              const control: FormControl | FormGroup = this[e.param];
+              if (!control) {
+                return;
+              }
+
+              const messages = control.getError('remote');
+              if (messages) {
+                messages.push(e.msg);
+              } else {
+                control.setErrors({remote: [e.msg]});
+              }
+            }
+
           });
       }
     }
@@ -289,6 +373,22 @@ export class ArticleEditComponent implements OnInit {
         .subscribe((res: any) => {
           this.snackBar.open('下書きを更新しました。', null, {duration: 3000});
           this.goToDraft(res.obj._id);
+        }, (error: any) => {
+          for (const e of error['errors']) {
+            // getterからformControllを取得
+            const control: FormControl | FormGroup = this[e.param];
+            if (!control) {
+              return;
+            }
+
+            const messages = control.getError('remote');
+            if (messages) {
+              messages.push(e.msg);
+            } else {
+              control.setErrors({remote: [e.msg]});
+            }
+          }
+
         });
     } else {
       // それ以外の場合は新規登録
@@ -309,6 +409,22 @@ export class ArticleEditComponent implements OnInit {
         .subscribe((res: any) => {
           this.snackBar.open('下書きを保存しました。', null, {duration: 3000});
           this.goToDraft(res.obj._id);
+        }, (error: any) => {
+          for (const e of error['errors']) {
+            // getterからformControllを取得
+            const control: FormControl | FormGroup = this[e.param];
+            if (!control) {
+              return;
+            }
+
+            const messages = control.getError('remote');
+            if (messages) {
+              messages.push(e.msg);
+            } else {
+              control.setErrors({remote: [e.msg]});
+            }
+          }
+
         });
     }
   }

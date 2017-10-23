@@ -30,7 +30,8 @@ export class DraftService {
 
     return this.http
       .get(URL, { headers, search })
-      .map((response: Response) => response.json() as Array<DraftModel>);
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   getById(_id: string): Observable<DraftModel> {
@@ -38,7 +39,8 @@ export class DraftService {
 
     return this.http
       .get(URL, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json() as DraftModel);
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   create(model: DraftModel): Observable<any> {
@@ -46,7 +48,8 @@ export class DraftService {
 
     return this.http
       .post(URL, model, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json());
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   update(model: DraftModel) {
@@ -54,7 +57,8 @@ export class DraftService {
 
     return this.http
       .put(URL, model, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json());
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   delete(_id: string) {
@@ -62,6 +66,7 @@ export class DraftService {
 
     return this.http
       .delete(URL, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json());
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 }
