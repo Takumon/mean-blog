@@ -7,74 +7,44 @@
         <i class="fa fa-fw fa-times" aria-hidden="true"></i>
     </div>
   </div>
-  <div mat-dialog-content *ngIf="form">
+  <div
+    mat-dialog-content
+    *ngIf="form">
+
+    <div class="data-label">
+      <div>お気に入り検索条件名</div>
+    </div>
     <mat-input-container class="data-wrapper">
       <input
         matInput
         type="text"
         class="data"
         [(ngModel)]="form.name"
-        placeholder="検索条件名"
         ngDefaultControl
         required >
     </mat-input-container>
 
-    <ng-container *ngIf="!form.checkUserList">
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    </ng-container>
-    <div *ngIf="form.checkUserList" class="data-label">
-      <i class="fa fa-fw fa-user"></i> ユーザ
-    </div>
-    <mat-list *ngIf="form.checkUserList" class="data-wrapper">
-      <mat-list-item
-        *ngFor="let checkinfo of form.checkUserList"
-        mat-ripple
-        class="user" >
-        <mat-checkbox
-          class="user__check"
-          [(ngModel)]="checkinfo.checked"
-          ngDefaultControl >
-        </mat-checkbox>
-        <img
-          (click)="checkinfo.checked = !checkinfo.checked"
-          class="user__icon"
-          src="data:image/png;base64,{{checkinfo.user.icon}}">
-        <p
-          (click)="checkinfo.checked = !checkinfo.checked"
-          class="user__userId">{{checkinfo.user.userId}}</p>
-      </mat-list-item>
-    </mat-list>
+
+
     <div class="data-label">
-      <div><i class="fa fa-fw fa-calendar"></i> 投稿日</div>
-      <div class="data-label__spacer"></div>
-      <button
-        class="data-label__clear-btn"
-        *ngIf="form.dateSearchPattern"
-        mat-button
-        (click)="resetDateSearchPattern()">
-        <i class="fa fa-fw fa-times"></i> 選択を解除</button>
+      <div>投稿日で絞り込み</div>
     </div>
-    <div class="data-wrapper">
-      <mat-radio-group
+    <div class="data-wrapper_date-search-pattern">
+      <mat-form-field
         *ngIf="form"
-        [(ngModel)]="form.dateSearchPattern"
-        class="date-search-pattern">
-        <div
-          class="date-search-pattern__factor-wrapper"
-          *ngFor="let key of (dateRangePatterns | keys)">
-          <mat-radio-button
-            mat-ripple
-            class="date-search-pattern__factor full-width"
-            [class.checked]="form.dateSearchPattern === key"
-            [value]="key"
-            ngDefaultControl>{{dateRangePatterns[key]}}</mat-radio-button>
-        </div>
-      </mat-radio-group>
-    </div>
-    <div
-      *ngIf="isSpecificDateRange(form.dateSearchPattern)"
-      class="data-wrapper">
-      <mat-form-field>
+        class="data-wrapper_date-search-pattern__factor">
+        <mat-select
+          [(ngModel)]="form.dateSearchPattern"
+          placeholder="投稿期間">
+          <mat-option *ngFor="let key of (dateRangePatterns | keys)" [value]="key">
+            {{dateRangePatterns[key]}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        *ngIf="isSpecificDateRange(form.dateSearchPattern)"
+        class="data-wrapper_date-search-pattern__factor">
           <input
             matInput
             [matDatepicker]="fromPicker"
@@ -85,7 +55,9 @@
           <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
           <mat-datepicker #fromPicker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field
+        *ngIf="isSpecificDateRange(form.dateSearchPattern)"
+        class="data-wrapper_date-search-pattern__factor">
         <input
           matInput
           [matDatepicker]="toPicker"
@@ -96,7 +68,70 @@
         <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
         <mat-datepicker #toPicker></mat-datepicker>
       </mat-form-field>
+
+      <button
+        *ngIf="form.dateSearchPattern"
+        class="data-wrapper_date-search-pattern__factor"
+        mat-button
+        matTooltip="投稿期間指定を解除"
+        (click)="resetDateSearchPattern()">
+        <i class="fa fa-fw fa-times"></i></button>
     </div>
+
+    <div class="data-label">
+      <div>ユーザで絞り込み</div>
+    </div>
+    <div class="user-select">
+      <mat-progress-bar *ngIf="!(form.checkUserList || form.unCheckUserList)" mode="indeterminate"></mat-progress-bar>
+      <div
+        *ngIf="form.checkUserList || form.unCheckUserList"
+        class="user-select__unselected">
+        <div class="user-select__title">
+          <i class="fa fa-fw fa-user"></i> ユーザ（未選択）
+        </div>
+        <mat-list class="user-select__list">
+          <mat-list-item
+            *ngFor="let checkinfo of form.unCheckUserList; trackBy: trackByUserList"
+            class="user" >
+            <div
+              class="user__content"
+              (click)="moveToCheckList(checkinfo)"
+              >
+              <img
+                class="user__content__icon"
+                src="data:image/png;base64,{{checkinfo.user.icon}}">
+              <div
+                class="user__content__userId">{{checkinfo.user.userId}}</div>
+              </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+      <div *ngIf="form.checkUserList || form.unCheckUserList" class="user-select__selected">
+        <div class="user-select__title">
+          <i class="fa fa-fw fa-check-square-o"></i> 選択したユーザ
+        </div>
+        <mat-list class="user-select__list">
+          <mat-list-item
+            *ngFor="let checkinfo of form.checkUserList; trackBy: trackByUserList"
+            class="user" >
+            <div
+              class="user__content"
+              (click)="moveToUnCheckList(checkinfo)"
+              >
+              <img
+                class="user__content__icon"
+                src="data:image/png;base64,{{checkinfo.user.icon}}">
+              <div
+                class="user__content__userId">{{checkinfo.user.userId}}</div>
+              </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+    </div>
+
+
   </div>
 
   <div mat-dialog-actions style="display:flex;">

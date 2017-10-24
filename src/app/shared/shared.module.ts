@@ -22,6 +22,7 @@ import {
   MatListModule,
   MatProgressSpinnerModule,
   MatRippleModule,
+  MatSelectModule,
 } from '@angular/material';
 
 
@@ -53,6 +54,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
     MatListModule,
     MatProgressSpinnerModule,
     MatRippleModule,
+    MatSelectModule,
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher},
@@ -83,6 +85,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
     MatListModule,
     MatProgressSpinnerModule,
     MatRippleModule,
+    MatSelectModule,
   ],
 })
 export class SharedModule { }

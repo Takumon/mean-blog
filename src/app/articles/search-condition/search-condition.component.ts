@@ -143,7 +143,7 @@ export class SearchConditionComponent implements OnInit {
   // 引数なしの場合は新規登録
   openSerchConditionDialog(idForUpdate: string = null) {
     const dialogRef = this.dialog.open(SearchConditionDialogComponent, {
-      width: '600px',
+      width: '810px',
       data: { idForUpdate: idForUpdate }
     });
 

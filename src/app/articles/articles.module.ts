@@ -13,6 +13,8 @@ import { SearchConditionService } from './shared/search-condition.service';
 import { DraftService } from './shared/draft.service';
 
 import { AppDateAdapter } from '../shared/app-date-adapter';
+import { CheckedListPipe } from '../shared/pipes/checked-list.pipe';
+import { NotCheckedListPipe } from '../shared/pipes/not-checked-list.pipe';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
 import { SharedService } from '../shared/services/shared.service';
 import { MessageService } from '../shared/services/message.service';
@@ -64,6 +66,8 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     ExcludeDeletedCommentPipe,
     ExcludeDeletedVoterPipe,
     KeysPipe,
+    CheckedListPipe,
+    NotCheckedListPipe,
     SafeHtmlPipe,
     DraftListComponent,
     DraftDetailComponent,

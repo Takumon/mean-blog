@@ -14,6 +14,6 @@ import {
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl| FormGroup, form: NgForm | FormGroupDirective): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control.invalid && (control.dirty || isSubmitted));
+    return !!(control && control.invalid && (control.dirty || isSubmitted));
   }
 }

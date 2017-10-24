@@ -73,15 +73,29 @@ export class SearchConditionDialogComponent implements OnInit {
 
           this.userService.getAll()
             .subscribe(users => {
-              this.form['checkUserList'] = users.map(user => {
+              this.form['checkUserList'] = [];
+              this.form['unCheckUserList'] = [];
+              users.forEach(user => {
                 const _id = user._id.toString();
-                const checked = checkedUsers.indexOf(_id) !== -1;
-
-                return {
-                  _id: _id,
-                  checked: checked,
-                  user: user
-                };
+                if (checkedUsers.indexOf(_id) === -1) {
+                  this.form['unCheckUserList'].push({
+                    _id: _id,
+                    user: {
+                      _id: user._id,
+                      userId: user.userId,
+                      icon: user.icon
+                    }
+                  });
+                } else {
+                  this.form['checkUserList'].push({
+                    _id: _id,
+                    user: {
+                      _id: user._id,
+                      userId: user.userId,
+                      icon: user.icon
+                    }
+                  });
+                }
               });
             });
         });
@@ -90,11 +104,15 @@ export class SearchConditionDialogComponent implements OnInit {
       this.form = {};
       this.userService.getAll()
         .subscribe(users => {
-          this.form['checkUserList'] = users.map(user => {
+          this.form['checkUserList'] = [];
+          this.form['unCheckUserList'] = users.map(user => {
             return {
               _id: user._id,
-              checked: false, // 全てチェックオフ
-              user: user
+              user: {
+                _id: user._id,
+                userId: user.userId,
+                icon: user.icon
+              }
             };
           });
         });
@@ -102,10 +120,34 @@ export class SearchConditionDialogComponent implements OnInit {
     }
   }
 
+  trackByUserList(index, item) {
+    return item._id;
+  }
+
+  moveToUnCheckList(checkInfo: any): void {
+    const list = this.form['checkUserList'];
+    const index = list.indexOf(checkInfo);
+    if (index !== -1) {
+      list.splice(index, 1);
+
+      this.form['unCheckUserList'].push(checkInfo);
+    }
+  }
+
+  moveToCheckList(checkInfo: any): void {
+    const list = this.form['unCheckUserList'];
+    const index = list.indexOf(checkInfo);
+    if (index !== -1) {
+      list.splice(index, 1);
+
+      this.form['checkUserList'].push(checkInfo);
+    }
+  }
+
   setOutput() {
     this.output.name = this.form.name;
     this.output.author = this.auth.loginUser._id;
-    this.output.users = this.form.checkUserList.filter(c => c.checked).map(c => c._id);
+    this.output.users = this.form.checkUserList.map(c => c._id);
     this.output.dateSearchPattern = this.form.dateSearchPattern;
 
     if (this.form._id) {

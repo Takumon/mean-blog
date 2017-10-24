@@ -1,5 +1,10 @@
 .content {
   position: relative;
+  color: #4e4e4e;
+
+  .mat-dialog-content {
+    padding-top: 12px;
+  }
 }
 
 
@@ -28,24 +33,74 @@
 }
 
 
+.user-select {
+  display: flex;
+  min-height: 400px;
+  margin-bottom: 24px;
+
+  &__unselected {
+    flex: 1;
+    padding-left: 0;
+
+    position: relative;
+
+  }
+
+  &__selected {
+    flex: 1;
+    padding-right: 0;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+  }
+
+  &__list {
+    min-height: 400px;
+    border-radius: 2px;
+    border: 1px solid rgb(224, 224, 224);
+  }
+}
+
+
+
 .data-wrapper {
-  margin: 2px 0 24px;
+  margin: 2px 0 60px;
   width: 100%;
   padding: 0;
+
+  $parent: &;
+
+  &_date-search-pattern {
+    @extend #{$parent};
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+
+    &__factor {
+      margin-right: 12px;
+    }
+
+    button {
+      height: 36px;
+      width: 36px;
+    }
+  }
 }
 
 .data-label {
   display: flex;
+  margin-bottom: 12px;
+  font-weight: bold;
 
   &__spacer {
     flex: 1 1 auto;
   }
 
-  &__clear-btn {
-    height: 24px;
-    line-height: 24px;
-  }
+  div {
 
+  }
 }
 
 .data {
@@ -65,65 +120,32 @@
 }
 
 .user {
-  color: gray;
 
-  &:hover {
-    background-color: #E3E3E3;
-  }
-
-  &_checked {
-
-  }
-
-  &__check {
-    padding-right: 24px;
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-
-  &__icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 4px;
-    margin-right: 12px;
-    box-sizing: border-box;
-    box-shadow: #2f2f2f 0 0 1px 0;
-  }
-
-  &__userId {
+  &__content {
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    color: gray;
+    cursor: pointer;
     width: 100%;
-    margin: 0;
-    padding: 12px 0;
-  }
-}
-
-
-.date-search-pattern {
-  display: flex;
-  flex-wrap: wrap;
-
-  &__factor-wrapper {
-    padding-top: 2px;
-    padding-left: 8px;
-    width: 33%;
-    box-sizing: border-box;
-  }
-
-  &__factor {
-    width: 100%;
-    background: #d4d4d4;
-
-    height: 46px;
-    line-height: 46px;
-    padding-left: 12px;
-    box-sizing: border-box;
 
     &:hover {
-      opacity: 0.8;
+      background: rgb(241, 227, 238);
     }
 
-    &.checked {
-      background: #ffc3d6;
+    &__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      margin-right: 12px;
+      box-sizing: border-box;
+      box-shadow: #2f2f2f 0 0 1px 0;
+    }
+
+    &__userId {
+      flex: 1 1 auto;
     }
   }
 }
+
+
