@@ -1,19 +1,23 @@
 import * as mongoose from 'mongoose';
 import * as http from 'http';
 import { Router, Response } from 'express';
+import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
+import { validateHelper as v } from '../helpers/validate-helper';
 import { SearchCondition } from '../models/search-condition';
 
+// TODO 日付期間はenum化
 const COSTOME_RANGE: String = '6';
-const searchConditionRouter: Router = Router();
+const MODEL_NAME = 'お気に入り検索条件';
+const router: Router = Router();
 
 // 複数件検索
-searchConditionRouter.get('/', (req, res, next) => {
-  const cb = (err, doc) => {
-    if (err) {
+router.get('/', (req, res, next) => {
+  const cb = (error, doc) => {
+    if (error) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: error.message
       });
     }
     return res.status(200).json(doc);
@@ -57,12 +61,12 @@ searchConditionRouter.get('/', (req, res, next) => {
 
 
 // 1件検索
-searchConditionRouter.get('/:_id', (req, res, next) => {
-  const cb = (err, doc) => {
-    if (err) {
+router.get('/:_id', (req, res, next) => {
+  const cb = (error, doc) => {
+    if (error) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: error.message
       });
     }
     return res.status(200).json(doc[0]);
@@ -95,7 +99,57 @@ searchConditionRouter.get('/:_id', (req, res, next) => {
 
 
 // 登録
-searchConditionRouter.post('/', (req, res, next) => {
+router.post('/', [
+  body('title')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['お気に入り検索条件名']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['お気に入り検索条件名', '100'])),
+  body('author')
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+  body('users')
+    .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
+    .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
+  body('dateSearchPattern')
+    .custom((value, {req}) => {
+      // TODO リファクタ（定数化など）
+      if (value === null || value === undefined) {
+        return true;
+      }
+      if (value === '0'
+        || value === '1'
+        || value === '2'
+        || value === '3'
+        || value === '4'
+        || value === '5'
+        || value === '6'
+      ) {
+        return true;
+      }
+
+      if (value === '6') {
+        return !!(req.param['dataTo'] || req.param['dataFrom']);
+      }
+
+      return false;
+    }).withMessage('検索条件の投稿日の指定が正しくありません')
+    .custom((value, {req}) => {
+      // TODO リファクタ（定数化など）
+      if (value === null || value === undefined) {
+        return true;
+      }
+
+      if (value === '6') {
+        return !!(req.param['dataTo'] || req.param['dataFrom']);
+      }
+
+      return false;
+    }).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
+
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const searchCondition = new SearchCondition(req.body);
   if (searchCondition.dateSearchPattern === COSTOME_RANGE) {
     if (req.body.dateFrom) {
@@ -107,23 +161,76 @@ searchConditionRouter.post('/', (req, res, next) => {
     }
   }
 
-  searchCondition.save((err, result) => {
-    if (err) {
+  searchCondition.save((error, target) => {
+    if (error) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: error.message
       });
     }
 
     return res.status(200).json({
-      message: '検索条件を登録しました。',
-      obj: result
+      message: `${MODEL_NAME}を登録しました。`,
+      obj: target
     });
   });
 });
 
+
 // 更新（差分更新）
-searchConditionRouter.put('/:_id', (req, res, next) => {
+router.put('/:_id', [
+  param('_id')
+    .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE.not_existed, ['お気に入り検索条件'])),
+    body('title')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['お気に入り検索条件名']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['お気に入り検索条件名', '100'])),
+  body('author')
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+  body('users')
+    .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
+    .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
+  body('dateSearchPattern')
+    .custom((value, {req}) => {
+      // TODO リファクタ（定数化など）
+      if (value === null || value === undefined) {
+        return true;
+      }
+      if (value === '0'
+        || value === '1'
+        || value === '2'
+        || value === '3'
+        || value === '4'
+        || value === '5'
+        || value === '6'
+      ) {
+        return true;
+      }
+
+      if (value === '6') {
+        return !!(req.param['dataTo'] || req.param['dataFrom']);
+      }
+
+      return false;
+    }).withMessage('検索条件の投稿日の指定が正しくありません')
+    .custom((value, {req}) => {
+      // TODO リファクタ（定数化など）
+      if (value === null || value === undefined) {
+        return true;
+      }
+
+      if (value === '6') {
+        return !!(req.param['dataTo'] || req.param['dataFrom']);
+      }
+
+      return false;
+    }).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+
   let model;
   const searchCondition = req.body;
   if (searchCondition.dateSearchPattern === COSTOME_RANGE) {
@@ -147,51 +254,48 @@ searchConditionRouter.put('/:_id', (req, res, next) => {
     };
   }
 
-  SearchCondition.update({
-    _id: new mongoose.Types.ObjectId(req.params._id),
-  }, model, (err, result) => {
+  SearchCondition.findByIdAndUpdate(req.params._id, model, {new: true}, (error, target) => {
+    // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
-    if (err) {
+    if (error) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE.default,
+        error: error.message
       });
     }
 
     return res.status(200).json({
-      message: '検索条件を更新しました。',
-      obj: result
+      message: `${MODEL_NAME}を更新しました。`,
+      obj: target
     });
   });
 });
 
 
 // 削除
-searchConditionRouter.delete('/:_id', (req, res, next) => {
-  SearchCondition.findOne({
-    _id: new mongoose.Types.ObjectId(req.params._id),
-  }, (err, model) => {
+router.delete('/:_id', [
+  param('_id')
+    .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE.not_existed, ['お気に入り検索条件'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    if (err) {
+  SearchCondition.findByIdAndRemove( new mongoose.Types.ObjectId(req.params._id), (error, taget) => {
+
+    if (error) {
       return res.status(500).json({
-        title: '削除しようとした検索条件(_id=${req.params._id})が見つかりませんでした。',
-        error: err.message
+        title: v.MESSAGE.default,
+        error: error.message
       });
     }
 
-    model.remove(err2 => {
-      if (err2) {
-        return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
-        });
-      }
-
-      return res.status(200).json({
-        message: '検索条件を削除しました。',
-      });
+    return res.status(200).json({
+      message: `${MODEL_NAME}を削除しました。`,
+      obj: taget,
     });
   });
 });
 
-export { searchConditionRouter };
+export { router as searchConditionRouter };

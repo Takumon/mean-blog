@@ -2,6 +2,7 @@
 import { Draft } from '../models/draft';
 import { User } from '../models/user';
 import { Article } from '../models/article';
+import { SearchCondition } from '../models/search-condition';
 
 class ValidateHelper {
   PATTERN = {
@@ -24,12 +25,12 @@ class ValidateHelper {
     allready_existed: '指定した{0}は既に使用されています',
     allready_deleted: '指定した{0}は既に削除されています',
     not_existed: '指定した{0}は存在しません',
+    not_unique: '指定した{0}は重複が存在します',
     different: '{0}と{1}が一致しません',
     login_error: 'ユーザIDかパスワードが正しくありません'
   };
 
   validation = {
-    // 入力チェック用
     isExistedUser: (_id: String): Promise<boolean> => {
       return User
         .findOne({ _id: _id, deleted: { $exists : false }})
@@ -38,6 +39,41 @@ class ValidateHelper {
           if (target) {
             // チェックOK
             return Promise.resolve(true);
+          }
+          return Promise.reject(false);
+        }).catch(err => Promise.reject(false));
+    },
+
+    isUniqueUserIdList: (_ids: String[]): boolean => {
+      if (!_ids || _ids.length === 0) {
+        return true;
+      }
+
+      const unique = _ids.filter((value, index, self) => self.indexOf(value) === index);
+
+      return unique.length === _ids.length;
+    },
+
+    isExistedUserAll: (_ids: String[] ): Promise<boolean> => {
+      if (!_ids || _ids.length === 0) {
+        return Promise.resolve(true);
+      }
+
+      return User
+        .find({ _id: {$in: _ids}, deleted: { $exists : false }})
+        .exec()
+        .then(target => {
+          if (target && target.length === _ids.length) {
+            let ok = true;
+            target.forEach(user => {
+              if (_ids.indexOf(user._id) === -1) {
+                ok = false;
+              }
+            });
+
+            if (ok) {
+              return Promise.resolve(true);
+            }
           }
           return Promise.reject(false);
         }).catch(err => Promise.reject(false));
@@ -84,7 +120,20 @@ class ValidateHelper {
           }
           return Promise.reject(false);
         }).catch(err => Promise.reject(false));
-    }
+    },
+
+    isExistedSearchCondition: (_id: String): Promise<boolean> => {
+      return SearchCondition
+        .findOne({ _id: _id}) // 論理削除はないので単純に_id検索
+        .exec()
+        .then(target => {
+          if (target) {
+            // チェックOK
+            return Promise.resolve(true);
+          }
+          return Promise.reject(false);
+        }).catch(err => Promise.reject(false));
+    },
   };
 
   message(validationName: string, replacements: Array<string> = []): string {

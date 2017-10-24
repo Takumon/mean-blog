@@ -101,11 +101,11 @@ router.post('/', [
 
   const draft = new Draft(req.body);
 
-  draft.save((err, target) => {
-    if (err) {
+  draft.save((error, target) => {
+    if (error) {
       return res.status(500).json({
           title: DEFAULT_ERR_MSG,
-          error: err.message
+          error: error.message
       });
     }
 
@@ -145,13 +145,13 @@ router.put('/:_id', [
     updated: new Date(),
   };
 
-  Draft.findByIdAndUpdate(req.params._id, {$set: draft }, {new: true}, (err, target) => {
+  Draft.findByIdAndUpdate(req.params._id, {$set: draft }, {new: true}, (error, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
-    if (err) {
+    if (error) {
       return res.status(500).json({
         title: v.MESSAGE.default,
-        error: err.message
+        error: error.message
       });
     }
 
@@ -165,7 +165,6 @@ router.put('/:_id', [
 
 // 物理削除
 router.delete('/:_id', [
-  // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
     .custom(v.validation.isExistedDraft).withMessage(v.message(v.MESSAGE.not_existed, ['下書き'])),
 ], (req, res, next) => {
@@ -174,12 +173,12 @@ router.delete('/:_id', [
     return res.status(400).json({ errors: errors.array() });
   }
 
-  Draft.findByIdAndRemove( new mongoose.Types.ObjectId(req.params._id), (err, taget) => {
+  Draft.findByIdAndRemove( new mongoose.Types.ObjectId(req.params._id), (error, taget) => {
 
-    if (err) {
+    if (error) {
       return res.status(500).json({
           title: 'エラーが発生しました。',
-          error: err.message
+          error: error.message
       });
     }
 
