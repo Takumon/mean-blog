@@ -58,7 +58,7 @@
 
   &__list {
     min-height: 400px;
-    border-radius: 2px;
+    margin: 8px 36px 8px 0;
     border: 1px solid rgb(224, 224, 224);
   }
 }
@@ -129,8 +129,17 @@
     cursor: pointer;
     width: 100%;
 
+    .show-when-hover {
+      color: transparent;
+    }
+
     &:hover {
       background: rgb(241, 227, 238);
+
+      .show-when-hover {
+        color: gray;
+      }
+
     }
 
     &__icon {
@@ -145,7 +154,19 @@
     &__userId {
       flex: 1 1 auto;
     }
+
   }
 }
 
+.clear-icon {
+  color: #b9b9b9;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
 
+  &:hover {
+    color: rgb(235, 147, 147);
+    background: rgb(241, 224, 224);
+  }
+}

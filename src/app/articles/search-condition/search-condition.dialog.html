@@ -40,6 +40,12 @@
             {{dateRangePatterns[key]}}
           </mat-option>
         </mat-select>
+        <i
+          *ngIf="form.dateSearchPattern"
+          matSuffix
+          matTooltip="投稿期間指定を解除"
+          (click)="resetDateSearchPattern()"
+          class="clear-icon fa fa-fw fa-times"></i>
       </mat-form-field>
 
       <mat-form-field
@@ -54,6 +60,12 @@
             placeholder="開始日">
           <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
           <mat-datepicker #fromPicker></mat-datepicker>
+          <i
+            *ngIf="form.dateFrom"
+            matSuffix
+            matTooltip="開始日の指定を解除"
+            class="clear-icon fa fa-fw fa-close"
+            (click)="form.dateFrom = null"></i>
       </mat-form-field>
       <mat-form-field
         *ngIf="isSpecificDateRange(form.dateSearchPattern)"
@@ -67,65 +79,72 @@
           placeholder="終了日">
         <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
         <mat-datepicker #toPicker></mat-datepicker>
+        <i
+          *ngIf="form.dateTo"
+          matSuffix
+          matTooltip="終了日の指定を解除"
+          class="clear-icon fa fa-fw fa-close"
+          (click)="form.dateTo = null"></i>
       </mat-form-field>
-
-      <button
-        *ngIf="form.dateSearchPattern"
-        class="data-wrapper_date-search-pattern__factor"
-        mat-button
-        matTooltip="投稿期間指定を解除"
-        (click)="resetDateSearchPattern()">
-        <i class="fa fa-fw fa-times"></i></button>
     </div>
 
     <div class="data-label">
       <div>ユーザで絞り込み</div>
     </div>
     <div class="user-select">
-      <mat-progress-bar *ngIf="!(form.checkUserList || form.unCheckUserList)" mode="indeterminate"></mat-progress-bar>
       <div
-        *ngIf="form.checkUserList || form.unCheckUserList"
         class="user-select__unselected">
         <div class="user-select__title">
           <i class="fa fa-fw fa-user"></i> ユーザ（未選択）
         </div>
         <mat-list class="user-select__list">
-          <mat-list-item
-            *ngFor="let checkinfo of form.unCheckUserList; trackBy: trackByUserList"
-            class="user" >
-            <div
-              class="user__content"
-              (click)="moveToCheckList(checkinfo)"
-              >
-              <img
-                class="user__content__icon"
-                src="data:image/png;base64,{{checkinfo.user.icon}}">
+          <mat-progress-bar *ngIf="!(form.checkUserList || form.unCheckUserList)" mode="indeterminate"></mat-progress-bar>
+          <ng-container *ngIf="form.checkUserList || form.unCheckUserList">
+            <mat-list-item
+              *ngFor="let checkinfo of form.unCheckUserList; trackBy: trackByUserList"
+              class="user" >
               <div
-                class="user__content__userId">{{checkinfo.user.userId}}</div>
+                class="user__content"
+                (click)="moveToCheckList(checkinfo)"
+                >
+                <img
+                  class="user__content__icon"
+                  src="data:image/png;base64,{{checkinfo.user.icon}}">
+                <div
+                  class="user__content__userId">{{checkinfo.user.userId}}</div>
+                <i class="show-when-hover fa fa-fw fa-arrow-right" aria-hidden="true"></i>
               </div>
-          </mat-list-item>
+            </mat-list-item>
+          </ng-container>
+
         </mat-list>
       </div>
 
-      <div *ngIf="form.checkUserList || form.unCheckUserList" class="user-select__selected">
+      <div class="user-select__selected">
         <div class="user-select__title">
           <i class="fa fa-fw fa-check-square-o"></i> 選択したユーザ
         </div>
         <mat-list class="user-select__list">
-          <mat-list-item
-            *ngFor="let checkinfo of form.checkUserList; trackBy: trackByUserList"
-            class="user" >
-            <div
-              class="user__content"
-              (click)="moveToUnCheckList(checkinfo)"
-              >
-              <img
-                class="user__content__icon"
-                src="data:image/png;base64,{{checkinfo.user.icon}}">
+          <mat-progress-bar *ngIf="!(form.checkUserList || form.unCheckUserList)" mode="indeterminate"></mat-progress-bar>
+          <ng-container *ngIf="form.checkUserList || form.unCheckUserList">
+
+            <mat-list-item
+              *ngFor="let checkinfo of form.checkUserList; trackBy: trackByUserList"
+              class="user" >
               <div
-                class="user__content__userId">{{checkinfo.user.userId}}</div>
-              </div>
-          </mat-list-item>
+                class="user__content"
+                (click)="moveToUnCheckList(checkinfo)"
+                >
+                <img
+                  class="user__content__icon"
+                  src="data:image/png;base64,{{checkinfo.user.icon}}">
+                <div
+                  class="user__content__userId">{{checkinfo.user.userId}}</div>
+                <i class="show-when-hover fa fa-fw fa-arrow-left" aria-hidden="true"></i>
+                </div>
+            </mat-list-item>
+
+          </ng-container>
         </mat-list>
       </div>
 
