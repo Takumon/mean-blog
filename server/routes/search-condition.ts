@@ -105,7 +105,7 @@ const isCollectedPattern = (value) => {
   }
   return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value);
 };
-const isCollectedDateRange = (value, {req}) => {
+const isExistDateRange = (value, {req}) => {
   if (value === null || value === undefined) {
     return true;
   }
@@ -116,6 +116,31 @@ const isCollectedDateRange = (value, {req}) => {
 
   return false;
 };
+const isCollectedDateRange = (value, {req}) => {
+  if (value === null || value === undefined) {
+    return true;
+  }
+
+  // 期間指定ではない場合は指定範囲のチェックはしない
+  if (value !== '6') {
+    return true;
+  }
+
+  const dateFrom = req.body['dateFrom'];
+  const dateTo = req.body['dateTo'];
+  // 両方存在する場合のみ
+  if (!dateFrom || !dateTo) {
+    return true;
+  }
+
+  // どちらかが日付形式ではない場合は大小比較はできない
+  if (!v.validation.isDate(dateFrom) || !v.validation.isDate(dateTo)) {
+    return true;
+  }
+
+  return Date.parse(dateFrom) <= Date.parse(dateTo);
+};
+
 
 // 登録
 router.post('/', [
@@ -129,8 +154,13 @@ router.post('/', [
     .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
     .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
-    .custom(isCollectedDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
-
+    .custom(isExistDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください')
+    // TODO 相関チェックの場所
+    .custom(isCollectedDateRange).withMessage(v.message(v.MESSAGE.date_range, ['終了日', '開始日'])),
+  body('dateFrom').optional({checkFalsy: true})
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['開始日'])),
+  body('dateTo').optional({checkFalsy: true})
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['終了日'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -177,8 +207,14 @@ router.put('/:_id', [
     .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
     .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
-  .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
-  .custom(isCollectedDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
+    .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
+    .custom(isExistDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください')
+    // TODO 相関チェックの場所
+    .custom(isCollectedDateRange).withMessage(v.message(v.MESSAGE.date_range, ['終了日', '開始日'])),
+  body('dateFrom').optional({checkFalsy: true})
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['開始日'])),
+  body('dateTo').optional({checkFalsy: true})
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['終了日'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -17,6 +17,8 @@ class ValidateHelper {
     minlength: '{0}は{1}桁以上にしてください',
     maxlength: '{0}は{1}桁以下にしてください',
     passwordMatch: 'パスワードと確認用パスワードが一致しません',
+    pattern_date: '{0}は日付形式にしてください',
+    date_range: '{0}は{1}以降を指定してください',
     pattern: '{0}は{1}にしてください',
     pattern_hankakueisuji: '{0}は半角英数字で入力してください',
     pattern_password: '{0}は半角英数字記号をそれぞれ1種類以上含む8文字以上30文字以下にしてください',
@@ -31,6 +33,10 @@ class ValidateHelper {
   };
 
   validation = {
+    isDate: (str: string): boolean => {
+      return !isNaN(Date.parse(str));
+    },
+
     isExistedUser: (_id: String): Promise<boolean> => {
       return User
         .findOne({ _id: _id, deleted: { $exists : false }})
