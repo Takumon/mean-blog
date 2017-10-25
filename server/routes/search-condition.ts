@@ -98,9 +98,28 @@ router.get('/:_id', (req, res, next) => {
 });
 
 
+// 入力チェック処理
+const isCollectedPattern = (value) => {
+  if (value === null || value === undefined) {
+    return true;
+  }
+  return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value);
+};
+const isCollectedDateRange = (value, {req}) => {
+  if (value === null || value === undefined) {
+    return true;
+  }
+
+  if (value === '6') {
+    return !!(req.body['dateTo'] || req.body['dateFrom']);
+  }
+
+  return false;
+};
+
 // 登録
 router.post('/', [
-  body('title')
+  body('name')
     .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['お気に入り検索条件名']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['お気に入り検索条件名', '100'])),
   body('author')
@@ -109,40 +128,8 @@ router.post('/', [
     .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
     .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
-    .custom((value, {req}) => {
-      // TODO リファクタ（定数化など）
-      if (value === null || value === undefined) {
-        return true;
-      }
-      if (value === '0'
-        || value === '1'
-        || value === '2'
-        || value === '3'
-        || value === '4'
-        || value === '5'
-        || value === '6'
-      ) {
-        return true;
-      }
-
-      if (value === '6') {
-        return !!(req.param['dataTo'] || req.param['dataFrom']);
-      }
-
-      return false;
-    }).withMessage('検索条件の投稿日の指定が正しくありません')
-    .custom((value, {req}) => {
-      // TODO リファクタ（定数化など）
-      if (value === null || value === undefined) {
-        return true;
-      }
-
-      if (value === '6') {
-        return !!(req.param['dataTo'] || req.param['dataFrom']);
-      }
-
-      return false;
-    }).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
+    .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
+    .custom(isCollectedDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
 
 ], (req, res, next) => {
   const errors = validationResult(req);
@@ -181,7 +168,7 @@ router.post('/', [
 router.put('/:_id', [
   param('_id')
     .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE.not_existed, ['お気に入り検索条件'])),
-    body('title')
+    body('name')
     .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['お気に入り検索条件名']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['お気に入り検索条件名', '100'])),
   body('author')
@@ -190,40 +177,8 @@ router.put('/:_id', [
     .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
     .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
-    .custom((value, {req}) => {
-      // TODO リファクタ（定数化など）
-      if (value === null || value === undefined) {
-        return true;
-      }
-      if (value === '0'
-        || value === '1'
-        || value === '2'
-        || value === '3'
-        || value === '4'
-        || value === '5'
-        || value === '6'
-      ) {
-        return true;
-      }
-
-      if (value === '6') {
-        return !!(req.param['dataTo'] || req.param['dataFrom']);
-      }
-
-      return false;
-    }).withMessage('検索条件の投稿日の指定が正しくありません')
-    .custom((value, {req}) => {
-      // TODO リファクタ（定数化など）
-      if (value === null || value === undefined) {
-        return true;
-      }
-
-      if (value === '6') {
-        return !!(req.param['dataTo'] || req.param['dataFrom']);
-      }
-
-      return false;
-    }).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
+  .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
+  .custom(isCollectedDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください'),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

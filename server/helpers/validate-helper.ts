@@ -63,19 +63,17 @@ class ValidateHelper {
         .find({ _id: {$in: _ids}, deleted: { $exists : false }})
         .exec()
         .then(target => {
-          if (target && target.length === _ids.length) {
-            let ok = true;
-            target.forEach(user => {
-              if (_ids.indexOf(user._id) === -1) {
-                ok = false;
-              }
-            });
+          if (!target || target.length !== _ids.length) {
+            return Promise.reject(false);
+          }
 
-            if (ok) {
-              return Promise.resolve(true);
+          for (const user of target) {
+            if (_ids.indexOf(user._id.toString()) === -1) {
+              return Promise.reject(false);
             }
           }
-          return Promise.reject(false);
+
+          return Promise.resolve(true);
         }).catch(err => Promise.reject(false));
     },
 
