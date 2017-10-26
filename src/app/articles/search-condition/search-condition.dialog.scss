@@ -80,6 +80,13 @@
 
     &__factor {
       margin-right: 12px;
+
+      &__calendar {
+        cursor: pointer;
+        &:hover {
+          background: rgb(243, 235, 235);
+        }
+      }
     }
 
     button {

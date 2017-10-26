@@ -66,12 +66,15 @@
               [matDatepicker]="fromPicker"
               formControlName="dateFrom"
               readonly
+              (click)="fromPicker.open()"
+              class="data-wrapper_date-search-pattern__factor__calendar"
               placeholder="開始日">
             <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
             <mat-datepicker #fromPicker></mat-datepicker>
             <i
               *ngIf="dateFrom.value"
               matSuffix
+              mat-ripple
               matTooltip="開始日の指定を解除"
               class="clear-icon fa fa-fw fa-close"
               (click)="dateFrom.markAsDirty(); dateFrom.setValue(null)"></i>
@@ -104,6 +107,9 @@
             [matDatepicker]="toPicker"
             formControlName="dateTo"
             readonly
+            mat-ripple
+            (click)="toPicker.open()"
+            class="data-wrapper_date-search-pattern__factor__calendar"
             placeholder="終了日">
           <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
           <mat-datepicker #toPicker></mat-datepicker>
