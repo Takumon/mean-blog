@@ -114,7 +114,7 @@ const isExistDateRange = (value, {req}) => {
     return !!(req.body['dateTo'] || req.body['dateFrom']);
   }
 
-  return false;
+  return true;
 };
 const isCollectedDateRange = (value, {req}) => {
   if (value === null || value === undefined) {

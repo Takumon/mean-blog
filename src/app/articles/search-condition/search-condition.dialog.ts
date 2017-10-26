@@ -162,9 +162,7 @@ export class SearchConditionDialogComponent implements OnInit {
                 }
               });
 
-              this.form.patchValue({
-                users: this.checkUserList.map(u => u._id)
-              });
+              this.checkUserList.forEach(u => this.users.push(new FormControl(u._id)));
             });
         });
     } else {
@@ -199,10 +197,17 @@ export class SearchConditionDialogComponent implements OnInit {
       this.unCheckUserList.push(checkInfo);
     }
 
-    this.users.push(new FormControl(checkInfo._id));
+    const controls = this.users.controls;
+    const len = controls.length;
+    for (let i = 0; i < len; i++ ) {
+      if (controls[i].value === checkInfo._id) {
+        this.users.removeAt(i);
+        break;
+      }
+    }
   }
 
-  moveToCheckList(checkInfo: any): void {
+  moveToCheckList(checkInfo: UserListFactor): void {
     const list = this.unCheckUserList;
     const index = list.indexOf(checkInfo);
     if (index !== -1) {
@@ -211,32 +216,28 @@ export class SearchConditionDialogComponent implements OnInit {
       this.checkUserList.push(checkInfo);
     }
 
-    const controls = this.users.controls;
-    const len = controls.length;
-    for (let i = 0; i < len; i++ ) {
-      if (controls[i].value === checkInfo.value) {
-        this.users.removeAt(i);
-        break;
-      }
-    }
+    this.users.push(new FormControl(checkInfo._id));
   }
 
   setOutput() {
-    const output = this.form.value;
-    output.author = this.auth.loginUser._id;
+    this.output.name = this.form.value.name;
+    this.output.author = this.auth.loginUser._id;
+    this.output.users = this.form.value.users;
+    this.output.dateSearchPattern = this.form.value.dateSearchPatternGroup.dateSearchPattern;
+    this.output.dateFrom = this.form.value.dateSearchPatternGroup.dateFrom;
+    this.output.dateTo = this.form.value.dateSearchPatternGroup.dateTo;
+
 
     if (this.data.idForUpdate) {
-      output._id = this.data.idForUpdate;
+      this.output._id = this.data.idForUpdate;
     }
 
-    if (output.dateFrom) {
-      output.dateFrom = moment(output.dateFrom).startOf('date').toString();
+    if (this.output.dateFrom) {
+      this.output.dateFrom = moment(this.output.dateFrom).startOf('date').toString();
     }
-    if (output.dateTo) {
-      output.dateTo = moment(output.dateTo).endOf('date').toString();
+    if (this.output.dateTo) {
+      this.output.dateTo = moment(this.output.dateTo).endOf('date').toString();
     }
-
-    this.output = output;
   }
 
   close(): void {
