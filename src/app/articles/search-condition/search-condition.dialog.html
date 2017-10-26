@@ -1,165 +1,206 @@
-<div class="content">
-  <div class="title">
-    <div>お気に入り検索条件を登録</div>
-    <div class="title__spacer"></div>
-    <div class="title__close-btn"
-      (click)="close()">
-        <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+<div *ngIf="form" class="content">
+  <form [formGroup]="form">
+    <div class="title">
+      <div>お気に入り検索条件を登録</div>
+      <div class="title__spacer"></div>
+      <div class="title__close-btn"
+        (click)="close()">
+          <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+      </div>
     </div>
-  </div>
-  <div
-    mat-dialog-content
-    *ngIf="form">
-
-    <div class="data-label">
-      <div>お気に入り検索条件名</div>
-    </div>
-    <mat-input-container class="data-wrapper">
-      <input
-        matInput
-        type="text"
-        class="data"
-        [(ngModel)]="form.name"
-        ngDefaultControl
-        required >
-    </mat-input-container>
-
-
-
-    <div class="data-label">
-      <div>投稿日で絞り込み</div>
-    </div>
-    <div class="data-wrapper_date-search-pattern">
-      <mat-form-field
-        *ngIf="form"
-        class="data-wrapper_date-search-pattern__factor">
-        <mat-select
-          [(ngModel)]="form.dateSearchPattern"
-          placeholder="投稿期間">
-          <mat-option *ngFor="let key of (dateRangePatterns | keys)" [value]="key">
-            {{dateRangePatterns[key]}}
-          </mat-option>
-        </mat-select>
-        <i
-          *ngIf="form.dateSearchPattern"
-          matSuffix
-          matTooltip="投稿期間指定を解除"
-          (click)="resetDateSearchPattern()"
-          class="clear-icon fa fa-fw fa-times"></i>
-      </mat-form-field>
-
-      <mat-form-field
-        *ngIf="isSpecificDateRange(form.dateSearchPattern)"
-        class="data-wrapper_date-search-pattern__factor">
-          <input
-            matInput
-            [matDatepicker]="fromPicker"
-            [(ngModel)]="form.dateFrom"
-            ngDefaultControl
-            readonly
-            placeholder="開始日">
-          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-          <mat-datepicker #fromPicker></mat-datepicker>
-          <i
-            *ngIf="form.dateFrom"
-            matSuffix
-            matTooltip="開始日の指定を解除"
-            class="clear-icon fa fa-fw fa-close"
-            (click)="form.dateFrom = null"></i>
-      </mat-form-field>
-      <mat-form-field
-        *ngIf="isSpecificDateRange(form.dateSearchPattern)"
-        class="data-wrapper_date-search-pattern__factor">
+    <div mat-dialog-content>
+      <div class="data-label">
+        <div>お気に入り検索条件名</div>
+      </div>
+      <mat-input-container class="data-wrapper">
         <input
           matInput
-          [matDatepicker]="toPicker"
-          [(ngModel)]="form.dateTo"
-          ngDefaultControl
-          readonly
-          placeholder="終了日">
-        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-        <mat-datepicker #toPicker></mat-datepicker>
-        <i
-          *ngIf="form.dateTo"
-          matSuffix
-          matTooltip="終了日の指定を解除"
-          class="clear-icon fa fa-fw fa-close"
-          (click)="form.dateTo = null"></i>
-      </mat-form-field>
-    </div>
+          type="text"
+          class="data"
+          formControlName="name"
+          required >
+        <mat-error *ngIf="messageService.hasError(name, 'required')">
+          {{ messageService.get('required',['お気に入り検索条件名']) }}
+        </mat-error>
+        <mat-error *ngIf="messageService.hasError(name, 'maxlength')">
+          {{ messageService.get('maxlength',['お気に入り検索条件名' , name.getError('maxlength').requiredLength]) }}
+        </mat-error>
+        <mat-error *ngIf="messageService.hasErrorWithoutDirty(name, 'remote')">
+          <ng-container *ngFor="let msg of name.getError('remote')">
+            {{msg}}<br>
+          </ng-container>
+        </mat-error>
+      </mat-input-container>
 
-    <div class="data-label">
-      <div>ユーザで絞り込み</div>
-    </div>
-    <div class="user-select">
+
+
+      <div class="data-label">
+        <div>投稿日で絞り込み</div>
+      </div>
       <div
-        class="user-select__unselected">
-        <div class="user-select__title">
-          <i class="fa fa-fw fa-user"></i> ユーザ（未選択）
-        </div>
-        <mat-list class="user-select__list">
-          <mat-progress-bar *ngIf="!(form.checkUserList || form.unCheckUserList)" mode="indeterminate"></mat-progress-bar>
-          <ng-container *ngIf="form.checkUserList || form.unCheckUserList">
-            <mat-list-item
-              *ngFor="let checkinfo of form.unCheckUserList; trackBy: trackByUserList"
-              class="user" >
-              <div
-                class="user__content"
-                (click)="moveToCheckList(checkinfo)"
-                >
-                <img
-                  class="user__content__icon"
-                  src="data:image/png;base64,{{checkinfo.user.icon}}">
-                <div
-                  class="user__content__userId">{{checkinfo.user.userId}}</div>
-                <i class="show-when-hover fa fa-fw fa-arrow-right" aria-hidden="true"></i>
-              </div>
-            </mat-list-item>
-          </ng-container>
+        formGroupName="dateSearchPatternGroup"
+        class="data-wrapper_date-search-pattern">
+        <mat-form-field
+           class="data-wrapper_date-search-pattern__factor">
+          <mat-select
+            formControlName="dateSearchPattern"
+            placeholder="投稿期間">
+            <mat-option *ngFor="let key of (dateRangePatterns | keys)" [value]="key">
+              {{dateRangePatterns[key]}}
+            </mat-option>
+          </mat-select>
+          <i
+            *ngIf="dateSearchPattern.value"
+            matSuffix
+            matTooltip="投稿期間指定を解除"
+            (click)="resetDateSearchPattern()"
+            class="clear-icon fa fa-fw fa-times"></i>
+        </mat-form-field>
 
-        </mat-list>
+        <mat-form-field
+          *ngIf="isSpecificDateRange(dateSearchPattern.value)"
+          class="data-wrapper_date-search-pattern__factor">
+            <input
+              matInput
+              [errorStateMatcher]="errorStateMatcherContainParentGroup"
+              [matDatepicker]="fromPicker"
+              formControlName="dateFrom"
+              readonly
+              placeholder="開始日">
+            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+            <i
+              *ngIf="dateFrom.value"
+              matSuffix
+              matTooltip="開始日の指定を解除"
+              class="clear-icon fa fa-fw fa-close"
+              (click)="dateFrom.markAsDirty(); dateFrom.setValue(null)"></i>
+            <mat-error *ngIf="messageService.hasError(dateFrom, 'isDate')">
+              {{ messageService.get('isDate',['開始日']) }}
+            </mat-error>
+            <mat-error *ngIf="messageService.hasErrorWithoutDirty(dateFrom, 'remote')">
+              <ng-container *ngFor="let msg of dateFrom.getError('remote')">
+                {{msg}}<br>
+              </ng-container>
+            </mat-error>
+            <mat-error *ngIf="messageService.hasError(dateSearchPatternGroup, 'isExistDateRange')">
+              {{ messageService.get('isExistDateRange',['開始日', '終了日']) }}
+            </mat-error>
+            <mat-error class="mat-error" *ngIf="messageService.hasError(dateSearchPatternGroup, 'isCollectedDateRange')">
+              {{ messageService.get('isCollectedDateRange', ['開始日', '終了日']) }}
+            </mat-error>
+            <mat-error *ngIf="messageService.hasErrorWithoutDirty(dateSearchPatternGroup, 'remote')">
+              <ng-container *ngFor="let msg of dateSearchPatternGroup.getError('remote')">
+                {{msg}}<br>
+              </ng-container>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field
+          *ngIf="isSpecificDateRange(dateSearchPattern.value)"
+          class="data-wrapper_date-search-pattern__factor">
+          <input
+            matInput
+            [errorStateMatcher]="errorStateMatcherContainParentGroup"
+            [matDatepicker]="toPicker"
+            formControlName="dateTo"
+            readonly
+            placeholder="終了日">
+          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+          <i
+            *ngIf="dateTo.value"
+            matSuffix
+            matTooltip="終了日の指定を解除"
+            class="clear-icon fa fa-fw fa-close"
+            (click)="dateTo.markAsDirty(); dateTo.setValue(null)"></i>
+          <mat-error *ngIf="messageService.hasError(dateTo, 'isDate')">
+            {{ messageService.get('isDate',['終了日']) }}
+          </mat-error>
+          <mat-error *ngIf="messageService.hasErrorWithoutDirty(dateTo, 'remote')">
+            <ng-container *ngFor="let msg of dateTo.getError('remote')">
+              {{msg}}<br>
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="user-select__selected">
-        <div class="user-select__title">
-          <i class="fa fa-fw fa-check-square-o"></i> 選択したユーザ
-        </div>
-        <mat-list class="user-select__list">
-          <mat-progress-bar *ngIf="!(form.checkUserList || form.unCheckUserList)" mode="indeterminate"></mat-progress-bar>
-          <ng-container *ngIf="form.checkUserList || form.unCheckUserList">
-
-            <mat-list-item
-              *ngFor="let checkinfo of form.checkUserList; trackBy: trackByUserList"
-              class="user" >
-              <div
-                class="user__content"
-                (click)="moveToUnCheckList(checkinfo)"
-                >
-                <img
-                  class="user__content__icon"
-                  src="data:image/png;base64,{{checkinfo.user.icon}}">
+      <div class="data-label">
+        <div>ユーザで絞り込み</div>
+      </div>
+      <div class="user-select">
+        <div
+          class="user-select__unselected">
+          <div class="user-select__title">
+            <i class="fa fa-fw fa-user"></i> ユーザ（未選択）
+          </div>
+          <mat-list class="user-select__list">
+            <mat-progress-bar *ngIf="!(checkUserList || unCheckUserList)" mode="indeterminate"></mat-progress-bar>
+            <ng-container *ngIf="checkUserList || unCheckUserList">
+              <mat-list-item
+                *ngFor="let checkinfo of unCheckUserList; trackBy: trackByUserList"
+                class="user" >
                 <div
-                  class="user__content__userId">{{checkinfo.user.userId}}</div>
-                <i class="show-when-hover fa fa-fw fa-arrow-left" aria-hidden="true"></i>
+                  class="user__content"
+                  (click)="moveToCheckList(checkinfo)"
+                  >
+                  <img
+                    class="user__content__icon"
+                    src="data:image/png;base64,{{checkinfo.user.icon}}">
+                  <div
+                    class="user__content__userId">{{checkinfo.user.userId}}</div>
+                  <i class="show-when-hover fa fa-fw fa-arrow-right" aria-hidden="true"></i>
                 </div>
-            </mat-list-item>
+              </mat-list-item>
+            </ng-container>
 
-          </ng-container>
-        </mat-list>
+          </mat-list>
+        </div>
+
+        <div class="user-select__selected">
+          <div class="user-select__title">
+            <i class="fa fa-fw fa-check-square-o"></i> 選択したユーザ
+          </div>
+          <mat-error *ngIf="messageService.hasErrorWithoutDirty(users, 'remote')">
+            <ng-container *ngFor="let msg of users.getError('remote')">
+              {{msg}}<br>
+            </ng-container>
+          </mat-error>
+          <mat-list class="user-select__list">
+            <mat-progress-bar *ngIf="!(checkUserList || unCheckUserList)" mode="indeterminate"></mat-progress-bar>
+            <ng-container *ngIf="checkUserList || unCheckUserList">
+
+              <mat-list-item
+                *ngFor="let checkinfo of checkUserList; trackBy: trackByUserList"
+                class="user" >
+                <div
+                  class="user__content"
+                  (click)="moveToUnCheckList(checkinfo)"
+                  >
+                  <img
+                    class="user__content__icon"
+                    src="data:image/png;base64,{{checkinfo.user.icon}}">
+                  <div
+                    class="user__content__userId">{{checkinfo.user.userId}}</div>
+                  <i class="show-when-hover fa fa-fw fa-arrow-left" aria-hidden="true"></i>
+                  </div>
+              </mat-list-item>
+
+            </ng-container>
+          </mat-list>
+        </div>
+
       </div>
-
     </div>
 
-
-  </div>
-
-  <div mat-dialog-actions style="display:flex;">
-    <div style="flex: 1 1 auto"></div>
-    <button mat-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="setOutput()"
-      [mat-dialog-close]="output">決定</button>
-  </div>
+    <div mat-dialog-actions style="display:flex;">
+      <div style="flex: 1 1 auto"></div>
+      <button mat-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+        (click)="setOutput()"
+        [mat-dialog-close]="output">決定</button>
+    </div>
+  </form>
 </div>

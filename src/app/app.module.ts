@@ -24,6 +24,7 @@ import { LocalStrageService } from './shared/services/local-strage.service';
 import { AlertService } from './shared/services/alert.service';
 import { ScrollSpyService } from './shared/services/scroll-spy.service';
 import { ScrollService } from './shared/services/scroll.service';
+import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
 import { TocService } from './shared/services/toc.service';
 import { AuthGuard } from './shared/auth.guard';
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
@@ -56,6 +57,7 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
     AuthenticationService,
     LocalStrageService,
     AuthGuard,
+    ErrorStateMatcherContainParentGroup,
     {provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher}
   ],
   bootstrap: [AppComponent],

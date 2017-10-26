@@ -1,5 +1,17 @@
 import { Component, Inject, OnInit} from '@angular/core';
 import {
+  ReactiveFormsModule,
+  FormsModule,
+  FormGroup,
+  FormGroupDirective,
+  FormControl,
+  FormArray,
+  NgForm,
+  Validators,
+  FormBuilder,
+  ValidatorFn,
+} from '@angular/forms';
+import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -14,11 +26,22 @@ import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
+import { MessageService, ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
+
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../../users/shared/user.service';
 
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { SearchConditionService } from '../shared/search-condition.service';
+
+interface UserListFactor {
+  _id: string;
+  user: {
+    _id: string;
+    userId: string;
+    icon: string;
+  };
+}
 
 @Component({
   selector: 'app-search-condition-dialog',
@@ -27,14 +50,20 @@ import { SearchConditionService } from '../shared/search-condition.service';
 })
 export class SearchConditionDialogComponent implements OnInit {
   // formグループ化したい
-  public form: any;
+  public form: FormGroup;
+  private searchConditionId: string;
+  public checkUserList: Array<UserListFactor>;
+  public unCheckUserList: Array<UserListFactor>;
   public output: any = {};
   public dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
     public dialogRef: MatDialogRef<SearchConditionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private fb: FormBuilder,
     public auth: AuthenticationService,
+    public messageService: MessageService,
+    public errorStateMatcherContainParentGroup: ErrorStateMatcherContainParentGroup,
     private userService: UserService,
     private searchConditionService: SearchConditionService,
     private dateAdapter: DateAdapter<NativeDateAdapter>) {
@@ -43,9 +72,46 @@ export class SearchConditionDialogComponent implements OnInit {
 
   ngOnInit() {
     this.cerateForm();
+    this.setForm();
   }
 
   cerateForm() {
+    this.form = this.fb.group({
+      name: ['', [
+        Validators.required,
+        Validators.maxLength(30),
+      ]],
+      users: this.fb.array([]),
+      dateSearchPatternGroup: new FormGroup(
+        {
+          dateSearchPattern: this.fb.control('', [
+          Validators.pattern(/[123456]+/)
+          ]),
+          dateTo: this.fb.control('', [
+            MessageService.validation.isDate
+          ]),
+          dateFrom: this.fb.control('', [
+            MessageService.validation.isDate
+          ])
+        },
+        Validators.compose([
+          MessageService.validation.isExistDateRange,
+          MessageService.validation.isCollectedDateRange,
+        ])
+      )
+    });
+  }
+
+  get name(): FormControl { return this.form.get('name') as FormControl; }
+  get users(): FormArray { return this.form.get('users') as FormArray; }
+  get dateSearchPatternGroup(): FormGroup { return this.form.get('dateSearchPatternGroup') as FormGroup; }
+    get dateSearchPattern(): FormControl { return this.dateSearchPatternGroup.get('dateSearchPattern') as FormControl; }
+    get dateFrom(): FormControl { return this.dateSearchPatternGroup.get('dateFrom') as FormControl; }
+    get dateTo(): FormControl { return this.dateSearchPatternGroup.get('dateTo') as FormControl; }
+
+
+  setForm() {
+
     // TODO ページング
     if (this.data.idForUpdate) {
       // 更新時
@@ -53,32 +119,30 @@ export class SearchConditionDialogComponent implements OnInit {
 
       this.searchConditionService
         .getById(this.data.idForUpdate, withUser)
-        .subscribe(conditionForUpdate => {
-          this.form = {
-            _id: conditionForUpdate._id,
-            name: conditionForUpdate.name,
-            dateSearchPattern: conditionForUpdate.dateSearchPattern,
-          };
-          if (this.form.dateSearchPattern
-              && (DATE_RANGE_PATTERN.期間指定 === Number(conditionForUpdate.dateSearchPattern)) ) {
-            if (conditionForUpdate.dateFrom) {
-              this.form['dateFrom'] = new Date(conditionForUpdate.dateFrom);
-            }
-            if (conditionForUpdate.dateTo) {
-              this.form['dateTo'] = new Date(conditionForUpdate.dateTo);
-            }
-          }
+        .subscribe(condition => {
+          this.form.patchValue({
+            _id: condition._id,
+            name: condition.name,
+            dateSearchPatternGroup: {
+              dateSearchPattern: condition.dateSearchPattern,
+              dateFrom: condition.dateFrom && new Date(condition.dateFrom),
+              dateTo: condition.dateTo && new Date(condition.dateTo),
+            },
+            users: condition.users || []
+          });
 
-          const checkedUsers: Array<string> = conditionForUpdate.users;
+          const checkedUsers: Array<string> = condition.users || [];
 
           this.userService.getAll()
             .subscribe(users => {
-              this.form['checkUserList'] = [];
-              this.form['unCheckUserList'] = [];
+              this.checkUserList = [];
+              this.unCheckUserList = [];
+
               users.forEach(user => {
                 const _id = user._id.toString();
+
                 if (checkedUsers.indexOf(_id) === -1) {
-                  this.form['unCheckUserList'].push({
+                  this.unCheckUserList.push({
                     _id: _id,
                     user: {
                       _id: user._id,
@@ -87,7 +151,7 @@ export class SearchConditionDialogComponent implements OnInit {
                     }
                   });
                 } else {
-                  this.form['checkUserList'].push({
+                  this.checkUserList.push({
                     _id: _id,
                     user: {
                       _id: user._id,
@@ -97,15 +161,18 @@ export class SearchConditionDialogComponent implements OnInit {
                   });
                 }
               });
+
+              this.form.patchValue({
+                users: this.checkUserList.map(u => u._id)
+              });
             });
         });
     } else {
       // 新規登録時
-      this.form = {};
       this.userService.getAll()
         .subscribe(users => {
-          this.form['checkUserList'] = [];
-          this.form['unCheckUserList'] = users.map(user => {
+          this.checkUserList = [];
+          this.unCheckUserList = users.map(user => {
             return {
               _id: user._id,
               user: {
@@ -116,52 +183,60 @@ export class SearchConditionDialogComponent implements OnInit {
             };
           });
         });
-
     }
   }
 
-  trackByUserList(index, item) {
+  trackByUserList(index: UserListFactor, item) {
     return item._id;
   }
 
-  moveToUnCheckList(checkInfo: any): void {
-    const list = this.form['checkUserList'];
+  moveToUnCheckList(checkInfo: UserListFactor): void {
+    const list = this.checkUserList;
     const index = list.indexOf(checkInfo);
     if (index !== -1) {
       list.splice(index, 1);
 
-      this.form['unCheckUserList'].push(checkInfo);
+      this.unCheckUserList.push(checkInfo);
     }
+
+    this.users.push(new FormControl(checkInfo._id));
   }
 
   moveToCheckList(checkInfo: any): void {
-    const list = this.form['unCheckUserList'];
+    const list = this.unCheckUserList;
     const index = list.indexOf(checkInfo);
     if (index !== -1) {
       list.splice(index, 1);
 
-      this.form['checkUserList'].push(checkInfo);
+      this.checkUserList.push(checkInfo);
+    }
+
+    const controls = this.users.controls;
+    const len = controls.length;
+    for (let i = 0; i < len; i++ ) {
+      if (controls[i].value === checkInfo.value) {
+        this.users.removeAt(i);
+        break;
+      }
     }
   }
 
   setOutput() {
-    this.output.name = this.form.name;
-    this.output.author = this.auth.loginUser._id;
-    this.output.users = this.form.checkUserList.map(c => c._id);
-    this.output.dateSearchPattern = this.form.dateSearchPattern;
+    const output = this.form.value;
+    output.author = this.auth.loginUser._id;
 
-    if (this.form._id) {
-      this.output._id = this.form._id;
+    if (this.data.idForUpdate) {
+      output._id = this.data.idForUpdate;
     }
 
-    if (this.isSpecificDateRange(this.form.dateSearchPattern)) {
-      if (this.form.dateFrom) {
-        this.output.dateFrom = moment(this.form.dateFrom).startOf('date').toString();
-      }
-      if (this.form.dateTo) {
-        this.output.dateTo = moment(this.form.dateTo).endOf('date').toString();
-      }
+    if (output.dateFrom) {
+      output.dateFrom = moment(output.dateFrom).startOf('date').toString();
     }
+    if (output.dateTo) {
+      output.dateTo = moment(output.dateTo).endOf('date').toString();
+    }
+
+    this.output = output;
   }
 
   close(): void {
@@ -169,10 +244,17 @@ export class SearchConditionDialogComponent implements OnInit {
   }
 
   resetDateSearchPattern() {
-    this.form.dateSearchPattern = null;
+    this.form.patchValue({
+      dateSearchPatternGroup: {
+        dateSearchPattern: null,
+        dateFrom: null,
+        dateTo: null,
+      }
+    });
+    this.dateSearchPatternGroup.markAsDirty();
   }
 
-  isSpecificDateRange(pattern: string) {
-    return DATE_RANGE_PATTERN.期間指定 === Number(pattern);
+  isSpecificDateRange(value: string) {
+    return DATE_RANGE_PATTERN.期間指定 === Number(value);
   }
 }
