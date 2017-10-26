@@ -54,7 +54,6 @@ export class SearchConditionDialogComponent implements OnInit {
   private searchConditionId: string;
   public checkUserList: Array<UserListFactor>;
   public unCheckUserList: Array<UserListFactor>;
-  public output: any = {};
   public dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
@@ -78,25 +77,25 @@ export class SearchConditionDialogComponent implements OnInit {
   cerateForm() {
     this.form = this.fb.group({
       name: ['', [
-        Validators.required,
-        Validators.maxLength(30),
+        // Validators.required,
+        // Validators.maxLength(30),
       ]],
       users: this.fb.array([]),
       dateSearchPatternGroup: new FormGroup(
         {
           dateSearchPattern: this.fb.control('', [
-          Validators.pattern(/[123456]+/)
+          // Validators.pattern(/[123456]+/)
           ]),
           dateTo: this.fb.control('', [
-            MessageService.validation.isDate
+            // MessageService.validation.isDate
           ]),
           dateFrom: this.fb.control('', [
-            MessageService.validation.isDate
+            // MessageService.validation.isDate
           ])
         },
         Validators.compose([
-          MessageService.validation.isExistDateRange,
-          MessageService.validation.isCollectedDateRange,
+          // MessageService.validation.isExistDateRange,
+          // MessageService.validation.isCollectedDateRange,
         ])
       )
     });
@@ -219,24 +218,39 @@ export class SearchConditionDialogComponent implements OnInit {
     this.users.push(new FormControl(checkInfo._id));
   }
 
-  setOutput() {
-    this.output.name = this.form.value.name;
-    this.output.author = this.auth.loginUser._id;
-    this.output.users = this.form.value.users;
-    this.output.dateSearchPattern = this.form.value.dateSearchPatternGroup.dateSearchPattern;
-    this.output.dateFrom = this.form.value.dateSearchPatternGroup.dateFrom;
-    this.output.dateTo = this.form.value.dateSearchPatternGroup.dateTo;
+  upsert() {
+    const searchCondition: any = {};
+    searchCondition.name = this.form.value.name;
+    searchCondition.author = this.auth.loginUser._id;
+    searchCondition.users = this.form.value.users;
+    searchCondition.dateSearchPattern = this.form.value.dateSearchPatternGroup.dateSearchPattern;
+    searchCondition.dateFrom = this.form.value.dateSearchPatternGroup.dateFrom;
+    searchCondition.dateTo = this.form.value.dateSearchPatternGroup.dateTo;
 
 
     if (this.data.idForUpdate) {
-      this.output._id = this.data.idForUpdate;
+      searchCondition._id = this.data.idForUpdate;
     }
 
-    if (this.output.dateFrom) {
-      this.output.dateFrom = moment(this.output.dateFrom).startOf('date').toString();
+    if (searchCondition.dateFrom) {
+      searchCondition.dateFrom = moment(searchCondition.dateFrom).startOf('date').toString();
     }
-    if (this.output.dateTo) {
-      this.output.dateTo = moment(this.output.dateTo).endOf('date').toString();
+    if (searchCondition.dateTo) {
+      searchCondition.dateTo = moment(searchCondition.dateTo).endOf('date').toString();
+    }
+
+    if (searchCondition._id) {
+      this.searchConditionService
+      .update(searchCondition)
+      .subscribe(res => {
+        this.dialogRef.close(res.obj);
+      });
+    } else {
+      this.searchConditionService
+      .create(searchCondition)
+      .subscribe(res => {
+        this.dialogRef.close(res.obj);
+      });
     }
   }
 

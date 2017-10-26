@@ -141,10 +141,10 @@ export class SearchConditionComponent implements OnInit {
 
 
   // 引数なしの場合は新規登録
-  openSerchConditionDialog(idForUpdate: string = null) {
+  openSerchConditionDialog(conditionForUpdate: SearchConditionModel = null) {
     const dialogRef = this.dialog.open(SearchConditionDialogComponent, {
       width: '810px',
-      data: { idForUpdate: idForUpdate }
+      data: { idForUpdate:  conditionForUpdate && conditionForUpdate._id.toString() }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -152,25 +152,36 @@ export class SearchConditionComponent implements OnInit {
         return;
       }
 
-      if (!result.name && (!result.users || result.users.length < 1)) {
-        // do nothing
-        return;
-      }
-
-      if (result._id) {
-        this.searchConditionService
-        .update(result as SearchConditionModel)
-        .subscribe(res => {
-          this.snackBar.open('お気に入り検索条件を更新しました。', null, {duration: 3000});
+      if (conditionForUpdate) {
+        this.snackBar.open('お気に入り検索条件を更新しました。', null, {duration: 3000});
+        // 選択中の検索条件を更新した時だけ再検索
+        if (conditionForUpdate.checked) {
           this.getSearchCondition();
-        });
+        } else {
+          // 選択中以外の場合は検索条件リストを入れ替えるだけ
+          const conditions = this.seaerchConditions;
+          const len = conditions.length;
+          for (let i = 0; i < len; i++ ) {
+            if (conditions[i]._id === conditionForUpdate._id) {
+              this.searchConditionService
+              .getById( result._id.toString(), true)
+              .subscribe(c => this.seaerchConditions[i] = c);
+              break;
+            }
+          }
+        }
       } else {
-        this.searchConditionService
-        .create(result as SearchConditionModel)
-        .subscribe(res => {
-          this.snackBar.open('お気に入り検索条件を登録しました。', null, {duration: 3000});
+        this.snackBar.open('お気に入り検索条件を登録しました。', null, {duration: 3000});
+
+        // 初登録の場合は再検索
+        if (this.seaerchConditions.length === 0) {
           this.getSearchCondition();
-        });
+        } else {
+          // すでに検索条件がある場合は検索条件リストに追加するだけ
+          this.searchConditionService
+          .getById( result._id.toString(), true)
+          .subscribe(c => this.seaerchConditions.push(c));
+        }
       }
     });
   }

@@ -103,7 +103,7 @@ const isCollectedPattern = (value) => {
   if (value === null || value === undefined) {
     return true;
   }
-  return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value);
+  return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value) !== -1;
 };
 const isExistDateRange = (value, {req}) => {
   if (value === null || value === undefined) {
