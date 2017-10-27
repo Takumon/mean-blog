@@ -222,28 +222,40 @@ router.put('/:_id', [
   }
 
 
-  let model;
-  const searchCondition = req.body;
-  if (searchCondition.dateSearchPattern === COSTOME_RANGE) {
-    if (req.body.dateFrom) {
-      searchCondition.dateFrom = new Date(req.body.dateFrom);
-    }
+  const set: any = {};
+  const unset: any = {};
 
-    if (req.body.dateTo) {
-      searchCondition.dateTo = new Date(req.body.dateTo);
-    }
+  set.name = req.body.name;
+  set.updated = new Date();
 
-    model = {$set: searchCondition };
+  if (req.body.users || req.body.users.length > 0) {
+    set.users = req.body.users;
   } else {
-    // 期間指定からそれ以外のdateSearchPatternに変更した場合dateFromとdateToは削除する
-    model = {
-      $set: searchCondition,
-      $unset: {
-        dateFrom: '',
-        dateTo: '',
-      },
-    };
+    unset.users = '';
   }
+
+  if (['0', '1', '2', '3', '4', '5', '6'].indexOf(req.body.dateSearchPattern) != -1) {
+    unset.dateSearchPattern = '';
+  } else {
+    set.dateSearchPattern = req.body.dateSearchPattern;
+  }
+
+  if (req.body.dateFrom) {
+    set.dateFrom = new Date(req.body.dateFrom);
+  } else {
+    unset.dateFrom = '';
+  }
+
+  if (req.body.dateTo) {
+    set.dateTo = new Date(req.body.dateTo);
+  } else {
+    unset.dateTo = '';
+  }
+
+  const model = {$set: set, $unset: unset };
+
+  console.log(set);
+  console.log(unset);
 
   SearchCondition.findByIdAndUpdate(req.params._id, model, {new: true}, (error, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない

@@ -180,9 +180,9 @@ export class ArticleEditComponent implements OnInit {
     });
   }
 
-  get title() { return this.form.get('title'); }
-  get body() { return this.form.get('body'); }
-  get isMarkdown() { return this.form.get('isMarkdown'); }
+  get title(): FormControl { return this.form.get('title') as FormControl; }
+  get body(): FormControl { return this.form.get('body') as FormControl; }
+  get isMarkdown(): FormControl { return this.form.get('isMarkdown') as FormControl; }
 
   hasError(validationName: string, control: FormControl): Boolean {
     return control.hasError(validationName) && control.dirty;
