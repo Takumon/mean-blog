@@ -77,25 +77,25 @@ export class SearchConditionDialogComponent implements OnInit {
   cerateForm() {
     this.form = this.fb.group({
       name: ['', [
-        // Validators.required,
-        // Validators.maxLength(30),
+        Validators.required,
+        Validators.maxLength(30),
       ]],
       users: this.fb.array([]),
       dateSearchPatternGroup: new FormGroup(
         {
           dateSearchPattern: this.fb.control('', [
-          // Validators.pattern(/[123456]+/)
+          Validators.pattern(/[123456]+/)
           ]),
           dateTo: this.fb.control('', [
-            // MessageService.validation.isDate
+            MessageService.validation.isDate
           ]),
           dateFrom: this.fb.control('', [
-            // MessageService.validation.isDate
+            MessageService.validation.isDate
           ])
         },
         Validators.compose([
-          // MessageService.validation.isExistDateRange,
-          // MessageService.validation.isCollectedDateRange,
+          MessageService.validation.isExistDateRange,
+          MessageService.validation.isCollectedDateRange,
         ])
       )
     });
@@ -242,15 +242,38 @@ export class SearchConditionDialogComponent implements OnInit {
     if (searchCondition._id) {
       this.searchConditionService
       .update(searchCondition)
-      .subscribe(res => {
-        this.dialogRef.close(res.obj);
-      });
+      .subscribe(
+        res => this.dialogRef.close(res.obj),
+        error => this.onError(error)
+      );
     } else {
       this.searchConditionService
       .create(searchCondition)
-      .subscribe(res => {
-        this.dialogRef.close(res.obj);
-      });
+      .subscribe(
+        res => this.dialogRef.close(res.obj),
+        error => this.onError(error)
+      );
+    }
+  }
+
+  private onError(error: any): void {
+    for (const e of error['errors']) {
+      // getterからformControllを取得
+      const param =  ['dateSearchPattern', 'dateTo', 'dateFrom'].indexOf(e.param) === -1
+        ? e.param
+        : 'dateSearchPatternGroup';
+
+      const control: FormControl | FormGroup = this[param];
+      if (!control) {
+        return;
+      }
+
+      const messages = control.getError('remote');
+      if (messages) {
+        messages.push(e.msg);
+      } else {
+        control.setErrors({remote: [e.msg]});
+      }
     }
   }
 

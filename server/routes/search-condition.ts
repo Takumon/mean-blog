@@ -234,7 +234,7 @@ router.put('/:_id', [
     unset.users = '';
   }
 
-  if (['0', '1', '2', '3', '4', '5', '6'].indexOf(req.body.dateSearchPattern) != -1) {
+  if (['0', '1', '2', '3', '4', '5', '6'].indexOf(req.body.dateSearchPattern) === -1) {
     unset.dateSearchPattern = '';
   } else {
     set.dateSearchPattern = req.body.dateSearchPattern;

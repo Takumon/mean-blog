@@ -38,7 +38,8 @@ export class SearchConditionService {
 
     return this.http
       .get(URL, { headers, search })
-      .map((response: Response) => response.json() as Array<SearchConditionModel>);
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   getById(_id: string, withUser: Boolean = false): Observable<SearchConditionModel> {
@@ -52,7 +53,8 @@ export class SearchConditionService {
 
     return this.http
       .get(URL, { headers, search })
-      .map((response: Response) => response.json() as SearchConditionModel);
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   create(user: SearchConditionModel): Observable<any> {
@@ -60,15 +62,17 @@ export class SearchConditionService {
 
     return this.http
       .post(URL, user, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json());
-  }
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
+ }
 
   update(searchCondition: SearchConditionModel) {
     const URL = `${this.baseUrl}/${searchCondition._id}`;
 
     return this.http
       .put(URL, searchCondition, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json());
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   delete(_id: string) {
@@ -76,6 +80,7 @@ export class SearchConditionService {
 
     return this.http
       .delete(URL, this.jwtService.getRequestOptions())
-      .map((response: Response) => response.json());
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 }

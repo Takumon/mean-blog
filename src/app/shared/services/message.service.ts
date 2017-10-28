@@ -117,6 +117,6 @@ export class ErrorStateMatcherContainParentGroup implements ErrorStateMatcher {
   // 親グループも含めてチェック
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control.invalid || control.parent.invalid) && (control.dirty || isSubmitted);
+    return !!(control.invalid || control.parent.invalid) && (control.parent.dirty || isSubmitted);
   }
 }

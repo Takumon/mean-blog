@@ -217,8 +217,8 @@ export class SearchConditionComponent implements OnInit {
     let to;
     if (this.isSpecificDateRange(pattern)) {
       const range = this.dateRange.of(pattern, new Date(condition.dateFrom), new Date(condition.dateTo));
-      from = moment(range.dateFrom).format('YYYY/MM/DD');
-      to = moment(range.dateTo).format('YYYY/MM/DD');
+      from = condition.dateFrom ? moment(range.dateFrom).format('YYYY/MM/DD') : '指定なし';
+      to = condition.dateTo ? moment(range.dateTo).format('YYYY/MM/DD') : '指定なし';
     } else {
       from = moment(this.dateRange.of(pattern).dateFrom).format('YYYY/MM/DD');
       to   = moment(this.dateRange.of(pattern).dateTo  ).format('YYYY/MM/DD');

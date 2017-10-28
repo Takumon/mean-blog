@@ -18,7 +18,7 @@
           type="text"
           class="data"
           formControlName="name"
-          required >
+          >
         <mat-error *ngIf="messageService.hasError(name, 'required')">
           {{ messageService.get('required',['お気に入り検索条件名']) }}
         </mat-error>
@@ -44,6 +44,7 @@
            class="data-wrapper_date-search-pattern__factor">
           <mat-select
             formControlName="dateSearchPattern"
+            [errorStateMatcher]="errorStateMatcherContainParentGroup"
             placeholder="投稿期間">
             <mat-option *ngFor="let key of (dateRangePatterns | keys)" [value]="key">
               {{dateRangePatterns[key]}}
@@ -55,6 +56,17 @@
             matTooltip="投稿期間指定を解除"
             (click)="resetDateSearchPattern()"
             class="clear-icon fa fa-fw fa-times"></i>
+          <mat-error *ngIf="messageService.hasError(dateSearchPatternGroup, 'isExistDateRange')">
+            {{ messageService.get('isExistDateRange',['開始日', '終了日']) }}
+          </mat-error>
+          <mat-error class="mat-error" *ngIf="messageService.hasError(dateSearchPatternGroup, 'isCollectedDateRange')">
+            {{ messageService.get('isCollectedDateRange', ['開始日', '終了日']) }}
+          </mat-error>
+          <mat-error *ngIf="messageService.hasErrorWithoutDirty(dateSearchPatternGroup, 'remote')">
+            <ng-container *ngFor="let msg of dateSearchPatternGroup.getError('remote')">
+              {{msg}}<br>
+            </ng-container>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field
@@ -83,17 +95,6 @@
             </mat-error>
             <mat-error *ngIf="messageService.hasErrorWithoutDirty(dateFrom, 'remote')">
               <ng-container *ngFor="let msg of dateFrom.getError('remote')">
-                {{msg}}<br>
-              </ng-container>
-            </mat-error>
-            <mat-error *ngIf="messageService.hasError(dateSearchPatternGroup, 'isExistDateRange')">
-              {{ messageService.get('isExistDateRange',['開始日', '終了日']) }}
-            </mat-error>
-            <mat-error class="mat-error" *ngIf="messageService.hasError(dateSearchPatternGroup, 'isCollectedDateRange')">
-              {{ messageService.get('isCollectedDateRange', ['開始日', '終了日']) }}
-            </mat-error>
-            <mat-error *ngIf="messageService.hasErrorWithoutDirty(dateSearchPatternGroup, 'remote')">
-              <ng-container *ngFor="let msg of dateSearchPatternGroup.getError('remote')">
                 {{msg}}<br>
               </ng-container>
             </mat-error>
