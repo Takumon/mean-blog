@@ -12,9 +12,9 @@ import {
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
+import { MessageBarService } from '../../shared/services/message-bar.service';
 
 import { UserModel } from '../../users/shared/user.model';
-
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -35,6 +35,7 @@ export class ArticleComponent {
 
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
+    private messageBarService: MessageBarService,
     private commentService: CommentService,
     private articleService: ArticleService,
   ) {
@@ -84,7 +85,7 @@ export class ArticleComponent {
       .subscribe(vote => {
         this.item.vote = vote;
       });
-    });
+    }, this.messageBarService.showValidationError.bind(this.messageBarService));
   }
 
   deleteVote() {
@@ -108,7 +109,7 @@ export class ArticleComponent {
         .subscribe(vote => {
           this.item.vote = vote;
         });
-      });
+      }, this.messageBarService.showValidationError.bind(this.messageBarService));
     });
   }
 

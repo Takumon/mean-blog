@@ -1,0 +1,8 @@
+<ng-container *ngFor="let messageInfo of data.messages; let index = index">
+  <div *ngIf="!messageInfo.hide" class="snackbar__message">
+    <span class="snackbar__message__text">{{messageInfo.message}}</span>
+    <button class="snackbar__message__delete-btn" mat-icon-button (click)="hide(messageInfo)">
+      <i class="fa fa-fw fa-times"></i>
+    </button>
+  </div>
+</ng-container>

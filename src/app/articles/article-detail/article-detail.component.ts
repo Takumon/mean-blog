@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import {
   Component,
   OnInit,
@@ -16,14 +17,13 @@ import {
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-
+import 'rxjs/Rx';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-
+import { MessageBarService } from '../../shared/services/message-bar.service';
 import { UserModel } from '../../users/shared/user.model';
-
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { MarkdownParseService } from '../shared/markdown-parse.service';
 import { ArticleService } from '../shared/article.service';
@@ -48,12 +48,14 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   private activeIndex: number | null = null;
 
   constructor(
+    private sanitized: DomSanitizer,
     public auth: AuthenticationService,
 
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
+    private messageBarService: MessageBarService,
     private routeNamesService: RouteNamesService,
     private markdownParseService: MarkdownParseService,
     private articleService: ArticleService,
@@ -66,7 +68,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   // markdonwテキストが初期化時に
-  // ハッシュタグで指定したhタグまでスクロールする
+  // ハッシュタグで指定したタグまでスクロールする
   ngAfterViewInit(): void {
     this.showToc = this.markdownTexts.changes
       .takeUntil(this.onDestroy)
@@ -121,8 +123,9 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       .subscribe(article => {
         this.snackBar.open('記事を削除しました。', null, {duration: 3000});
         this.router.navigate(['/']);
-      });
+      }, this.messageBarService.showValidationError.bind(this.messageBarService));
     });
+
   }
 
   private registerVote(): void {
@@ -134,19 +137,33 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
           .subscribe(vote => {
             this.article.vote = vote;
           });
-      });
+      }, this.messageBarService.showValidationError.bind(this.messageBarService));
   }
 
   private deleteVote(): void {
-    this.articleService
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'いいね取り消し',
+        message: `いいねを取り消しますか？`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+
+      this.articleService
       .deleteVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
         this.snackBar.open('いいねを取り消しました。', null, {duration: 3000});
         this.articleService.getVoteOne(this.article._id)
-          .subscribe(vote => {
-            this.article.vote = vote;
-          });
-      });
+        .subscribe(vote => {
+          this.article.vote = vote;
+        });
+      }, this.messageBarService.showValidationError.bind(this.messageBarService));
+    });
   }
 
   private containMineVote(votes: Array<UserModel>): boolean {

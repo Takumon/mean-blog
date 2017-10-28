@@ -18,6 +18,7 @@ import { NotCheckedListPipe } from '../shared/pipes/not-checked-list.pipe';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
 import { SharedService } from '../shared/services/shared.service';
 import { MessageService } from '../shared/services/message.service';
+import { MessageBarService } from '../shared/services/message-bar.service';
 import { AuthenticationService } from '../shared/services/authentication.service';
 import { RouteNamesService } from '../shared/services/route-names.service';
 
@@ -84,6 +85,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
   providers: [
     SharedService,
     MessageService,
+    MessageBarService,
     AuthenticationService,
     RouteNamesService,
 

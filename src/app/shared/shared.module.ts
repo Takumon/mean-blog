@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
 import {
   ErrorStateMatcher,
@@ -28,14 +29,18 @@ import {
 
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { ConfirmDialogComponent } from './components/confirm.dialog';
+import { MessageBarComponent } from './components/message-bar.component';
 import { CustomErrorStateMatcher } from './custom-error-state-matcher';
 
 @NgModule({
   declarations: [
     AutofocusDirective,
     ConfirmDialogComponent,
+    MessageBarComponent,
   ],
   imports: [
+    BrowserModule,
+
     MatToolbarModule,
     MatProgressBarModule,
     MatButtonModule,
@@ -62,10 +67,12 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
   ],
   entryComponents: [
     ConfirmDialogComponent,
+    MessageBarComponent,
   ],
   exports: [
     AutofocusDirective,
     ConfirmDialogComponent,
+    MessageBarComponent,
 
     MatToolbarModule,
     MatProgressBarModule,

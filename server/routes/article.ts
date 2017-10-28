@@ -169,6 +169,10 @@ router.post('/', [
   body('title')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['タイトル']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['タイトル', '100'])),
+  body('author')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['投稿者'])),
+  body('author').optional()
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['投稿者'])),
   body('isMarkdown')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
@@ -182,6 +186,7 @@ router.post('/', [
 
   const article = new Article();
   article.title = req.body.title;
+  article.author = req.body.author;
   article.isMarkdown = req.body.isMarkdown;
   article.body = req.body.body;
   article.created = new Date();
@@ -278,7 +283,8 @@ router.post('/:_id/vote', [
   body('voter')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['いいねの投稿者'])),
   body('voter').optional({checkFalsy: true})
-    .not().custom(v.validation.isExistedVote).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['いいね'])),
+    .custom(v.validation.isNotExistedVote).withMessage(v.message(v.MESSAGE_KEY.allready_existed, ['いいね']))
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['いいねの投稿者'])),
 ], (req, res, next) => {
 
   const errors = validationResult(req);

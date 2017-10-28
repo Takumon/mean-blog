@@ -68,16 +68,46 @@ class Validation {
       }).catch(err => Promise.reject(false));
   }
 
+  // 指定したいいねが存在するか（削除用）
   isExistedVote(_idOfVorter: String, {req}): Promise<boolean> {
     return Article
     .findOne({ _id: req.params._id, deleted: { $exists : false }})
     .exec()
     .then(target => {
-      if (target && target.vote && target.vote.length > 0 && target.vote.indexOf(_idOfVorter) !== -1) {
+
+      // 記事が存在しない場合またはいいねが0件の場合はチェックNG
+      if (!target || !target.vote || target.vote.length === 0) {
+        return Promise.reject(false);
+      }
+
+      if (target.vote.indexOf(_idOfVorter) !== -1) {
         // チェックOK
         return Promise.resolve(true);
       }
+
       return Promise.reject(false);
+    }).catch(err => Promise.reject(false));
+  }
+
+  // 指定したいいねが存在していないか（登録用）
+  isNotExistedVote(_idOfVorter: String, {req}): Promise<boolean> {
+    return Article
+    .findOne({ _id: req.params._id, deleted: { $exists : false }})
+    .exec()
+    .then(target => {
+
+      // 記事が存在しない場合またはいいねが0件の場合はチェックOK
+      if (!target || !target.vote || target.vote.length === 0) {
+        return Promise.resolve(true);
+      }
+
+      if (target.vote.indexOf(_idOfVorter) !== -1) {
+        // チェックNG
+        return Promise.reject(false);
+      }
+
+      // チェックOK
+      return Promise.resolve(true);
     }).catch(err => Promise.reject(false));
   }
 

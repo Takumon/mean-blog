@@ -22,11 +22,11 @@ import {
   MatDialog,
 } from '@angular/material';
 
+import { MessageBarService } from '../../shared/services/message-bar.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { MessageService } from '../../shared/services/message.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
@@ -70,6 +70,7 @@ export class ArticleEditComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
 
+    private messageBarService: MessageBarService,
     private articleService: ArticleService,
     private draftService: DraftService,
     private auth: AuthenticationService,
@@ -232,43 +233,8 @@ export class ArticleEditComponent implements OnInit {
           .subscribe(r => {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.goToArticle(resOfModifiedArticle.obj._id);
-          }, (error: any) => {
-            for (const e of error['errors']) {
-              // getterからformControllを取得
-              const control: FormControl | FormGroup = this[e.param];
-              if (!control) {
-                return;
-              }
-
-              const messages = control.getError('remote');
-              if (messages) {
-                messages.push(e.msg);
-              } else {
-                control.setErrors({remote: [e.msg]});
-              }
-            }
-
-          });
-
-
-
-        }, (error: any) => {
-          for (const e of error['errors']) {
-            // getterからformControllを取得
-            const control: FormControl | FormGroup = this[e.param];
-            if (!control) {
-              return;
-            }
-
-            const messages = control.getError('remote');
-            if (messages) {
-              messages.push(e.msg);
-            } else {
-              control.setErrors({remote: [e.msg]});
-            }
-          }
-
-        });
+          }, this.messageBarService.showValidationError.bind(this.messageBarService));
+        }, this.onError.bind(this));
       } else {
         // 未公開の場合は記事を登録
         article.author = this.previousDraft.author;
@@ -281,24 +247,8 @@ export class ArticleEditComponent implements OnInit {
           .subscribe(r => {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
             this.goToArticle(resOfModifiedArticle.obj._id);
-          }, (error: any) => {
-            for (const e of error['errors']) {
-              // getterからformControllを取得
-              const control: FormControl | FormGroup = this[e.param];
-              if (!control) {
-                return;
-              }
-
-              const messages = control.getError('remote');
-              if (messages) {
-                messages.push(e.msg);
-              } else {
-                control.setErrors({remote: [e.msg]});
-              }
-            }
-
-          });
-        });
+          }, this.messageBarService.showValidationError.bind(this.messageBarService));
+        }, this.onError.bind(this));
       }
 
     } else {
@@ -311,23 +261,7 @@ export class ArticleEditComponent implements OnInit {
           .subscribe((res: any) => {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.goToArticle(res.obj._id);
-          }, (error: any) => {
-            for (const e of error['errors']) {
-              // getterからformControllを取得
-              const control: FormControl | FormGroup = this[e.param];
-              if (!control) {
-                return;
-              }
-
-              const messages = control.getError('remote');
-              if (messages) {
-                messages.push(e.msg);
-              } else {
-                control.setErrors({remote: [e.msg]});
-              }
-            }
-
-          });
+          }, (error: any) => this.onError(error));
       } else {
         // 記事登録
         article.author = this.auth.loginUser._id;
@@ -337,24 +271,32 @@ export class ArticleEditComponent implements OnInit {
           .subscribe((res: any) => {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
             this.goToArticle(res.obj._id);
-          }, (error: any) => {
-            for (const e of error['errors']) {
-              // getterからformControllを取得
-              const control: FormControl | FormGroup = this[e.param];
-              if (!control) {
-                return;
-              }
-
-              const messages = control.getError('remote');
-              if (messages) {
-                messages.push(e.msg);
-              } else {
-                control.setErrors({remote: [e.msg]});
-              }
-            }
-
-          });
+          }, this.onError.bind(this));
       }
+    }
+  }
+
+  onError(error: any): void {
+    const noControlErrors = [];
+    for (const e of error['errors']) {
+      // getterからformControllを取得
+      const control: FormControl | FormGroup = this[e.param];
+      if (!control) {
+        // 該当するfromがないものはスナックバーで表示
+        noControlErrors.push(e);
+        continue;
+      }
+
+      const messages = control.getError('remote');
+      if (messages) {
+        messages.push(e.msg);
+      } else {
+        control.setErrors({remote: [e.msg]});
+      }
+    }
+
+    if (noControlErrors.length > 0) {
+      this.messageBarService.showValidationError({errors: noControlErrors});
     }
   }
 

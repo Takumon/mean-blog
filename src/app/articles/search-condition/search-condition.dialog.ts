@@ -244,15 +244,13 @@ export class SearchConditionDialogComponent implements OnInit {
       .update(searchCondition)
       .subscribe(
         res => this.dialogRef.close(res.obj),
-        error => this.onError(error)
-      );
+        this.onError.bind(this));
     } else {
       this.searchConditionService
       .create(searchCondition)
       .subscribe(
         res => this.dialogRef.close(res.obj),
-        error => this.onError(error)
-      );
+        this.onError.bind(this));
     }
   }
 
@@ -265,7 +263,7 @@ export class SearchConditionDialogComponent implements OnInit {
 
       const control: FormControl | FormGroup = this[param];
       if (!control) {
-        return;
+        continue;
       }
 
       const messages = control.getError('remote');

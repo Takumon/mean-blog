@@ -1,0 +1,21 @@
+
+.snackbar {
+  &__validation {
+    background: red !important;
+  }
+  &__message {
+    display: flex;
+    align-items: center;
+
+    &__text {
+      flex: 1 1 auto;
+    }
+
+    &__delete-btn {
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
