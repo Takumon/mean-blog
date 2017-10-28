@@ -15,9 +15,9 @@ const authenticateRouter: Router = Router();
 
 authenticateRouter.post('/login', [
   body('userId')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['ユーザID'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['ユーザID'])),
   body('password')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['パスワード'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['パスワード'])),
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -35,12 +35,12 @@ authenticateRouter.post('/login', [
 
     if (!user) {
       console.log('ユーザが存在しません');
-      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE.login_error)}] });
+      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE_KEY.login_error)}] });
     }
 
     if (!PasswordManager.compare(reqUser.password, user.password)) {
       console.log('パスワードが正しくありません');
-      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE.login_error)}] });
+      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE_KEY.login_error)}] });
     }
 
     const token = jwt.sign({ _id: user._id }, SECRET, {
@@ -74,17 +74,17 @@ function isAllreadyUsed(userId: String): Promise<boolean> {
 
 authenticateRouter.post('/register', [
   body('userId')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['ユーザID']))
-    .isLength({ min: 6 }).withMessage(v.message(v.MESSAGE.minlength, ['ユーザID', '6']))
-    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE.maxlength, ['ユーザID', '30']))
-    .matches(v.PATTERN.HANKAKUEISU).withMessage(v.message(v.MESSAGE.pattern_hankakueisuji, ['ユーザID']))
-    .custom(isAllreadyUsed).withMessage(v.message(v.MESSAGE.allready_existed, ['ユーザID'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['ユーザID']))
+    .isLength({ min: 6 }).withMessage(v.message(v.MESSAGE_KEY.minlength, ['ユーザID', '6']))
+    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['ユーザID', '30']))
+    .matches(v.PATTERN.HANKAKUEISU).withMessage(v.message(v.MESSAGE_KEY.pattern_hankakueisuji, ['ユーザID']))
+    .custom(isAllreadyUsed).withMessage(v.message(v.MESSAGE_KEY.allready_existed, ['ユーザID'])),
   body('password')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['パスワード']))
-    .matches(v.PATTERN.PASSWORD).withMessage(v.message(v.MESSAGE.pattern_password, ['パスワード'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['パスワード']))
+    .matches(v.PATTERN.PASSWORD).withMessage(v.message(v.MESSAGE_KEY.pattern_password, ['パスワード'])),
   body('confirmPassword')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['確認用パスワード']))
-    .custom((value, {req}) => value === req.body.password).withMessage(v.message(v.MESSAGE.different, ['パスワード', '確認用パスワード'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['確認用パスワード']))
+    .custom((value, {req}) => value === req.body.password).withMessage(v.message(v.MESSAGE_KEY.different, ['パスワード', '確認用パスワード'])),
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

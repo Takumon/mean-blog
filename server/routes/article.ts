@@ -19,7 +19,7 @@ router.get('/', (req, res, next) => {
   getCondition(req, function(error, condition) {
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
@@ -28,7 +28,7 @@ router.get('/', (req, res, next) => {
     CommentTree.getArticlesWithCommentOfTree(condition, withUser, (err, doc) => {
       if (err) {
         return res.status(500).json({
-          title: v.MESSAGE.default,
+          title: v.MESSAGE_KEY.default,
           error: err.message
         });
       }
@@ -148,7 +148,7 @@ router.get('/:_id', (req, res, next) => {
   function cbFind(err, doc): any {
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -167,13 +167,13 @@ router.get('/:_id', (req, res, next) => {
 // 登録
 router.post('/', [
   body('title')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['タイトル']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['タイトル', '100'])),
   body('isMarkdown')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['記事形式'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['本文']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['本文', '10000'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -189,7 +189,7 @@ router.post('/', [
   article.save((err, target) => {
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -206,15 +206,15 @@ router.post('/', [
 router.put('/:_id', [
   // 形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
+    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['記事'])),
   body('title')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['タイトル']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['タイトル', '100'])),
   body('isMarkdown')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['記事形式'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['本文']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['本文', '10000'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -230,7 +230,7 @@ router.put('/:_id', [
 
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -247,7 +247,7 @@ router.put('/:_id', [
 router.delete('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE.not_existed, ['記事'])),
+    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['記事'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -260,7 +260,7 @@ router.delete('/:_id', [
 
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -274,7 +274,18 @@ router.delete('/:_id', [
 
 
 // いいね登録
-router.post('/:_id/vote', (req, res, next) => {
+router.post('/:_id/vote', [
+  body('voter')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['いいねの投稿者'])),
+  body('voter').optional({checkFalsy: true})
+    .not().custom(v.validation.isExistedVote).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['いいね'])),
+], (req, res, next) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+  return res.status(400).json({ errors: errors.array() });
+  }
+
   const _idOfUser = req.body.voter;
 
   Article.update({
@@ -285,7 +296,7 @@ router.post('/:_id/vote', (req, res, next) => {
 
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -298,7 +309,15 @@ router.post('/:_id/vote', (req, res, next) => {
 });
 
 // いいね削除
-router.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
+router.delete('/:_id/vote/:_idOfVorter', [
+  param('_idOfVorter')
+    .custom(v.validation.isExistedVote).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['いいね'])),
+], (req, res, next) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
   Article.update({
     _id: req.params._id
@@ -308,7 +327,7 @@ router.delete('/:_id/vote/:_idOfVorter', (req, res, next) => {
 
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -337,7 +356,7 @@ router.get('/:_id/vote', (req, res, next) => {
   function cbFind(err, doc): any {
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }

@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
   const cb = (error, doc) => {
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
@@ -65,7 +65,7 @@ router.get('/:_id', (req, res, next) => {
   const cb = (error, doc) => {
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
@@ -145,22 +145,22 @@ const isCollectedDateRange = (value, {req}) => {
 // 登録
 router.post('/', [
   body('name')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['お気に入り検索条件名']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['お気に入り検索条件名', '100'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['お気に入り検索条件名']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['お気に入り検索条件名', '100'])),
   body('author')
-    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
   body('users')
-    .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
-    .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
+    .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['検索条件のユーザ']))
+    .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
     .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
     .custom(isExistDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください')
     // TODO 相関チェックの場所
-    .custom(isCollectedDateRange).withMessage(v.message(v.MESSAGE.date_range, ['終了日', '開始日'])),
+    .custom(isCollectedDateRange).withMessage(v.message(v.MESSAGE_KEY.date_range, ['終了日', '開始日'])),
   body('dateFrom').optional({checkFalsy: true})
-    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['開始日'])),
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE_KEY.pattern_date, ['開始日'])),
   body('dateTo').optional({checkFalsy: true})
-    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['終了日'])),
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE_KEY.pattern_date, ['終了日'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -181,7 +181,7 @@ router.post('/', [
   searchCondition.save((error, target) => {
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
@@ -197,24 +197,24 @@ router.post('/', [
 // 更新（差分更新）
 router.put('/:_id', [
   param('_id')
-    .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE.not_existed, ['お気に入り検索条件'])),
+    .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['お気に入り検索条件'])),
     body('name')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['お気に入り検索条件名']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['お気に入り検索条件名', '100'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['お気に入り検索条件名']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['お気に入り検索条件名', '100'])),
   body('author')
-    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
   body('users')
-    .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE.not_unique, ['検索条件のユーザ']))
-    .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE.not_existed, ['検索条件のユーザ'])),
+    .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['検索条件のユーザ']))
+    .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
     .custom(isCollectedPattern).withMessage('検索条件の投稿日の指定が正しくありません')
     .custom(isExistDateRange).withMessage('検索条件の投稿日を期間指定にする場合、開始日か終了日を指定してください')
     // TODO 相関チェックの場所
-    .custom(isCollectedDateRange).withMessage(v.message(v.MESSAGE.date_range, ['終了日', '開始日'])),
+    .custom(isCollectedDateRange).withMessage(v.message(v.MESSAGE_KEY.date_range, ['終了日', '開始日'])),
   body('dateFrom').optional({checkFalsy: true})
-    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['開始日'])),
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE_KEY.pattern_date, ['開始日'])),
   body('dateTo').optional({checkFalsy: true})
-    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE.pattern_date, ['終了日'])),
+    .custom(v.validation.isDate).withMessage(v.message(v.MESSAGE_KEY.pattern_date, ['終了日'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -262,7 +262,7 @@ router.put('/:_id', [
 
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
@@ -278,7 +278,7 @@ router.put('/:_id', [
 // 削除
 router.delete('/:_id', [
   param('_id')
-    .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE.not_existed, ['お気に入り検索条件'])),
+    .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['お気に入り検索条件'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -289,7 +289,7 @@ router.delete('/:_id', [
 
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }

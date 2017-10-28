@@ -19,7 +19,7 @@ userRouter.get('/', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -50,7 +50,7 @@ userRouter.get('/:userId', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -108,22 +108,22 @@ function isNotDeleted(_id: String): Promise<boolean> {
 userRouter.put('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(isNotExisted).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(isNotExisted).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
   body('email').optional({ checkFalsy : true})
-    .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE.maxlength, ['Eメール', '50']))
-    .isEmail().withMessage(v.message(v.MESSAGE.pattern_email, ['Eメール'])),
+    .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['Eメール', '50']))
+    .isEmail().withMessage(v.message(v.MESSAGE_KEY.pattern_email, ['Eメール'])),
   body('firstName').optional({ checkFalsy : true})
-    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE.maxlength, ['氏', '30'])),
+    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['氏', '30'])),
   body('lastName').optional({ checkFalsy : true})
-    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE.maxlength, ['名', '30'])),
+    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
   body('blogTitle').optional({ checkFalsy : true})
-    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE.maxlength, ['名', '30'])),
+    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
   body('userDescription').optional({ checkFalsy : true})
-    .isLength({ max: 400 }).withMessage(v.message(v.MESSAGE.maxlength, ['名', '30'])),
+    .isLength({ max: 400 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
   body('icon').optional({ checkFalsy : true})
-    .isBase64().withMessage(v.message(v.MESSAGE.pattern, ['アイコン画像', '画像ファイル'])),
+    .isBase64().withMessage(v.message(v.MESSAGE_KEY.pattern, ['アイコン画像', '画像ファイル'])),
   body('blogTitleBackground').optional({ checkFalsy : true})
-    .isBase64().withMessage(v.message(v.MESSAGE.pattern, ['ブログタイトル画像', '画像ファイル'])),
+    .isBase64().withMessage(v.message(v.MESSAGE_KEY.pattern, ['ブログタイトル画像', '画像ファイル'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -140,7 +140,7 @@ userRouter.put('/:_id', [
 
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
@@ -157,7 +157,7 @@ userRouter.put('/:_id', [
 userRouter.delete('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(isNotDeleted).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(isNotDeleted).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -169,7 +169,7 @@ userRouter.delete('/:_id', [
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
     if (err) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }

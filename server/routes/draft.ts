@@ -82,15 +82,15 @@ router.get('/:_id', (req, res, next) => {
 // 登録
 router.post('/', [
   body('title')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['タイトル']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['タイトル', '100'])),
   body('isMarkdown')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['記事形式'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['本文']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['本文', '10000'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
   body('author')
-    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE.not_existed, ['ユーザ'])),
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
   body('articleId')
     .custom(v.validation.isArticleAuthorEqualsAuthor).withMessage('投稿者が記事のユーザと一致しません'),
 ], (req, res, next) => {
@@ -122,15 +122,15 @@ router.post('/', [
 router.put('/:_id', [
   // 形式チェックは行わず存在するかだけを確認する
   param('_id')
-    .custom(v.validation.isExistedDraft).withMessage(v.message(v.MESSAGE.not_existed, ['下書き'])),
+    .custom(v.validation.isExistedDraft).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['下書き'])),
   body('title')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['タイトル']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['タイトル', '100'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['タイトル']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['タイトル', '100'])),
   body('isMarkdown')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['記事形式'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
-    .not().isEmpty().withMessage(v.message(v.MESSAGE.required, ['本文']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE.maxlength, ['本文', '10000'])),
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
+    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -150,7 +150,7 @@ router.put('/:_id', [
 
     if (error) {
       return res.status(500).json({
-        title: v.MESSAGE.default,
+        title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
@@ -166,7 +166,7 @@ router.put('/:_id', [
 // 物理削除
 router.delete('/:_id', [
   param('_id')
-    .custom(v.validation.isExistedDraft).withMessage(v.message(v.MESSAGE.not_existed, ['下書き'])),
+    .custom(v.validation.isExistedDraft).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['下書き'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
