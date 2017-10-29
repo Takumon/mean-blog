@@ -6,14 +6,14 @@
   top: 24px;
   margin-left: 50px;
   bottom: 48px;
-  padding-left: 4px;  
+  padding-left: 4px;
   padding-bottom: 42px;
-  color: #767575;  
+  color: #767575;
   font-size: 13px;
   font-weight: bold;
   overflow-y: scroll;
   max-height: 80vh;
-  
+
   &__inner {
     overflow-y: visible;
     border-left: 4px solid #A9A9A9;
@@ -46,6 +46,7 @@
 
   &__head {
     position: relative;
+    margin-left: -8px;
 
     &__link {
       padding: 2px 4px;
@@ -56,17 +57,17 @@
       display: block;
       text-decoration: none;
       color: inherit;
-      
+
       &:hover {
         color: #383838;
         background: #E8E8E8;
 
         &:before {
           content: "";
-          left: -8px;
+          left: 0;
           top: 0;
           bottom: 0;
-          background: #717171;
+          background: #383838;
           position: absolute;
           width: 4px;
         }
@@ -78,7 +79,7 @@
 
         &:before {
           content: "";
-          left: -8px;
+          left: 0;
           top: 0;
           bottom: 0;
           background: #ec407a;
@@ -86,7 +87,7 @@
           width: 4px;
         }
       }
-  
+
       &:focus {
         outline: 0;
       }
