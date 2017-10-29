@@ -31,6 +31,8 @@ export class UserComponent implements OnInit, OnDestroy {
   public isMine: Boolean;
   public editMode: Boolean = false;
   public form: FormGroup;
+  /** routerLink変更時にUI(アクティブなタブ)をリフレッシュするためのダミーオブジェクト */
+  public routerOptions: any = { exact: true };
 
   private onDestroy = new Subject();
   private param_userId: string;
@@ -66,6 +68,13 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userService.getById(userId).subscribe(user => {
       this.isMine = user._id === this.auth.loginUser._id;
       this.user = user as UserModel;
+      // ユーザ変更後、タブのrouterLinkが変わるので
+      // それに合わせてアクティブタブをリフレッシュするため
+      // routerOptionsの値を変更してリフレッシュをトリガーする
+      // あえてオブジェクトの参照を変えるためオブジェクトを代入している
+      this.routerOptions = {
+        exact : true
+      };
     });
   }
 
