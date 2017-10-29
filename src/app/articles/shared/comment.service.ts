@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams } from '@angular/http';
-import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
@@ -32,10 +31,7 @@ export class CommentService {
 
     return this.http
       .get(URL, { headers, search })
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
+      .map((res: Response) => res.json())
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
@@ -49,13 +45,8 @@ export class CommentService {
 
     return this.http
       .post(URL, comment, options)
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
-      .catch((error: Response) => {
-        return Observable.throw(error.json());
-      });
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
   // 必ず差分更新とする
@@ -69,13 +60,9 @@ export class CommentService {
 
     return this.http
       .put(URL, {$set: comment}, options)
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
-      .catch((error: Response) => {
-        return Observable.throw(error.json());
-      });
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
+
   }
 
   delete(commentId: String): Observable<any> {
@@ -83,13 +70,8 @@ export class CommentService {
 
     return this.http
       .delete(URL, this.jwtService.getRequestOptions())
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
-      .catch((error: Response) => {
-        return Observable.throw(error.json());
-      });
+      .map((res: Response) => res.json())
+      .catch((error: Response) => Observable.throw(error.json()));
   }
 
 
@@ -104,10 +86,7 @@ export class CommentService {
 
     return this.http
       .get(URL, { headers, search })
-      .map((response: Response) => {
-        const result = response.json();
-        return result;
-      })
+      .map((res: Response) => res.json())
       .catch((error: Response) => Observable.throw(error.json()));
   }
 }

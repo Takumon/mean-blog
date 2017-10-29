@@ -234,7 +234,7 @@ export class ArticleEditComponent implements OnInit {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.goToArticle(resOfModifiedArticle.obj._id);
           }, this.messageBarService.showValidationError.bind(this.messageBarService));
-        }, this.onError.bind(this));
+        }, this.onValidationError.bind(this));
       } else {
         // 未公開の場合は記事を登録
         article.author = this.previousDraft.author;
@@ -248,7 +248,7 @@ export class ArticleEditComponent implements OnInit {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
             this.goToArticle(resOfModifiedArticle.obj._id);
           }, this.messageBarService.showValidationError.bind(this.messageBarService));
-        }, this.onError.bind(this));
+        }, this.onValidationError.bind(this));
       }
 
     } else {
@@ -261,7 +261,7 @@ export class ArticleEditComponent implements OnInit {
           .subscribe((res: any) => {
             this.snackBar.open('記事を更新しました。', null, {duration: 3000});
             this.goToArticle(res.obj._id);
-          }, (error: any) => this.onError(error));
+          }, this.onValidationError.bind(this));
       } else {
         // 記事登録
         article.author = this.auth.loginUser._id;
@@ -271,12 +271,17 @@ export class ArticleEditComponent implements OnInit {
           .subscribe((res: any) => {
             this.snackBar.open('記事を登録しました。', null, {duration: 3000});
             this.goToArticle(res.obj._id);
-          }, this.onError.bind(this));
+          }, this.onValidationError.bind(this));
       }
     }
   }
 
-  onError(error: any): void {
+  /**
+   * 入力チェック時の共通エラーハンドリング用関数(<b>bindして使用する<b>)<br>
+   * bind先は入力チェックkeyと同名のコントローラのgetterを定義すること<br>
+   * getterで入力チェックに対応するコントローラが取得できない場合はsnackBarでエラーメッセージを表示する
+   */
+  onValidationError(error: any): void {
     const noControlErrors = [];
     for (const e of error['errors']) {
       // getterからformControllを取得

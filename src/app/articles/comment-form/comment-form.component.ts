@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
+import { MessageBarService } from '../../shared/services/message-bar.service';
 
 import { CommentModel } from '../shared/comment.model';
 import { ArticleService } from '../shared/article.service';
@@ -38,10 +39,11 @@ export class CommentFormComponent implements OnInit {
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
 
+    public messageService: MessageService,
+    private messageBarService: MessageBarService,
     private commentService: CommentService,
     private articleService: ArticleService,
     public auth: AuthenticationService,
-    public messageService: MessageService,
   ) {
   }
 
@@ -54,17 +56,18 @@ export class CommentFormComponent implements OnInit {
 
   createForm() {
     this.form = this.fb.group({
-      commentText: ['', [
-        Validators.required,
+      text: ['', [
+        // Validators.required,
+        // Validators.maxLength(400),
       ]],
     });
 
     this.form.patchValue({
-      commentText: this.commentModel.text
+      text: this.commentModel.text
     });
   }
 
-  get commentText(): FormControl { return this.form.get('commentText') as FormControl; }
+  get text(): FormControl { return this.form.get('text') as FormControl; }
 
   hasError(validationName: string, control: FormControl): Boolean {
     return control.hasError(validationName) && control.dirty;
@@ -79,30 +82,50 @@ export class CommentFormComponent implements OnInit {
       return false;
     }
 
-    this.commentModel.text = form.value['commentText'];
+    this.commentModel.text = form.value['text'];
 
     if (this.isRegister) {
       this.commentService
         .register(this.commentModel)
         .subscribe(res => {
-          // TODO エラー処理
-
           this.snackBar.open('コメントを追加しました。', null, {duration: 3000});
           this.complete.emit();
           this.form.reset();
-        });
+        }, this.onValidationError.bind(this));
     } else {
       this.commentService
         .update(this.commentModel)
         .subscribe(res => {
-          // TODO エラー処理
-
           this.snackBar.open('コメントを更新しました。', null, {duration: 3000});
           this.complete.emit();
           this.form.reset();
-        });
+        }, this.onValidationError.bind(this));
+      }
+  }
+
+  // TODO 共通化できるか検討
+  private onValidationError(error: any): void {
+    const noControlErrors = [];
+
+    for (const e of error['errors']) {
+      const control: FormControl | FormGroup = this[e.param];
+      if (!control) {
+        // 該当するfromがないものはスナックバーで表示
+        noControlErrors.push(e);
+        continue;
+      }
+
+      const messages = control.getError('remote');
+      if (messages) {
+        messages.push(e.msg);
+      } else {
+        control.setErrors({remote: [e.msg]});
+      }
     }
 
+    if (noControlErrors.length > 0) {
+      this.messageBarService.showValidationError({errors: noControlErrors});
+    }
   }
 
   onCancel(): void {

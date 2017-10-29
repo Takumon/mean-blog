@@ -4,6 +4,15 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
+  FormGroup,
+  FormGroupDirective,
+  FormControl,
+  NgForm,
+  ValidatorFn,
+  ValidationErrors,
+  AbstractControl,
+} from '@angular/forms';
+import {
   MatSnackBar,
   MatDialog,
   MatInputModule,
@@ -29,6 +38,7 @@ import { CommentModel } from '../shared/comment.model';
 export class ArticleComponent {
   @Input() item: ArticleWithUserModel;
 
+
   constructor(
     public auth: AuthenticationService,
     public messageService: MessageService,
@@ -39,10 +49,6 @@ export class ArticleComponent {
     private commentService: CommentService,
     private articleService: ArticleService,
   ) {
-  }
-
-  refreshComments(event: any) {
-    this.item.comments = event.comments;
   }
 
   toggleDetail() {
@@ -62,17 +68,14 @@ export class ArticleComponent {
     this.item.newComment = null;
   }
 
-  registerComment(newComment: CommentModel) {
+
+  refreshComments() {
+    this.item.newComment = null;
+
     this.commentService
-    .register(newComment)
-    .subscribe(res => {
-      this.commentService
-      .getOfArticle(newComment.articleId, true)
-      .subscribe(comments => {
-        this.snackBar.open('コメントしました。', null, {duration: 3000});
-        this.item.newComment = null;
-        this.item.comments = comments;
-      });
+    .getOfArticle(this.item._id, true)
+    .subscribe(comments => {
+      this.item.comments = comments;
     });
   }
 
@@ -85,8 +88,9 @@ export class ArticleComponent {
       .subscribe(vote => {
         this.item.vote = vote;
       });
-    }, this.messageBarService.showValidationError.bind(this.messageBarService));
-  }
+    }, this.onValidationError.bind(this));
+}
+
 
   deleteVote() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -109,9 +113,39 @@ export class ArticleComponent {
         .subscribe(vote => {
           this.item.vote = vote;
         });
-      }, this.messageBarService.showValidationError.bind(this.messageBarService));
+      }, this.onValidationError.bind(this));
     });
   }
+
+  /**
+   * 入力チェック時の共通エラーハンドリング用関数(<b>bindして使用する<b>)<br>
+   * bind先は入力チェックkeyと同名のコントローラのgetterを定義すること<br>
+   * getterで入力チェックに対応するコントローラが取得できない場合はsnackBarでエラーメッセージを表示する
+   */
+  onValidationError(error: any): void {
+    const noControlErrors = [];
+    for (const e of error['errors']) {
+      // getterからformControllを取得
+      const control: FormControl | FormGroup = this[e.param];
+      if (!control) {
+        // 該当するfromがないものはスナックバーで表示
+        noControlErrors.push(e);
+        continue;
+      }
+
+      const messages = control.getError('remote');
+      if (messages) {
+        messages.push(e.msg);
+      } else {
+        control.setErrors({remote: [e.msg]});
+      }
+    }
+
+    if (noControlErrors.length > 0) {
+      this.messageBarService.showValidationError({errors: noControlErrors});
+    }
+  }
+
 
   containMineVote(): boolean {
     if (!this.item.vote) {

@@ -12,6 +12,7 @@ import {
  ErrorStateMatcher
 } from '@angular/material';
 
+import { MessageBarService } from './message-bar.service';
 
 @Injectable()
 export class MessageService {
@@ -30,7 +31,6 @@ export class MessageService {
     isDate: '{0}は日付形式で入力してください',
     isExistDateRange: '期間指定の場合は少なくとも{0}か{1}のどちらかを指定してください',
     isCollectedDateRange: '{0}は{1}以前を指定してください',
-
   };
 
   static validation = {
@@ -87,6 +87,7 @@ export class MessageService {
 
   };
 
+
   get(validationName: string, replacements: Array<string> = []): string {
     let messageTemplate = MessageService.validationMessages[validationName];
     messageTemplate = messageTemplate || validationName;
@@ -109,7 +110,6 @@ export class MessageService {
   hasErrorWithoutDirty(control: FormControl | FormGroup, validationName: string): Boolean {
     return control.hasError(validationName);
   }
-
 }
 
 @Injectable()

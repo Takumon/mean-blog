@@ -2,6 +2,7 @@
 import { Draft } from '../models/draft';
 import { User } from '../models/user';
 import { Article } from '../models/article';
+import { Comment } from '../models/comment';
 import { SearchCondition } from '../models/search-condition';
 
 class Validation {
@@ -55,6 +56,7 @@ class Validation {
       }).catch(err => Promise.reject(false));
   }
 
+  /** 記事（論理削除されていない記事）が存在するか */
   isExistedArticle(_id: String): Promise<boolean> {
     return Article
       .findOne({ _id: _id, deleted: { $exists : false }})
@@ -68,7 +70,22 @@ class Validation {
       }).catch(err => Promise.reject(false));
   }
 
-  // 指定したいいねが存在するか（削除用）
+  /** コメント（論理削除されていないコメント）が存在するか */
+  isExistedComment(_id: String): Promise<boolean> {
+    return Comment
+      .findOne({ _id: _id, deleted: { $exists : false }})
+      .exec()
+      .then(target => {
+        if (target) {
+          // チェックOK
+          return Promise.resolve(true);
+        }
+        return Promise.reject(false);
+      }).catch(err => Promise.reject(false));
+  }
+
+
+  // いいねが存在するか（削除用）
   isExistedVote(_idOfVorter: String, {req}): Promise<boolean> {
     return Article
     .findOne({ _id: req.params._id, deleted: { $exists : false }})
@@ -172,6 +189,7 @@ const MESSAGE_KEY = {
   allready_deleted: '指定した{0}は既に削除されています',
   not_existed: '指定した{0}は存在しません',
   not_unique: '指定した{0}は重複が存在します',
+  not_specified: '{0}が指定されていません',
   different: '{0}と{1}が一致しません',
   login_error: 'ユーザIDかパスワードが正しくありません'
 };

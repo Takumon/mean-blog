@@ -1,24 +1,29 @@
 import * as http from 'http';
 import { Router, Response } from 'express';
 import * as mongoose from 'mongoose';
+import { check, oneOf, body, param, validationResult } from 'express-validator/check';
+
+import { validateHelper as v } from '../helpers/validate-helper';
 import { Comment } from '../models/comment';
 import { CommentTree } from '../helpers/comment-tree';
 import { User } from '../models/user';
 
-const commentRouter: Router = Router();
 
+const MODEL_NAME = 'コメント';
+const router: Router = Router();
 
 // 複数件検索
-commentRouter.get('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
 
   getCondition(req, function(error, condition) {
     const cb = (err, doc) => {
-      if (err) {
+      if (error) {
         return res.status(500).json({
-            title: 'エラーが発生しました。',
-            error: err.message
+          title: v.MESSAGE_KEY.default,
+          error: error.message
         });
       }
+
       return res.status(200).json(doc);
     };
 
@@ -42,20 +47,12 @@ commentRouter.get('/', (req, res, next) => {
         Comment
         .find(condition)
         .populate('user', '-password')
-        // .populate({
-        //   path: 'articleId',
-        //   populate: {
-        //     path: 'author',
-        //     select: '-password',
-        //   }
-        // })
         .exec(cb);
       }
     } else {
       if (withArticle) {
         Comment
         .find(condition)
-        // .populate('user', '-password')
         .populate({
           path: 'articleId',
           populate: {
@@ -67,14 +64,6 @@ commentRouter.get('/', (req, res, next) => {
       } else {
         Comment
         .find(condition)
-        // .populate('user', '-password')
-        // .populate({
-        //   path: 'articleId',
-        //   populate: {
-        //     path: 'author',
-        //     select: '-password',
-        //   }
-        // })
         .exec(cb);
       }
     }
@@ -143,74 +132,102 @@ function getCondition(req: any, cb: Function): void {
 
 
 // 登録
-commentRouter.post('/', (req, res, next) => {
+router.post('/', [
+  body('articleId')
+    .exists().withMessage(v.message(v.MESSAGE_KEY.not_specified, ['コメント先の記事'])),
+  body('articleId').optional()
+    .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント先の記事'])),
+  body('parentId').optional()
+    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['返信先のコメント'])),
+  body('text')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['コメント本文'])),
+  body('text').optional()
+    .isLength({ max: 400 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['コメント本文', '400'])),
+  body('user')
+    .exists().withMessage(v.message(v.MESSAGE_KEY.not_specified, ['コメント投稿者'])),
+  body('user').optional()
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント投稿者'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const comment = new Comment(req.body);
 
-  comment.save((err, result) => {
+  comment.save((err, target) => {
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE_KEY.default,
+        error: err.message
       });
     }
 
     return res.status(200).json({
-      message: 'コメントを登録しました。',
-      obj: result
+      message: `${MODEL_NAME}を登録しました。`,
+      obj: target
     });
   });
 });
 
 // 更新（差分更新）
-commentRouter.put('/:commentId', (req, res, next) => {
-  const comment = req.body;
+router.put('/:_id', [
+  param('_id')
+    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['更新しようとしたコメント'])),
+  body('text')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント本文'])),
+  body('text').optional()
+    .isLength({ max: 400 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['コメント本文', '400'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const comment: any = {};
+  comment.text = req.body.text;
   comment.updated = new Date();
 
-  Comment.update({
-    _id: req.params.commentId
-  }, {$set: comment}, (err, result) => {
+  Comment.findByIdAndUpdate(req.params._id, {$set: comment }, {new: true}, (err, target) => {
+    // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE_KEY.default,
+        error: err.message
       });
     }
 
     return res.status(200).json({
-      message: 'コメントを更新しました。',
-      obj: result
+      message: `${MODEL_NAME}を更新しました。`,
+      obj: target
     });
   });
 });
 
 // 論理削除
-commentRouter.delete('/:commentId', (req, res, next) => {
-  Comment.findOne({ _id: req.params.commentId }, (err, model) => {
+router.delete('/:_id', [
+  param('_id')
+    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['削除しようとしたコメント'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const sysdate = new Date();
+  Comment.findByIdAndUpdate(req.params._id, {$set: {updated: sysdate, deleted: sysdate }}, {new: true}, (err, target) => {
+    // 削除対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (err) {
       return res.status(500).json({
-        title: '削除しようとしたコメント(_id=${req.params.id})が見つかりませんでした。',
+        title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
-    const sysdate = new Date();
-    model.update({
-      $set: {
-        updated: sysdate,
-        deleted: sysdate,
-      }
-    }, err2 => {
-      if (err2) {
-        return res.status(500).json({
-            title: 'エラーが発生しました。',
-            error: err.message
-        });
-      }
 
-      return res.status(200).json({
-        message: 'コメントを削除しました。',
-      });
+    return res.status(200).json({
+      message: `${MODEL_NAME}を削除しました。`,
+      obj: target
     });
   });
 
@@ -219,12 +236,12 @@ commentRouter.delete('/:commentId', (req, res, next) => {
 
 // 記事に紐付くコメントを
 // ツリー構造の順にソートしdepthを追加した配列にして取得する
-commentRouter.get('/ofArticle/:_idOfArticle', (req, res, next) => {
+router.get('/ofArticle/:_idOfArticle', (req, res, next) => {
   const cb = (err, doc) => {
     if (err) {
       return res.status(500).json({
-          title: 'エラーが発生しました。',
-          error: err.message
+        title: v.MESSAGE_KEY.default,
+        error: err.message
       });
     }
     return res.status(200).json(doc);
@@ -238,4 +255,4 @@ commentRouter.get('/ofArticle/:_idOfArticle', (req, res, next) => {
 
 
 
-export { commentRouter };
+export { router　as commentRouter };

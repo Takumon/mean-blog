@@ -6,12 +6,13 @@
   <div class="comment-form__main">
     <img class="comment-form__author-icon"
       src="data:image/png;base64,{{ auth.loginUser.icon }}">
-    <mat-input-container class="comment-form__textarea-wrapper">
+    <mat-input-container
+      class="comment-form__textarea-wrapper">
       <textarea
         *ngIf="isAuthfocuse"
         matInput
         class="comment-form__textarea"
-        formControlName="commentText"
+        formControlName="text"
         placeholder="コメントを{{action}}する"
         appAutofocus
         ></textarea>
@@ -19,11 +20,20 @@
         *ngIf="!isAuthfocuse"
         matInput
         class="comment-form__textarea"
-        formControlName="commentText"
+        formControlName="text"
         placeholder="コメントを{{action}}する"
         ></textarea>
-      <mat-error *ngIf="hasError('required', commentText)">
-        {{ messageService.get('required',['コメント']) }}
+      <mat-hint align="start">{{text.value?.length || 0}} / 400文字</mat-hint>
+      <mat-error *ngIf="hasError('required', text)">
+        {{ messageService.get('required',['コメント本文']) }}
+      </mat-error>
+      <mat-error *ngIf="messageService.hasError(text, 'maxlength')">
+        {{ messageService.get('maxlength',['コメント本文' , text.getError('maxlength').requiredLength]) }} {{text.value?.length || 0}} / 400文字
+      </mat-error>
+      <mat-error *ngIf="messageService.hasErrorWithoutDirty(text, 'remote')">
+        <ng-container *ngFor="let msg of text.getError('remote')">
+          {{msg}}<br>
+        </ng-container>
       </mat-error>
     </mat-input-container>
   </div>

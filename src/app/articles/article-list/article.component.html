@@ -31,7 +31,6 @@
       type="button"
       class="article__operation-btn"
       (click)="registerVote()"
-      *ngIf="!containMineVote()"
       >
       <i class="fa fa-fw fa-thumbs-up"></i> いいね!
     </button>
@@ -40,7 +39,6 @@
       type="button"
       class="article__operation-btn"
       (click)="deleteVote()"
-      *ngIf="containMineVote()"
       >
       <i class="fa fa-fw fa-check"></i> いいね済み
     </button>
@@ -92,40 +90,12 @@
       </div>
     </div>
     <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
-      <div class="comment-editor__main">
-        <img class="comment-editor__author-icon" *ngIf="auth.loginUser" src="data:image/png;base64,{{auth.loginUser.icon }}">
-        <mat-input-container class="comment-editor__textarea-wrapper">
-          <textarea
-            matInput
-            appAutofocus
-            class="comment-editor__textarea-wrapper__textarea"
-            [(ngModel)]="item.newComment.text"
-            required
-            placeholder="コメントを追加する"
-            #newComment="ngModel"
-          ></textarea>
-          <mat-error *ngIf="newComment.hasError('required')">
-            {{ messageService.get('required',['コメント']) }}
-          </mat-error>
-        </mat-input-container>
-      </div>
-
-      <div class="comment-editor__operation">
-        <div class="comment-editor__operation__spacer"></div>
-        <button
-          mat-raised-button
-          type="button"
-          class="comment-editor__operation__cancel-btn"
-          (click)="cancelNewComment()"><i class="fa fa-fw fa-times"></i> キャンセル</button>
-        <button
-          mat-raised-button
-          class="comment-editor__operation__register-btn"
-          color="primary"
-          type="button"
-          [disabled]="newComment.hasError('required')"
-          id="registe-comment-btn"
-          (click)="registerComment(item.newComment)"><i class="fa fa-fw fa-commenting"></i>  追加</button>
-      </div>
+      <app-comment-form
+        [commentModel]="item.newComment"
+        [hasCancelBtn]="true"
+        [isAuthfocuse]="true"
+        (complete)="refreshComments()"
+        (cancel)="cancelNewComment()"></app-comment-form>
     </div>
   </ng-template>
 
@@ -147,7 +117,7 @@
       <app-comment-list
         _idOfArticle="{{item._id}}"
         [comments]="item.comments"
-        (refresh)="refreshComments($event)"
+        (refresh)="refreshComments()"
       ></app-comment-list>
       <button
         mat-icon-button

@@ -15,7 +15,6 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 import { UserModel } from '../../users/shared/user.model';
 import { ArticleService } from '../shared/article.service';
-import { CommentService } from '../shared/comment.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 
