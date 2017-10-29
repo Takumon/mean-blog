@@ -57,8 +57,8 @@ export class CommentFormComponent implements OnInit {
   createForm() {
     this.form = this.fb.group({
       text: ['', [
-        // Validators.required,
-        // Validators.maxLength(400),
+        Validators.required,
+        Validators.maxLength(400),
       ]],
     });
 
