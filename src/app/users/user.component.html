@@ -114,36 +114,16 @@
               <input
                 matInput
                 type="text"
-                id="lastName"
-                name="lastName"
-                formControlName="lastName"
-                placeholder="氏"
+                id="userName"
+                name="userName"
+                formControlName="userName"
+                placeholder="ユーザ名"
                 >
-                <mat-error *ngIf="messageService.hasError(lastName, 'maxlength')">
-                  {{ messageService.get('maxlength',['氏' , lastName.getError('maxlength').requiredLength]) }}
+                <mat-error *ngIf="messageService.hasError(userName, 'maxlength')">
+                  {{ messageService.get('maxlength',['ユーザ名' , userName.getError('maxlength').requiredLength ]) }}
                 </mat-error>
-                <mat-error *ngIf="messageService.hasErrorWithoutDirty(lastName, 'remote')">
-                  <ng-container *ngFor="let msg of lastName.getError('remote')">
-                    {{msg}}<br>
-                  </ng-container>
-                </mat-error>
-            </mat-input-container>
-          </div>
-          <div class="data">
-            <mat-input-container class="data__input">
-              <input
-                matInput
-                type="text"
-                id="firstName"
-                name="firstName"
-                formControlName="firstName"
-                placeholder="名"
-                >
-                <mat-error *ngIf="messageService.hasError(firstName, 'maxlength')">
-                  {{ messageService.get('maxlength',['名' , firstName.getError('maxlength').requiredLength ]) }}
-                </mat-error>
-                <mat-error *ngIf="messageService.hasErrorWithoutDirty(firstName, 'remote')">
-                  <ng-container *ngFor="let msg of firstName.getError('remote')">
+                <mat-error *ngIf="messageService.hasErrorWithoutDirty(userName, 'remote')">
+                  <ng-container *ngFor="let msg of userName.getError('remote')">
                     {{msg}}<br>
                   </ng-container>
                 </mat-error>
@@ -240,14 +220,8 @@
 
         <div class="data">
           <div class="data__output">
-            <div class="data__output__label">氏</div>
-            <div  class="data__output__value">{{user.lastName}}</div>
-          </div>
-        </div>
-        <div class="data">
-          <div class="data__output">
-            <div class="data__output__label">名</div>
-            <div  class="data__output__value">{{user.firstName}}</div>
+            <div class="data__output__label">ユーザ名</div>
+            <div  class="data__output__value">{{user.userName}}</div>
           </div>
         </div>
 

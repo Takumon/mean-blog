@@ -112,10 +112,8 @@ userRouter.put('/:_id', [
   body('email').optional({ checkFalsy : true})
     .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['Eメール', '50']))
     .isEmail().withMessage(v.message(v.MESSAGE_KEY.pattern_email, ['Eメール'])),
-  body('firstName').optional({ checkFalsy : true})
-    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['氏', '30'])),
-  body('lastName').optional({ checkFalsy : true})
-    .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
+  body('userName').optional({ checkFalsy : true})
+    .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['ユーザ名', '30'])),
   body('blogTitle').optional({ checkFalsy : true})
     .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
   body('userDescription').optional({ checkFalsy : true})

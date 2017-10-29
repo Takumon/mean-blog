@@ -42,26 +42,12 @@
             <input
               matInput
               type="text"
-              id="lastName"
-              name="lastName"
+              id="userName"
+              name="userName"
               (focus)="labelUserName.focused = true"
               (blur)="labelUserName.focused = false"
-              [(ngModel)]="user.lastName"
-              placeholder="氏"
-              >
-          </mat-input-container>
-        </div>
-        <div class="data">
-          <mat-input-container class="data__input">
-            <input
-              matInput
-              type="text"
-              id="firstName"
-              name="firstName"
-              (focus)="labelUserName.focused = true"
-              (blur)="labelUserName.focused = false"
-              [(ngModel)]="user.firstName"
-              placeholder="名"
+              [(ngModel)]="user.userName"
+              placeholder="ユーザ名"
               >
           </mat-input-container>
         </div>

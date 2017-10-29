@@ -14,10 +14,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
   },
-  firstName: {
-    type: String
-  },
-  lastName: {
+  userName: {
     type: String
   },
   isAdmin: {

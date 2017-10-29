@@ -121,11 +121,8 @@ export class UserComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       _id: '',
       userId: [{value: '', disabled: true}],
-      firstName: ['', [
-        Validators.maxLength(30),
-      ]],
-      lastName: ['', [
-        Validators.maxLength(30),
+      userName: ['', [
+        Validators.maxLength(50),
       ]],
       email: ['', [
         Validators.maxLength(50),
@@ -170,8 +167,7 @@ export class UserComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
-  get firstName(): FormControl { return this.form.get('firstName') as FormControl; }
-  get lastName(): FormControl { return this.form.get('lastName') as FormControl; }
+  get userName(): FormControl { return this.form.get('userName') as FormControl; }
   get email(): FormControl { return this.form.get('email') as FormControl; }
   get blogTitle(): FormControl { return this.form.get('blogTitle') as FormControl; }
   get userDescription(): FormControl { return this.form.get('userDescription') as FormControl; }

@@ -3,8 +3,7 @@ export class UserModel {
   userId: string;
   password: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  userName: string;
   isAdmin: Boolean;
   blogTitle: string;
   userDescription: string;
