@@ -175,7 +175,20 @@ class Validation {
 
   maxSearchConditionCount(userId: String): Promise<boolean> {
     return SearchCondition
-    .find({ author: userId}) // 論理削除はないので単純に_id検索
+    .find({ author: userId}) // 論理削除はないので単純に検索
+    .exec()
+    .then((target: Array<any>) => {
+      if (!target || target.length < 10 ) {
+        // チェックOK
+        return Promise.resolve(true);
+      }
+      return Promise.reject(false);
+    }).catch(err => Promise.reject(false));
+  }
+
+  maxDraftCount(userId: String): Promise<boolean> {
+    return Draft
+    .find({ author: userId}) // 論理削除はないので単純に検索
     .exec()
     .then((target: Array<any>) => {
       if (!target || target.length < 10 ) {

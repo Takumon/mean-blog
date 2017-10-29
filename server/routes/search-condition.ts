@@ -257,9 +257,6 @@ router.put('/:_id', [
 
   const model = {$set: set, $unset: unset };
 
-  console.log(set);
-  console.log(unset);
-
   SearchCondition.findByIdAndUpdate(req.params._id, model, {new: true}, (error, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 

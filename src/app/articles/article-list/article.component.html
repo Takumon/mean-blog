@@ -27,6 +27,7 @@
 
   <div class="article__operation">
     <button
+      *ngIf="!containMineVote()"
       mat-button
       type="button"
       class="article__operation-btn"
@@ -35,6 +36,7 @@
       <i class="fa fa-fw fa-thumbs-up"></i> いいね!
     </button>
     <button
+      *ngIf="containMineVote()"
       mat-button
       type="button"
       class="article__operation-btn"

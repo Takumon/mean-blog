@@ -114,6 +114,14 @@
       </mat-error>
     </div>
     <button
+      *ngIf="!canRegisterDraft"
+      mat-raised-button
+      color="accent"
+      type="button"
+      disabled
+      ><i class="fa fa-floppy-o"></i>  下書きは{{draftService.MAX_DRAFT_COUNT}}件以上保存できません</button>
+    <button
+      *ngIf="canRegisterDraft"
       mat-raised-button
       color="accent"
       type="button"

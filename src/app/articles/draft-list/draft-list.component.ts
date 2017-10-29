@@ -40,7 +40,6 @@ export class DraftListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.routeNamesService.name.next(`下書き一覧`);
     this.sharedService.changeEmitted$
     .takeUntil(this.onDestroy)
     .subscribe(text => {
@@ -60,6 +59,9 @@ export class DraftListComponent implements OnInit, OnDestroy {
     const condition = { userId: this.auth.loginUser._id };
     this.draftService.get(condition)
     .subscribe(drafts => {
+      const count = drafts ? drafts.length : 0;
+      this.routeNamesService.name.next(`下書き一覧 ( ${count} / 10件 )`);
+
       if (!drafts || drafts.length === 0) {
         this.notFound = true;
         this.groupedDrafts = null;

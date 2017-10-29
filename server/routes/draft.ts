@@ -90,7 +90,8 @@ router.post('/', [
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
   body('author')
-    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ']))
+    .custom(v.validation.maxDraftCount).withMessage(v.message(v.MESSAGE_KEY.max_register_count, ['下書き', '10'])),
   body('articleId')
     .custom(v.validation.isArticleAuthorEqualsAuthor).withMessage('投稿者が記事のユーザと一致しません'),
 ], (req, res, next) => {
