@@ -1,10 +1,11 @@
 <div class="search-condition">
   <div class="search-condition__header">
-    <div class="search-condition__header__title">お気に入り検索条件</div>
+    <div class="search-condition__header__title">お気に入り検索条件<span class="search-condition__header__title__count">( {{ seaerchConditions?.length || 0 }} / 10件 )</span></div>
     <div class="search-condition__header__spacer"></div>
     <button
       mat-button
       type="button"
+      *ngIf="seaerchConditions?.length <= 10"
       class="search-condition__header__operation-btn"
       (click)="openSerchConditionDialog()">
       <i class="fa fa-fw fa-plus"></i> 追加
@@ -54,7 +55,7 @@
         <button
           mat-button
           type="button"
-          (click)="deleteCondition(condition._id.toString(), condition.name)"
+          (click)="deleteCondition(condition)"
           ><i class="fa fa-fw fa-trash"></i>  削除</button>
         <button
           mat-button

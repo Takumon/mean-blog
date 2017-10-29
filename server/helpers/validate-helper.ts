@@ -23,6 +23,8 @@ class Validation {
       }).catch(err => Promise.reject(false));
   }
 
+
+
   isUniqueUserIdList(_ids: String[]): boolean {
     if (!_ids || _ids.length === 0) {
       return true;
@@ -170,6 +172,19 @@ class Validation {
         return Promise.reject(false);
       }).catch(err => Promise.reject(false));
   }
+
+  maxSearchConditionCount(userId: String): Promise<boolean> {
+    return SearchCondition
+    .find({ author: userId}) // 論理削除はないので単純に_id検索
+    .exec()
+    .then((target: Array<any>) => {
+      if (!target || target.length < 10 ) {
+        // チェックOK
+        return Promise.resolve(true);
+      }
+      return Promise.reject(false);
+    }).catch(err => Promise.reject(false));
+  }
 }
 
 const MESSAGE_KEY = {
@@ -188,6 +203,7 @@ const MESSAGE_KEY = {
   allready_existed: '指定した{0}は既に存在しています',
   allready_deleted: '指定した{0}は既に削除されています',
   not_existed: '指定した{0}は存在しません',
+  max_register_count: '{0}は{1}件以上登録できません',
   not_unique: '指定した{0}は重複が存在します',
   not_specified: '{0}が指定されていません',
   different: '{0}と{1}が一致しません',

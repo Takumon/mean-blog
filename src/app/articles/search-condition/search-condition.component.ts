@@ -186,11 +186,11 @@ export class SearchConditionComponent implements OnInit {
     });
   }
 
-  deleteCondition(id: string, name: string) {
+  deleteCondition(conditionForDelete: SearchConditionModel) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: '検索条件削除',
-        message: `「${name}」を削除しますか？`
+        message: `「${conditionForDelete.name}」を削除しますか？`
       }
     });
 
@@ -200,10 +200,21 @@ export class SearchConditionComponent implements OnInit {
       }
 
       this.searchConditionService
-      .delete(id)
+      .delete(conditionForDelete._id.toString())
       .subscribe(res => {
-        this.snackBar.open(`お気に入り検索条件「${name}」を削除しました。`, null, {duration: 3000});
+        this.snackBar.open(`お気に入り検索条件「${conditionForDelete.name}」を削除しました。`, null, {duration: 3000});
+        if (conditionForDelete.checked) {
           this.getSearchCondition();
+        } else {
+          // 選択中以外の場合は検索条件リストから削除するだけ
+          const conditions = this.seaerchConditions;
+          const len = conditions.length;
+          for (let i = 0; i < len; i++ ) {
+            if (conditions[i]._id === conditionForDelete._id) {
+              this.seaerchConditions.splice(i, 1);
+            }
+          }
+        }
       });
     });
   }

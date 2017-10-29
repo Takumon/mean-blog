@@ -6,6 +6,7 @@ import { check, oneOf, body, param, validationResult } from 'express-validator/c
 import { validateHelper as v } from '../helpers/validate-helper';
 import { SearchCondition } from '../models/search-condition';
 
+
 // TODO 日付期間はenum化
 const COSTOME_RANGE: String = '6';
 const MODEL_NAME = 'お気に入り検索条件';
@@ -99,14 +100,14 @@ router.get('/:_id', (req, res, next) => {
 
 
 // 入力チェック処理
-const isCollectedPattern = (value) => {
-  if (value === null || value === undefined) {
+const isCollectedPattern = (value: string) => {
+  if (!value) {
     return true;
   }
   return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value) !== -1;
 };
-const isExistDateRange = (value, {req}) => {
-  if (value === null || value === undefined) {
+const isExistDateRange = (value: string, {req}) => {
+  if (!value) {
     return true;
   }
 
@@ -116,8 +117,8 @@ const isExistDateRange = (value, {req}) => {
 
   return true;
 };
-const isCollectedDateRange = (value, {req}) => {
-  if (value === null || value === undefined) {
+const isCollectedDateRange = (value: string, {req}) => {
+  if (!value) {
     return true;
   }
 
@@ -148,8 +149,9 @@ router.post('/', [
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['お気に入り検索条件名']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['お気に入り検索条件名', '100'])),
   body('author')
-    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
-  body('users')
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ']))
+    .custom(v.validation.maxSearchConditionCount).withMessage(v.message(v.MESSAGE_KEY.max_register_count, ['お気に入り検索条件', '10'])),
+    body('users')
     .custom(v.validation.isUniqueUserIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['検索条件のユーザ']))
     .custom(v.validation.isExistedUserAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['検索条件のユーザ'])),
   body('dateSearchPattern')
@@ -195,6 +197,7 @@ router.post('/', [
 
 
 // 更新（差分更新）
+// １ユーザ１０件まで
 router.put('/:_id', [
   param('_id')
     .custom(v.validation.isExistedSearchCondition).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['お気に入り検索条件'])),

@@ -86,7 +86,7 @@ export class SearchConditionDialogComponent implements OnInit {
       dateSearchPatternGroup: new FormGroup(
         {
           dateSearchPattern: this.fb.control('', [
-          Validators.pattern(/[123456]+/)
+          Validators.pattern(/[0123456]+/)
           ]),
           dateTo: this.fb.control('', [
             MessageService.validation.isDate

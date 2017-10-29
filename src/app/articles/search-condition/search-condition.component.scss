@@ -24,6 +24,11 @@
 
     &__title {
       font-size: 18px;
+
+      &__count {
+        padding-left: 18px;
+        font-size: 10px;
+      }
     }
 
     &__spacer {
@@ -37,9 +42,9 @@
   }
 
   &__content {
-    overflow-y: scroll;    
+    overflow-y: scroll;
     max-height: 80vh;
-    
+
     $parent: &;
 
     &_noconditions {
@@ -114,7 +119,7 @@
     height: 36px;
     display: flex;
     align-items: center;
-  
+
     &__statement {
       margin-left: 8px;
     }
