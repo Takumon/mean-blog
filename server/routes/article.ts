@@ -55,6 +55,7 @@ function getCondition(req: any, cb: Function): void {
     $and: factors
   }};
 
+  // ユーザのuserIdで絞り込み
   const userIds = source.author && source.author.userId;
   if (userIds) {
     let userFindCondition;
@@ -89,7 +90,7 @@ function getCondition(req: any, cb: Function): void {
     });
   }
 
-
+  // 投稿者の_idで絞り込み
   const _ids = source.author && source.author._id;
   if (_ids) {
     if (_ids instanceof Array) {
@@ -105,6 +106,7 @@ function getCondition(req: any, cb: Function): void {
     }
   }
 
+  // 記事作成日の下限で絞り込み
   if (source.dateFrom) {
     factors.push({
       created: {
@@ -113,13 +115,31 @@ function getCondition(req: any, cb: Function): void {
     });
   }
 
-
+  // 記事作成日の上限で絞り込み
   if (source.dateTo) {
     factors.push({
       created: {
         $lte: new Date(source.dateTo)
       }
     });
+  }
+
+  // 記事にいいねしたユーザの_idで絞り込み
+  const voters = source.voter;
+  if (voters) {
+    if (voters instanceof Array) {
+      factors.push({
+        vote: {
+          $in: voters.map(id =>  new mongoose.Types.ObjectId(id))
+        }
+      });
+    } else {
+      factors.push({
+        vote: {
+          $in: [ new mongoose.Types.ObjectId(voters) ]
+        }
+      });
+    }
   }
 
   return cb(null, condition);

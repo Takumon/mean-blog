@@ -32,9 +32,10 @@ const routes: Routes = [
       },
       {
         path: 'votes',
-        // TODO いいね一覧に変える
-        component: CommentListComponent,
-      }
+        component: ArticleListComponent,
+        data: {mode: Mode.VOTER },
+        canActivate: [AuthGuard]
+      },
     ]
   },
 ];

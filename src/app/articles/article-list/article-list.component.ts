@@ -13,6 +13,7 @@ import 'rxjs/add/operator/takeUntil';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
+import { UserService } from '../../users/shared/user.service';
 import { UserModel } from '../../users/shared/user.model';
 import { ArticleService } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
@@ -22,6 +23,7 @@ export enum Mode {
   ALL = 100,
   FAVORITE = 200,
   USER = 300,
+  VOTER = 400,
 }
 
 @Component({
@@ -45,6 +47,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private articleService: ArticleService,
     private auth: AuthenticationService,
+    private userService: UserService,
   ) {
   }
 
@@ -57,9 +60,10 @@ export class ArticleListComponent implements OnInit, OnDestroy {
       switch (this.mode) {
         case Mode.ALL:
         case Mode.USER:
+        case Mode.VOTER:
           this.getArticles();
           break;
-        case Mode.FAVORITE:
+          case Mode.FAVORITE:
           this.showPrograssBar = true;
           // 子コンポーネントの検索条件初期化が終わったらgetArticlesを呼ぶ
           break;
@@ -106,6 +110,21 @@ export class ArticleListComponent implements OnInit, OnDestroy {
           .get({author: { userId: userId }}, withUser)
           .do(() => { this.showPrograssBar = false; })
           .share();
+        });
+        break;
+      case Mode.VOTER:
+        this.route.parent.params
+        .takeUntil(this.onDestroy)
+        .subscribe( params => {
+          const userId = params['_userId'];
+          this.userService
+          .getById(userId)
+          .subscribe(user => {
+            this.articles = this.articleService
+            .get({ voter: user._id.toString()}, withUser)
+            .do(() => { this.showPrograssBar = false; })
+            .share();
+          });
         });
         break;
     }
