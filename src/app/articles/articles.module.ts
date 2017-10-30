@@ -2,9 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateAdapter } from '@angular/material';
+import { DateAdapter, MatPaginatorIntl } from '@angular/material';
 
 import { SharedModule } from '../shared/shared.module';
+import { PaginatorService } from '../shared/services/paginator.service';
+
 
 import { ArticleService } from './shared/article.service';
 import { CommentService } from './shared/comment.service';
@@ -95,6 +97,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     SearchConditionService,
     DraftService,
     { provide: DateAdapter, useClass: AppDateAdapter },
+    { provide: MatPaginatorIntl, useClass: PaginatorService},
   ],
   entryComponents: [
     VoterListComponent,

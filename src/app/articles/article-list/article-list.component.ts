@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PageEvent, MatPaginatorIntl } from '@angular/material';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -36,6 +37,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public seaerchConditions: any;
   public articles: Observable<Array<ArticleWithUserModel>>;
   public showPrograssBar: Boolean = false;
+  public pageEvent: PageEvent;
 
   private onDestroy = new Subject();
   @ViewChild(SearchConditionComponent)
@@ -46,6 +48,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private articleService: ArticleService,
+    public paginatorService: MatPaginatorIntl,
     private auth: AuthenticationService,
     private userService: UserService,
   ) {
@@ -133,4 +136,16 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   isFavoriteMode(): boolean {
     return this.mode && this.mode === Mode.FAVORITE;
   }
+
+  rangeLabel(page: number, pageSize: number, length: number): string {
+    if (length === 0 || pageSize === 0) {
+      return `0 of ${length}`;
+    }
+    length = Math.max(length, 0);
+    const startIndex = page * pageSize;
+    // If the start index exceeds the list length, do not try and fix the end index to the end.
+    const endIndex = startIndex < length
+      ? Math.min(startIndex + pageSize, length)
+      : startIndex + pageSize; return `${startIndex + 1} - ${endIndex} of ${length}`;
+    }
 }

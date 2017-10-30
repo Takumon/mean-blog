@@ -24,6 +24,7 @@ import {
   MatProgressSpinnerModule,
   MatRippleModule,
   MatSelectModule,
+  MatPaginatorModule,
 } from '@angular/material';
 
 
@@ -60,6 +61,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
     MatProgressSpinnerModule,
     MatRippleModule,
     MatSelectModule,
+    MatPaginatorModule,
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher},
@@ -93,6 +95,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
     MatProgressSpinnerModule,
     MatRippleModule,
     MatSelectModule,
+    MatPaginatorModule,
   ],
 })
 export class SharedModule { }

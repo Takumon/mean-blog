@@ -36,12 +36,24 @@
 </div>
 <ng-container *ngIf="(articles | async)?.length > 0">
   <div class="article-list">
+    <mat-paginator
+      class="article-list__paginator"
+      [length]="(articles | async)?.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 20, 50]">
+    </mat-paginator>
     <div
       class="article-list__item"
-      *ngFor="let item of (articles | async | orderby: ['-created'])">
+      *ngFor="let item of (articles | async | orderby: ['-created'] | slice: paginatorService.startIndex: paginatorService.endIndex)">
       <app-article [item]="item">
       </app-article>
     </div>
+    <mat-paginator
+      class="article-list__paginator"
+      [length]="(articles | async)?.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 20, 50]">
+    </mat-paginator>
   </div>
 </ng-container>
 
