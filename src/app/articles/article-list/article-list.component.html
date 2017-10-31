@@ -1,7 +1,7 @@
 <div class="wrapper">
 
 
-<div class="message-area" *ngIf="(articles | async)?.length === 0 && (!seaerchConditions || seaerchConditions.length < 1)">
+<div class="message-area" *ngIf="articles?.length === 0 && (!seaerchConditions || seaerchConditions.length < 1)">
   <div class="message-area__main">
     <div class="message-area__main__icon">
       <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<div class="message-area" *ngIf="(articles | async)?.length === 0 && !(!seaerchConditions || seaerchConditions.length < 1)">
+<div class="message-area" *ngIf="articles?.length === 0 && !(!seaerchConditions || seaerchConditions.length < 1)">
   <div class="message-area__main">
     <div class="message-area__main__icon">
       <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
@@ -34,34 +34,38 @@
 <div class="prograss-bar" *ngIf="showPrograssBar" >
   <mat-spinner></mat-spinner>
 </div>
-<ng-container *ngIf="(articles | async)?.length > 0">
+<ng-container *ngIf="articles?.length > 0">
   <div class="article-list">
     <mat-paginator
       class="article-list__paginator"
-      [length]="(articles | async)?.length"
-      [pageSize]="10"
-      [pageSizeOptions]="[10, 20, 50]">
+      (page)="changeArticlesPerPage($event)"
+      [length]="articles.length"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="DEFAILT_PER_PAGES">
     </mat-paginator>
     <div
       class="article-list__item"
-      *ngFor="let item of (articles | async | orderby: ['-created'] | slice: paginatorService.startIndex: paginatorService.endIndex)">
+      *ngFor="let item of (articlesPerPage | async)">
       <app-article [item]="item">
       </app-article>
     </div>
     <mat-paginator
       class="article-list__paginator"
-      [length]="(articles | async)?.length"
-      [pageSize]="10"
-      [pageSizeOptions]="[10, 20, 50]">
+      (page)="changeArticlesPerPage($event)"
+      [length]="articles.length"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="DEFAILT_PER_PAGES">
     </mat-paginator>
   </div>
 </ng-container>
 
 
 <app-search-condition
-*ngIf="isFavoriteMode()"
-(changeSeaerchCondition)="getArticles()"
-></app-search-condition>
+  *ngIf="isFavoriteMode()"
+  (changeSeaerchCondition)="getArticles()"
+  ></app-search-condition>
 
 </div>
 

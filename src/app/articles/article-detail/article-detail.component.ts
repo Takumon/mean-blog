@@ -87,7 +87,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       const _idOfArticle = params['_id'];
       const withUser = true;
       this.articleService.getOne(_idOfArticle, withUser)
-      .subscribe(article => {
+      .subscribe( (article: ArticleWithUserModel) => {
 
         if (userId !== article.author.userId) {
           this.router.navigate(['/', article.author.userId, 'articles', article._id]);

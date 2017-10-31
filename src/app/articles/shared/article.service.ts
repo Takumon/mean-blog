@@ -7,6 +7,7 @@ import 'rxjs/Rx';
 import { JwtService } from '../../shared/services/jwt.service';
 
 import { ArticleModel } from './article.model';
+import { ArticleWithUserModel } from './article-with-user.model';
 import { CommentModel } from './comment.model';
 
 
@@ -21,7 +22,7 @@ export class ArticleService {
   ) {}
 
   // 複数件取得
-  get(condition: Object, withUser: Boolean = false): Observable<any> {
+  get(condition: Object, withUser: Boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
@@ -37,7 +38,7 @@ export class ArticleService {
   }
 
   // １件取得
-  getOne(_id: string, withUser: Boolean = false): Observable<any> {
+  getOne(_id: string, withUser: Boolean = false): Observable<ArticleModel | ArticleWithUserModel> {
     const URL = `${this.baseUrl}/${_id}`;
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
@@ -52,7 +53,7 @@ export class ArticleService {
   }
 
   // 更新
-  update(article: ArticleModel): Observable<any> {
+  update(article: ArticleModel): Observable<ArticleModel> {
     const URL = `${this.baseUrl}/${article._id}`;
 
     return this.http
@@ -62,7 +63,7 @@ export class ArticleService {
   }
 
   // 登録
-  register(article: ArticleModel): Observable<any> {
+  register(article: ArticleModel): Observable<ArticleModel> {
     const URL = this.baseUrl;
 
     return this.http
@@ -72,7 +73,7 @@ export class ArticleService {
   }
 
   // 削除
-  delete(_id: string): Observable<any> {
+  delete(_id: string): Observable<ArticleModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
     return this.http

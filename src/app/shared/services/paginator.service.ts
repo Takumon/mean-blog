@@ -1,21 +1,32 @@
 import { MatPaginatorIntl } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+
+
 export class PaginatorService extends MatPaginatorIntl {
   itemsPerPageLabel = '1ページあたりの件数';
   nextPageLabel     = '次ページ';
   previousPageLabel = '前ページ';
-  startIndex: number;
-  endIndex: number;
 
-  getRangeLabel = (page, pageSize, length) => {
+  getRangeLabel = (pageIndex, pageSize, length) => {
     if (length === 0 || pageSize === 0) {
       return '0 / ' + length;
     }
-    length = Math.max(length, 0);
-    this.startIndex = page * pageSize;
-    this.endIndex = this.startIndex < length
-      ? Math.min(this.startIndex + pageSize, length)
-      : this.startIndex + pageSize;
 
-      return (this.startIndex + 1) + ' - ' + this.endIndex + ' / ' + length;
+    const range = this.calcRange(pageIndex, pageSize, length);
+    return pageIndex + 1 + '/' + Math.ceil(length / pageSize) + ' ページ目';
+  }
+
+  calcRange(pageIndex, pageSize, length): {startIndex: number, endIndex: number} {
+    length = Math.max(length, 0);
+    const startIndex = pageIndex * pageSize;
+    const endIndex = startIndex < length
+      ? Math.min(startIndex + pageSize, length)
+      : startIndex + pageSize;
+
+    return {
+      startIndex,
+      endIndex,
+    };
   }
 }

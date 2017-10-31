@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { PaginatorService } from '../../shared/services/paginator.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 import { UserService } from '../../users/shared/user.service';
@@ -34,10 +35,15 @@ export enum Mode {
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleListComponent implements OnInit, OnDestroy {
+  // TODO 定数科
+  public DEFAULT_PER_PAGE = 20;
+  public DEFAILT_PER_PAGES = [20, 50, 100];
   public seaerchConditions: any;
-  public articles: Observable<Array<ArticleWithUserModel>>;
+  public articles: Array<ArticleWithUserModel>;
+  public articlesPerPage: Subject<Array<ArticleWithUserModel>> = new Subject<Array<ArticleWithUserModel>>();
   public showPrograssBar: Boolean = false;
-  public pageEvent: PageEvent;
+  public pageSize: Number = this.DEFAULT_PER_PAGE;
+  public pageIndex: Number = 0;
 
   private onDestroy = new Subject();
   @ViewChild(SearchConditionComponent)
@@ -87,10 +93,9 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     const withUser = true;
     switch (this.mode) {
       case Mode.ALL:
-        this.articles = this.articleService
+        this.articleService
         .get({}, withUser)
-        .do(() => { this.showPrograssBar = false; })
-        .share();
+        .subscribe(this.onFinishGetArticles.bind(this));
         break;
       case Mode.FAVORITE:
         if (!this.searchConditionComponent) {
@@ -99,20 +104,18 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         }
 
         this.seaerchConditions = this.searchConditionComponent.createCondition();
-        this.articles = this.articleService
+        this.articleService
         .get( this.seaerchConditions, withUser)
-        .do(() => { this.showPrograssBar = false; })
-        .share();
+        .subscribe(this.onFinishGetArticles.bind(this));
         break;
       case Mode.USER:
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => {
           const userId = params['_userId'];
-          this.articles = this.articleService
+          this.articleService
           .get({author: { userId: userId }}, withUser)
-          .do(() => { this.showPrograssBar = false; })
-          .share();
+          .subscribe(this.onFinishGetArticles.bind(this));
         });
         break;
       case Mode.VOTER:
@@ -123,29 +126,35 @@ export class ArticleListComponent implements OnInit, OnDestroy {
           this.userService
           .getById(userId)
           .subscribe(user => {
-            this.articles = this.articleService
+            this.articleService
             .get({ voter: user._id.toString()}, withUser)
-            .do(() => { this.showPrograssBar = false; })
-            .share();
+            .subscribe(this.onFinishGetArticles.bind(this));
           });
         });
         break;
     }
   }
 
+  onFinishGetArticles(articles: Array<ArticleWithUserModel>) {
+    this.articles = articles;
+    this.showPrograssBar = false;
+    setTimeout(function() {
+      this.refreshArticlesPerPage(0, this.DEFAULT_PER_PAGE, articles.length);
+    }.bind(this), 0);
+  }
+
   isFavoriteMode(): boolean {
     return this.mode && this.mode === Mode.FAVORITE;
   }
 
-  rangeLabel(page: number, pageSize: number, length: number): string {
-    if (length === 0 || pageSize === 0) {
-      return `0 of ${length}`;
-    }
-    length = Math.max(length, 0);
-    const startIndex = page * pageSize;
-    // If the start index exceeds the list length, do not try and fix the end index to the end.
-    const endIndex = startIndex < length
-      ? Math.min(startIndex + pageSize, length)
-      : startIndex + pageSize; return `${startIndex + 1} - ${endIndex} of ${length}`;
-    }
+  changeArticlesPerPage($event: PageEvent) {
+    this.pageIndex = $event.pageIndex;
+    this.pageSize = $event.pageSize;
+    this.refreshArticlesPerPage($event.pageIndex, $event.pageSize, $event.length);
+  }
+
+  refreshArticlesPerPage(pageIndex, pageSize, length) {
+    const range = (this.paginatorService as PaginatorService).calcRange(pageIndex, pageSize, length);
+    this.articlesPerPage.next(this.articles.slice(range.startIndex, range.endIndex));
+  }
 }
