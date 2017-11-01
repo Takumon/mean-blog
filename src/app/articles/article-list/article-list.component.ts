@@ -28,6 +28,83 @@ export enum Mode {
   VOTER = 400,
 }
 
+const SortFactors = {
+  UPDATE_DATE: {
+    label: '更新日',
+    value: 'updated',
+    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
+      const reverse = -1;
+      const nomal = 1;
+
+      return (a, b) => {
+        const a_factor = a['updated'];
+        const b_factor =  b['updated'];
+
+        if (a_factor > b_factor) {
+          return isAsc ? nomal : reverse;
+        } else if ( a_factor < b_factor) {
+          return isAsc ? reverse : nomal;
+        }
+
+        return 0;
+      };
+    }
+  },
+  CREATE_DATE: {
+    label: '登録日',
+    value: 'created',
+    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
+      const reverse = -1;
+      const nomal = 1;
+
+      return (a, b) => {
+        const a_factor = a['created'];
+        const b_factor =  b['created'];
+
+        if (a_factor > b_factor) {
+          return isAsc ? nomal : reverse;
+        } else if ( a_factor < b_factor) {
+          return isAsc ? reverse : nomal;
+        }
+
+        return 0;
+      };
+    }
+  },
+  USER_ID: {
+    label: 'ユーザID',
+    value: 'author',
+    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
+      const reverse = -1;
+      const nomal = 1;
+
+      return (a, b) => {
+        const a_factor = a['author']['userId'];
+        const b_factor =  b['author']['userId'];
+
+        if (a_factor > b_factor) {
+          return isAsc ? nomal : reverse;
+        } else if ( a_factor < b_factor) {
+          return isAsc ? reverse : nomal;
+        }
+
+        return 0;
+      };
+    }
+  },
+};
+
+const OrderFactors = {
+  ASC: {
+    label: '昇順',
+    value: true
+  },
+  DESC: {
+    label: '降順',
+    value: false
+  },
+};
+
 @Component({
   selector: 'app-article-list',
   templateUrl: './article-list.component.html',
@@ -42,8 +119,17 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public articles: Array<ArticleWithUserModel>;
   public articlesPerPage: Subject<Array<ArticleWithUserModel>> = new Subject<Array<ArticleWithUserModel>>();
   public showPrograssBar: Boolean = false;
-  public pageSize: Number = this.DEFAULT_PER_PAGE;
-  public pageIndex: Number = 0;
+  public sortFactors = SortFactors;
+  public sortFactorKeys = Object.keys(SortFactors);
+  public orderFactors = OrderFactors;
+  public orderFactorKeys = Object.keys(OrderFactors);
+
+  // ページング用プロパティ
+  // デフォルトは更新日降順
+  public selectedSortFactor = SortFactors.UPDATE_DATE;
+  public selectedOrderFactor = OrderFactors.DESC;
+  public pageSize = this.DEFAULT_PER_PAGE;
+  public pageIndex = 0;
 
   private onDestroy = new Subject();
   @ViewChild(SearchConditionComponent)
@@ -147,14 +233,21 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     return this.mode && this.mode === Mode.FAVORITE;
   }
 
-  changeArticlesPerPage($event: PageEvent) {
-    this.pageIndex = $event.pageIndex;
-    this.pageSize = $event.pageSize;
-    this.refreshArticlesPerPage($event.pageIndex, $event.pageSize, $event.length);
+  refreshPage(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.refreshArticlesPerPage();
   }
 
-  refreshArticlesPerPage(pageIndex, pageSize, length) {
-    const range = (this.paginatorService as PaginatorService).calcRange(pageIndex, pageSize, length);
-    this.articlesPerPage.next(this.articles.slice(range.startIndex, range.endIndex));
+  // ページングとソートの設定に従って表示する記事をセットする
+  refreshArticlesPerPage() {
+    const sortSetting = this.selectedSortFactor.sortFunc(this.selectedOrderFactor.value);
+    const sroted = this.articles.sort(sortSetting);
+
+
+    const range = (this.paginatorService as PaginatorService).calcRange(this.pageIndex, this.pageSize, this.articles.length);
+    const paged = sroted.slice(range.startIndex, range.endIndex);
+
+    this.articlesPerPage.next(paged);
   }
 }

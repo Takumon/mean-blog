@@ -48,9 +48,43 @@
     margin-bottom: 24px;
   }
 
-  &__paginator {
-    margin: 8px 0;
-    background: transparent;
+  &__operation {
+    display: flex;
+    flex-wrap: nowrap;
+    background: white;
+    height: 48px;
+    font-size: 12px;
+    align-items: center;
+    margin: 12px 0;
+    padding: 0 24px 0 36px;
+    border-radius: 24px;
+
+    &_top {
+      margin-top: 0;
+    }
+
+    &_bottom {
+      margin-bottom: 0;
+    }
+
+    &__sort-item {
+      width: 6em;
+      margin-right: 24px;
+    }
+    &__sort-direction {
+      width: 6em;
+      margin-right: 24px;
+    }
+
+    &__spacer {
+      flex: 1 1 auto;
+    }
+
+    &__paginator {
+      margin: 0;
+      background: transparent;
+    }
   }
+
 
 }

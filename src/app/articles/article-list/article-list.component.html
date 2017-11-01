@@ -34,30 +34,83 @@
 <div class="prograss-bar" *ngIf="showPrograssBar" >
   <mat-spinner></mat-spinner>
 </div>
+
+
+
+
 <ng-container *ngIf="articles?.length > 0">
   <div class="article-list">
-    <mat-paginator
-      class="article-list__paginator"
-      (page)="changeArticlesPerPage($event)"
-      [length]="articles.length"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="DEFAILT_PER_PAGES">
-    </mat-paginator>
+    <div class="article-list__operation article-list__operation_top">
+      <mat-form-field class="article-list__operation__sort-item">
+        <mat-select
+          [(ngModel)]="selectedSortFactor"
+          (change)="refreshArticlesPerPage()"
+          >
+          <mat-option *ngFor="let key of sortFactorKeys" [value]="sortFactors[key]">
+            {{ sortFactors[key].label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="article-list__operation__sort-direction">
+        <mat-select
+          [(ngModel)]="selectedOrderFactor"
+          (change)="refreshArticlesPerPage()"
+          >
+          <mat-option *ngFor="let orderkey of orderFactorKeys" [value]="orderFactors[orderkey]">
+            {{ orderFactors[orderkey].label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="article-list__operation__spacer"></div>
+      <mat-paginator
+        class="article-list__operation__paginator"
+        (page)="refreshPage($event)"
+        [length]="articles.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="DEFAILT_PER_PAGES">
+      </mat-paginator>
+    </div>
+
     <div
       class="article-list__item"
       *ngFor="let item of (articlesPerPage | async)">
       <app-article [item]="item">
       </app-article>
     </div>
-    <mat-paginator
-      class="article-list__paginator"
-      (page)="changeArticlesPerPage($event)"
-      [length]="articles.length"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="DEFAILT_PER_PAGES">
-    </mat-paginator>
+
+
+    <div class="article-list__operation article-list__operation_bottom">
+      <mat-form-field class="article-list__operation__sort-item">
+        <mat-select
+          [(ngModel)]="selectedSortFactor"
+          (change)="refreshArticlesPerPage()"
+          >
+          <mat-option *ngFor="let key of sortFactorKeys" [value]="sortFactors[key]">
+            {{ sortFactors[key].label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="article-list__operation__sort-direction">
+        <mat-select
+          [(ngModel)]="selectedOrderFactor"
+          (change)="refreshArticlesPerPage()"
+          >
+          <mat-option *ngFor="let orderkey of orderFactorKeys" [value]="orderFactors[orderkey]">
+            {{ orderFactors[orderkey].label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="article-list__operation__spacer"></div>
+      <mat-paginator
+        class="article-list__operation__paginator"
+        (page)="refreshPage($event)"
+        [length]="articles.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="DEFAILT_PER_PAGES">
+      </mat-paginator>
+    </div>
   </div>
 </ng-container>
 
