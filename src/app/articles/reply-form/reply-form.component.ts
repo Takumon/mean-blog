@@ -15,18 +15,18 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 
-import { CommentModel } from '../shared/comment.model';
-import { ArticleService } from '../shared/article.service';
-import { CommentService } from '../shared/comment.service';
+import { ReplyModel } from '../shared/reply.model';
+import { ReplyService } from '../shared/reply.service';
+
 
 @Component({
-  selector: 'app-comment-form',
-  templateUrl: './comment-form.component.html',
-  styleUrls: ['./comment-form.component.scss']
+  selector: 'app-reply-form',
+  templateUrl: './reply-form.component.html',
+  styleUrls: ['./reply-form.component.scss']
 })
-export class CommentFormComponent implements OnInit {
+export class ReplyFormComponent implements OnInit {
   @Input() isAuthfocuse: boolean;
-  @Input() model: CommentModel;
+  @Input() model: ReplyModel;
   @Input() hasCancelBtn: boolean;
   @Output() complete = new EventEmitter();
   @Output() cancel = new EventEmitter();
@@ -41,8 +41,7 @@ export class CommentFormComponent implements OnInit {
 
     public messageService: MessageService,
     private messageBarService: MessageBarService,
-    private commentService: CommentService,
-    private articleService: ArticleService,
+    private replyService: ReplyService,
     public auth: AuthenticationService,
   ) {
   }
@@ -50,7 +49,7 @@ export class CommentFormComponent implements OnInit {
   ngOnInit() {
     this.createForm();
     this.isRegister = !this.model.created;
-    this.action = this.model.created ? '更新' : '追加';
+    this.action = this.isRegister ?  '追加' : '更新';
   }
 
 
@@ -74,7 +73,6 @@ export class CommentFormComponent implements OnInit {
   // 引数としてNgFormオブジェクトをとりクリアする
   upsert(f: NgForm) {
     const form = this.form;
-
     if (!form.valid ) {
       return false;
     }
@@ -82,19 +80,19 @@ export class CommentFormComponent implements OnInit {
     this.model.text = form.value['text'];
 
     if (this.isRegister) {
-      this.commentService
+      this.replyService
         .register(this.model)
         .subscribe(res => {
-          this.snackBar.open('コメントを追加しました。', null, {duration: 3000});
+          this.snackBar.open('リプライを追加しました。', null, {duration: 3000});
           this.complete.emit();
           this.form.reset();
           f.resetForm();
         }, this.onValidationError.bind(this));
     } else {
-      this.commentService
+      this.replyService
         .update(this.model)
         .subscribe(res => {
-          this.snackBar.open('コメントを更新しました。', null, {duration: 3000});
+          this.snackBar.open('リプライを更新しました。', null, {duration: 3000});
           this.complete.emit();
           this.form.reset();
           f.resetForm();

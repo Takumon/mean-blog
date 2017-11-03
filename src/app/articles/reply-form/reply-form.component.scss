@@ -1,0 +1,50 @@
+.comment-form {
+  &__main {
+    display: flex;
+    margin-bottom: 12px;
+  }
+
+  &__author-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+    background: white;
+    box-shadow: grey 0 0 2px 0px;
+    border-radius: 4px;
+  }
+
+  &__textarea-wrapper {
+    flex: 1;
+    font-size: 14px;
+    margin-bottom: -24px;
+  }
+
+  &__textarea {
+    font-size: 12px;
+    box-sizing: border-box;
+    line-height: 16px;
+    padding: 4px;
+    background: #fbfbfb;
+    resize: none;
+    height: 124px;
+  }
+
+  &__operation {
+    display: flex;
+
+    &__spacer {
+      flex: 1 1 auto;
+    }
+
+    button {
+      margin-right: 12px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+
+
+

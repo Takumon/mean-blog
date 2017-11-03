@@ -63,7 +63,7 @@
       </div>
 
       <div class="comments__count">
-        <i class="comments__count-icon fa fa-fw fa-commenting"></i>{{(item.comments | excludeDeletedComment).length}}<span class="comments__count-unit">件</span>
+        <i class="comments__count-icon fa fa-fw fa-commenting"></i>{{commentService.count(item.comments)}}<span class="comments__count-unit">件</span>
       </div>
       <div class="comments__main">
         <div
@@ -74,7 +74,16 @@
               *ngIf="!comment.userDeleted && !comment.deleted"
               matTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
               class="comments__comment__user"
-              src="data:image/png;base64,{{comment.user.icon}}">
+              src="data:image/png;base64,{{comment.user.icon}}" />
+
+              <div *ngIf="comment.replies?.length > 0"
+                class="comments__reply">
+              <img
+                *ngFor="let reply of comment.replies"
+                matTooltip="【{{comment.user.userId}} ← {{reply.user.userId}}】&#013;{{reply.text}}"
+                class="comments__comment__user_reply"
+                src="data:image/png;base64,{{reply.user.icon}}" />
+            </div>
         </div>
       </div>
 
@@ -91,9 +100,10 @@
           (click)="toggleDetail()"><i class="fa fa-fw fa-chevron-down"></i></button>
       </div>
     </div>
+
     <div *ngIf="item.newComment" class="article__comment-editor comment-editor">
       <app-comment-form
-        [commentModel]="item.newComment"
+        [model]="item.newComment"
         [hasCancelBtn]="true"
         [isAuthfocuse]="true"
         (complete)="refreshComments()"

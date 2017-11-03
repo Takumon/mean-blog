@@ -28,6 +28,7 @@ import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
+import { CommentWithUserModel } from '../shared/comment-with-user.model';
 
 @Component({
   selector: 'app-article',
@@ -46,7 +47,7 @@ export class ArticleComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private messageBarService: MessageBarService,
-    private commentService: CommentService,
+    public commentService: CommentService,
     private articleService: ArticleService,
   ) {
   }
@@ -75,7 +76,7 @@ export class ArticleComponent {
     this.commentService
     .getOfArticle(this.item._id, true)
     .subscribe(comments => {
-      this.item.comments = comments;
+      this.item.comments = comments as Array<CommentWithUserModel>;
     });
   }
 

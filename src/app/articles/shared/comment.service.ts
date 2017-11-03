@@ -6,18 +6,22 @@ import 'rxjs/Rx';
 import { JwtService } from '../../shared/services/jwt.service';
 
 import { CommentModel } from './comment.model';
+import { CommentWithUserModel } from './comment-with-user.model';
+import { CommentWithArticleModel } from './comment-with-article.model';
+
 
 @Injectable()
 export class CommentService {
-  private baseUrl = '/api/comments';
+  private baseCommentUrl = '/api/comments';
+  private baseReplyUrl = '/api/replies';
 
   constructor(
     private http: Http,
     private jwtService: JwtService
   ) {}
 
-  get(condition: Object, withUser: Boolean = false, withArticle: Boolean = false): Observable<any> {
-    const URL = this.baseUrl;
+  get(condition: Object, withUser: boolean = false, withArticle: boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>> {
+    const URL = this.baseCommentUrl;
 
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
@@ -35,8 +39,8 @@ export class CommentService {
       .catch((error: Response) => Observable.throw(error.json()));
   }
 
-  register(comment: CommentModel): Observable<any> {
-    const URL = this.baseUrl;
+  register(comment: CommentModel): Observable<CommentModel> {
+    const URL = this.baseCommentUrl;
 
     const options = {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -50,8 +54,8 @@ export class CommentService {
   }
 
   // 必ず差分更新とする
-  update(comment: CommentModel): Observable<any> {
-    const URL = `${this.baseUrl}/${comment._id}`;
+  update(comment: CommentModel): Observable<CommentModel> {
+    const URL = `${this.baseCommentUrl}/${comment._id}`;
 
     const options = {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,14 +63,14 @@ export class CommentService {
     };
 
     return this.http
-      .put(URL, {$set: comment}, options)
+      .put(URL, comment, options)
       .map((res: Response) => res.json())
       .catch((error: Response) => Observable.throw(error.json()));
 
   }
 
-  delete(commentId: String): Observable<any> {
-    const URL = `${this.baseUrl}/${commentId}`;
+  delete(commentId: String): Observable<CommentModel> {
+    const URL = `${this.baseCommentUrl}/${commentId}`;
 
     return this.http
       .delete(URL, this.jwtService.getRequestOptions())
@@ -75,8 +79,8 @@ export class CommentService {
   }
 
 
-  getOfArticle(_idOfArticle: string, withUser: Boolean = false): Observable<any> {
-    const URL = `${this.baseUrl}/ofArticle/${_idOfArticle}`;
+  getOfArticle(_idOfArticle: string, withUser: Boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel>> {
+    const URL = `${this.baseCommentUrl}/ofArticle/${_idOfArticle}`;
 
     const headers = this.jwtService.getHeaders();
     const search = new URLSearchParams();
@@ -88,5 +92,23 @@ export class CommentService {
       .get(URL, { headers, search })
       .map((res: Response) => res.json())
       .catch((error: Response) => Observable.throw(error.json()));
+  }
+
+
+  count(comments: Array<CommentWithUserModel>): number {
+    if (!comments || comments.length === 0) {
+      return 0;
+    }
+
+    let count = 0;
+    comments.filter(c => !c.deleted).forEach(c => {
+      count++;
+      // リプライは論理削除がないのでそのまま加算する
+      if (c.replies && c.replies.length > 0) {
+        count += c.replies.length;
+      }
+    });
+
+    return count;
   }
 }

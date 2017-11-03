@@ -1,7 +1,7 @@
 <form
   [formGroup]="form"
   #f="ngForm"
-  class="comment-form"
+  class="comment-form reply-form"
   >
   <div class="comment-form__main">
     <img class="comment-form__author-icon"
@@ -48,7 +48,7 @@
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="form.invalid"
+      [disabled]="!form.valid"
       (click)="upsert(f)"
       ><i class="fa fa-fw fa-commenting"></i>  {{action}}</button>
   </div>

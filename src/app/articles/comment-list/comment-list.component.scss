@@ -23,7 +23,8 @@
   }
 }
 
-.comment-list-content {
+.comment-list-content,
+.reply-list-content {
   padding-top: 6px;
   padding-bottom: 6px;
   border-top: 1px solid #f5f4f4;
@@ -139,6 +140,9 @@
   }
 }
 
+.reply-list-content {
+  margin-left: 42px;
+}
 
 .reply {
   margin: 12px 0 12px 42px;

@@ -3,44 +3,91 @@
 </ng-container>
 <ng-container *ngIf="comments">
   <div class="comment-list-header">
-    <div class="comment-list-header__count" >コメント{{(comments | excludeDeletedComment).length}}件</div>
+    <div class="comment-list-header__count" >コメント{{commentService.count(comments)}}件</div>
     <div class="comment-list-header__spacer"></div>
   </div>
   <div
-    *ngFor="let comment of (comments | excludeDeletedLeafComment)"
-    class="comment-list-content"
-    [style.marginLeft.px]="calcMarginOfComment(comment.depth)"
-    >
+    *ngFor="let comment of (comments | excludeDeletedComment)"
+    class="comment-list-content">
 
-    <div *ngIf=" comment.userDeleted;                                            then displayDeletedUserComment"></div>
-    <div *ngIf="!comment.userDeleted &&  comment.deleted;                        then displayDeletedComment"></div>
-    <div *ngIf="!comment.userDeleted && !comment.deleted && comment.isEditable;  then editComment"></div>
-    <div *ngIf="!comment.userDeleted && !comment.deleted && !comment.isEditable; then displayComment"></div>
-    <ng-template #displayDeletedUserComment>
-      <div class="comment_deleted">
-        <img class="comment__author-icon" src="assets/images/deleted-comment.png">
-        <div class="comment__main">
-          <pre class="comment__text_deleted">このコメントの投稿者は削除されました。</pre>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #displayDeletedComment>
-      <div class="comment_deleted">
-        <img class="comment__author-icon" src="assets/images/deleted-comment.png">
-        <div class="comment__main">
-          <pre class="comment__text_deleted">このコメントは削除されました。</pre>
-        </div>
-      </div>
-    </ng-template>
+    <div *ngIf="comment.isEditable;  then editComment else displayComment"></div>
+    <div *ngIf="comment.replies?.length > 0" class="reply-list-content">
+      <ng-container *ngFor="let reply of comment.replies">
+        <div *ngIf="reply.isEditable;  then editReply else displayReply"></div>
+        <!-- リプライ更新 -->
+        <ng-template #editReply>
+          <app-reply-form
+            [model]="replyOfForm(comment, false, reply)"
+            [hasCancelBtn]="true"
+            [isAuthfocuse]="true"
+            (complete)="refreshComments()"
+            (cancel)="reply.isEditable = false;"
+            ></app-reply-form>
+        </ng-template>
+
+        <ng-template #displayReply>
+          <div class="comment">
+            <img
+              class="comment__author-icon"
+              src="data:image/png;base64,{{reply.user.icon}}"
+              [routerLink]="['/', reply.user.userId, 'articles']"
+               >
+            <div class="comment__main">
+              <div class="comment__metadata">
+                <div
+                  class="comment__author"
+                  [routerLink]="['/', comment.user.userId, 'articles']"
+                  >{{reply.user.userId}}</div>
+                <div class="comment__created">{{reply.updated | date: 'yyyy/MM/dd HH:mm' }}<span> に{{reply.created == reply.updated ? "投稿" : "更新" }}</span></div>
+              </div>
+              <pre [innerHTML]="reply.text" class="comment__text"></pre>
+              <div class="comment__operation">
+                <button
+                  mat-button
+                  (click)="reply.addReply = true; reply.isEditable = false;">
+                  <i class="fa fa-fw fa-reply"></i><span>  返信</span>
+                </button>
+                <button
+                  mat-button
+                  *ngIf="auth.loginUser._id === reply.user._id"
+                  (click)="reply.isEditable = true; reply.addReply = false">
+                  <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
+                </button>
+                <button
+                  mat-button
+                  *ngIf="auth.loginUser._id === reply.user._id"
+                  (click)="deleteReply(reply._id)">
+                  <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- リプライに対するリプライ（実質コメントに対するリプライ）登録  -->
+          <div *ngIf="reply.addReply" class="reply">
+            <app-reply-form
+              [model]="replyOfForm(comment, true)"
+              [hasCancelBtn]="true"
+              [isAuthfocuse]="true"
+              (complete)="refreshComments()"
+              (cancel)="reply.addReply = false;"
+              ></app-reply-form>
+          </div>
+        </ng-template>
+
+      </ng-container>
+    </div>
+
+    <!-- コメント更新 -->
     <ng-template #editComment>
       <app-comment-form
-        [commentModel]="commentOfForm(comment)"
+        [model]="commentOfForm(comment)"
         [hasCancelBtn]="true"
         [isAuthfocuse]="true"
         (complete)="refreshComments()"
         (cancel)="comment.isEditable = false;"
         ></app-comment-form>
     </ng-template>
+
     <ng-template #displayComment>
       <div class="comment">
         <img
@@ -78,20 +125,22 @@
           </div>
         </div>
       </div>
+      <!-- リプライ登録 -->
       <div *ngIf="comment.addReply" class="reply">
-        <app-comment-form
-          [commentModel]="commentOfForm(null, comment._id)"
+        <app-reply-form
+          [model]="replyOfForm(comment, false)"
           [hasCancelBtn]="true"
           [isAuthfocuse]="true"
           (complete)="refreshComments()"
           (cancel)="comment.addReply = false;"
-          ></app-comment-form>
+          ></app-reply-form>
       </div>
     </ng-template>
   </div>
+  <!-- コメント登録 -->
   <div class="new-comment" *ngIf="auth.loginUser">
       <app-comment-form
-        [commentModel]="commentOfForm()"
+        [model]="commentOfForm()"
         [hasCancelBtn]="false"
         [isAuthfocuse]="false"
         (complete)="refreshComments()"></app-comment-form>

@@ -10,6 +10,7 @@ import { PaginatorService } from '../shared/services/paginator.service';
 
 import { ArticleService } from './shared/article.service';
 import { CommentService } from './shared/comment.service';
+import { ReplyService } from './shared/reply.service';
 import { MarkdownParseService } from './shared/markdown-parse.service';
 import { SearchConditionService } from './shared/search-condition.service';
 import { DraftService } from './shared/draft.service';
@@ -27,7 +28,6 @@ import { RouteNamesService } from '../shared/services/route-names.service';
 
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
-import { ExcludeDeletedLeafCommentPipe } from './shared/exclude-deleted-leaf-comment.pipe';
 import { ExcludeDeletedCommentPipe } from './shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from './shared/exclude-deleted-voter.pipe';
 import { SafeHtmlPipe } from './shared/safe-html.pipe';
@@ -40,6 +40,7 @@ import { ArticleTocComponent } from './article-detail/article-toc.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { CommentFormComponent } from './comment-form/comment-form.component';
+import { ReplyFormComponent } from './reply-form/reply-form.component';
 import { VoterListComponent } from './voter-list/voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
@@ -60,12 +61,12 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     ArticleTocComponent,
     CommentListComponent,
     CommentFormComponent,
+    ReplyFormComponent,
     VoterListComponent,
     SearchConditionDialogComponent,
     SearchConditionComponent,
     MarkdownParsePipe,
     OrderByPipe,
-    ExcludeDeletedLeafCommentPipe,
     ExcludeDeletedCommentPipe,
     ExcludeDeletedVoterPipe,
     KeysPipe,
@@ -93,6 +94,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
 
     ArticleService,
     CommentService,
+    ReplyService,
     MarkdownParseService,
     SearchConditionService,
     DraftService,

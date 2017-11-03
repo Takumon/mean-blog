@@ -14,6 +14,9 @@ import { CommentModel } from '../shared/comment.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
+import { ReplyService } from '../shared/reply.service';
+import { ReplyModel } from '../shared/reply.model';
+import { ReplyWithUserModel } from '../shared/reply-with-user.model';
 
 @Component({
   selector: 'app-comment-list',
@@ -32,7 +35,8 @@ export class CommentListComponent implements OnInit {
     public snackBar: MatSnackBar,
     public auth: AuthenticationService,
     private articleService: ArticleService,
-    private commentService: CommentService,
+    public commentService: CommentService,
+    private replyService: ReplyService,
     public dialog: MatDialog,
   ) {
   }
@@ -58,13 +62,12 @@ export class CommentListComponent implements OnInit {
       });
   }
 
-  commentOfForm(commentWithUserModel: CommentWithUserModel = null, parentId: string = null): CommentModel {
+  commentOfForm(commentWithUserModel: CommentWithUserModel = null): CommentModel {
     // 追加の場合
     if (commentWithUserModel === null) {
       const newComment = new CommentModel();
       newComment.user = this.auth.loginUser._id;
       newComment.articleId = this._idOfArticle;
-      newComment.parentId = parentId;
       return newComment;
     }
 
@@ -75,6 +78,26 @@ export class CommentListComponent implements OnInit {
     commentModel.created = commentWithUserModel.created;
     return commentModel;
   }
+
+  replyOfForm(comment: CommentWithUserModel, isReplyToReoly: boolean, replyWithUserModel: ReplyWithUserModel = null): ReplyModel {
+    // 追加の場合
+    if (replyWithUserModel === null) {
+      const newReply = new ReplyModel();
+      newReply.user = this.auth.loginUser._id;
+      newReply.articleId = this._idOfArticle;
+      newReply.commentId = comment._id;
+      newReply.text = isReplyToReoly ? `> ${comment.user.userId} さん\n` : '';
+      return newReply;
+    }
+
+    // 更新の場合（差分更新なので必要なのは_idとテキスト情報のみ）
+    const replyModel = new ReplyModel();
+    replyModel._id = replyWithUserModel._id;
+    replyModel.text = replyWithUserModel.text;
+    replyModel.created = replyWithUserModel.created;
+    return replyModel;
+  }
+
 
   calcMarginOfComment(depth: number): number {
     const d: number = depth > 4 ? 4 : depth;
@@ -99,6 +122,28 @@ export class CommentListComponent implements OnInit {
       .delete(commentId)
       .subscribe(res => {
         this.snackBar.open('コメントを削除しました。', null, {duration: 3000});
+        this.refreshComments();
+      });
+    });
+  }
+
+  deleteReply(replyId: String): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'リプライ削除',
+        message: `リプライを削除しますか？`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.replyService
+      .delete(replyId)
+      .subscribe(res => {
+        this.snackBar.open('リプライを削除しました。', null, {duration: 3000});
         this.refreshComments();
       });
     });

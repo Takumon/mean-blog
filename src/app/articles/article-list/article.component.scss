@@ -183,7 +183,8 @@
   &__count {
     white-space: nowrap;
     font-size: 16px;
-    line-height: 24px;
+    line-height: 36px;
+    height: 36px;
     color: #606060;
     width: 72px;
     box-sizing: border-box;
@@ -220,16 +221,56 @@
   &__comment {
     margin-top: 12px;
     line-height: 0;
+    display: flex;
 
     &__user {
-      width: 24px;
-      height: 24px;
+      width: 36px;
+      height: 36px;
       box-shadow: grey 0 0 1px 0px;
       margin-right: 12px;
       background: white;
       border-radius: 3px;
       image-rendering: -webkit-optimize-contrast;
       cursor: pointer;
+      $parent: &;
+
+      &_reply {
+        @extend #{$parent};
+        margin-top: 11px;
+        width: 24px;
+        height: 24px;
+        box-shadow: #a2a7b3 0 0 1px 0px;
+        margin-right: 6px;
+      }
+    }
+  }
+
+  &__reply {
+    display:flex;
+    position: relative;
+    margin-left: -6px;
+    margin-right: 8px;
+
+    &:before {
+      content: '';
+      display: block;
+      height: 1px;
+      background: #d4d4e8;
+      top: 6px;
+      right: 0px;
+      left: -2px;
+      position: absolute;
+    }
+
+    &:after {
+      content: '';
+      display: block;
+      width: 1px;
+      background: #d4d4e8;
+      top: 6px;
+      bottom: 0;
+      right: 0px;
+      position: absolute;
     }
   }
 
