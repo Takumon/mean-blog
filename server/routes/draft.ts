@@ -54,7 +54,7 @@ router.get('/', (req, res, next) => {
 router.get('/:_id', (req, res, next) => {
   const condition = {
     _id: new mongoose.Types.ObjectId(req.params._id),
-    deleted: { $exists : false } // 削除記事は除外
+    deleted: { $eq: null}  // 削除記事は除外
   };
 
   Draft

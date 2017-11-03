@@ -29,7 +29,7 @@ userRouter.get('/', (req, res, next) => {
   const query = req.query;
   // 削除記事は除外
   const condition = {
-    deleted: { $exists : false }
+    deleted: { $eq: null}
   };
 
   if (query.withPassword) {
@@ -59,7 +59,7 @@ userRouter.get('/:userId', (req, res, next) => {
 
   const condition = {
     userId: req.params.userId,
-    deleted: { $exists : false } // 削除記事は除外
+    deleted: { $eq: null} // 削除記事は除外
   };
 
   if (req.query.withPassword) {
@@ -78,7 +78,7 @@ userRouter.get('/:userId', (req, res, next) => {
 // 入力チェック用
 function isNotExisted(_id: String): Promise<boolean> {
   return User
-  .findOne({ _id: _id, deleted: { $exists : false }})
+  .findOne({ _id: _id, deleted: { $eq: null} })
   .exec()
   .then(user => {
     if (user) {
@@ -92,7 +92,7 @@ function isNotExisted(_id: String): Promise<boolean> {
 // 入力チェック用
 function isNotDeleted(_id: String): Promise<boolean> {
   return User
-  .findOne({ _id: _id, deleted: { $exists : false }})
+  .findOne({ _id: _id, deleted: { $eq: null} })
   .exec()
   .then(user => {
     // 削除されてないユーザが存在すればOK

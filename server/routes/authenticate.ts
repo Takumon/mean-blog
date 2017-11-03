@@ -27,7 +27,7 @@ authenticateRouter.post('/login', [
   const reqUser = req.body;
   User.findOne({
     userId: reqUser.userId,
-    deleted: { $exists : false }
+    deleted: { $eq: null}
   }, function(err, user) {
     if (err) {
       throw err;
@@ -61,7 +61,7 @@ authenticateRouter.post('/login', [
 
 function isAllreadyUsed(userId: String): Promise<boolean> {
   return User
-  .findOne({ userId: userId, deleted: { $exists : false }})
+  .findOne({ userId: userId, deleted: { $eq: null}})
   .exec()
   .then(user => {
     if (user) {
@@ -94,7 +94,7 @@ authenticateRouter.post('/register', [
   const reqUser = req.body;
   User.findOne({
     userId: reqUser.userId,
-    deleted: { $exists : false }
+    deleted: { $eq: null}
   }, (err, user) => {
     if (err) {
       throw err;
@@ -153,7 +153,7 @@ authenticateRouter.get('/check-state', (req, res) => {
     User
       .find({
         _id: decoded._id,
-        deleted: { $exists : false }
+        deleted: { $eq: null}
       })
       .select('-password')
       .exec( (err2, doc) => {
