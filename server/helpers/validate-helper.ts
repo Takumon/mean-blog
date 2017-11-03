@@ -3,6 +3,7 @@ import { Draft } from '../models/draft';
 import { User } from '../models/user';
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
+import { Reply } from '../models/reply';
 import { SearchCondition } from '../models/search-condition';
 
 class Validation {
@@ -12,7 +13,7 @@ class Validation {
 
   isExistedUser(_id: String): Promise<boolean> {
     return User
-      .findOne({ _id: _id, deleted: { $exists : false }})
+      .findOne({ _id: _id, deleted: { $eq: null}})
       .exec()
       .then(target => {
         if (target) {
@@ -41,7 +42,7 @@ class Validation {
     }
 
     return User
-      .find({ _id: {$in: _ids}, deleted: { $exists : false }})
+      .find({ _id: {$in: _ids}, deleted: { $eq: null}})
       .exec()
       .then(target => {
         if (!target || target.length !== _ids.length) {
@@ -61,7 +62,7 @@ class Validation {
   /** 記事（論理削除されていない記事）が存在するか */
   isExistedArticle(_id: String): Promise<boolean> {
     return Article
-      .findOne({ _id: _id, deleted: { $exists : false }})
+      .findOne({ _id: _id, deleted: { $eq: null}})
       .exec()
       .then(target => {
         if (target) {
@@ -75,7 +76,7 @@ class Validation {
   /** コメント（論理削除されていないコメント）が存在するか */
   isExistedComment(_id: String): Promise<boolean> {
     return Comment
-      .findOne({ _id: _id, deleted: { $exists : false }})
+      .findOne({ _id: _id,  deleted: { $eq: null}})
       .exec()
       .then(target => {
         if (target) {
@@ -90,7 +91,7 @@ class Validation {
   // いいねが存在するか（削除用）
   isExistedVote(_idOfVorter: String, {req}): Promise<boolean> {
     return Article
-    .findOne({ _id: req.params._id, deleted: { $exists : false }})
+    .findOne({ _id: req.params._id,  deleted: { $eq: null}})
     .exec()
     .then(target => {
 
@@ -111,7 +112,7 @@ class Validation {
   // 指定したいいねが存在していないか（登録用）
   isNotExistedVote(_idOfVorter: String, {req}): Promise<boolean> {
     return Article
-    .findOne({ _id: req.params._id, deleted: { $exists : false }})
+    .findOne({ _id: req.params._id, deleted: { $eq: null}})
     .exec()
     .then(target => {
 
@@ -137,12 +138,25 @@ class Validation {
     }
 
     return Article
-      .findOne({ _id: _id, deleted: { $exists : false }})
+      .findOne({ _id: _id, deleted: { $eq: null}})
       .exec()
       .then(target => {
         if (target && target.author.toString() === req.body.author) {
           return Promise.resolve(true);
       }
+        return Promise.reject(false);
+      }).catch(err => Promise.reject(false));
+  }
+
+  isExistedReply(_id: String): Promise<boolean> {
+    return Reply
+      .findOne({ _id: _id}) // 論理削除はないので単純に_id検索
+      .exec()
+      .then(target => {
+        if (target) {
+          // チェックOK
+          return Promise.resolve(true);
+        }
         return Promise.reject(false);
       }).catch(err => Promise.reject(false));
   }

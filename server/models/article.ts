@@ -26,7 +26,16 @@ const ArticleSchema = new mongoose.Schema({
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
   deleted: { type: Date },
+}, { toJSON: { virtuals: true } });
+
+
+ArticleSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'articleId',
+  justOne: false,
 });
+
 
 ArticleSchema.plugin(autoIncrement.plugin, {
   model: 'Article',

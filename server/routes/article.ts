@@ -7,7 +7,6 @@ import { check, oneOf, body, param, validationResult } from 'express-validator/c
 import { validateHelper as v } from '../helpers/validate-helper';
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
-import { CommentTree } from '../helpers/comment-tree';
 import { User } from '../models/user';
 
 const MODEL_NAME = '記事';
@@ -15,8 +14,7 @@ const router: Router = Router();
 
 // 複数件検索
 router.get('/', (req, res, next) => {
-
-  getCondition(req, function(error, condition) {
+  getCondition(req, function(error: any, condition: ArticleCondition) {
     if (error) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -24,8 +22,32 @@ router.get('/', (req, res, next) => {
       });
     }
 
-    const withUser: boolean = !!req.query.withUser;
-    CommentTree.getArticlesWithCommentOfTree(condition, withUser, (err, doc) => {
+    Article
+    .find(condition)
+    .populate('author', 'icon userId userName')
+    .populate({
+      path: 'vote',
+      options: { sort: { created: 1 }},
+    })
+    .populate({
+      path: 'comments',
+      options: {
+        sort: { created: 1 }
+      },
+      populate: [{
+        path: 'user',
+        select: 'icon userId userName',
+      }, {
+        path: 'replies',
+        options: { sort: { created: 1 }},
+
+        populate: {
+          path: 'user',
+          select: 'icon userId userName',
+        }
+      }],
+    })
+    .exec((err, doc) => {
       if (err) {
         return res.status(500).json({
           title: v.MESSAGE_KEY.default,
@@ -38,22 +60,23 @@ router.get('/', (req, res, next) => {
 });
 
 
+interface ArticleCondition {
+  author?: any;
+  vote?: any;
+  created?: any;
+  deleted: any;
+}
+
 // 検索条件にauthorUserIdの指定がある場合はユーザ情報を取得して_idに変換する
-function getCondition(req: any, cb: Function): void {
+function getCondition(req: any, cb: (error: any, condition: ArticleCondition) => void): void {
   const query = req.query;
   const source = query.condition ?
     JSON.parse(query.condition) :
     {};
 
-  // 削除記事は除外
-  const factors: Array<Object> = [];
-  factors.push({
-    deleted: { $exists : false }
-  });
-
-  const condition = {$match: {
-    $and: factors
-  }};
+  const condition: ArticleCondition = {
+    deleted: { $eq: null}  // 削除記事は除外
+  };
 
   // ユーザのuserIdで絞り込み
   const userIds = source.author && source.author.userId;
@@ -80,13 +103,11 @@ function getCondition(req: any, cb: Function): void {
         return cb(new mongoose.Error(`指定したユーザ(${userIds})が見つかりません`), null);
       }
 
-      factors.push({
-        author: {
+      condition.author =  {
           $in: users.map(user => user._id)
-        }
-      });
+      };
 
-      return cb(null, condition);
+      return cb && cb(null, condition);
     });
   }
 
@@ -94,55 +115,43 @@ function getCondition(req: any, cb: Function): void {
   const _ids = source.author && source.author._id;
   if (_ids) {
     if (_ids instanceof Array) {
-      factors.push({
-        author: {
-          $in: _ids.map(id =>  new mongoose.Types.ObjectId(id))
-        }
-      });
+      condition.author = {
+        $in: _ids.map(id =>  new mongoose.Types.ObjectId(id))
+      };
     } else {
-      factors.push({
-        author: new mongoose.Types.ObjectId(_ids)
-      });
+      condition.author = new mongoose.Types.ObjectId(_ids);
     }
   }
 
   // 記事作成日の下限で絞り込み
   if (source.dateFrom) {
-    factors.push({
-      created: {
-        $gte: new Date(source.dateFrom)
-      }
-    });
+    condition.created = {
+      $gte: new Date(source.dateFrom)
+    };
   }
 
   // 記事作成日の上限で絞り込み
   if (source.dateTo) {
-    factors.push({
-      created: {
+    condition.created = {
         $lte: new Date(source.dateTo)
-      }
-    });
+    };
   }
 
   // 記事にいいねしたユーザの_idで絞り込み
   const voters = source.voter;
   if (voters) {
     if (voters instanceof Array) {
-      factors.push({
-        vote: {
-          $in: voters.map(id =>  new mongoose.Types.ObjectId(id))
-        }
-      });
+      condition.vote = {
+        $in: voters.map(id =>  new mongoose.Types.ObjectId(id))
+      };
     } else {
-      factors.push({
-        vote: {
-          $in: [ new mongoose.Types.ObjectId(voters) ]
-        }
-      });
+      condition.vote = {
+        $in: [ new mongoose.Types.ObjectId(voters) ]
+      };
     }
   }
 
-  return cb(null, condition);
+  return cb && cb(null, condition);
 }
 
 
@@ -150,7 +159,7 @@ function getCondition(req: any, cb: Function): void {
 router.get('/:_id', (req, res, next) => {
   const condition = {
     _id: req.params._id,
-    deleted: { $exists : false } // 削除記事は除外
+    deleted: { $eq: null}  // 削除記事は除外
   };
 
   if (req.query.withUser) {
@@ -371,7 +380,7 @@ router.get('/:_id/vote', (req, res, next) => {
 
   const condition = {
     _id: req.params._id,
-    deleted: { $exists : false } // 削除記事は除外
+    deleted: { $eq: null}  // 削除記事は除外
   };
 
   Article

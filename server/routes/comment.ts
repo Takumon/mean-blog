@@ -5,7 +5,6 @@ import { check, oneOf, body, param, validationResult } from 'express-validator/c
 
 import { validateHelper as v } from '../helpers/validate-helper';
 import { Comment } from '../models/comment';
-import { CommentTree } from '../helpers/comment-tree';
 import { User } from '../models/user';
 
 
@@ -80,7 +79,7 @@ function getCondition(req: any, cb: Function): void {
 
   // 削除記事は除外
   const condition = {
-    deleted: { $exists : false }
+    deleted: { $eq: null}
   };
 
   const userIds = source.user && source.user.userId;
@@ -137,8 +136,6 @@ router.post('/', [
     .exists().withMessage(v.message(v.MESSAGE_KEY.not_specified, ['コメント先の記事'])),
   body('articleId').optional()
     .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント先の記事'])),
-  body('parentId').optional()
-    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['返信先のコメント'])),
   body('text')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['コメント本文'])),
   body('text').optional()
@@ -153,7 +150,10 @@ router.post('/', [
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const comment = new Comment(req.body);
+  const comment = new Comment();
+  comment.articleId = req.body.articleId;
+  comment.text = req.body.text;
+  comment.user = req.body.user;
 
   comment.save((err, target) => {
     if (err) {
@@ -173,7 +173,7 @@ router.post('/', [
 // 更新（差分更新）
 router.put('/:_id', [
   param('_id')
-    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['更新しようとしたコメント'])),
+    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント'])),
   body('text')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント本文'])),
   body('text').optional()
@@ -207,7 +207,7 @@ router.put('/:_id', [
 // 論理削除
 router.delete('/:_id', [
   param('_id')
-    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['削除しようとしたコメント'])),
+    .custom(v.validation.isExistedComment).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['コメント'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -236,8 +236,33 @@ router.delete('/:_id', [
 
 // 記事に紐付くコメントを
 // ツリー構造の順にソートしdepthを追加した配列にして取得する
-router.get('/ofArticle/:_idOfArticle', (req, res, next) => {
-  const cb = (err, doc) => {
+router.get('/ofArticle/:_idOfArticle', [
+  param('_idOfArticle')
+  .custom(v.validation.isExistedArticle).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['URLの記事ID'])),
+], (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  Comment
+  .find({
+    articleId: req.params._idOfArticle
+  })
+  .sort({ created: 1 })
+  .populate([{
+      path: 'user',
+      select: 'icon userId userName',
+    }, {
+      path: 'replies',
+      options: { sort: { created: 1 }},
+
+      populate: {
+        path: 'user',
+        select: 'icon userId userName',
+      }
+  }])
+  .exec((err, doc) => {
     if (err) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -245,12 +270,10 @@ router.get('/ofArticle/:_idOfArticle', (req, res, next) => {
       });
     }
     return res.status(200).json(doc);
-  };
+  });
 
 
-  const withUser: boolean = !!req.query.withUser;
-  const _idOfArticle: mongoose.Types.ObjectId = mongoose.Types.ObjectId(req.params._idOfArticle);
-  CommentTree.getCommentOfTree(_idOfArticle, withUser, cb);
+
 });
 
 
