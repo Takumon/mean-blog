@@ -36,7 +36,7 @@
               <div class="comment__metadata">
                 <div
                   class="comment__author"
-                  [routerLink]="['/', comment.user.userId, 'articles']"
+                  [routerLink]="['/', reply.user.userId, 'articles']"
                   >{{reply.user.userId}}</div>
                 <div class="comment__created">{{reply.updated | date: 'yyyy/MM/dd HH:mm' }}<span> に{{reply.created == reply.updated ? "投稿" : "更新" }}</span></div>
               </div>

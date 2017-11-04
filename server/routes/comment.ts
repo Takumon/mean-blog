@@ -247,19 +247,20 @@ router.get('/ofArticle/:_idOfArticle', [
 
   Comment
   .find({
-    articleId: req.params._idOfArticle
+    articleId: req.params._idOfArticle,
+    deleted: {$eq: null},
   })
   .sort({ created: 1 })
   .populate([{
       path: 'user',
-      select: 'icon userId userName',
+      select: 'icon userId userName deleted',
     }, {
       path: 'replies',
       options: { sort: { created: 1 }},
 
       populate: {
         path: 'user',
-        select: 'icon userId userName',
+        select: 'icon userId userName deleted',
       }
   }])
   .exec((err, doc) => {
@@ -269,7 +270,15 @@ router.get('/ofArticle/:_idOfArticle', [
         error: err.message
       });
     }
-    return res.status(200).json(doc);
+
+    // 削除ユーザのコメントを削除
+    const comments = doc.filter(c => !c.user.deleted);
+    // 削除ユーザのリプライを削除
+    comments.filter(c => c.replies && c.replies.length > 0).forEach( (c, indexOfComments , commentsList) => {
+      commentsList[indexOfComments].replies = c.replies.filter(r => !r.user.deleted);
+    });
+
+    return res.status(200).json(comments);
   });
 
 

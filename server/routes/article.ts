@@ -24,7 +24,7 @@ router.get('/', (req, res, next) => {
 
     Article
     .find(condition)
-    .populate('author', 'icon userId userName')
+    .populate('author', 'icon userId userName deleted')
     .populate({
       path: 'vote',
       options: { sort: { created: 1 }},
@@ -32,18 +32,19 @@ router.get('/', (req, res, next) => {
     .populate({
       path: 'comments',
       options: {
+        deleted: {$eq: null},
         sort: { created: 1 }
       },
       populate: [{
         path: 'user',
-        select: 'icon userId userName',
+        select: 'icon userId userName deleted',
       }, {
         path: 'replies',
         options: { sort: { created: 1 }},
 
         populate: {
           path: 'user',
-          select: 'icon userId userName',
+          select: 'icon userId userName deleted',
         }
       }],
     })
@@ -54,6 +55,26 @@ router.get('/', (req, res, next) => {
           error: err.message
         });
       }
+
+      // TODO ユーザアイコンはサイズが大きいので別にする
+      // 削除ユーザのコメントを削除
+      doc.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
+
+        // 削除ユーザのリプライを削除
+        const temp = a.comments.filter(c => !c.user.deleted);
+
+        temp.filter(c => c.replies && c.replies.length > 0).forEach( (c, indexOfComments , commentsList) => {
+          commentsList[indexOfComments].replies = c.replies.filter(r => !r.user.deleted);
+        });
+
+        articlesList[indexOfArticles].comments = temp;
+      });
+
+      // 削除ユーザのいいねを削除
+      doc.filter(a => a.vote && a.vote.length > 0).forEach((a, i , articlesList) => {
+        articlesList[i].vote = a.vote.filter(voter => !voter.deleted);
+      });
+
       return res.status(200).json(doc);
     });
   });
@@ -104,7 +125,7 @@ function getCondition(req: any, cb: (error: any, condition: ArticleCondition) =>
       }
 
       condition.author =  {
-          $in: users.map(user => user._id)
+        $in: users.map(user => user._id)
       };
 
       return cb && cb(null, condition);
