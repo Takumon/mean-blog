@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import * as autoIncrement from 'mongoose-auto-increment';
 import '../connection';
 
 const ArticleSchema = new mongoose.Schema({
@@ -34,13 +33,6 @@ ArticleSchema.virtual('comments', {
   localField: '_id',
   foreignField: 'articleId',
   justOne: false,
-});
-
-
-ArticleSchema.plugin(autoIncrement.plugin, {
-  model: 'Article',
-  field: 'articleId',
-  startAt: 0
 });
 
 const Article = mongoose.model('Article', ArticleSchema);

@@ -2,7 +2,6 @@ import * as express from 'express';
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
-import * as autoIncrement from 'mongoose-auto-increment';
 import * as jwt from 'jsonWebToken';
 
 

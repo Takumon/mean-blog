@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import * as autoIncrement from 'mongoose-auto-increment';
 import '../connection';
 
 const SearchConditoinSchema = new mongoose.Schema({
