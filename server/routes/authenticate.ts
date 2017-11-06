@@ -6,6 +6,7 @@ import { check, oneOf, body, validationResult } from 'express-validator/check';
 import { matchedData, sanitize } from 'express-validator/filter';
 
 import { User } from '../models/user';
+import { Image, ImageType } from '../models/image';
 import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
 import { authenticate } from '../middleware/authenticate';
 import { PasswordManager } from '../helpers/password-manager';
@@ -102,14 +103,14 @@ authenticateRouter.post('/register', [
 
     const newUser = new User();
     newUser.userId = reqUser.userId;
-    newUser.icon = jdenticon.toPng(reqUser.userId, 200).toString('base64');
     newUser.password = PasswordManager.crypt(reqUser.password);
+
 
     newUser.save( (err2) => {
       if (err2) {
         return res.status(500).json({
           success: false,
-          message: `ユーザ情報の登録に失敗しました。`,
+          message: err2,
         });
       }
 
@@ -117,15 +118,36 @@ authenticateRouter.post('/register', [
         expiresIn : TOKEN_EFFECTIVE_SECOND
       });
 
-      // パスワードはクライアント側に送信しない
-      deleteProp(newUser, 'password');
 
-      return res.send({
-        success: true,
-        message: 'ユーザ情報を新規作成しました。',
-        token: token,
-        user: newUser,
+      // アバター登録
+      const avator = new Image({
+        author: newUser._id,
+        data: jdenticon.toPng(reqUser.userId, 200),
+        contentType: 'image/png',
+        fileName: `avator_${newUser.userId}.png`,
+        type: ImageType.AVATOR,
       });
+
+
+      avator.save((err3) => {
+        if (err3) {
+          return res.status(500).json({
+            success: false,
+            message: err3,
+          });
+        }
+
+        // パスワードはクライアント側に送信しない
+        deleteProp(newUser, 'password');
+
+        return res.send({
+          success: true,
+          message: 'ユーザ情報を新規作成しました。',
+          token: token,
+          user: newUser,
+        });
+      });
+
     });
   });
 });
