@@ -40,7 +40,6 @@ interface UserListFactor {
   user: {
     _id: string;
     userId: string;
-    icon: string;
   };
 }
 
@@ -148,7 +147,6 @@ export class SearchConditionDialogComponent implements OnInit {
                     user: {
                       _id: user._id,
                       userId: user.userId,
-                      icon: user.icon
                     }
                   });
                 } else {
@@ -157,7 +155,6 @@ export class SearchConditionDialogComponent implements OnInit {
                     user: {
                       _id: user._id,
                       userId: user.userId,
-                      icon: user.icon
                     }
                   });
                 }
@@ -177,7 +174,6 @@ export class SearchConditionDialogComponent implements OnInit {
               user: {
                 _id: user._id,
                 userId: user.userId,
-                icon: user.icon
               }
             };
           });
