@@ -146,6 +146,7 @@
   }
 
   &__icon {
+    min-width: 24px;
     width: 24px;
     height: 24px;
     border-radius: 2px;
@@ -154,6 +155,7 @@
     box-shadow: #2f2f2f 0 0 1px 0;
     image-rendering: -webkit-optimize-contrast;
     background: white;
+    display: block;
   }
 
   &__userId {
