@@ -48,6 +48,7 @@
     border-radius: 4px;
     box-sizing: border-box;
     margin-top: 1px;
+    image-rendering: -webkit-optimize-contrast;
     cursor: pointer;
     &:hover {
       opacity: 0.6;
