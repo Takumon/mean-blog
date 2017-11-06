@@ -7,8 +7,6 @@ export class UserModel {
   isAdmin: Boolean;
   blogTitle: string;
   userDescription: string;
-  icon: string;
-  blogTitleBackground: string;
   created: string;
   updated: string;
   deleted: string;

@@ -42,13 +42,30 @@ export class UserService {
       .map((response: Response) => response.json());
   }
 
-  update(user: UserModel): Observable<Object> {
+  // 更新処理（画像ファイルも含むのでenctypeはマルチパート）
+  update(user: UserModel, avator, profileBackground): Observable<Object> {
     const URL = `${this.baseUrl}/${user._id}`;
 
+    const headers = this.jwtService.getHeaders();
+    headers.delete('Content-Type');
+    const options = new RequestOptions({ headers: headers });
+
+
+    const formData = new FormData();
+    formData.append('blogTitle', user.blogTitle);
+    formData.append('email', user.email);
+    formData.append('userName', user.userName);
+    formData.append('userDescription', user.userDescription);
+    formData.append('avator', avator);
+    formData.append('profileBackground', profileBackground);
+
+
     return this.http
-      .put(URL, user, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((res: Response) => Observable.throw(res.json()));
+      .request(URL, {
+        method: 'put',
+        body: formData,
+        headers: options.headers
+      });
   }
 
   delete(_id: string) {

@@ -17,6 +17,7 @@ import {
 import { AuthenticationService } from '../shared/services/authentication.service';
 import { RouteNamesService } from '../shared/services/route-names.service';
 import { MessageService } from '../shared/services/message.service';
+import { MessageBarService } from '../shared/services/message-bar.service';
 
 import { UserModel } from './shared/user.model';
 import { UserService } from './shared/user.service';
@@ -31,6 +32,9 @@ export class UserComponent implements OnInit, OnDestroy {
   public isMine: Boolean;
   public editMode: Boolean = false;
   public form: FormGroup;
+  public avatorForPreview: string;
+  public profileBackgroundForPreview: string;
+
   /** routerLink変更時にUI(アクティブなタブ)をリフレッシュするためのダミーオブジェクト */
   public routerOptions: any = { exact: true };
 
@@ -44,6 +48,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
+    private messageBarService: MessageBarService,
     private auth: AuthenticationService,
     private userService: UserService,
   ) {
@@ -83,33 +88,55 @@ export class UserComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const val = this.form.value;
+    const model = new UserModel();
+    model.blogTitle = val.blogTitle;
+    model.email = val.email;
+    model.userDescription = val.userDescription;
+    model.userName = val.userName;
+
+
+
     this.userService
-      .update(this.form.value)
+      .update(model, val.avator, val.profileBackground)
       .subscribe((res: any) => {
         this.snackBar.open('プロフィールを編集しました。', null, {duration: 3000});
         this.getUser(this.param_userId);
-        this.editMode = false;
-      }, (error: any) => {
-        for (const e of error['errors']) {
-          // getterからformControllを取得
-          const control: FormControl | FormGroup = this[e.param];
-          if (!control) {
-            return;
-          }
+        this.cancelEdit();
+      }, this.onValidationError.bind(this));
+  }
 
-          const messages = control.getError('remote');
-          if (messages) {
-            messages.push(e.msg);
-          } else {
-            control.setErrors({remote: [e.msg]});
-          }
-        }
-      });
+    // TODO 共通化できるか検討
+  private onValidationError(error: any): void {
+    const noControlErrors = [];
+
+    for (const e of error['errors']) {
+      const control: FormControl | FormGroup = this[e.param];
+      // 画像に対するエラーはメッセージだけ表示する
+      if (e.param === 'avator' || e.param === 'profileBackground' || !control) {
+        // 該当するfromがないものはスナックバーで表示
+        noControlErrors.push(e);
+        continue;
+      }
+
+      const messages = control.getError('remote');
+      if (messages) {
+        messages.push(e.msg);
+      } else {
+        control.setErrors({remote: [e.msg]});
+      }
+    }
+
+    if (noControlErrors.length > 0) {
+      this.messageBarService.showValidationError({errors: noControlErrors});
+    }
   }
 
   cancelEdit(): void {
     this.editMode = false;
     this.form = null;
+    this.avatorForPreview = null;
+    this.profileBackgroundForPreview = null;
   }
 
   editUser(): void {
@@ -134,24 +161,26 @@ export class UserComponent implements OnInit, OnDestroy {
       userDescription: ['', [
         Validators.maxLength(400),
       ]],
-      icon: '',
-      blogTitleBackground: '',
+      avator: '',
+      profileBackground: '',
     });
 
     this.form.patchValue(user);
   }
 
-  onChangeIconFile(event): void {
+  onChangeAvatorFile(event): void {
     const file = event.srcElement.files[0];
+    this.avator.setValue(file);
     this.getBase64(file, base64File => {
-      this.icon.setValue(base64File);
+      this.avatorForPreview = base64File;
     });
   }
 
   onChangeBackgroundFile(event): void {
     const file = event.srcElement.files[0];
+    this.profileBackground.setValue(file);
     this.getBase64(file, base64File => {
-      this.blogTitleBackground.setValue(base64File);
+      this.profileBackgroundForPreview = base64File;
     });
   }
 
@@ -159,9 +188,8 @@ export class UserComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const base64File = e.target.result;
-      const withoutMediaType = base64File.split(',')[1];
       if (callback) {
-        callback(withoutMediaType);
+        callback(base64File);
       }
     };
     reader.readAsDataURL(file);
@@ -171,6 +199,6 @@ export class UserComponent implements OnInit, OnDestroy {
   get email(): FormControl { return this.form.get('email') as FormControl; }
   get blogTitle(): FormControl { return this.form.get('blogTitle') as FormControl; }
   get userDescription(): FormControl { return this.form.get('userDescription') as FormControl; }
-  get icon(): FormControl { return this.form.get('icon') as FormControl; }
-  get blogTitleBackground(): FormControl { return this.form.get('blogTitleBackground') as FormControl; }
+  get avator(): FormControl { return this.form.get('avator') as FormControl; }
+  get profileBackground(): FormControl { return this.form.get('profileBackground') as FormControl; }
 }
