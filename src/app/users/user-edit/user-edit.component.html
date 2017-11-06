@@ -117,7 +117,11 @@
           name="icon"
           (change)="onChangeIconFile($event)"
           >
-        <img class="avator-icon" src="data:image/png;base64,{{user.icon}}">
+        <img
+          class="avator-icon"
+          lazyLoad="/api/images/avator/{{user._id}}"
+          offset="50"
+          >
       </div>
     </div>
 

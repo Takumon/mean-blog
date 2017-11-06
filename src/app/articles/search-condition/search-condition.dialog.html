@@ -152,7 +152,9 @@
                   >
                   <img
                     class="user__content__icon"
-                    src="data:image/png;base64,{{checkinfo.user.icon}}">
+                    lazyLoad="/api/images/avator/{{ checkinfo.user._id }}"
+                    offset="50"
+                    >
                   <div
                     class="user__content__userId">{{checkinfo.user.userId}}</div>
                   <i class="show-when-hover fa fa-fw fa-arrow-right" aria-hidden="true"></i>
@@ -185,7 +187,9 @@
                   >
                   <img
                     class="user__content__icon"
-                    src="data:image/png;base64,{{checkinfo.user.icon}}">
+                    lazyLoad="/api/images/avator/{{ checkinfo.user._id }}"
+                    offset="50"
+                    >
                   <div
                     class="user__content__userId">{{checkinfo.user.userId}}</div>
                   <i class="show-when-hover fa fa-fw fa-arrow-left" aria-hidden="true"></i>

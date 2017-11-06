@@ -40,7 +40,9 @@
             class="user">
             <img
               class="user__icon"
-              src="data:image/png;base64,{{user.icon}}">
+              lazyLoad="/api/images/avator/{{ user._id }}"
+              offset="50"
+              >
             <p class="user__userId">{{user.userId}}</p>
           </div>
         </div>

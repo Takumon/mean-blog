@@ -40,7 +40,11 @@
     <h1 class="profile__title">アバター</h1>
     <div class="prifile__main">
       <div class="data">
-        <img class="avator-icon" src="data:image/png;base64,{{user.icon}}">
+        <img
+          class="avator-icon"
+          lazyLoad="/api/images/avator/{{user._id}}"
+          offset="50"
+          >
       </div>
     </div>
   </div>

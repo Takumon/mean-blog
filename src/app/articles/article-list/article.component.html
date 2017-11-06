@@ -5,7 +5,10 @@
     [routerLink]="['/', item.author.userId, 'articles', item._id]"
     routerLinkActive="active">
     <div class="article__avator">
-      <img class="article__avator-icon" src="data:image/png;base64,{{item.author.icon}}">
+      <img class="article__avator-icon"
+        lazyLoad="/api/images/avator/{{ item.author._id}}"
+        offset="50"
+        >
     </div>
     <div class="article__subtitle">
       <div class="article__author-name">{{item.author.userId}}</div>
@@ -74,15 +77,19 @@
               *ngIf="!comment.userDeleted && !comment.deleted"
               matTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
               class="comments__comment__user"
-              src="data:image/png;base64,{{comment.user.icon}}" />
+              lazyLoad="/api/images/avator/{{ comment.user._id}}"
+              offset="50"
+              >
 
               <div *ngIf="comment.replies?.length > 0"
                 class="comments__reply">
-              <img
-                *ngFor="let reply of comment.replies"
-                matTooltip="【{{comment.user.userId}} ← {{reply.user.userId}}】&#013;{{reply.text}}"
-                class="comments__comment__user_reply"
-                src="data:image/png;base64,{{reply.user.icon}}" />
+                <img
+                  *ngFor="let reply of comment.replies"
+                  matTooltip="【{{comment.user.userId}} ← {{reply.user.userId}}】&#013;{{reply.text}}"
+                  class="comments__comment__user_reply"
+                  lazyLoad="/api/images/avator/{{ reply.user._id }}"
+                  offset="50"
+                  />
             </div>
         </div>
       </div>

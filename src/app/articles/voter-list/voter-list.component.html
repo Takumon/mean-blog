@@ -9,8 +9,9 @@
       <img
         matTooltip="{{voter.userId}}"
         class="voter-list__voter-icon"
-        src="data:image/png;base64,{{voter.icon}}"
         [routerLink]="['/', voter.userId, 'articles']"
+        lazyLoad="/api/images/avator/{{ voter._id}}"
+        offset="50"
         >
     </div>
   </div>

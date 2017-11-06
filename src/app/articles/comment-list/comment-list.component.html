@@ -29,9 +29,10 @@
           <div class="comment">
             <img
               class="comment__author-icon"
-              src="data:image/png;base64,{{reply.user.icon}}"
               [routerLink]="['/', reply.user.userId, 'articles']"
-               >
+              lazyLoad="/api/images/avator/{{ reply.user._id }}"
+              offset="50"
+              >
             <div class="comment__main">
               <div class="comment__metadata">
                 <div
@@ -92,8 +93,9 @@
       <div class="comment">
         <img
           class="comment__author-icon"
-          src="data:image/png;base64,{{comment.user.icon}}"
           [routerLink]="['/', comment.user.userId, 'articles']"
+          lazyLoad="/api/images/avator/{{ comment.user._id }}"
+          offset="50"
           >
         <div class="comment__main">
           <div class="comment__metadata">

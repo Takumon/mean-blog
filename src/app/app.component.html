@@ -64,7 +64,12 @@
       *ngIf="auth.loginUser"
       class="menu-btn"
       [matMenuTriggerFor]="menu">
-      <img class="menu-btn__icon" src="{{auth.loginUser.icon ? 'data:image/png;base64,' + auth.loginUser.icon: ''}}">
+      <img
+        *ngIf="auth.loginUser"
+        class="menu-btn__icon"
+        lazyLoad="/api/images/avator/{{ auth.loginUser._id }}"
+        offset="50"
+        >
 
       <mat-menu #menu="matMenu" class="menu-btn__menu">
         <div mat-menu-item disabled class="menu-btn__menu__description"><span class="menu-btn__menu__username">{{auth.loginUser.userId}}</span>としてログイン済</div>

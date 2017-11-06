@@ -26,6 +26,7 @@ import {
   MatSelectModule,
   MatPaginatorModule,
 } from '@angular/material';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -41,6 +42,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
   ],
   imports: [
     BrowserModule,
+    LazyLoadImageModule,
 
     MatToolbarModule,
     MatProgressBarModule,
@@ -75,6 +77,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
     AutofocusDirective,
     ConfirmDialogComponent,
     MessageBarComponent,
+    LazyLoadImageModule,
 
     MatToolbarModule,
     MatProgressBarModule,
