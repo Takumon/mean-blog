@@ -15,7 +15,6 @@ import {MAT_SNACK_BAR_DATA} from '@angular/material';
 export class MessageBarComponent {
 
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {
-    console.log(data);
   }
 
   // snackBarを使う側がsnackBarRefをココに代入する

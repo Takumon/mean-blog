@@ -16,7 +16,6 @@ export class MessageBarService {
 
   // 入力チェックエラーメッセージをスナックバーで表示する
   showValidationError(error: any): Observable<any> {
-    console.log(error);
     if (error.errors && error.errors.length > 0) {
       this.openSnackBar(
         error.errors.map(e => e.msg),
