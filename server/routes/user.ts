@@ -1,11 +1,14 @@
+import * as mongoose from 'mongoose';
 import * as http from 'http';
 import { Router, Response } from 'express';
+import * as multer from 'multer';
 import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
-
+import { inspect } from 'util';
 
 import { User } from '../models/user';
+import { Image, ImageType } from '../models/image';
 import { authenticate } from '../middleware/authenticate';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
@@ -103,37 +106,125 @@ function isNotDeleted(_id: String): Promise<boolean> {
   }).catch(err => Promise.reject(false));
 }
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+export interface MulterFile {
+  key: string; // Available using `S3`.
+  path: string; // Available using `DiskStorage`.
+  mimetype: string;
+  originalname: string;
+  size: number;
+}
 
 // 更新（差分更新）
-userRouter.put('/:_id', [
+userRouter.put('/:_id', upload.fields([
+  { name: 'avator', maxCount: 1 },
+  { name: 'profileBackground', maxCount: 1 }
+]), [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
     .custom(isNotExisted).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザ'])),
-  body('email').optional({ checkFalsy : true})
+  check('email').optional({ checkFalsy : true})
     .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['Eメール', '50']))
     .isEmail().withMessage(v.message(v.MESSAGE_KEY.pattern_email, ['Eメール'])),
-  body('userName').optional({ checkFalsy : true})
+  check('userName').optional({ checkFalsy : true})
     .isLength({ max: 50 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['ユーザ名', '30'])),
-  body('blogTitle').optional({ checkFalsy : true})
+  check('blogTitle').optional({ checkFalsy : true})
     .isLength({ max: 30 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
-  body('userDescription').optional({ checkFalsy : true})
+  check('userDescription').optional({ checkFalsy : true})
     .isLength({ max: 400 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['名', '30'])),
-  body('icon').optional({ checkFalsy : true})
-    .isBase64().withMessage(v.message(v.MESSAGE_KEY.pattern, ['アイコン画像', '画像ファイル'])),
-  body('blogTitleBackground').optional({ checkFalsy : true})
-    .isBase64().withMessage(v.message(v.MESSAGE_KEY.pattern, ['ブログタイトル画像', '画像ファイル'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const user = req.body;
-  delete user.password;
-  delete user.isAdmin;
-  user.updated = new Date();
+  // アバター更新
+  if (req.files['avator'] && req.files['avator'][0]) {
+    const avatorFile = req.files['avator'][0];
+    const condition = {
+      author: new mongoose.Types.ObjectId(req.params._id),
+      type: ImageType.AVATOR,
+    };
+    const avator = {
+      author: new mongoose.Types.ObjectId(req.params._id),
+      data: avatorFile.buffer,
+      contentType: avatorFile.mimetype,
+      filename: avatorFile.filename,
+      type: ImageType.AVATOR,
+    };
 
-  User.findByIdAndUpdate(req.params._id, {$set: user }, {new: true}, (err, target) => {
+
+    Image
+    .findOneAndUpdate(condition, avator, {upsert: true, new: true}, (error, target ) => {
+
+      if (error) {
+        return res.status(500).json({
+            title: v.MESSAGE_KEY.default,
+            error: error.message
+        });
+      }
+
+      updateProfileBackground(req, res);
+    });
+  } else {
+    updateProfileBackground(req, res);
+  }
+
+});
+
+
+function updateProfileBackground(req, res) {
+  // プロフィール背景更新
+  if (req.files['profileBackground'] && req.files['profileBackground'][0]) {
+    const profileBackgroundFile = req.files['profileBackground'][0];
+    const condition = {
+      author: new mongoose.Types.ObjectId(req.params._id),
+      type: ImageType.PROFILE_BACKGROUND,
+    };
+    const profileBackground = {
+      author: new mongoose.Types.ObjectId(req.params._id),
+      data: profileBackgroundFile.buffer,
+      contentType: profileBackgroundFile.mimetype,
+      filename: profileBackgroundFile.filename,
+      type: ImageType.PROFILE_BACKGROUND,
+    };
+
+    Image
+    .findOneAndUpdate(condition, profileBackground, {upsert: true, new: true}, (error, target ) => {
+      if (error) {
+        return res.status(500).json({
+            title: v.MESSAGE_KEY.default,
+            error: error.message
+        });
+      }
+
+      updateUser(req, res);
+    });
+  } else {
+    updateUser(req, res);
+  }
+}
+
+function updateUser(req, res) {
+  const user = {
+    blogTitle: req.param('blogTitle'),
+    email: req.param('email'),
+    userName: req.param('userName'),
+    userDescription: req.param('userDescription'),
+    updated: new Date()
+  };
+
+  User.findByIdAndUpdate(req.params._id, user, {new: true}, (err, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (err) {
@@ -148,7 +239,8 @@ userRouter.put('/:_id', [
       obj: target
     });
   });
-});
+}
+
 
 
 // 削除

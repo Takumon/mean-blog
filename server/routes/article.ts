@@ -24,9 +24,10 @@ router.get('/', (req, res, next) => {
 
     Article
     .find(condition)
-    .populate('author', 'icon userId userName deleted')
+    .populate('author', 'userId userName deleted')
     .populate({
       path: 'vote',
+      select: 'userId userName deleted',
       options: { sort: { created: 1 }},
     })
     .populate({
@@ -37,14 +38,14 @@ router.get('/', (req, res, next) => {
       },
       populate: [{
         path: 'user',
-        select: 'icon userId userName deleted',
+        select: 'userId userName deleted',
       }, {
         path: 'replies',
         options: { sort: { created: 1 }},
 
         populate: {
           path: 'user',
-          select: 'icon userId userName deleted',
+          select: 'userId userName deleted',
         }
       }],
     })

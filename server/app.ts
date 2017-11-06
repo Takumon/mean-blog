@@ -13,6 +13,7 @@ import { draftRouter } from './routes/draft';
 import { commentRouter } from './routes/comment';
 import { replyRouter } from './routes/reply';
 import { userRouter } from './routes/user';
+import { imageRouter } from './routes/image';
 import { searchConditionRouter } from './routes/search-condition';
 
 class App {
@@ -35,9 +36,10 @@ class App {
     this.express.use(express.static(path.join(__dirname, 'public')));
 
     this.express.use('/api/authenticate', authenticateRouter);
+    this.express.use('/api/images', imageRouter);
+
 
     this.express.use(authenticate.verifyToken);
-
 
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);

@@ -253,14 +253,14 @@ router.get('/ofArticle/:_idOfArticle', [
   .sort({ created: 1 })
   .populate([{
       path: 'user',
-      select: 'icon userId userName deleted',
+      select: 'userId userName deleted',
     }, {
       path: 'replies',
       options: { sort: { created: 1 }},
 
       populate: {
         path: 'user',
-        select: 'icon userId userName deleted',
+        select: 'userId userName deleted',
       }
   }])
   .exec((err, doc) => {
