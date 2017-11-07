@@ -31,14 +31,14 @@
     </div>
   </div>
 </div>
+
+
 <div class="prograss-bar" *ngIf="showPrograssBar" >
   <mat-spinner></mat-spinner>
 </div>
 
 
-
-
-<ng-container *ngIf="articles?.length > 0">
+<ng-container *ngIf="!showPrograssBar && articles?.length > 0">
   <div class="article-list">
     <div class="article-list__operation article-list__operation_top">
       <div class="article-list__operation__sort-item">
