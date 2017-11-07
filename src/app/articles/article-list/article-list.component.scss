@@ -68,8 +68,21 @@
     }
 
     &__sort-item {
-      width: 6em;
-      margin-right: 24px;
+      display: flex;
+
+      button {
+        margin-right: 12px;
+        background: #fdfdfd;
+        font-size: 12px;
+        line-height: 32px;
+        height: 32px;
+        border-radius: 16px;
+      }
+
+      button.checked {
+        color: #ed4c7a;
+        font-weight: bold;
+      }
     }
     &__sort-direction {
       width: 6em;

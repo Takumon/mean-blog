@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
@@ -28,28 +29,18 @@ export enum Mode {
   VOTER = 400,
 }
 
+enum Direction {
+  ASC, DESC, NONE
+}
+
+interface SortFactor {
+  label: string;
+  value: string;
+  sortFunc: Function;
+  direction: Direction;
+}
+
 const SortFactors = {
-  UPDATE_DATE: {
-    label: '更新日',
-    value: 'updated',
-    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
-      const reverse = -1;
-      const nomal = 1;
-
-      return (a, b) => {
-        const a_factor = a['updated'];
-        const b_factor =  b['updated'];
-
-        if (a_factor > b_factor) {
-          return isAsc ? nomal : reverse;
-        } else if ( a_factor < b_factor) {
-          return isAsc ? reverse : nomal;
-        }
-
-        return 0;
-      };
-    }
-  },
   CREATE_DATE: {
     label: '登録日',
     value: 'created',
@@ -69,7 +60,30 @@ const SortFactors = {
 
         return 0;
       };
-    }
+    },
+    direction: Direction.DESC,
+  },
+  UPDATE_DATE: {
+    label: '更新日',
+    value: 'updated',
+    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
+      const reverse = -1;
+      const nomal = 1;
+
+      return (a, b) => {
+        const a_factor = a['updated'];
+        const b_factor =  b['updated'];
+
+        if (a_factor > b_factor) {
+          return isAsc ? nomal : reverse;
+        } else if ( a_factor < b_factor) {
+          return isAsc ? reverse : nomal;
+        }
+
+        return 0;
+      };
+    },
+    direction: Direction.NONE
   },
   USER_ID: {
     label: 'ユーザID',
@@ -90,20 +104,11 @@ const SortFactors = {
 
         return 0;
       };
-    }
+    },
+    direction: Direction.NONE
   },
 };
 
-const OrderFactors = {
-  ASC: {
-    label: '昇順',
-    value: true
-  },
-  DESC: {
-    label: '降順',
-    value: false
-  },
-};
 
 @Component({
   selector: 'app-article-list',
@@ -119,15 +124,11 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public articles: Array<ArticleWithUserModel>;
   public articlesPerPage: Subject<Array<ArticleWithUserModel>> = new Subject<Array<ArticleWithUserModel>>();
   public showPrograssBar: Boolean = false;
+  public direction = Direction;
   public sortFactors = SortFactors;
   public sortFactorKeys = Object.keys(SortFactors);
-  public orderFactors = OrderFactors;
-  public orderFactorKeys = Object.keys(OrderFactors);
 
   // ページング用プロパティ
-  // デフォルトは更新日降順
-  public selectedSortFactor = SortFactors.UPDATE_DATE;
-  public selectedOrderFactor = OrderFactors.DESC;
   public pageSize = this.DEFAULT_PER_PAGE;
   public pageIndex = 0;
 
@@ -137,6 +138,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   private mode;
 
   constructor(
+    private scrollService: ScrollService,
     private router: Router,
     private route: ActivatedRoute,
     private articleService: ArticleService,
@@ -239,9 +241,42 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     this.refreshArticlesPerPage();
   }
 
+  sortAndRefresh(selectedKey): void {
+    for (const key of this.sortFactorKeys) {
+      const factor = this.sortFactors[key];
+
+      if (selectedKey === key) {
+        switch (factor.direction) {
+          case Direction.NONE:
+          case Direction.ASC:
+            factor.direction = Direction.DESC;
+            break;
+          case Direction.DESC:
+            factor.direction = Direction.ASC;
+        }
+      } else {
+        if (factor.direction !== Direction.NONE) {
+          factor.direction = Direction.NONE;
+        }
+      }
+    }
+
+    this.refreshArticlesPerPage();
+  }
+
   // ページングとソートの設定に従って表示する記事をセットする
   refreshArticlesPerPage() {
-    const sortSetting = this.selectedSortFactor.sortFunc(this.selectedOrderFactor.value);
+    let selectedSortFactor: SortFactor;
+    for (const key of this.sortFactorKeys) {
+      const factor = this.sortFactors[key];
+      if (factor.direction !== Direction.NONE) {
+        selectedSortFactor = factor;
+        break;
+      }
+    }
+
+    const asc: boolean = selectedSortFactor.direction === Direction.ASC;
+    const sortSetting = selectedSortFactor.sortFunc(asc);
     const sroted = this.articles.sort(sortSetting);
 
 
@@ -249,5 +284,8 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     const paged = sroted.slice(range.startIndex, range.endIndex);
 
     this.articlesPerPage.next(paged);
+    setTimeout(function() {
+      this.scrollService.scrollToTop();
+    }.bind(this), 0);
   }
 }
