@@ -255,7 +255,10 @@ router.put('/:_id', [
     unset.dateTo = '';
   }
 
-  const model = {$set: set, $unset: unset };
+  const model = {$set: set };
+  if (unset.users || unset.dateSearchPattern || unset.dateFrom || unset.dateTo) {
+    model['$unset'] = unset;
+  }
 
   SearchCondition.findByIdAndUpdate(req.params._id, model, {new: true}, (error, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
