@@ -34,12 +34,16 @@ class App {
   private routes(): void {
     // 静的資産へのルーティング
     this.express.use(express.static(path.join(__dirname, 'public')));
+    // api系のリクエストでない場合はindexファイルにルーティング
+    this.express.use(/^(?!\/api\/).*$/, (req, res) => {
+      res.sendFile(path.join(__dirname, 'public/index.html'));
+    });
 
     this.express.use('/api/authenticate', authenticateRouter);
     this.express.use('/api/images', imageRouter);
 
 
-    this.express.use(authenticate.verifyToken);
+    // this.express.use(authenticate.verifyToken);
 
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);
