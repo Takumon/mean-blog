@@ -30,6 +30,7 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { ConfirmDialogComponent } from './components/confirm.dialog';
 import { MessageBarComponent } from './components/message-bar.component';
 import { CustomErrorStateMatcher } from './custom-error-state-matcher';
@@ -37,6 +38,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
 @NgModule({
   declarations: [
     AutofocusDirective,
+    DragAndDropDirective,
     ConfirmDialogComponent,
     MessageBarComponent,
   ],
@@ -75,6 +77,7 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
   ],
   exports: [
     AutofocusDirective,
+    DragAndDropDirective,
     ConfirmDialogComponent,
     MessageBarComponent,
     LazyLoadImageModule,
