@@ -1,6 +1,9 @@
 import * as mongoose from 'mongoose';
 import * as http from 'http';
 import { Router, Response } from 'express';
+import * as multer from 'multer';
+import { check, oneOf, body, param, validationResult } from 'express-validator/check';
+
 
 
 import { User } from '../models/user';
@@ -66,6 +69,50 @@ function getImage(req, res, next, condition: any, errorMessage: string) {
 
 }
 
+const upload = multer({ storage: multer.memoryStorage() });
+
+
+// 更新（差分更新）
+router.post('/ofArticle', upload.fields([
+  { name: 'image', maxCount: 1 },
+]), [
+  // check('image')
+  //   .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['画像ファイル']))
+], (req, res, next) => {
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({ errors: errors.array() });
+  // }
+
+
+  // TODO ファイル名重複防ぐため同ファイル名があれば末尾に連番つけて保存
+
+  // アバター登録
+  const imageFile = req.files['image'][0];
+  console.log(imageFile);
+  const image = new Image();
+  image.data = imageFile.buffer;
+  image.contentType = imageFile.mimetype;
+  image.fileName = imageFile.originalname;
+  image.type = ImageType.OF_ARTICLE;
+
+
+
+  image
+  .save((error, target ) => {
+    if (error) {
+      return res.status(500).json({
+          title: v.MESSAGE_KEY.default,
+          error: error.message
+      });
+    }
+
+    return res.status(200).json({
+      message: `${MODEL_NAME}を登録しました。`,
+      obj: target
+    });
+  });
+});
 
 
 export { router as imageRouter };
