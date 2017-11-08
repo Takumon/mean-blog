@@ -22,6 +22,7 @@ import {
   MatDialog,
 } from '@angular/material';
 
+import { ImageService } from '../../shared/services/image.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -32,7 +33,6 @@ import { ArticleModel } from '../shared/article.model';
 import { ArticleService } from '../shared/article.service';
 import { DraftModel } from '../shared/draft.model';
 import { DraftService } from '../shared/draft.service';
-
 import { EditMode } from './edit-mode.enum';
 
 const IS_RESUME = 'resume';
@@ -52,6 +52,11 @@ export class ArticleEditComponent implements OnInit {
   param_id: string;
 
   canRegisterDraft: Boolean = true;
+
+  fileList: Array<any> = [];
+  invalidFiles: Array<any> = [];
+  images: Array<any> = [];
+
 
 
 
@@ -73,6 +78,7 @@ export class ArticleEditComponent implements OnInit {
     public dialog: MatDialog,
 
     private messageBarService: MessageBarService,
+    private imageService: ImageService,
     private articleService: ArticleService,
     public draftService: DraftService,
     private auth: AuthenticationService,
@@ -394,6 +400,22 @@ export class ArticleEditComponent implements OnInit {
 
   private goToArticle(_id: string) {
     this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', _id]);
+  }
+
+  onFilesChange(fileList: Array<File>)　{
+    this.fileList = fileList;
+
+
+    // TODO 複数件アップロード
+    this.imageService.create(fileList[0])
+    .subscribe((res: any) => {
+      this.snackBar.open('画像をアップロードしました。', null, {duration: 3000});
+      this.images.push(JSON.parse(res._body).obj._id);
+    }, this.onValidationError.bind(this));
+  }
+
+  onFileInvalids(fileList: Array<File>)　{
+    this.invalidFiles = fileList;
   }
 
 }

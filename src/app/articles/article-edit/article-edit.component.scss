@@ -154,6 +154,13 @@
 .markdonw-editor {
   &__row-text {
 
+    &.drogover {
+      textarea {
+        border: 4px #3428a0 dotted;
+        background: rgb(168, 168, 168);
+      }
+    }
+
     textarea {
       width: 100%;
       height: 100%;

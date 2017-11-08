@@ -24,7 +24,7 @@ import { MessageService } from '../shared/services/message.service';
 import { MessageBarService } from '../shared/services/message-bar.service';
 import { AuthenticationService } from '../shared/services/authentication.service';
 import { RouteNamesService } from '../shared/services/route-names.service';
-
+import { ImageService } from '../shared/services/image.service';
 
 import { MarkdownParsePipe } from './shared/markdown-parse.pipe';
 import { OrderByPipe } from './shared/orderby.pipe';
@@ -91,6 +91,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     MessageBarService,
     AuthenticationService,
     RouteNamesService,
+    ImageService,
 
     ArticleService,
     CommentService,

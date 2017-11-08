@@ -64,13 +64,30 @@
   <div *ngIf="isMarkdown.value; then bodyMarkdown else bodyPlainText"></div>
   <ng-template #bodyMarkdown>
     <div class="article-editor__main markdonw-editor" >
-      <div [ngClass]="['markdonw-editor__row-text', markdonwEditMode]">
+      <div
+        appDragAndDrop
+        (filesChangeEmiter)="onFilesChange($event)"
+        (filesInvalidEmiter)="onFileInvalids($event)"
+        [allowed_extensions]="['png', 'jpg', 'bmp']"
+        [ngClass]="['markdonw-editor__row-text', markdonwEditMode]">
         <textarea
           id="register-article-body"
           formControlName="body"
           (scroll)="syncScroll($event)"
           placeholder="本文"
           ></textarea>
+      </div>
+      <div class="dropzone-list">
+        <ul class="valid">
+          <li *ngFor="let file of fileList">
+            {{ file.name }}
+          </li>
+        </ul>
+        <ul class="invalid">
+          <li *ngFor="let imageId of images">
+            {{ imageId }}
+          </li>
+        </ul>
       </div>
       <div [ngClass]="['markdonw-editor__preview', markdonwEditMode]" #syncScrollTarget>
         <p [innerHTML]="(body.value | toMarkdown).text" class="markdown-body"></p>
