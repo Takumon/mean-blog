@@ -1,6 +1,7 @@
 
 import { Draft } from '../models/draft';
 import { User } from '../models/user';
+import { Image } from '../models/image';
 import { Article } from '../models/article';
 import { Comment } from '../models/comment';
 import { Reply } from '../models/reply';
@@ -163,6 +164,19 @@ class Validation {
 
   isExistedDraft(_id: String): Promise<boolean> {
     return Draft
+      .findOne({ _id: _id}) // 論理削除はないので単純に_id検索
+      .exec()
+      .then(target => {
+        if (target) {
+          // チェックOK
+          return Promise.resolve(true);
+        }
+        return Promise.reject(false);
+      }).catch(err => Promise.reject(false));
+  }
+
+  isExistedImage(_id: String): Promise<boolean> {
+    return Image
       .findOne({ _id: _id}) // 論理削除はないので単純に_id検索
       .exec()
       .then(target => {

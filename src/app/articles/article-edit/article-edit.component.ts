@@ -57,6 +57,10 @@ export class ArticleEditComponent implements OnInit {
   invalidFiles: Array<any> = [];
   images: Array<any> = [];
 
+  caretPos = 0;
+
+  /** 画像一覧領域を表示するか */
+  public isImageOperationShow = true;
 
 
 
@@ -402,6 +406,17 @@ export class ArticleEditComponent implements OnInit {
     this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', _id]);
   }
 
+  deleteImage(image) {
+    this.imageService.delete(image._id).subscribe((res: any) => {
+      const escapedImage = image.fileName.replace(/\./g, '\\.');
+      const imageStatement = `\\!\\[${escapedImage}\\]\\(api\\/images\\/ofArticle\\/${image._id}\\)`;
+      // テキストエリアから画像宣言部分を削除する
+      // 複数定義している場合を考慮してグローバルマッチにしている
+      this.body.setValue(this.body.value.replace(new RegExp(imageStatement, 'g'), ''));
+      this.images = this.images.filter(i => i !== image);
+    });
+  }
+
   onFilesChange(fileList: Array<File>)　{
     this.fileList = fileList;
 
@@ -410,8 +425,39 @@ export class ArticleEditComponent implements OnInit {
     this.imageService.create(fileList[0])
     .subscribe((res: any) => {
       this.snackBar.open('画像をアップロードしました。', null, {duration: 3000});
-      this.images.push(JSON.parse(res._body).obj._id);
+      const image = JSON.parse(res._body).obj;
+      this.images.push(image);
+
+      this.insertImageToArticle(image);
     }, this.onValidationError.bind(this));
+  }
+
+  insertImageToArticle(image) {
+    const imageStatement = `\n![${image.fileName}](api/images/ofArticle/${image._id})\n`;
+    this.insertInTextArea(imageStatement);
+
+  }
+
+  /**
+   * 指定したテキストをテキストエリアのキャレットがある位置に挿入する
+   *
+   * @param text 挿入するテキスト
+   */
+  insertInTextArea(text) {
+    this.body.setValue(this.body.value.substring(0, this.caretPos)
+      + text
+      + this.body.value.substring(this.caretPos, this.body.value.length));
+  }
+
+  /**
+   * テキストエリアのキャレット位置を保存する
+   *
+   * ＠param textareaElement テキストエリアのDOM要素
+   */
+  getCaretPos(textareaElement) {
+    if (textareaElement.selectionStart || textareaElement.selectionStart === '0') {
+       this.caretPos = textareaElement.selectionStart;
+    }
   }
 
   onFileInvalids(fileList: Array<File>)　{
