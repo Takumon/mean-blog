@@ -83,38 +83,50 @@
 
 
       <div class="image-operation" [class.show]="isImageOperationShow">
-        <button
-          mat-icon-button
-          class="image-operation__header__showhide-btn"
-          (click)="isImageOperationShow = !isImageOperationShow"
-          >
-          <i
-            class="fa fa-fw"
-            [class.fa-chevron-up]="!(images?.length > 0 && isImageOperationShow)"
-            [class.fa-chevron-down]="images?.length > 0 && isImageOperationShow"
-            ></i>
-          </button>
-        <i class="image-operation__header__picture-icon fa fa-fw fa-picture-o"></i>
-
-        <ng-container
-          *ngIf="isImageOperationShow"
-          >
-          <div
-            class="image-operation__image"
-            *ngFor="let image of images">
-            <button
+        <div class="image-operation__header">
+          <button
+            *ngIf="images?.length > 0"
             mat-icon-button
-            class="image-operation__insert-btn"
-            (click)="insertImageToArticle(image)"
-            ><i class="fa fa-fw fa-plus-square"></i></button>
-            <div class="image-operation__file-name">{{image.fileName}}</div>
-            <button
-              mat-icon-button
-              class="image-operation__delete-btn"
-              (click)="deleteImage(image)"
-              ><i class="fa fa-fw fa-trash"></i></button>
-          </div>
-        </ng-container>
+            class="image-operation__header__showhide-btn"
+            (click)="isImageOperationShow = !isImageOperationShow"
+            >
+            <i
+              class="fa fa-fw"
+              [class.fa-chevron-up]="!isImageOperationShow"
+              [class.fa-chevron-down]="isImageOperationShow"
+              ></i>
+          </button>
+          <div
+            matRipple
+            class="image-operation__header__showhide-btn"
+            (click)="imageFile.click()">画像アップロード</div>
+          <input
+            hidden
+            type="file"
+            (change)="onFilesChange($event.srcElement.files)" #imageFile>
+        </div>
+
+        <div>
+          <ng-container
+            *ngIf="isImageOperationShow"
+            >
+            <div
+              class="image-operation__image"
+              *ngFor="let image of images">
+              <button
+                mat-icon-button
+                class="image-operation__insert-btn"
+                (click)="insertImageToArticle(image)"
+              ><i class="fa fa-fw fa-plus-square"></i></button>
+              <div class="image-operation__file-name">{{image.fileName}}</div>
+              <button
+                mat-icon-button
+                class="image-operation__delete-btn"
+                (click)="deleteImage(image)"
+                ><i class="fa fa-fw fa-trash"></i></button>
+            </div>
+          </ng-container>
+        </div>
       </div>
 
       <div [ngClass]="['markdonw-editor__preview', markdonwEditMode]" #syncScrollTarget>

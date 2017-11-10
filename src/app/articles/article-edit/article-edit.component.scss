@@ -181,14 +181,17 @@
 
     &.notPreviewing {
       width: 100%;
+      transition: width 0.2s;
     }
 
     &.harfPreviewing {
       width: 50%;
+      transition: width 0.2s;
     }
 
     &.fullPreviewing {
-      display: none;
+      width: 0;
+      transition: width 0.2s;
     }
   }
 
@@ -222,15 +225,18 @@
     }
 
     &.notPreviewing {
-      display: none;
+      width: 0;
+      transition: width 0.2s;
     }
 
     &.harfPreviewing {
       width: 50%;
+      transition: width 0.2s;
     }
 
     &.fullPreviewing {
       width: 100%;
+      transition: width 0.2s;
     }
   }
 }
@@ -273,21 +279,27 @@
   right: 8px;
 
   &__header {
+    display: flex;
+    align-items: center;
+    background: #e0e0e0;
+    border-bottom: 1px solid #d2d2d2;
+
     &__showhide-btn {
+      padding: 0 8px;
+      cursor: pointer;
+      height: 36px;
+      line-height: 36px;
 
+      &:hover {
+        background: rgb(216, 216, 216);
+      }
     }
-    &__picture-icon {
-      display: inline-block;
-      margin-left: -12px;
-      margin-right: 9px;
-    }
-
   }
 
   &__image {
     display: flex;
     align-items: center;
-    padding: 6px 12px;
+    padding: 2px;
     border-bottom: solid 1px #d4d4d4;
   }
 

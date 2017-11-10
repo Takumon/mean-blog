@@ -228,8 +228,9 @@ router.post('/', [
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
+    .isLength({ max: 10000 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
 ], (req, res, next) => {
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -270,7 +271,7 @@ router.put('/:_id', [
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['記事形式'])),
   body('body')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
-    .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
+    .isLength({ max: 10000 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
