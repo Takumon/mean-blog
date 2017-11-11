@@ -20,7 +20,10 @@ const DraftSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-
+  image: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
+  }],
   posted: { type: Boolean, default: false},
   articleId: {
     type: mongoose.Schema.Types.ObjectId,

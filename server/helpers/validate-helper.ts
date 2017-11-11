@@ -25,7 +25,38 @@ class Validation {
       }).catch(err => Promise.reject(false));
   }
 
+  isUniqueImageIdList(_ids: String[]): boolean {
+    if (!_ids || _ids.length === 0) {
+      return true;
+    }
 
+    const unique = _ids.filter((value, index, self) => self.indexOf(value) === index);
+
+    return unique.length === _ids.length;
+  }
+
+  isExistedImageAll(_ids: String[] ): Promise<boolean> {
+    if (!_ids || _ids.length === 0) {
+      return Promise.resolve(true);
+    }
+
+    return Image
+      .find({ _id: {$in: _ids}})
+      .exec()
+      .then(target => {
+        if (!target || target.length !== _ids.length) {
+          return Promise.reject(false);
+        }
+
+        for (const user of target) {
+          if (_ids.indexOf(user._id.toString()) === -1) {
+            return Promise.reject(false);
+          }
+        }
+
+        return Promise.resolve(true);
+      }).catch(err => Promise.reject(false));
+  }
 
   isUniqueUserIdList(_ids: String[]): boolean {
     if (!_ids || _ids.length === 0) {

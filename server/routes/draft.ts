@@ -37,6 +37,7 @@ router.get('/', (req, res, next) => {
 
   Draft
   .find(condition)
+  .populate('image', '_id filename')
   .exec((err, doc) => {
     if (err) {
       return res.status(500).json({
@@ -59,6 +60,7 @@ router.get('/:_id', (req, res, next) => {
 
   Draft
   .find(condition)
+  .populate('image', '_id filename')
   .exec((err, doc) => {
     if (err) {
       return res.status(500).json({
@@ -94,13 +96,21 @@ router.post('/', [
     .custom(v.validation.maxDraftCount).withMessage(v.message(v.MESSAGE_KEY.max_register_count, ['下書き', '10'])),
   body('articleId')
     .custom(v.validation.isArticleAuthorEqualsAuthor).withMessage('投稿者が記事のユーザと一致しません'),
-], (req, res, next) => {
+  body('image').optional()
+    .custom(v.validation.isUniqueImageIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['検索条件のユーザ']))
+    .custom(v.validation.isExistedImageAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['検索条件のユーザ'])),
+  ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   const draft = new Draft(req.body);
+
+  if (req.body.image && req.body.image.length > 0) {
+    draft.image = req.body.image;
+  }
+
 
   draft.save((error, target) => {
     if (error) {
@@ -132,6 +142,9 @@ router.put('/:_id', [
   body('body')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
     .isLength({ max: 100 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
+  body('image').optional()
+    .custom(v.validation.isUniqueImageIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['画像']))
+    .custom(v.validation.isExistedImageAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['画像'])),
 ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -139,14 +152,22 @@ router.put('/:_id', [
   }
 
   // 投稿者、参照先記事などは更新不可
+  const model = {};
   const draft = {
     title: req.body.title,
     isMarkdown: req.body.isMarkdown,
     body: req.body.body,
     updated: new Date(),
   };
+  model['$set'] = draft;
 
-  Draft.findByIdAndUpdate(req.params._id, {$set: draft }, {new: true}, (error, target) => {
+  if (req.body.image && req.body.image.length > 0) {
+    draft['image'] = req.body.image;
+  } else {
+    model['$unset'] = { image: ''};
+  }
+
+  Draft.findByIdAndUpdate(req.params._id, model, {new: true}, (error, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (error) {

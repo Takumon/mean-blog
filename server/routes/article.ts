@@ -25,6 +25,7 @@ router.get('/', (req, res, next) => {
     Article
     .find(condition)
     .populate('author', 'userId userName deleted')
+    .populate('image', '_id fileName')
     .populate({
       path: 'vote',
       select: 'userId userName deleted',
@@ -189,10 +190,12 @@ router.get('/:_id', (req, res, next) => {
       .find(condition)
       .populate('author', '-password')
       .populate('vote', '-password')
+      .populate('image', '_id fileName')
       .exec(cbFind);
   } else {
     Article
       .find(condition)
+      .populate('image', '_id fileName')
       .exec(cbFind);
   }
 
@@ -229,6 +232,9 @@ router.post('/', [
   body('body')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
     .isLength({ max: 10000 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
+  body('image').optional()
+  .custom(v.validation.isUniqueImageIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['画像']))
+  .custom(v.validation.isExistedImageAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['画像'])),
 ], (req, res, next) => {
 
   const errors = validationResult(req);
@@ -242,6 +248,9 @@ router.post('/', [
   article.isMarkdown = req.body.isMarkdown;
   article.body = req.body.body;
   article.created = new Date();
+  if (req.body.image && req.body.image.length > 0) {
+    article.image = req.body.image;
+  }
 
   article.save((err, target) => {
     if (err) {
@@ -272,17 +281,29 @@ router.put('/:_id', [
   body('body')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['本文']))
     .isLength({ max: 10000 }).withMessage(v.message(v.MESSAGE_KEY.maxlength, ['本文', '10000'])),
-], (req, res, next) => {
+  body('image').optional()
+    .custom(v.validation.isUniqueImageIdList).withMessage(v.message(v.MESSAGE_KEY.not_unique, ['画像']))
+    .custom(v.validation.isExistedImageAll).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['画像'])),
+  ], (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  const model = {};
   const article = req.body;
   delete article.created;
   article.updated = new Date();
+  model['$set'] = article;
 
-  Article.findByIdAndUpdate(req.params._id, {$set: article }, {new: true}, (err, target) => {
+  if (req.body.image && req.body.image.length > 0) {
+    article.image = req.body.image;
+  } else {
+    model['$unset'] = { image: ''};
+  }
+
+
+  Article.findByIdAndUpdate(req.params._id, model, {new: true}, (err, target) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (err) {
