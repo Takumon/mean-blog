@@ -45,6 +45,8 @@ const IS_RESUME = 'resume';
   styleUrls: ['./article-edit.component.scss'],
 })
 export class ArticleEditComponent implements OnInit {
+  @ViewChild('mdTextArea') $mdTextArea;
+
   action: String;
   // 更新前の状態を保持する
   previousArticle: ArticleWithUserModel;
@@ -56,7 +58,10 @@ export class ArticleEditComponent implements OnInit {
 
   imageForDisplayList: Array<any> = [];
 
-  caretPos = 0;
+  /** キャレット開始位置（マークダウン入力補助のため）*/
+  caretPosStart = 0;
+  /** キャレット終了位置（マークダウン入力補助のため）*/
+  caretPosEnd = 0;
 
   /** 画像一覧領域を表示するか */
   public isImageOperationShow = true;
@@ -88,7 +93,6 @@ export class ArticleEditComponent implements OnInit {
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     ) {
-
   }
 
   ngOnInit(): void {
@@ -469,18 +473,56 @@ export class ArticleEditComponent implements OnInit {
 
   insertImageToArticle(image) {
     const imageStatement = `\n![${image.fileName}](api/images/ofArticle/${image._id})\n`;
-    this.insertInTextArea(imageStatement);
+    this.insertText(imageStatement, this.caretPosStart);
+  }
+
+
+  /**
+   * 指定したプレフィックスとサフィックスを指定した位置に挿入する
+   *
+   * @param preffix プレフィックス
+   * @param positionForPreffix プレフィックス挿入位置
+   * @param suffix サフィックス
+   * @param positionForSuffix サフィックス挿入位置
+   */
+  insertPreffixAndSuffix(preffix: string, positionForPreffix: number, suffix: string, positionForSuffix: number) {
+    const value = this.body.value;
+
+    const inserted = value.substring(0, positionForPreffix)
+                     + preffix + value.substring(positionForPreffix, positionForSuffix) + suffix
+                     + value.substring(positionForSuffix, value.length);
+
+    this.body.setValue(inserted);
   }
 
   /**
-   * 指定したテキストをテキストエリアのキャレットがある位置に挿入する
+   * 指定したテキストを指定した位置に挿入する
    *
    * @param text 挿入するテキスト
+   * @param position 挿入位置
    */
-  insertInTextArea(text) {
-    this.body.setValue(this.body.value.substring(0, this.caretPos)
-      + text
-      + this.body.value.substring(this.caretPos, this.body.value.length));
+  insertText(text: string, position: number) {
+    const value = this.body.value;
+
+    const inserted = value.substring(0, position)
+                    + text
+                    + value.substring(position, value.length);
+
+    this.body.setValue(inserted);
+  }
+
+
+  /**
+   * 現在のキャレットポジションをずらす<br>
+   * 範囲選択したくない場合は開始位置と終了位置に同じ値を指定する
+   *
+   * @param start 開始位置
+   * @param end 終了位置
+   */
+  moveCaretPosition(start: number, end: number) {
+    const elem = this.$mdTextArea.nativeElement;
+    elem.focus();
+    elem.setSelectionRange(start, end);
   }
 
   /**
@@ -490,7 +532,31 @@ export class ArticleEditComponent implements OnInit {
    */
   getCaretPos(textareaElement) {
     if (textareaElement.selectionStart || textareaElement.selectionStart === '0') {
-       this.caretPos = textareaElement.selectionStart;
+      this.caretPosStart = textareaElement.selectionStart;
+      this.caretPosEnd = textareaElement.selectionEnd;
+
+      console.log(this.caretPosStart + ' - ' + this.caretPosEnd);
     }
+  }
+
+  /**
+   * テキストエリアで範囲選択中か判断する
+   */
+  isSelectRange(): boolean {
+    return this.caretPosStart !== this.caretPosEnd;
+  }
+
+  /**
+   * 指定したpreffixをキャレット開始位置に、指定したsuffixをキャレット終了位置に挿入する
+   * @param preffix
+   * @param suffix
+   */
+  insertContent(preffix: string, suffix: string) {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    this.insertPreffixAndSuffix(preffix, previouseCaretPosStart, suffix, previouseCaretPosEnd);
+    this.moveCaretPosition(previouseCaretPosStart + 2, previouseCaretPosEnd + 2);
   }
 }

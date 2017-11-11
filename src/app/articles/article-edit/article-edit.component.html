@@ -37,24 +37,21 @@
       matTooltip="太字"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertContent("**", "**")'
       class="fa fa-fw fa-bold editor-support__icon"
       ></i>
       <i
       matTooltip="斜線"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertContent("_", "_")'
       class="fa fa-fw fa-italic editor-support__icon"
-      ></i>
-      <i
-      matTooltip="下線"
-      matTooltipPosition="above"
-      [matTooltipShowDelay]="500"
-      class="fa fa-fw fa-underline editor-support__icon"
       ></i>
       <i
       matTooltip="取り消し線"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertContent("~~", "~~")'
       class="fa fa-fw fa-strikethrough editor-support__icon"
       ></i>
 
