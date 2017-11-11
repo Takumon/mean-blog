@@ -18,7 +18,7 @@
       display: block;
       box-sizing: border-box;
       padding: 4px;
-      color: #222;
+      color: #4c4c4c;
       -webkit-font-smoothing: antialiased;
 
       &:focus {
@@ -171,7 +171,7 @@
       line-height: 20px;
       padding: 12px;
 
-      color: #222;
+      color: #4c4c4c;
       -webkit-font-smoothing: antialiased;
 
       &:focus {
@@ -205,7 +205,7 @@
     border: 1px #afafaf solid;
     position: relative;
 
-    color: #222;
+    color: #4c4c4c;
     -webkit-font-smoothing: antialiased;
 
     &:before {
@@ -256,7 +256,7 @@
       line-height: 20px;
       padding: 12px;
 
-      color: #222;
+      color: #4c4c4c;
       -webkit-font-smoothing: antialiased;
 
       &:focus {
@@ -329,6 +329,64 @@
       }
     }
 
+  }
+
+}
+
+
+.editor-support {
+  color: #525252;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+
+  &__icon {
+    padding: 4px;
+    height: 28px;
+    line-height: 20px;
+    width: 28px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    margin-right: 6px;
+    cursor: pointer;
+
+    &:hover {
+      color: black;
+      background: rgb(199, 199, 199);
+      transition: color 0.2s;
+    }
+  }
+
+  &__separator {
+    display: inline-block;
+    width: 1px;
+    background: #a2a2a2;
+    height: 32px;
+    margin: 0 8px;
+  }
+}
+
+
+.header-menu {
+
+  &__h1 {
+    font-size: 2em;
+  }
+
+  &__h2 {
+    font-size: 1.5em;
+  }
+  &__h3 {
+    font-size: 1.2em;
+  }
+  &__h4 {
+    font-size: 1em;
+  }
+  &__h5 {
+    font-size: 0.7em;
+  }
+  &__h6 {
+    font-size: 0.5em;
   }
 
 }

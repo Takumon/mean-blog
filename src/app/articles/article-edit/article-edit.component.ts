@@ -45,6 +45,8 @@ const IS_RESUME = 'resume';
   styleUrls: ['./article-edit.component.scss'],
 })
 export class ArticleEditComponent implements OnInit {
+  @ViewChild('mdTextArea') $mdTextArea;
+
   action: String;
   // 更新前の状態を保持する
   previousArticle: ArticleWithUserModel;
@@ -56,7 +58,10 @@ export class ArticleEditComponent implements OnInit {
 
   imageForDisplayList: Array<any> = [];
 
-  caretPos = 0;
+  /** キャレット開始位置（マークダウン入力補助のため）*/
+  caretPosStart = 0;
+  /** キャレット終了位置（マークダウン入力補助のため）*/
+  caretPosEnd = 0;
 
   /** 画像一覧領域を表示するか */
   public isImageOperationShow = true;
@@ -88,7 +93,6 @@ export class ArticleEditComponent implements OnInit {
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     ) {
-
   }
 
   ngOnInit(): void {
@@ -469,18 +473,108 @@ export class ArticleEditComponent implements OnInit {
 
   insertImageToArticle(image) {
     const imageStatement = `\n![${image.fileName}](api/images/ofArticle/${image._id})\n`;
-    this.insertInTextArea(imageStatement);
+    this.insertText(imageStatement, this.caretPosStart);
+  }
+
+
+  /**
+   * 指定したプレフィックスとサフィックスを指定した位置に挿入する
+   *
+   * @param preffix プレフィックス
+   * @param positionForPreffix プレフィックス挿入位置
+   * @param suffix サフィックス
+   * @param positionForSuffix サフィックス挿入位置
+   */
+  insertPreffixAndSuffix(preffix: string, positionForPreffix: number, suffix: string, positionForSuffix: number) {
+    const value = this.body.value;
+
+    const inserted = value.substring(0, positionForPreffix)
+                     + preffix + value.substring(positionForPreffix, positionForSuffix) + suffix
+                     + value.substring(positionForSuffix, value.length);
+
+    this.body.setValue(inserted);
   }
 
   /**
-   * 指定したテキストをテキストエリアのキャレットがある位置に挿入する
+   * 指定したテキストを現在キャレットがある行の冒頭に挿入する
    *
    * @param text 挿入するテキスト
    */
-  insertInTextArea(text) {
-    this.body.setValue(this.body.value.substring(0, this.caretPos)
-      + text
-      + this.body.value.substring(this.caretPos, this.body.value.length));
+  insertToLineStart(text: string) {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    this.insertText(text, this.searchLineStart());
+    this.moveCaretPosition(previouseCaretPosStart + text.length, previouseCaretPosEnd + text.length);
+  }
+
+  /**
+   * 現在キャレットがある行冒頭のポジションを取得する
+   *
+   * @return 現在キャレットがある行冒頭のポジション
+   */
+  searchLineStart(): number {
+    const value = this.body.value;
+    // 遡って行末の改行を探す
+
+    // テキストがない場合は最初が行冒頭とみなす
+    if (value.length === 0) {
+      return 0;
+    }
+
+    const last = value[this.caretPosStart];
+    if (!last) {
+      // キャレトが一番最後にある場合に一個前が改行の場合は、キャレットの位置が行冒頭とみなす
+      if (value[this.caretPosStart - 1] === '\n') {
+        return this.caretPosStart;
+      }
+    }
+
+    for (let i = this.caretPosStart; i > 0; i--) {
+      if (value[i] === '\n') {
+        if (i > 1 && value[i - 1] === '\n') {
+          // ひとつ前も改行であれば行冒頭とみなす
+          return i;
+        } else if ( i === this.caretPosStart) {
+          // 行末とみなす
+          continue;
+        }
+        // そうでない場合は一つ後が行冒頭
+        return i + 1;
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * 指定したテキストを指定した位置に挿入する
+   *
+   * @param text 挿入するテキスト
+   * @param position 挿入位置
+   */
+  insertText(text: string, position: number) {
+    const value = this.body.value;
+
+    const inserted = value.substring(0, position)
+                    + text
+                    + value.substring(position, value.length);
+
+    this.body.setValue(inserted);
+  }
+
+
+  /**
+   * 現在のキャレットポジションをずらす<br>
+   * 範囲選択したくない場合は開始位置と終了位置に同じ値を指定する
+   *
+   * @param start 開始位置
+   * @param end 終了位置
+   */
+  moveCaretPosition(start: number, end: number) {
+    const elem = this.$mdTextArea.nativeElement;
+    elem.focus();
+    elem.setSelectionRange(start, end);
   }
 
   /**
@@ -488,9 +582,86 @@ export class ArticleEditComponent implements OnInit {
    *
    * ＠param textareaElement テキストエリアのDOM要素
    */
-  getCaretPos(textareaElement) {
+  saveCaretPos(textareaElement) {
     if (textareaElement.selectionStart || textareaElement.selectionStart === '0') {
-       this.caretPos = textareaElement.selectionStart;
+      this.caretPosStart = textareaElement.selectionStart;
+      this.caretPosEnd = textareaElement.selectionEnd;
+
+      console.log(this.caretPosStart + ' - ' + this.caretPosEnd);
     }
+  }
+
+  insertIndentifTab($event) {
+    const TAB = '    ';
+    if ($event.keyCode !== 9) {
+      return;
+    }
+
+    $event.preventDefault();
+
+    // インデントを追加
+    if (!$event.shiftKey) {
+      this.insertContent(TAB, '');
+      return;
+    }
+
+    // インデントを削除
+    if (this.caretPosStart > 4
+      && TAB === this.body.value.substring(this.caretPosStart - 4, this.caretPosStart)) {
+
+      // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+      const previouseCaretPosStart = this.caretPosStart;
+      const previouseCaretPosEnd = this.caretPosEnd;
+
+      const removed = this.body.value.substring(0, this.caretPosStart - TAB.length)
+                    + this.body.value.substring(this.caretPosStart);
+
+      this.body.setValue(removed);
+      this.moveCaretPosition(previouseCaretPosStart - TAB.length, previouseCaretPosEnd - TAB.length);
+    }
+  }
+
+  /**
+   * テキストエリアで範囲選択中か判断する
+   */
+  isSelectRange(): boolean {
+    return this.caretPosStart !== this.caretPosEnd;
+  }
+
+  /**
+   * 指定したpreffixをキャレット開始位置に、指定したsuffixをキャレット終了位置に挿入する
+   * @param preffix
+   * @param suffix
+   */
+  insertContent(preffix: string, suffix: string) {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    this.insertPreffixAndSuffix(preffix, previouseCaretPosStart, suffix, previouseCaretPosEnd);
+    this.moveCaretPosition(previouseCaretPosStart + preffix.length, previouseCaretPosEnd + preffix.length);
+  }
+
+  insertCodeWrapper() {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    // 範囲選択時はそれを囲む
+    if (this.isSelectRange()) {
+      this.insertContent('`', '`');
+      this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
+    } else if (this.caretPosStart === this.searchLineStart()) {
+      // 行冒頭の場合
+      this.insertText('```\n\n```\n', this.caretPosStart);
+      this.moveCaretPosition(previouseCaretPosStart + 4, previouseCaretPosEnd + 4);
+    } else {
+      // それ以外の場合
+      this.insertContent('`', '`');
+      this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
+    }
+
+
+
   }
 }

@@ -28,7 +28,143 @@
   <div class="article-editor__format-operation">
     <mat-checkbox
       formControlName="isMarkdown"
-      >Markdonw形式で書く</mat-checkbox>
+      >Markdonw形式</mat-checkbox>
+
+    <div
+      *ngIf="isMarkdown.value"
+      class="editor-support">
+      <i
+      matTooltip="太字"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertContent("**", "**")'
+      class="fa fa-fw fa-bold editor-support__icon"
+      ></i>
+      <i
+      matTooltip="斜線"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertContent("_", "_")'
+      class="fa fa-fw fa-italic editor-support__icon"
+      ></i>
+      <i
+      matTooltip="取り消し線"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertContent("~~", "~~")'
+      class="fa fa-fw fa-strikethrough editor-support__icon"
+      ></i>
+
+
+      <i class="editor-support__separator"></i>
+
+      <i
+        matTooltip="ヘッダー"
+        matTooltipPosition="above"
+        [matTooltipShowDelay]="500"
+        [matMenuTriggerFor]="menu"
+        class="fa fa-fw fa-header editor-support__icon"
+      ></i>
+
+      <mat-menu
+        #menu="matMenu"
+        [overlapTrigger]="false"
+        yPosition="below"
+        class="header-menu">
+        <button
+          mat-menu-item
+          (click)='insertToLineStart("# ")'
+          >
+          <span class="header-menu__h1"> H1: Header</span>
+        </button>
+        <button
+          mat-menu-item
+          (click)='insertToLineStart("## ")'
+          >
+          <span class="header-menu__h2"> H2: Header</span>
+        </button>
+        <button
+          mat-menu-item
+          (click)='insertToLineStart("### ")'
+          >
+          <span class="header-menu__h3"> H3: Header</span>
+        </button>
+        <button
+          mat-menu-item
+          (click)='insertToLineStart("#### ")'
+          >
+          <span class="header-menu__h4"> H4: Header</span>
+        </button>
+        <button
+          mat-menu-item
+          (click)='insertToLineStart("##### ")'
+          >
+          <span class="header-menu__h5"> H5: Header</span>
+        </button>
+        <button
+          mat-menu-item
+          (click)='insertToLineStart("###### ")'
+          >
+          <span class="header-menu__h6"> H6: Header</span>
+        </button>
+
+      </mat-menu>
+
+      <i
+      matTooltip="リンク"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertContent("[", "](https://)")'
+      class="fa fa-fw fa-link editor-support__icon"
+      ></i>
+      <i
+      matTooltip="ソースコード"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)="insertCodeWrapper()"
+      class="fa fa-fw fa-code editor-support__icon"
+      ></i>
+      <i
+      matTooltip="引用"
+        matTooltipPosition="above"
+        [matTooltipShowDelay]="500"
+        (click)='insertToLineStart("> ")'
+      class="fa fa-fw fa-quote-left editor-support__icon"
+      ></i>
+
+      <i
+      matTooltip="水平線"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertContent("", "\n\n---\n")'
+      class="fa fa-fw fa-minus editor-support__icon"
+      ></i>
+
+
+      <i class="editor-support__separator"></i>
+
+      <i
+      matTooltip="リスト"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertToLineStart("* ")'
+      class="fa fa-fw fa-list-ul editor-support__icon"
+      ></i>
+      <i
+      matTooltip="順序付きリスト"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertToLineStart("1. ")'
+      class="fa fa-fw fa-list-ol editor-support__icon"
+      ></i>
+      <i
+      matTooltip="テーブル"
+      matTooltipPosition="above"
+      [matTooltipShowDelay]="500"
+      (click)='insertContent("", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text     | Text     |\n")'
+      class="fa fa-fw fa-table editor-support__icon"
+      ></i>
+    </div>
 
     <mat-button-toggle-group
       *ngIf="isMarkdown.value"
@@ -58,7 +194,9 @@
         <i class="fa fa-fw fa-eye" aria-hidden="true"></i>
       </mat-button-toggle>
     </mat-button-toggle-group>
+
   </div>
+
 
 
   <div *ngIf="isMarkdown.value; then bodyMarkdown else bodyPlainText"></div>
@@ -75,8 +213,9 @@
           (scroll)="syncScroll($event)"
           placeholder="本文"
           #mdTextArea
-          (click)="getCaretPos(mdTextArea)"
-          (keyup)="getCaretPos(mdTextArea)"
+          (click)="saveCaretPos(mdTextArea)"
+          (keyup)="saveCaretPos(mdTextArea)"
+          (keydown)="insertIndentifTab($event)"
           ></textarea>
       </div>
 
