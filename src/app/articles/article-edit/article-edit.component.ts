@@ -516,8 +516,31 @@ export class ArticleEditComponent implements OnInit {
    */
   searchLineStart(): number {
     const value = this.body.value;
+    // 遡って行末の改行を探す
+
+    // テキストがない場合は最初が行冒頭とみなす
+    if (value.length === 0) {
+      return 0;
+    }
+
+    const last = value[this.caretPosStart];
+    if (!last) {
+      // キャレトが一番最後にある場合に一個前が改行の場合は、キャレットの位置が行冒頭とみなす
+      if (value[this.caretPosStart - 1] === '\n') {
+        return this.caretPosStart;
+      }
+    }
+
     for (let i = this.caretPosStart; i > 0; i--) {
       if (value[i] === '\n') {
+        if (i > 1 && value[i - 1] === '\n') {
+          // ひとつ前も改行であれば行冒頭とみなす
+          return i;
+        } else if ( i === this.caretPosStart) {
+          // 行末とみなす
+          continue;
+        }
+        // そうでない場合は一つ後が行冒頭
         return i + 1;
       }
     }
@@ -559,12 +582,42 @@ export class ArticleEditComponent implements OnInit {
    *
    * ＠param textareaElement テキストエリアのDOM要素
    */
-  getCaretPos(textareaElement) {
+  saveCaretPos(textareaElement) {
     if (textareaElement.selectionStart || textareaElement.selectionStart === '0') {
       this.caretPosStart = textareaElement.selectionStart;
       this.caretPosEnd = textareaElement.selectionEnd;
 
       console.log(this.caretPosStart + ' - ' + this.caretPosEnd);
+    }
+  }
+
+  insertIndentifTab($event) {
+    const TAB = '    ';
+    if ($event.keyCode !== 9) {
+      return;
+    }
+
+    $event.preventDefault();
+
+    // インデントを追加
+    if (!$event.shiftKey) {
+      this.insertContent(TAB, '');
+      return;
+    }
+
+    // インデントを削除
+    if (this.caretPosStart > 4
+      && TAB === this.body.value.substring(this.caretPosStart - 4, this.caretPosStart)) {
+
+      // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+      const previouseCaretPosStart = this.caretPosStart;
+      const previouseCaretPosEnd = this.caretPosEnd;
+
+      const removed = this.body.value.substring(0, this.caretPosStart - TAB.length)
+                    + this.body.value.substring(this.caretPosStart);
+
+      this.body.setValue(removed);
+      this.moveCaretPosition(previouseCaretPosStart - TAB.length, previouseCaretPosEnd - TAB.length);
     }
   }
 
@@ -586,6 +639,29 @@ export class ArticleEditComponent implements OnInit {
     const previouseCaretPosEnd = this.caretPosEnd;
 
     this.insertPreffixAndSuffix(preffix, previouseCaretPosStart, suffix, previouseCaretPosEnd);
-    this.moveCaretPosition(previouseCaretPosStart + 2, previouseCaretPosEnd + 2);
+    this.moveCaretPosition(previouseCaretPosStart + preffix.length, previouseCaretPosEnd + preffix.length);
+  }
+
+  insertCodeWrapper() {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    // 範囲選択時はそれを囲む
+    if (this.isSelectRange()) {
+      this.insertContent('`', '`');
+      this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
+    } else if (this.caretPosStart === this.searchLineStart()) {
+      // 行冒頭の場合
+      this.insertText('```\n\n```\n', this.caretPosStart);
+      this.moveCaretPosition(previouseCaretPosStart + 4, previouseCaretPosEnd + 4);
+    } else {
+      // それ以外の場合
+      this.insertContent('`', '`');
+      this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
+    }
+
+
+
   }
 }

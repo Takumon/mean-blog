@@ -114,19 +114,21 @@
       matTooltip="リンク"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertContent("[", "](https://)")'
       class="fa fa-fw fa-link editor-support__icon"
       ></i>
-
       <i
       matTooltip="ソースコード"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)="insertCodeWrapper()"
       class="fa fa-fw fa-code editor-support__icon"
       ></i>
       <i
       matTooltip="引用"
         matTooltipPosition="above"
         [matTooltipShowDelay]="500"
+        (click)='insertToLineStart("> ")'
       class="fa fa-fw fa-quote-left editor-support__icon"
       ></i>
 
@@ -134,6 +136,7 @@
       matTooltip="水平線"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertContent("", "\n\n---\n")'
       class="fa fa-fw fa-minus editor-support__icon"
       ></i>
 
@@ -144,18 +147,21 @@
       matTooltip="リスト"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertToLineStart("* ")'
       class="fa fa-fw fa-list-ul editor-support__icon"
       ></i>
       <i
       matTooltip="順序付きリスト"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertToLineStart("1. ")'
       class="fa fa-fw fa-list-ol editor-support__icon"
       ></i>
       <i
       matTooltip="テーブル"
       matTooltipPosition="above"
       [matTooltipShowDelay]="500"
+      (click)='insertContent("", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text     | Text     |\n")'
       class="fa fa-fw fa-table editor-support__icon"
       ></i>
     </div>
@@ -207,8 +213,9 @@
           (scroll)="syncScroll($event)"
           placeholder="本文"
           #mdTextArea
-          (click)="getCaretPos(mdTextArea)"
-          (keyup)="getCaretPos(mdTextArea)"
+          (click)="saveCaretPos(mdTextArea)"
+          (keyup)="saveCaretPos(mdTextArea)"
+          (keydown)="insertIndentifTab($event)"
           ></textarea>
       </div>
 
