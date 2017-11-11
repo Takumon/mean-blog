@@ -496,6 +496,35 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
+   * 指定したテキストを現在キャレットがある行の冒頭に挿入する
+   *
+   * @param text 挿入するテキスト
+   */
+  insertToLineStart(text: string) {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    this.insertText(text, this.searchLineStart());
+    this.moveCaretPosition(previouseCaretPosStart + text.length, previouseCaretPosEnd + text.length);
+  }
+
+  /**
+   * 現在キャレットがある行冒頭のポジションを取得する
+   *
+   * @return 現在キャレットがある行冒頭のポジション
+   */
+  searchLineStart(): number {
+    const value = this.body.value;
+    for (let i = this.caretPosStart; i > 0; i--) {
+      if (value[i] === '\n') {
+        return i + 1;
+      }
+    }
+    return 0;
+  }
+
+  /**
    * 指定したテキストを指定した位置に挿入する
    *
    * @param text 挿入するテキスト

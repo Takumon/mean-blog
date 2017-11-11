@@ -73,32 +73,38 @@
         class="header-menu">
         <button
           mat-menu-item
-          routerLinkActive="active">
+          (click)='insertToLineStart("# ")'
+          >
           <span class="header-menu__h1"> H1: Header</span>
         </button>
         <button
           mat-menu-item
-          routerLinkActive="active">
+          (click)='insertToLineStart("## ")'
+          >
           <span class="header-menu__h2"> H2: Header</span>
         </button>
         <button
           mat-menu-item
-          routerLinkActive="active">
+          (click)='insertToLineStart("### ")'
+          >
           <span class="header-menu__h3"> H3: Header</span>
         </button>
         <button
           mat-menu-item
-          routerLinkActive="active">
+          (click)='insertToLineStart("#### ")'
+          >
           <span class="header-menu__h4"> H4: Header</span>
         </button>
         <button
           mat-menu-item
-          routerLinkActive="active">
+          (click)='insertToLineStart("##### ")'
+          >
           <span class="header-menu__h5"> H5: Header</span>
         </button>
         <button
           mat-menu-item
-          routerLinkActive="active">
+          (click)='insertToLineStart("###### ")'
+          >
           <span class="header-menu__h6"> H6: Header</span>
         </button>
 
