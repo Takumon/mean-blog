@@ -12,6 +12,7 @@ import {
   FormGroup,
   FormGroupDirective,
   FormControl,
+  FormArray,
   NgForm,
   Validators,
   FormBuilder,
@@ -53,9 +54,7 @@ export class ArticleEditComponent implements OnInit {
 
   canRegisterDraft: Boolean = true;
 
-  fileList: Array<any> = [];
-  invalidFiles: Array<any> = [];
-  images: Array<any> = [];
+  imageForDisplayList: Array<any> = [];
 
   caretPos = 0;
 
@@ -108,6 +107,27 @@ export class ArticleEditComponent implements OnInit {
     });
   }
 
+  createForm() {
+    this.form = this.fb.group({
+      title: ['', [
+        Validators.required,
+        Validators.maxLength(100),
+      ]],
+      isMarkdown: '',
+      body: ['', [
+        Validators.required,
+        Validators.maxLength(10000),
+      ]],
+      image: this.fb.array([]),
+    });
+  }
+
+  get title(): FormControl { return this.form.get('title') as FormControl; }
+  get body(): FormControl { return this.form.get('body') as FormControl; }
+  get isMarkdown(): FormControl { return this.form.get('isMarkdown') as FormControl; }
+  get image(): FormArray { return this.form.get('image') as FormArray; }
+
+
 
   // URLの情報を元に画面初期化する
   init(isResume: boolean, _id: string): void {
@@ -125,6 +145,11 @@ export class ArticleEditComponent implements OnInit {
           isMarkdown: draft.isMarkdown,
           body: draft.body,
         });
+
+        if (draft.image && draft.image.length > 0) {
+          draft.image.forEach(i => this.image.push(new FormControl(i._id)));
+        }
+        this.imageForDisplayList = draft.image || [];
 
       });
 
@@ -148,12 +173,20 @@ export class ArticleEditComponent implements OnInit {
 
           // すでに下書きがある場合は下書きがインプット
           if (drafts && drafts.length === 1) {
-            this.previousDraft = drafts[0];
+            const draft = drafts[0];
+            this.previousDraft = draft;
             this.form.patchValue({
-              title: drafts[0].title,
-              isMarkdown: drafts[0].isMarkdown,
-              body: drafts[0].body,
+              title: draft.title,
+              isMarkdown: draft.isMarkdown,
+              body: draft.body,
+              image: draft.image && draft.image.length > 0 ? draft.image.map(i => i._id) : [],
             });
+
+            if (draft.image && draft.image.length > 0) {
+              draft.image.forEach(i => this.image.push(new FormControl(i._id)));
+            }
+            this.imageForDisplayList = draft.image || [];
+
             // 下書き保存ボタンの設定を戻す
             this.canRegisterDraft = true;
             this.snackBar.open('編集中の下書きがあるのでそれを編集します。', null, {duration: 3000});
@@ -172,7 +205,13 @@ export class ArticleEditComponent implements OnInit {
               title: article.title,
               isMarkdown: article.isMarkdown,
               body: article.body,
+              image: article.image && article.image.length > 0 ? article.image.map(i => i._id) : [],
             });
+
+            if (article.image && article.image.length > 0) {
+              article.image.forEach(i => this.image.push(new FormControl(i._id)));
+            }
+            this.imageForDisplayList = article.image || [];
           });
         });
 
@@ -185,24 +224,6 @@ export class ArticleEditComponent implements OnInit {
       }
     }
   }
-
-  createForm() {
-    this.form = this.fb.group({
-      title: ['', [
-        Validators.required,
-        Validators.maxLength(100),
-      ]],
-      isMarkdown: '',
-      body: ['', [
-        Validators.required,
-        Validators.maxLength(10000),
-      ]],
-    });
-  }
-
-  get title(): FormControl { return this.form.get('title') as FormControl; }
-  get body(): FormControl { return this.form.get('body') as FormControl; }
-  get isMarkdown(): FormControl { return this.form.get('isMarkdown') as FormControl; }
 
   hasError(validationName: string, control: FormControl): Boolean {
     return control.hasError(validationName) && control.dirty;
@@ -237,6 +258,7 @@ export class ArticleEditComponent implements OnInit {
     article.title = form.value['title'];
     article.isMarkdown = form.value['isMarkdown'];
     article.body = form.value['body'];
+    article.image = form.value['image'];
 
     if (this.previousDraft) {
       // TODO トランザクション
@@ -413,12 +435,21 @@ export class ArticleEditComponent implements OnInit {
       // テキストエリアから画像宣言部分を削除する
       // 複数定義している場合を考慮してグローバルマッチにしている
       this.body.setValue(this.body.value.replace(new RegExp(imageStatement, 'g'), ''));
-      this.images = this.images.filter(i => i !== image);
+      this.imageForDisplayList = this.imageForDisplayList.filter(i => i !== image);
+
+      const controls = this.image.controls;
+      const len = controls.length;
+      for (let i = 0; i < len; i++ ) {
+        if (controls[i].value === image._id) {
+          this.image.removeAt(i);
+          break;
+        }
+      }
+
     });
   }
 
   onFilesChange(fileList: Array<File>)　{
-    this.fileList = fileList;
 
 
     // TODO 複数件アップロード
@@ -426,7 +457,11 @@ export class ArticleEditComponent implements OnInit {
     .subscribe((res: any) => {
       this.snackBar.open('画像をアップロードしました。', null, {duration: 3000});
       const image = JSON.parse(res._body).obj;
-      this.images.push(image);
+      this.imageForDisplayList.push({
+        _id: image._id,
+        fileName: image.fileName,
+      });
+      this.image.push(new FormControl(image._id));
 
       this.insertImageToArticle(image);
     }, this.onValidationError.bind(this));
@@ -435,7 +470,6 @@ export class ArticleEditComponent implements OnInit {
   insertImageToArticle(image) {
     const imageStatement = `\n![${image.fileName}](api/images/ofArticle/${image._id})\n`;
     this.insertInTextArea(imageStatement);
-
   }
 
   /**
@@ -459,9 +493,4 @@ export class ArticleEditComponent implements OnInit {
        this.caretPos = textareaElement.selectionStart;
     }
   }
-
-  onFileInvalids(fileList: Array<File>)　{
-    this.invalidFiles = fileList;
-  }
-
 }

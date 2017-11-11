@@ -67,7 +67,6 @@
       <div
         appDragAndDrop
         (filesChangeEmiter)="onFilesChange($event)"
-        (filesInvalidEmiter)="onFileInvalids($event)"
         [allowed_extensions]="['png', 'jpg', 'bmp']"
         [ngClass]="['markdonw-editor__row-text', markdonwEditMode]">
         <textarea
@@ -85,7 +84,7 @@
       <div class="image-operation" [class.show]="isImageOperationShow">
         <div class="image-operation__header">
           <button
-            *ngIf="images?.length > 0"
+            *ngIf="imageForDisplayList?.length > 0"
             mat-icon-button
             class="image-operation__header__showhide-btn"
             (click)="isImageOperationShow = !isImageOperationShow"
@@ -112,17 +111,18 @@
             >
             <div
               class="image-operation__image"
-              *ngFor="let image of images">
+              *ngFor="let imageForDisplay of imageForDisplayList">
               <button
                 mat-icon-button
-                class="image-operation__insert-btn"
-                (click)="insertImageToArticle(image)"
+                class="image-operation__image__insert-btn"
+                (click)="insertImageToArticle(imageForDisplay)"
               ><i class="fa fa-fw fa-plus-square"></i></button>
-              <div class="image-operation__file-name">{{image.fileName}}</div>
+              <div class="image-operation__image__file-name">{{imageForDisplay.fileName}}</div>
+              <div class="image-operation__image__spacer"></div>
               <button
                 mat-icon-button
-                class="image-operation__delete-btn"
-                (click)="deleteImage(image)"
+                class="image-operation__image__delete-btn"
+                (click)="deleteImage(imageForDisplay)"
                 ><i class="fa fa-fw fa-trash"></i></button>
             </div>
           </ng-container>

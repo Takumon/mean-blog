@@ -270,7 +270,7 @@
 .image-operation {
   z-index: 1;
   position: fixed;
-  background: whitesmoke;
+  background: rgba(245, 245, 245, 0.57);
   font-size: 12px;
   color: #191919;
   border-radius: 2px;
@@ -278,10 +278,17 @@
   bottom: 52px;
   right: 8px;
 
+  &:hover {
+    background: whitesmoke;
+    &__header {
+      background: #e0e0e0;
+    }
+  }
+
   &__header {
     display: flex;
     align-items: center;
-    background: #e0e0e0;
+    background: rgba(224, 224, 224, 0.6);
     border-bottom: 1px solid #d2d2d2;
 
     &__showhide-btn {
@@ -301,21 +308,27 @@
     align-items: center;
     padding: 2px;
     border-bottom: solid 1px #d4d4d4;
-  }
 
-  &__file-name {
-
-  }
-
-  &__insert-btn {
-    &:hover {
-      background: #d6d6d6;
+    &__insert-btn {
+      &:hover {
+        background: #d6d6d6;
+      }
     }
+
+    &__file-name {
+
+    }
+
+    &__spacer {
+      flex: 1 1 auto;
+    }
+
+    &__delete-btn {
+      &:hover {
+        background: #d6d6d6;
+      }
+    }
+
   }
 
-  &__delete-btn {
-    &:hover {
-      background: #d6d6d6;
-    }
-  }
 }
