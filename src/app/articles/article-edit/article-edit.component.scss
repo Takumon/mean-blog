@@ -362,6 +362,31 @@
     width: 1px;
     background: #a2a2a2;
     height: 32px;
-    margin-left: 8px;
+    margin: 0 8px;
   }
+}
+
+
+.header-menu {
+
+  &__h1 {
+    font-size: 2em;
+  }
+
+  &__h2 {
+    font-size: 1.5em;
+  }
+  &__h3 {
+    font-size: 1.2em;
+  }
+  &__h4 {
+    font-size: 1em;
+  }
+  &__h5 {
+    font-size: 0.7em;
+  }
+  &__h6 {
+    font-size: 0.5em;
+  }
+
 }
