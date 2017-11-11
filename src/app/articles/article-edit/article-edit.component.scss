@@ -332,3 +332,36 @@
   }
 
 }
+
+
+.editor-support {
+  color: #525252;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+
+  &__icon {
+    padding: 4px;
+    height: 28px;
+    line-height: 20px;
+    width: 28px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    margin-right: 6px;
+    cursor: pointer;
+
+    &:hover {
+      color: black;
+      background: rgb(199, 199, 199);
+      transition: color 0.2s;
+    }
+  }
+
+  &__separator {
+    display: inline-block;
+    width: 1px;
+    background: #a2a2a2;
+    height: 32px;
+    margin-left: 8px;
+  }
+}
