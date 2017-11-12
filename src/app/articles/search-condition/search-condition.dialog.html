@@ -143,12 +143,25 @@
           <mat-list class="user-select__list">
             <mat-progress-bar *ngIf="!(checkUserList || unCheckUserList)" mode="indeterminate"></mat-progress-bar>
             <ng-container *ngIf="checkUserList || unCheckUserList">
-              <mat-input-container>
+              <mat-input-container class="user-select__list__search-condition">
+                <i
+                  matPrefix
+                  class="fa fa-fw fa-search"
+                  ></i>
                 <input
                   matInput
+                  shouldPlaceholderFloat="false"
                   [(ngModel)]="searchUserId"
                   [ngModelOptions]="{standalone: true}"
-                  placeholder="ユーザIDで絞り込み">
+                  placeholder="ユーザIDで絞り込み"
+                  >
+                <i
+                  *ngIf="searchUserId"
+                  matSuffix
+                  mat-ripple
+                  matTooltip="絞り込み条件をクリア"
+                  class="clear-icon fa fa-fw fa-close"
+                  (click)="searchUserId = null"></i>
               </mat-input-container>
               <mat-list-item
                 *ngFor="let checkinfo of (unCheckUserList | userIdSearchFilter: searchUserId)  ; trackBy: trackByUserList"
@@ -210,7 +223,8 @@
       </div>
     </div>
 
-    <div mat-dialog-actions style="display:flex;">
+
+    <div mat-dialog-actions class="operation">
       <div style="flex: 1 1 auto"></div>
       <button mat-raised-button (click)="close()" tabindex="-1" style="margin-right: 12px;">キャンセル</button>
       <button
