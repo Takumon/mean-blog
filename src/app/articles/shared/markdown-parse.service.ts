@@ -24,8 +24,18 @@ export class MarkdownParseService {
     const toc = [];
     const renderer = new marked.Renderer();
     renderer.heading = function(text, level) {
-      // domのidに空白は含めないのでハイフンに痴漢する
-      const slug = text.toLowerCase().replace(/[\s]+/g, '-');
+      // domのidに使えない文字はハイフンに置換する
+      let slug = text
+        .toLowerCase()
+        .replace(/[\s]+/g, '-')
+        .replace(/[\.\(\)\/]/g, '');
+
+      // 数字始まりはquerySelectorでエラーになるので接頭子にnを付けてエラーを回避
+      const numeralBeginning: RegExp = /^\d/;
+      if (numeralBeginning.test(slug)) {
+        slug = 'n' + slug;
+      }
+
       const encodedSlug = encodeURI(slug);
 
       toc.push({
