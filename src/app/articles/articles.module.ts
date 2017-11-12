@@ -44,6 +44,7 @@ import { ReplyFormComponent } from './reply-form/reply-form.component';
 import { VoterListComponent } from './voter-list/voter-list.component';
 import { SearchConditionDialogComponent } from './search-condition/search-condition.dialog';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
+import { UserIdSearchFilterPipe } from './search-condition/user-id-search-filter.pip';
 import { DraftListComponent } from './draft-list/draft-list.component';
 import { DraftDetailComponent } from './draft-detail/draft-detail.component';
 
@@ -66,6 +67,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     SearchConditionDialogComponent,
     SearchConditionComponent,
     MarkdownParsePipe,
+    UserIdSearchFilterPipe,
     OrderByPipe,
     ExcludeDeletedCommentPipe,
     ExcludeDeletedVoterPipe,

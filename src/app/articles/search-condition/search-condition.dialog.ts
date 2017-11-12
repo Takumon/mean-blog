@@ -35,7 +35,7 @@ import { UserService } from '../../users/shared/user.service';
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { SearchConditionService } from '../shared/search-condition.service';
 
-interface UserListFactor {
+export interface UserListFactor {
   _id: string;
   user: {
     _id: string;
@@ -49,6 +49,7 @@ interface UserListFactor {
   styleUrls: ['./search-condition.dialog.scss'],
 })
 export class SearchConditionDialogComponent implements OnInit {
+  public searchUserId: string;
   // formグループ化したい
   public form: FormGroup;
   private searchConditionId: string;

@@ -143,8 +143,15 @@
           <mat-list class="user-select__list">
             <mat-progress-bar *ngIf="!(checkUserList || unCheckUserList)" mode="indeterminate"></mat-progress-bar>
             <ng-container *ngIf="checkUserList || unCheckUserList">
+              <mat-input-container>
+                <input
+                  matInput
+                  [(ngModel)]="searchUserId"
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="ユーザIDで絞り込み">
+              </mat-input-container>
               <mat-list-item
-                *ngFor="let checkinfo of unCheckUserList; trackBy: trackByUserList"
+                *ngFor="let checkinfo of (unCheckUserList | userIdSearchFilter: searchUserId)  ; trackBy: trackByUserList"
                 class="user" >
                 <div
                   class="user__content"
