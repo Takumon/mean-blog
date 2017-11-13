@@ -12,9 +12,9 @@ import { authenticate } from '../middleware/authenticate';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
 
-const authenticateRouter: Router = Router();
+const router: Router = Router();
 
-authenticateRouter.post('/login', [
+router.post('/login', [
   body('userId')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['ユーザID'])),
   body('password')
@@ -73,7 +73,7 @@ function isAllreadyUsed(userId: String): Promise<boolean> {
   }).catch(err => Promise.reject(false));
 }
 
-authenticateRouter.post('/register', [
+router.post('/register', [
   body('userId')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['ユーザID']))
     .isLength({ min: 6 }).withMessage(v.message(v.MESSAGE_KEY.minlength, ['ユーザID', '6']))
@@ -153,7 +153,63 @@ authenticateRouter.post('/register', [
 });
 
 
-authenticateRouter.get('/check-state', (req, res) => {
+function isCollectPassword(password, {req}) {
+  return User
+  .findOne({ _id: req.body._id, deleted: { $eq: null}})
+  .exec()
+  .then(user => {
+    if (user && PasswordManager.compare(password, user.password)) {
+        return Promise.resolve(true);
+    }
+    return Promise.reject(false);
+  }).catch(err => Promise.reject(false));
+}
+
+
+router.put('/changePassword', [
+  body('_id')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['ユーザID']))
+    .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザID'])),
+  body('oldPassword')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['現在のパスワード']))
+    .custom(isCollectPassword).withMessage(v.message(v.MESSAGE_KEY.invalid, ['現在のパスワード'])),
+  body('newPassword')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['新しいパスワード']))
+    .matches(v.PATTERN.PASSWORD).withMessage(v.message(v.MESSAGE_KEY.pattern_password, ['新しいパスワード']))
+    .custom((value, {req}) => value !== req.body.oldPassword).withMessage(v.message(v.MESSAGE_KEY.same, ['現在のパスワード', '新しいパスワード'])),
+  body('newConfirmPassword')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['新しいパスワード確認用']))
+    .custom((value, {req}) => value === req.body.newPassword).withMessage(v.message(v.MESSAGE_KEY.different, ['新しいパスワード', '新しいパスワード確認用'])),
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const model = {$set: {
+    password: PasswordManager.crypt(req.body.newPassword),
+    updated: new Date()
+  }};
+
+  User.findByIdAndUpdate(req.body._id, model, {new: true}, (err, target) => {
+    if (err) {
+      return res.status(500).json({
+        title: v.MESSAGE_KEY.default,
+        error: err.message
+      });
+    }
+    // パスワードはクライアント側に送信しない
+    deleteProp(target, 'password');
+
+    return res.status(200).json({
+      message: `パスワードを更新しました。`,
+      obj: target
+    });
+  });
+});
+
+
+router.get('/check-state', (req, res) => {
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
   if (!token) {
@@ -218,4 +274,4 @@ function deleteProp(obj: Object, propertyName: string) {
   }
 }
 
-export { authenticateRouter };
+export { router as authenticateRouter};

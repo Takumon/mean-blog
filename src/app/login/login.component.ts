@@ -10,7 +10,8 @@ import { AuthenticationService } from '../shared/services/authentication.service
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public isLoginMode: Boolean;
+  public passwordChageMode: boolean;
+  public isLoginMode: boolean;
   private returnUrl: string;
 
   constructor(
@@ -19,23 +20,37 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
   ) {
-    this.authenticationService.logout();
+    const url: String = this.router.url;
+    // パスワード変更の場合はログインしたまま表示する
+    if (url !== '/passwordChange') {
+      this.authenticationService.logout();
+    }
   }
 
   ngOnInit() {
+    const url: String = this.router.url;
+    // パスワード変更
+    if (url === '/passwordChange') {
+      this.passwordChageMode = true;
+      this.returnUrl = '/';
+      return;
+    }
+
+    this.passwordChageMode = false;
+
     // 表示しようとしていたURLを保持しておく
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     const isLoginMode = !('register' in this.route.snapshot.queryParams);
     this.setLoginMode(isLoginMode);
   }
 
-  setLoginMode(value: Boolean): void {
+  setLoginMode(value: boolean): void {
     this.isLoginMode = value;
   }
 
 
-  private goNextPage() {
-    this.snackBar.open('ログインしました。', null, {duration: 3000});
+  private goNextPage(msg: string = 'ログインしました。') {
+    this.snackBar.open(msg, null, {duration: 3000});
     this.router.navigate([this.returnUrl]);
   }
 

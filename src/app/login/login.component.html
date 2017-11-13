@@ -1,5 +1,9 @@
 <mat-card class="login-box">
-  <mat-toolbar class="login-title" color="primary">
+  <mat-toolbar *ngIf="passwordChageMode" class="login-title" color="primary">
+    <span class="subtitle">パスワード変更</span>
+  </mat-toolbar>
+
+  <mat-toolbar *ngIf="!passwordChageMode" class="login-title" color="primary">
     <h1 class="title">Material Blog</h1>
     <mat-toolbar-row>
       <span *ngIf="isLoginMode" class="subtitle">ログイン</span>
@@ -7,13 +11,20 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
+
+
+  <app-password-form
+    *ngIf="passwordChageMode"
+    (complete)='goNextPage("パスワードを変更しました。")'
+    ></app-password-form>
+
   <app-login-form
-    *ngIf="isLoginMode"
+    *ngIf="!passwordChageMode && isLoginMode"
     (changeLoginMode)="setLoginMode(false)"
     (complete)="goNextPage()"
     ></app-login-form>
   <app-register-form
-    *ngIf="!isLoginMode"
+    *ngIf="!passwordChageMode && !isLoginMode"
     (changeLoginMode)="setLoginMode(true)"
     (complete)="goNextPage()"
     ></app-register-form>
