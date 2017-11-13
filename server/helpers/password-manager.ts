@@ -9,8 +9,7 @@ const PasswordManager = {
   },
 
   compare: (plainPass, hashword): Boolean => {
-    const result1 = bcrypt.compareSync(plainPass, hashword);
-    return result1;
+    return bcrypt.compareSync(plainPass, hashword);
   }
 };
 
