@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
     // パスワード変更
     if (url === '/passwordChange') {
       this.passwordChageMode = true;
+      this.returnUrl = '/';
       return;
     }
 
@@ -48,8 +49,8 @@ export class LoginComponent implements OnInit {
   }
 
 
-  private goNextPage() {
-    this.snackBar.open('ログインしました。', null, {duration: 3000});
+  private goNextPage(msg: string = 'ログインしました。') {
+    this.snackBar.open(msg, null, {duration: 3000});
     this.router.navigate([this.returnUrl]);
   }
 

@@ -15,7 +15,7 @@
 
   <app-password-form
     *ngIf="passwordChageMode"
-    (complete)="goNextPage()"
+    (complete)='goNextPage("パスワードを変更しました。")'
     ></app-password-form>
 
   <app-login-form
