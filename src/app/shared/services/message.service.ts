@@ -25,6 +25,7 @@ export class MessageService {
     minlength: '{0}は{1}桁以上にしてください',
     maxlength: '{0}は{1}桁以下にしてください',
     passwordMatch: 'パスワードと確認用パスワードが一致しません',
+    changingPassowrd: '新しいパスワードが現在のパスワードを同じです',
     pattern_hankakueisuji: '{0}は半角英数字で入力してください',
     pattern_password: 'パスワードは半角英数字記号をそれぞれ1種類以上含む8文字以上30文字以下にしてください',
     pattern_email: 'メール形式で入力してください',

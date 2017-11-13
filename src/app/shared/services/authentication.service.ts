@@ -59,6 +59,22 @@ export class AuthenticationService {
       .catch((res: Response) => Observable.throw(res.json()));
   }
 
+  changePassword(passwordInfo: {
+    oldPassword: string,
+    newPassword: string,
+    newConfirmPassword: string
+  }): Observable<Object> {
+
+    const URL = `${this.base_url}/changePassword`;
+
+    passwordInfo['_id'] = this.loginUser._id;
+
+    return this.http
+      .put(URL, passwordInfo)
+      .map((res: Response) => this.setToken(res) )
+      .catch((res: Response) => Observable.throw(res.json()));
+  }
+
   isLogin(): Boolean {
     return !!this.localStrageService.get(KEY.TOKEN);
   }
