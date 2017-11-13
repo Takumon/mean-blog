@@ -32,8 +32,6 @@ export class PasswordFormComponent implements OnInit {
     const newPassword = g.get('newPassword').value;
     const newConfirmPassword = g.get('newConfirmPassword').value;
 
-    console.log('newPassword = ' + newPassword);
-    console.log('newConfirmPassword = ' + newConfirmPassword);
     if (newPassword && newPassword.length > 8
        && newConfirmPassword  && newConfirmPassword.length > 8
        && newPassword !== newConfirmPassword) {
@@ -44,7 +42,6 @@ export class PasswordFormComponent implements OnInit {
        && oldPassword === newPassword) {
       result['changingPassowrd'] = true;
     }
-    console.log(result);
     return result;
   }
 
