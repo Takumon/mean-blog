@@ -279,7 +279,9 @@ const MESSAGE_KEY = {
   not_unique: '指定した{0}は重複が存在します',
   not_specified: '{0}が指定されていません',
   different: '{0}と{1}が一致しません',
-  login_error: 'ユーザIDかパスワードが正しくありません'
+  same: '{0}と{1}が同じです',
+  login_error: 'ユーザIDかパスワードが正しくありません',
+  invalid: '{0}が正しくありません'
 };
 
 class ValidateHelper {
