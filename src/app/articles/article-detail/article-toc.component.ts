@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { Constant } from '../../shared/constant';
 import { TocService } from '../../shared/services/toc.service';
 import { ScrollService } from '../../shared/services/scroll.service';
 import { MARKDOWN_HEADER_CLASS } from '../shared/markdown-parse.service';
@@ -18,6 +19,8 @@ import { MARKDOWN_HEADER_CLASS } from '../shared/markdown-parse.service';
   styleUrls: ['./article-toc.component.scss'],
 })
 export class ArticleTocComponent implements OnInit, OnDestroy {
+  private Constant = Constant;
+
   @Input() toc: string;
   @Input() title: string;
   @Input() baseUrl: string;
@@ -88,7 +91,7 @@ export class ArticleTocComponent implements OnInit, OnDestroy {
   }
 
   private calcMarginOfTitle(level: number): number {
-    return level * 12;
+    return level * this.Constant.TOC_INDENT_INTERVAL;
   }
 
   private scrollToAnchor(elementId: string): void {
