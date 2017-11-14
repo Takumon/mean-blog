@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
+import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
@@ -25,6 +26,8 @@ import { ReplyService } from '../shared/reply.service';
   styleUrls: ['./reply-form.component.scss']
 })
 export class ReplyFormComponent implements OnInit {
+  private Constant = Constant;
+
   @Input() isAuthfocuse: boolean;
   @Input() model: ReplyModel;
   @Input() hasCancelBtn: boolean;
@@ -83,7 +86,7 @@ export class ReplyFormComponent implements OnInit {
       this.replyService
         .register(this.model)
         .subscribe(res => {
-          this.snackBar.open('リプライを追加しました。', null, {duration: 3000});
+          this.snackBar.open('リプライを追加しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.complete.emit();
           this.form.reset();
           f.resetForm();
@@ -92,7 +95,7 @@ export class ReplyFormComponent implements OnInit {
       this.replyService
         .update(this.model)
         .subscribe(res => {
-          this.snackBar.open('リプライを更新しました。', null, {duration: 3000});
+          this.snackBar.open('リプライを更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.complete.emit();
           this.form.reset();
           f.resetForm();

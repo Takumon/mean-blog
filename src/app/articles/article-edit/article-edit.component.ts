@@ -196,7 +196,7 @@ export class ArticleEditComponent implements OnInit {
 
             // 下書き保存ボタンの設定を戻す
             this.canRegisterDraft = true;
-            this.snackBar.open('編集中の下書きがあるのでそれを編集します。', null, {duration: 3000});
+            this.snackBar.open('編集中の下書きがあるのでそれを編集します。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
             this.routeNamesService.name.next(`下書きを${this.action}する`);
             return;
           }
@@ -279,7 +279,7 @@ export class ArticleEditComponent implements OnInit {
           this.draftService
           .delete(this.previousDraft._id)
           .subscribe(r => {
-            this.snackBar.open('記事を更新しました。', null, {duration: 3000});
+            this.snackBar.open('記事を更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
             this.goToArticle(resOfModifiedArticle.obj._id);
           }, this.messageBarService.showValidationError.bind(this.messageBarService));
         }, this.onValidationError.bind(this));
@@ -293,7 +293,7 @@ export class ArticleEditComponent implements OnInit {
           this.draftService
           .delete(this.previousDraft._id)
           .subscribe(r => {
-            this.snackBar.open('記事を登録しました。', null, {duration: 3000});
+            this.snackBar.open('記事を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
             this.goToArticle(resOfModifiedArticle.obj._id);
           }, this.messageBarService.showValidationError.bind(this.messageBarService));
         }, this.onValidationError.bind(this));
@@ -307,7 +307,7 @@ export class ArticleEditComponent implements OnInit {
         this.articleService
           .update(article)
           .subscribe((res: any) => {
-            this.snackBar.open('記事を更新しました。', null, {duration: 3000});
+            this.snackBar.open('記事を更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
             this.goToArticle(res.obj._id);
           }, this.onValidationError.bind(this));
       } else {
@@ -317,7 +317,7 @@ export class ArticleEditComponent implements OnInit {
         this.articleService
           .register(article)
           .subscribe((res: any) => {
-            this.snackBar.open('記事を登録しました。', null, {duration: 3000});
+            this.snackBar.open('記事を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
             this.goToArticle(res.obj._id);
           }, this.onValidationError.bind(this));
       }
@@ -335,7 +335,7 @@ export class ArticleEditComponent implements OnInit {
       // getterからformControllを取得
       const control: FormControl | FormGroup = this[e.param];
       if (!control) {
-        // 該当するfromがないものはスナックバーで表示
+        // 該当するControlFormがないものはスナックバーで表示
         noControlErrors.push(e);
         continue;
       }
@@ -366,7 +366,7 @@ export class ArticleEditComponent implements OnInit {
       this.draftService
         .update(draft)
         .subscribe((res: any) => {
-          this.snackBar.open('下書きを更新しました。', null, {duration: 3000});
+          this.snackBar.open('下書きを更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.goToDraft(res.obj._id);
         }, this.onValidationError.bind(this));
     } else {
@@ -386,7 +386,7 @@ export class ArticleEditComponent implements OnInit {
       this.draftService
         .create(draft)
         .subscribe((res: any) => {
-          this.snackBar.open('下書きを保存しました。', null, {duration: 3000});
+          this.snackBar.open('下書きを保存しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.goToDraft(res.obj._id);
         }, this.onValidationError.bind(this));
     }
@@ -462,7 +462,7 @@ export class ArticleEditComponent implements OnInit {
     // TODO 複数件アップロード
     this.imageService.create(fileList[0])
     .subscribe((res: any) => {
-      this.snackBar.open('画像をアップロードしました。', null, {duration: 3000});
+      this.snackBar.open('画像をアップロードしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
       const image = JSON.parse(res._body).obj;
       this.imageForDisplayList.push({
         _id: image._id,
@@ -663,8 +663,5 @@ export class ArticleEditComponent implements OnInit {
       this.insertContent('`', '`');
       this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
     }
-
-
-
   }
 }

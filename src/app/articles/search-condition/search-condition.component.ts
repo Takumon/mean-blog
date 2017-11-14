@@ -6,6 +6,7 @@ import {
 } from '@angular/material';
 import * as moment from 'moment';
 
+import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
@@ -23,6 +24,7 @@ import { SearchConditionDialogComponent } from './search-condition.dialog';
   styleUrls: ['./search-condition.component.scss'],
 })
 export class SearchConditionComponent implements OnInit {
+  private Constant = Constant;
   @Output() changeSeaerchCondition = new EventEmitter();
   seaerchConditions: Array<SearchConditionModel>;
   dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
@@ -153,7 +155,7 @@ export class SearchConditionComponent implements OnInit {
       }
 
       if (conditionForUpdate) {
-        this.snackBar.open('お気に入り検索条件を更新しました。', null, {duration: 3000});
+        this.snackBar.open('お気に入り検索条件を更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         // 選択中の検索条件を更新した時だけ再検索
         if (conditionForUpdate.checked) {
           this.getSearchCondition();
@@ -171,7 +173,7 @@ export class SearchConditionComponent implements OnInit {
           }
         }
       } else {
-        this.snackBar.open('お気に入り検索条件を登録しました。', null, {duration: 3000});
+        this.snackBar.open('お気に入り検索条件を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
 
         // 初登録の場合は再検索
         if (this.seaerchConditions.length === 0) {
@@ -202,7 +204,7 @@ export class SearchConditionComponent implements OnInit {
       this.searchConditionService
       .delete(conditionForDelete._id.toString())
       .subscribe(res => {
-        this.snackBar.open(`お気に入り検索条件「${conditionForDelete.name}」を削除しました。`, null, {duration: 3000});
+        this.snackBar.open(`お気に入り検索条件「${conditionForDelete.name}」を削除しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         if (conditionForDelete.checked) {
           this.getSearchCondition();
         } else {

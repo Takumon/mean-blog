@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 
+
+import { Constant } from '../shared/constant';
 import { AuthenticationService } from '../shared/services/authentication.service';
 
 @Component({
@@ -10,6 +12,7 @@ import { AuthenticationService } from '../shared/services/authentication.service
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  private Constant = Constant;
   public passwordChageMode: boolean;
   public isLoginMode: boolean;
   private returnUrl: string;
@@ -50,7 +53,7 @@ export class LoginComponent implements OnInit {
 
 
   private goNextPage(msg: string = 'ログインしました。') {
-    this.snackBar.open(msg, null, {duration: 3000});
+    this.snackBar.open(msg, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
     this.router.navigate([this.returnUrl]);
   }
 

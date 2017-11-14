@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
+import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
@@ -25,6 +26,7 @@ import { CommentService } from '../shared/comment.service';
   styleUrls: ['./comment-form.component.scss']
 })
 export class CommentFormComponent implements OnInit {
+  private Constant = Constant;
   @Input() isAuthfocuse: boolean;
   @Input() model: CommentModel;
   @Input() hasCancelBtn: boolean;
@@ -85,7 +87,7 @@ export class CommentFormComponent implements OnInit {
       this.commentService
         .register(this.model)
         .subscribe(res => {
-          this.snackBar.open('コメントを追加しました。', null, {duration: 3000});
+          this.snackBar.open('コメントを追加しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.complete.emit();
           this.form.reset();
           f.resetForm();
@@ -94,7 +96,7 @@ export class CommentFormComponent implements OnInit {
       this.commentService
         .update(this.model)
         .subscribe(res => {
-          this.snackBar.open('コメントを更新しました。', null, {duration: 3000});
+          this.snackBar.open('コメントを更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.complete.emit();
           this.form.reset();
           f.resetForm();

@@ -4,6 +4,7 @@ import {
   MatDialog,
 } from '@angular/material';
 
+import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
@@ -24,6 +25,7 @@ import { ReplyWithUserModel } from '../shared/reply-with-user.model';
   styleUrls: ['./comment-list.component.scss'],
 })
 export class CommentListComponent implements OnInit {
+  private Constant = Constant;
   @Input() replyCommentIndentMargin: Number = 42;
   @Input() replyCommentIndentLimit: Number = 4;
   @Input() _idOfArticle: string;
@@ -99,12 +101,6 @@ export class CommentListComponent implements OnInit {
   }
 
 
-  calcMarginOfComment(depth: number): number {
-    const d: number = depth > 4 ? 4 : depth;
-    return d * 24;
-  }
-
-
   deleteComment(commentId: String): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -121,7 +117,7 @@ export class CommentListComponent implements OnInit {
       this.commentService
       .delete(commentId)
       .subscribe(res => {
-        this.snackBar.open('コメントを削除しました。', null, {duration: 3000});
+        this.snackBar.open('コメントを削除しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.refreshComments();
       });
     });
@@ -143,7 +139,7 @@ export class CommentListComponent implements OnInit {
       this.replyService
       .delete(replyId)
       .subscribe(res => {
-        this.snackBar.open('リプライを削除しました。', null, {duration: 3000});
+        this.snackBar.open('リプライを削除しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.refreshComments();
       });
     });

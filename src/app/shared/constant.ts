@@ -3,4 +3,6 @@ export class Constant {
 　public static TOC_INDENT_INTERVAL = 12;
   /** ツールチップを遅れて表示する場合のディレイタイム(msec) */
   public static TOOL_TIP_SHOW_DELAY = 500;
+  /** スナックバーのデフォルトオプション */
+  public static SNACK_BAR_DEFAULT_OPTION = {duration: 3000};
 }
