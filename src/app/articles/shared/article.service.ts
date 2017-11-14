@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services/jwt.service';
 
 import { ArticleModel } from './article.model';
@@ -13,6 +14,7 @@ import { CommentModel } from './comment.model';
 
 @Injectable()
 export class ArticleService {
+  private Constant = Constant;
   private baseUrl = '/api/articles';
   private commentUrl = '/api/comments';
 
@@ -89,7 +91,7 @@ export class ArticleService {
   registerVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
     const options = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': this.Constant.POST_CONTENT_TYPE,
       headers: this.jwtService.getHeaders()
     };
 

@@ -3,6 +3,7 @@ import { Http, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services/jwt.service';
 
 import { CommentModel } from './comment.model';
@@ -12,6 +13,7 @@ import { CommentWithArticleModel } from './comment-with-article.model';
 
 @Injectable()
 export class CommentService {
+  private Constant = Constant;
   private baseCommentUrl = '/api/comments';
   private baseReplyUrl = '/api/replies';
 
@@ -43,7 +45,7 @@ export class CommentService {
     const URL = this.baseCommentUrl;
 
     const options = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': this.Constant.POST_CONTENT_TYPE,
       headers: this.jwtService.getHeaders()
     };
 
@@ -58,7 +60,7 @@ export class CommentService {
     const URL = `${this.baseCommentUrl}/${comment._id}`;
 
     const options = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': this.Constant.POST_CONTENT_TYPE,
       headers: this.jwtService.getHeaders()
     };
 

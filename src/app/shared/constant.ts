@@ -5,4 +5,6 @@ export class Constant {
   public static TOOL_TIP_SHOW_DELAY = 500;
   /** スナックバーのデフォルトオプション */
   public static SNACK_BAR_DEFAULT_OPTION = {duration: 3000};
+  /** POST送信時に指定するコンテンツタイプ */
+  public static POST_CONTENT_TYPE = 'application/x-www-form-urlencoded';
 }
