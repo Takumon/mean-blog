@@ -1,17 +1,18 @@
 
 import * as bcrypt from 'bcrypt';
 
+/**
+ * パスワードを暗号化、比較するためのユーティルクラス
+ */
 const PasswordManager = {
 
   crypt: (password): String => {
-    const result = bcrypt.hashSync(password, 10);
-    return result;
+    return bcrypt.hashSync(password, 10);
   },
 
   compare: (plainPass, hashword): Boolean => {
     return bcrypt.compareSync(plainPass, hashword);
   }
 };
-
 
 export { PasswordManager };

@@ -271,6 +271,7 @@ router.get('/ofArticle/:_idOfArticle', [
       });
     }
 
+    // TODO 削除ユーザ除外処理はpopulateに持って行きたい
     // 削除ユーザのコメントを削除
     const comments = doc.filter(c => !c.user.deleted);
     // 削除ユーザのリプライを削除
