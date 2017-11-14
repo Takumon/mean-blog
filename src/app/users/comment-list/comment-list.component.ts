@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 
 import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
@@ -17,6 +18,7 @@ import { UserService } from '../shared/user.service';
   styleUrls: ['./comment-list.component.scss'],
 })
 export class CommentListComponent implements OnInit, OnDestroy {
+  public Constant = Constant;
   public comments: Array<CommentWithArticleModel>;
   public user: UserModel;
 

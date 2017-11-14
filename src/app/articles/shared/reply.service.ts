@@ -3,6 +3,7 @@ import { Http, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services/jwt.service';
 
 import { ReplyModel } from './reply.model';
@@ -11,6 +12,7 @@ import { ReplyWithUserModel } from './reply-with-user.model';
 
 @Injectable()
 export class ReplyService {
+  private Constant = Constant;
   private baseUrl = '/api/replies';
 
   constructor(
@@ -79,7 +81,7 @@ export class ReplyService {
     }
 
     const options = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': this.Constant.POST_CONTENT_TYPE,
       headers,
       search,
     };
@@ -104,7 +106,7 @@ export class ReplyService {
     }
 
     const options = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': this.Constant.POST_CONTENT_TYPE,
       headers,
       search,
     };

@@ -14,6 +14,7 @@ import {
   FormBuilder,
 } from '@angular/forms';
 
+import { Constant } from '../shared/constant';
 import { AuthenticationService } from '../shared/services/authentication.service';
 import { RouteNamesService } from '../shared/services/route-names.service';
 import { MessageService } from '../shared/services/message.service';
@@ -28,6 +29,7 @@ import { UserService } from './shared/user.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, OnDestroy {
+  public Constant = Constant;
   public user: UserModel;
   public isMine: Boolean;
   public editMode: Boolean = false;
@@ -101,7 +103,7 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userService
       .update(model, val.avator, val.profileBackground)
       .subscribe((res: any) => {
-        this.snackBar.open('プロフィールを編集しました。', null, {duration: 3000});
+        this.snackBar.open('プロフィールを編集しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.getUser(this.param_userId);
         this.cancelEdit();
       }, this.onValidationError.bind(this));

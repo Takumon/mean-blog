@@ -18,6 +18,7 @@ import {
   MatInputModule,
 } from '@angular/material';
 
+import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
@@ -37,6 +38,7 @@ import { CommentWithUserModel } from '../shared/comment-with-user.model';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleComponent {
+  public Constant = Constant;
   @Input() item: ArticleWithUserModel;
 
 
@@ -84,7 +86,7 @@ export class ArticleComponent {
     this.articleService
     .registerVote(this.item._id, this.auth.loginUser._id)
     .subscribe(article => {
-      this.snackBar.open('いいねしました。', null, {duration: 3000});
+      this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
       this.articleService.getVoteOne(this.item._id)
       .subscribe(vote => {
         this.item.vote = vote;
@@ -109,7 +111,7 @@ export class ArticleComponent {
       this.articleService
       .deleteVote(this.item._id, this.auth.loginUser._id)
       .subscribe(article => {
-        this.snackBar.open('いいねを取り消しました。', null, {duration: 3000});
+        this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.articleService.getVoteOne(this.item._id)
         .subscribe(vote => {
           this.item.vote = vote;

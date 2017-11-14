@@ -9,7 +9,6 @@ export class ArticleModel {
   author: string;
   comments: Array<CommentModel>;
   image: Array<ImageModel>;
-  // TODO 型は検討
   created: string;
   updated: string;
   deleted: string;

@@ -6,7 +6,7 @@
   <div class="comment-form__main">
     <img class="comment-form__author-icon"
       lazyLoad="/api/images/avator/{{ auth.loginUser._id }}"
-      offset="50"
+      [offset]="this.Constant.LAZY_LOAD_OFFSET"
       />
     <mat-input-container
       class="comment-form__textarea-wrapper">

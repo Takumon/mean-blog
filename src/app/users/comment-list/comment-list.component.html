@@ -8,7 +8,7 @@
       <img
         class="comment__author-icon"
         lazyLoad="/api/images/avator/{{ user._id}}"
-        offset="50"
+        [offset]="this.Constant.LAZY_LOAD_OFFSET"
         >
       <div class="comment__main">
         <div class="comment__article">
@@ -16,7 +16,7 @@
             class="comment__article__author-icon"
             [routerLink]="['/', comment.articleId.author.userId, 'articles']"
             lazyLoad="/api/images/avator/{{ user._id}}"
-            offset="50"
+            [offset]="this.Constant.LAZY_LOAD_OFFSET"
             >
           <div class="comment__article__author-wrapper">
             <span

@@ -41,7 +41,7 @@
             <img
               class="user__icon"
               lazyLoad="/api/images/avator/{{ user._id }}"
-              offset="50"
+              [offset]="this.Constant.LAZY_LOAD_OFFSET"
               >
             <p class="user__userId">{{user.userId}}</p>
           </div>

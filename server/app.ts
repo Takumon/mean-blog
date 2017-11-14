@@ -43,7 +43,7 @@ class App {
     this.express.use('/api/images', imageRouter);
 
 
-    // this.express.use(authenticate.verifyToken);
+    this.express.use(authenticate.verifyToken);
 
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);

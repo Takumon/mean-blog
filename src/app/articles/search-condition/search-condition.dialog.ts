@@ -22,6 +22,7 @@ import {
 } from '@angular/material';
 import * as moment from 'moment';
 
+import { Constant } from '../../shared/constant';
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { KeysPipe } from '../../shared/pipes/keys.pipe';
@@ -49,6 +50,7 @@ export interface UserListFactor {
   styleUrls: ['./search-condition.dialog.scss'],
 })
 export class SearchConditionDialogComponent implements OnInit {
+  public Constant = Constant;
   public searchUserId: string;
   // formグループ化したい
   public form: FormGroup;

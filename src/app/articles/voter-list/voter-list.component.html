@@ -11,7 +11,7 @@
         class="voter-list__voter-icon"
         [routerLink]="['/', voter.userId, 'articles']"
         lazyLoad="/api/images/avator/{{ voter._id}}"
-        offset="50"
+        [offset]="this.Constant.LAZY_LOAD_OFFSET"
         >
     </div>
   </div>

@@ -8,6 +8,7 @@ import {
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import { Constant } from '../../shared/constant'
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { SharedService } from '../../shared/services/shared.service';
 
@@ -20,6 +21,7 @@ import { DraftModel } from '../shared/draft.model';
   styleUrls: ['./draft-detail.component.scss'],
 })
 export class DraftDetailComponent implements OnInit, OnDestroy {
+  private Constant = Constant;
   draft: DraftModel;
   private onDestroy = new Subject();
 
@@ -69,7 +71,7 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
       .delete(draft._id)
       .subscribe(res => {
         this.draft = null;
-        this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, {duration: 3000});
+        this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.sharedService.emitChange('Deleted draft');
       });
     });

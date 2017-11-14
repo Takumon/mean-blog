@@ -19,7 +19,7 @@ const CommentSchema = new mongoose.Schema({
   },
   created: { type: Date, default: Date.now },
   updated: { type: Date, default: Date.now },
-  deleted: { type: Date, default: null }, // リプライがついていた時を考慮して物理削除しない
+  deleted: { type: Date, default: null }, // リプライがついた時を考慮して物理削除しない
 }, { toJSON: { virtuals: true } });
 
 CommentSchema.virtual('replies', {

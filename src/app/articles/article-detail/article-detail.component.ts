@@ -19,6 +19,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/Rx';
 
+import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
@@ -35,6 +36,8 @@ import { CommentListComponent } from '../comment-list/comment-list.component';
   styleUrls: ['./article-detail.component.scss'],
 })
 export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+  public Constant = Constant;
+
   public article: ArticleWithUserModel;
   public text: string;
   public showToc: Observable<Boolean> = Observable.of(false);
@@ -121,7 +124,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
       this.articleService.delete(this.article._id)
       .subscribe(article => {
-        this.snackBar.open('記事を削除しました。', null, {duration: 3000});
+        this.snackBar.open('記事を削除しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.router.navigate(['/']);
       }, this.messageBarService.showValidationError.bind(this.messageBarService));
     });
@@ -132,7 +135,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     this.articleService
       .registerVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
-        this.snackBar.open('いいねしました。', null, {duration: 3000});
+        this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.articleService.getVoteOne(this.article._id)
           .subscribe(vote => {
             this.article.vote = vote;
@@ -157,7 +160,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       this.articleService
       .deleteVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
-        this.snackBar.open('いいねを取り消しました。', null, {duration: 3000});
+        this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         this.articleService.getVoteOne(this.article._id)
         .subscribe(vote => {
           this.article.vote = vote;
@@ -173,10 +176,5 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const _idOfMine = this.auth.loginUser._id;
     return votes.some(v => _idOfMine === v._id);
-  }
-
-  // TODO 共通化
-  private calcMarginOfComment(level: number): number {
-    return level * 12;
   }
 }
