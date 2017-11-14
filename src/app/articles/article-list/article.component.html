@@ -101,7 +101,7 @@
           mat-icon-button
           matTooltip="コメント詳細を開く"
           matTooltipPosition="above"
-          matTooltipShowDelay="500"
+          [matTooltipShowDelay]="Constant.TOOL_TIP_SHOW_DELAY"
           type="button"
           class="comments__operation__show-detail-btn"
           (click)="toggleDetail()"><i class="fa fa-fw fa-chevron-down"></i></button>
@@ -125,7 +125,7 @@
         type="button"
         matTooltip="コメント詳細を閉じる"
         matTooltipPosition="above"
-        matTooltipShowDelay="500"
+        [matTooltipShowDelay]="Constant.TOOL_TIP_SHOW_DELAY"
         class="article__comments-detail__close-btn_top"
         (click)='toggleDetail()'
         ><i class="fa fa-fw fa-chevron-up"></i>
@@ -142,7 +142,7 @@
         mat-icon-button
         matTooltip="コメント詳細を閉じる"
         matTooltipPosition="above"
-        matTooltipShowDelay="500"
+        [matTooltipShowDelay]="Constant.TOOL_TIP_SHOW_DELAY"
         type="button"
         class="article__comments-detail__close-btn_bottom"
         (click)='toggleDetail()'

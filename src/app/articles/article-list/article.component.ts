@@ -18,6 +18,7 @@ import {
   MatInputModule,
 } from '@angular/material';
 
+import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
@@ -37,6 +38,8 @@ import { CommentWithUserModel } from '../shared/comment-with-user.model';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleComponent {
+
+  public Constant = Constant;
   @Input() item: ArticleWithUserModel;
 
 

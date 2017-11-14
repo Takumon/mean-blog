@@ -23,6 +23,7 @@ import {
   MatDialog,
 } from '@angular/material';
 
+import { Constant } from '../../shared/constant';
 import { ImageService } from '../../shared/services/image.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
@@ -45,6 +46,9 @@ const IS_RESUME = 'resume';
   styleUrls: ['./article-edit.component.scss'],
 })
 export class ArticleEditComponent implements OnInit {
+
+  public Constant = Constant;
+
   @ViewChild('mdTextArea') $mdTextArea;
 
   action: String;
@@ -93,11 +97,10 @@ export class ArticleEditComponent implements OnInit {
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     ) {
-  }
+    }
 
   ngOnInit(): void {
     this.createForm();
-
     this.route.queryParams
     .subscribe(queryParams => {
       this.queryparam_isResume = queryParams[IS_RESUME];
