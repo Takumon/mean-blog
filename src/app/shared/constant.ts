@@ -7,4 +7,6 @@ export class Constant {
   public static SNACK_BAR_DEFAULT_OPTION = {duration: 3000};
   /** POST送信時に指定するコンテンツタイプ */
   public static POST_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+  /** 画像遅延表示ときのoffset */
+  public static LAZY_LOAD_OFFSET = 50;
 }

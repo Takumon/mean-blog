@@ -52,7 +52,7 @@
               [routerLink]="['/', voter.userId, 'articles']"
               class="info-summary__voter-icon"
               lazyLoad="/api/images/avator/{{ voter._id}}"
-              offset="50"
+              [offset]="this.Constant.LAZY_LOAD_OFFSET"
               >
         </div>
       </div>
@@ -63,7 +63,7 @@
       class="article__author-icon"
       [routerLink]="['/', article.author.userId, 'articles']"
       lazyLoad="/api/images/avator/{{article.author._id}}"
-      offset="50"
+      [offset]="this.Constant.LAZY_LOAD_OFFSET"
       >
     <div
       class="article__author"

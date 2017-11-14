@@ -24,7 +24,7 @@ import { SearchConditionDialogComponent } from './search-condition.dialog';
   styleUrls: ['./search-condition.component.scss'],
 })
 export class SearchConditionComponent implements OnInit {
-  private Constant = Constant;
+  public Constant = Constant;
   @Output() changeSeaerchCondition = new EventEmitter();
   seaerchConditions: Array<SearchConditionModel>;
   dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;

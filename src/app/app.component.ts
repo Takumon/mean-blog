@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
+import { Constant } from './shared/constant';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { RouteNamesService } from './shared/services/route-names.service';
 import { UserModel } from './users/shared/user.model';
@@ -15,6 +16,7 @@ import { ScrollService } from './shared/services/scroll.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  public Constant = Constant;
   title: String = 'Material Blog';
   routerName: String;
 

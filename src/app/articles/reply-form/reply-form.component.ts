@@ -26,7 +26,7 @@ import { ReplyService } from '../shared/reply.service';
   styleUrls: ['./reply-form.component.scss']
 })
 export class ReplyFormComponent implements OnInit {
-  private Constant = Constant;
+  public Constant = Constant;
 
   @Input() isAuthfocuse: boolean;
   @Input() model: ReplyModel;

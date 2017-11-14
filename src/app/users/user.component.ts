@@ -29,7 +29,7 @@ import { UserService } from './shared/user.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, OnDestroy {
-  private Constant = Constant;
+  public Constant = Constant;
   public user: UserModel;
   public isMine: Boolean;
   public editMode: Boolean = false;

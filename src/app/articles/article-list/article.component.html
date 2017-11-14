@@ -7,7 +7,7 @@
     <div class="article__avator">
       <img class="article__avator-icon"
         lazyLoad="/api/images/avator/{{ item.author._id}}"
-        offset="50"
+        [offset]="this.Constant.LAZY_LOAD_OFFSET"
         >
     </div>
     <div class="article__subtitle">
@@ -78,7 +78,7 @@
               matTooltip="【{{comment.user.userId}}】&#013;{{comment.text}}"
               class="comments__comment__user"
               lazyLoad="/api/images/avator/{{ comment.user._id}}"
-              offset="50"
+              [offset]="this.Constant.LAZY_LOAD_OFFSET"
               >
 
               <div *ngIf="comment.replies?.length > 0"
@@ -88,7 +88,7 @@
                   matTooltip="【{{comment.user.userId}} ← {{reply.user.userId}}】&#013;{{reply.text}}"
                   class="comments__comment__user_reply"
                   lazyLoad="/api/images/avator/{{ reply.user._id }}"
-                  offset="50"
+                  [offset]="this.Constant.LAZY_LOAD_OFFSET"
                   />
             </div>
         </div>

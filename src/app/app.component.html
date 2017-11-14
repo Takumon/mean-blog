@@ -68,7 +68,7 @@
         *ngIf="auth.loginUser"
         class="menu-btn__icon"
         lazyLoad="/api/images/avator/{{ auth.loginUser._id }}"
-        offset="50"
+        [offset]="this.Constant.LAZY_LOAD_OFFSET"
         >
 
       <mat-menu #menu="matMenu" class="menu-btn__menu">

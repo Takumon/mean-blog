@@ -26,7 +26,7 @@ import { CommentService } from '../shared/comment.service';
   styleUrls: ['./comment-form.component.scss']
 })
 export class CommentFormComponent implements OnInit {
-  private Constant = Constant;
+  public Constant = Constant;
   @Input() isAuthfocuse: boolean;
   @Input() model: CommentModel;
   @Input() hasCancelBtn: boolean;

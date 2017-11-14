@@ -36,7 +36,7 @@ import { CommentListComponent } from '../comment-list/comment-list.component';
   styleUrls: ['./article-detail.component.scss'],
 })
 export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy {
-  private Constant = Constant;
+  public Constant = Constant;
 
   public article: ArticleWithUserModel;
   public text: string;

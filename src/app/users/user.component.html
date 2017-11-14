@@ -99,7 +99,7 @@
               *ngIf="!avatorForPreview"
               class="icon-editor__icon"
               lazyLoad="/api/images/avator/{{user._id}}"
-              offset="50">
+              [offset]="this.Constant.LAZY_LOAD_OFFSET">
 
           </div>
 
@@ -223,7 +223,7 @@
         <img
           class="profile__icon"
           lazyLoad="/api/images/avator/{{user._id}}"
-          offset="50"
+          [offset]="this.Constant.LAZY_LOAD_OFFSET"
           >
 
         <div *ngIf="isMine" class="profile__operation">
