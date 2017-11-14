@@ -3,7 +3,7 @@ import { UserListFactor } from './search-condition.dialog';
 
 @Pipe({
   name: 'userIdSearchFilter',
-  pure: false
+  pure: false // リストの中身が変更されたら随時このパイプを実行する
 })
 export class UserIdSearchFilterPipe implements PipeTransform {
   transform(items: Array<UserListFactor>, searchUserName: string): any[] {
