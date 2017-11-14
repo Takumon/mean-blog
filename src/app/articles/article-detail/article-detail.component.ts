@@ -174,9 +174,4 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     const _idOfMine = this.auth.loginUser._id;
     return votes.some(v => _idOfMine === v._id);
   }
-
-  // TODO 共通化
-  private calcMarginOfComment(level: number): number {
-    return level * 12;
-  }
 }
