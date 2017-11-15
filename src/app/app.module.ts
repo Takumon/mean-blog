@@ -23,7 +23,6 @@ import { RouteNamesService } from './shared/services/route-names.service';
 import { JwtService } from './shared/services/jwt.service';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { LocalStrageService } from './shared/services/local-strage.service';
-import { AlertService } from './shared/services/alert.service';
 import { ScrollSpyService } from './shared/services/scroll-spy.service';
 import { ScrollService } from './shared/services/scroll.service';
 import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
@@ -51,7 +50,6 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
     UsersModule,
   ],
   providers: [
-    AlertService,
     ScrollSpyService,
     ScrollService,
     TocService,
