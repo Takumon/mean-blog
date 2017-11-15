@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams } from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
@@ -16,7 +16,7 @@ export class ReplyService {
   private baseUrl = '/api/replies';
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private jwtService: JwtService
   ) {}
 

@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Http,
-  Headers,
-  RequestOptions,
-  Response,
-  URLSearchParams
-} from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
@@ -20,58 +14,42 @@ export class DraftService {
   private baseUrl = '/api/drafts';
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private jwtService: JwtService,
     private auth: AuthenticationService,
   ) { }
 
   get(condition = {}): Observable<Array<DraftModel>> {
-
     const URL = this.baseUrl;
-    const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(condition));
+    const headers = this.jwtService.getHeadersNew();
+    const params = new HttpParams()
+    .set('condition', JSON.stringify(condition));
 
-    return this.http
-      .get(URL, { headers, search })
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<DraftModel>>(URL, { headers, params });
   }
 
   getById(_id: string): Observable<DraftModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http
-      .get(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<DraftModel>(URL, this.jwtService.getRequestOptionsNew());
   }
 
   create(model: DraftModel): Observable<DraftModel> {
     const URL = this.baseUrl;
 
-    return this.http
-      .post(URL, model, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.post<DraftModel>(URL, model, this.jwtService.getRequestOptionsNew());
   }
 
   update(model: DraftModel): Observable<DraftModel> {
     const URL = `${this.baseUrl}/${model._id}`;
 
-    return this.http
-      .put(URL, model, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.put<DraftModel>(URL, model, this.jwtService.getRequestOptionsNew());
   }
 
   delete(_id: string): Observable<DraftModel>  {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http
-      .delete(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.delete<DraftModel>(URL, this.jwtService.getRequestOptionsNew());
   }
 
   getMineCount(): Observable<Number> {
