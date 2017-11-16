@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams } from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
@@ -18,7 +18,7 @@ export class CommentService {
   private baseReplyUrl = '/api/replies';
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private jwtService: JwtService
   ) {}
 
@@ -26,58 +26,37 @@ export class CommentService {
     const URL = this.baseCommentUrl;
 
     const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(condition));
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
-    if (withArticle) {
-      search.set('withArticle', 'true');
-    }
+    const params = new HttpParams()
+      .set('condition', JSON.stringify(condition))
+      .set('withUser', withUser ? 'true' : null)
+      .set('withArticle', withArticle + '');
 
-    return this.http
-      .get(URL, { headers, search })
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>>(URL, { headers, params });
   }
 
   register(comment: CommentModel): Observable<CommentModel> {
     const URL = this.baseCommentUrl;
 
-    const options = {
-      'Content-Type': this.Constant.POST_CONTENT_TYPE,
-      headers: this.jwtService.getHeaders()
-    };
+    const headers: HttpHeaders = this.jwtService.getHeaders()
+      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
 
-    return this.http
-      .post(URL, comment, options)
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.post<CommentModel>(URL, comment, { headers });
   }
 
   // 必ず差分更新とする
   update(comment: CommentModel): Observable<CommentModel> {
     const URL = `${this.baseCommentUrl}/${comment._id}`;
 
-    const options = {
-      'Content-Type': this.Constant.POST_CONTENT_TYPE,
-      headers: this.jwtService.getHeaders()
-    };
+    const headers: HttpHeaders = this.jwtService.getHeaders()
+      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
 
-    return this.http
-      .put(URL, comment, options)
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
-
+    return this.http.put<CommentModel>(URL, comment, { headers });
   }
 
   delete(commentId: String): Observable<CommentModel> {
     const URL = `${this.baseCommentUrl}/${commentId}`;
 
-    return this.http
-      .delete(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.delete<CommentModel>(URL, this.jwtService.getRequestOptions());
   }
 
 
@@ -85,15 +64,10 @@ export class CommentService {
     const URL = `${this.baseCommentUrl}/ofArticle/${_idOfArticle}`;
 
     const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', `true`);
-    }
+    const params = new HttpParams()
+      .set('withUser', withUser ? 'true' : null);
 
-    return this.http
-      .get(URL, { headers, search })
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<CommentModel> | Array<CommentWithUserModel>>(URL, { headers, params });
   }
 
 

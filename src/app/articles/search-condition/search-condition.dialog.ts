@@ -244,7 +244,7 @@ export class SearchConditionDialogComponent implements OnInit {
       this.searchConditionService
       .update(searchCondition)
       .subscribe(
-        res => this.dialogRef.close(res.obj),
+        res => this.dialogRef.close(res['obj']),
         this.onValidationError.bind(this));
     } else {
       this.searchConditionService

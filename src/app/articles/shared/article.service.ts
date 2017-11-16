@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams } from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
@@ -19,7 +19,7 @@ export class ArticleService {
   private commentUrl = '/api/comments';
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private jwtService: JwtService
   ) {}
 
@@ -27,61 +27,41 @@ export class ArticleService {
   get(condition: Object, withUser: Boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(condition));
-    if (withUser) {
-      search.set('withUser', `true`);
-    }
+    const params = new HttpParams()
+      .set('condition', JSON.stringify(condition))
+      .set('withUser', withUser ? 'true' : null);
 
-    return this.http
-        .get(URL, { headers, search })
-        .map((res: Response) => res.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<ArticleModel | ArticleWithUserModel>>(URL, { headers, params });
   }
 
   // １件取得
   getOne(_id: string, withUser: Boolean = false): Observable<ArticleModel | ArticleWithUserModel> {
     const URL = `${this.baseUrl}/${_id}`;
     const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', `true`);
-    }
+    const params = new HttpParams().set('withUser', withUser ? 'true' : null);
 
-    return this.http
-        .get(URL, { headers, search })
-        .map((res: Response) => res.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<ArticleModel | ArticleWithUserModel>(URL, { headers, params });
   }
 
   // 更新
   update(article: ArticleModel): Observable<ArticleModel> {
     const URL = `${this.baseUrl}/${article._id}`;
 
-    return this.http
-      .put(URL, article, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.put<ArticleModel>(URL, article, this.jwtService.getRequestOptions());
   }
 
   // 登録
   register(article: ArticleModel): Observable<ArticleModel> {
     const URL = this.baseUrl;
 
-    return this.http
-      .post(URL, article, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.post<ArticleModel>(URL, article, this.jwtService.getRequestOptions());
   }
 
   // 削除
   delete(_id: string): Observable<ArticleModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http
-        .delete(URL, this.jwtService.getRequestOptions())
-        .map((res: Response) => res.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.delete<ArticleModel>(URL, this.jwtService.getRequestOptions());
   }
 
 
@@ -90,34 +70,21 @@ export class ArticleService {
   // 登録
   registerVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
-    const options = {
-      'Content-Type': this.Constant.POST_CONTENT_TYPE,
-      headers: this.jwtService.getHeaders()
-    };
 
-    return this.http
-        .post(URL, {'voter': _idOfUser}, options)
-        .map((res: Response) => res.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.post(URL, {'voter': _idOfUser}, this.jwtService.getRequestOptions());
   }
 
   // 削除
   deleteVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote/${_idOfUser}`;
 
-    return this.http
-        .delete(URL, this.jwtService.getRequestOptions())
-        .map((res: Response) => res.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.delete(URL, this.jwtService.getRequestOptions());
   }
 
   // １件取得
   getVoteOne(_idOfArticle: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
-    return this.http
-        .get(URL, this.jwtService.getRequestOptions())
-        .map((res: Response) => res.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get(URL, this.jwtService.getRequestOptions());
   }
 }

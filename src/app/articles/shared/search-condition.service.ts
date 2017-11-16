@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
@@ -13,7 +13,7 @@ export class SearchConditionService {
   private dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   constructor(
-    private http: Http,
+    private http: HttpClient,
     private jwtService: JwtService,
   ) { }
 
@@ -30,57 +30,38 @@ export class SearchConditionService {
     const URL = this.baseUrl;
 
     const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(modifiedCondition));
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
+    const params = new HttpParams()
+      .set('condition', JSON.stringify(modifiedCondition))
+      .set('withUser', withUser + '');
 
-    return this.http
-      .get(URL, { headers, search })
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<SearchConditionModel>>(URL, { headers, params });
   }
 
   getById(_id: string, withUser: Boolean = false): Observable<SearchConditionModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
     const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
+    const params = new HttpParams()
+      .set('withUser', withUser + '');
 
-    return this.http
-      .get(URL, { headers, search })
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<SearchConditionModel>(URL, { headers, params });
   }
 
   create(user: SearchConditionModel): Observable<any> {
     const URL = this.baseUrl;
 
-    return this.http
-      .post(URL, user, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
- }
+    return this.http.post(URL, user, this.jwtService.getRequestOptions())
+  }
 
   update(searchCondition: SearchConditionModel) {
     const URL = `${this.baseUrl}/${searchCondition._id}`;
 
-    return this.http
-      .put(URL, searchCondition, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.put(URL, searchCondition, this.jwtService.getRequestOptions());
   }
 
   delete(_id: string) {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http
-      .delete(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.delete(URL, this.jwtService.getRequestOptions());
   }
 }

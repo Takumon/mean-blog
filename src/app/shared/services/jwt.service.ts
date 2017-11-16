@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
+import { HttpHeaders,  } from '@angular/common/http';
 
 import { LocalStrageService, KEY } from './local-strage.service';
 
@@ -13,21 +14,21 @@ export class JwtService {
     private localStrageService: LocalStrageService
   ) {}
 
-  getHeaders() {
+  getHeaders(): HttpHeaders {
     if (!this.localStrageService.has(KEY.TOKEN)) {
       return;
     }
 
-    return new Headers({
+    return new HttpHeaders({
       'x-access-token': this.localStrageService.get(KEY.TOKEN)
     });
   }
 
-  getRequestOptions() {
+  getRequestOptions(): {headers: HttpHeaders} {
     if (!this.localStrageService.has(KEY.TOKEN)) {
       return;
     }
 
-    return new RequestOptions({ headers: this.getHeaders() });
+    return { headers: this.getHeaders() };
   }
 }
