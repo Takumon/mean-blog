@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { UserModel } from '../../users/shared/user.model';
 import { Subject } from 'rxjs/Subject';
@@ -21,7 +21,7 @@ export class AuthenticationService {
   private base_url = '/api/authenticate';
 
   constructor(
-    public http: Http,
+    private http: HttpClient,
     private jwtService: JwtService,
     private localStrageService: LocalStrageService,
   ) {
@@ -40,9 +40,8 @@ export class AuthenticationService {
     const URL = `${this.base_url}/login`;
 
     return this.http
-      .post(URL, user)
-      .map((res: Response) => this.setToken(res) )
-      .catch((res: Response) => Observable.throw(res.json()));
+      .post<Object>(URL, user)
+      .map((res: Response) => this.setToken(res) );
   }
 
 
@@ -54,9 +53,8 @@ export class AuthenticationService {
     const URL = `${this.base_url}/register`;
 
     return this.http
-      .post(URL, user)
-      .map((res: Response) => this.setToken(res) )
-      .catch((res: Response) => Observable.throw(res.json()));
+      .post<Object>(URL, user)
+      .map((res: Response) => this.setToken(res) );
   }
 
   changePassword(passwordInfo: {
@@ -70,9 +68,8 @@ export class AuthenticationService {
     passwordInfo['_id'] = this.loginUser._id;
 
     return this.http
-      .put(URL, passwordInfo)
-      .map((res: Response) => this.setToken(res) )
-      .catch((res: Response) => Observable.throw(res.json()));
+      .put<Object>(URL, passwordInfo)
+      .map((res: Response) => this.setToken(res) );
   }
 
   isLogin(): Boolean {
@@ -83,9 +80,8 @@ export class AuthenticationService {
     const URL = `${this.base_url}/check-state`;
 
     return this.http
-      .get(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => this.setToken(res) )
-      .catch((res: Response) => Observable.throw(res.json()));
+      .get<any>(URL, this.jwtService.getRequestOptions())
+      .map((res: Response) => this.setToken(res));
   }
 
 
@@ -97,16 +93,15 @@ export class AuthenticationService {
 
 
   private setToken(res): Object {
-    const body = res.json();
-    if ( body.success !== true ) {
-      return body;
+    if ( res.success !== true ) {
+      return res;
     }
 
-    this.localStrageService.set(KEY.TOKEN, body.token);
-    this.loginUser = body.user;
+    this.localStrageService.set(KEY.TOKEN, res.token);
+    this.loginUser = res.user;
     this.isFinishedCheckState = true;
 
-    return body;
+    return res;
   }
 
   getToken(): String {

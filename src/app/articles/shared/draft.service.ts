@@ -21,7 +21,7 @@ export class DraftService {
 
   get(condition = {}): Observable<Array<DraftModel>> {
     const URL = this.baseUrl;
-    const headers = this.jwtService.getHeadersNew();
+    const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
     .set('condition', JSON.stringify(condition));
 
@@ -31,25 +31,25 @@ export class DraftService {
   getById(_id: string): Observable<DraftModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.get<DraftModel>(URL, this.jwtService.getRequestOptionsNew());
+    return this.http.get<DraftModel>(URL, this.jwtService.getRequestOptions());
   }
 
   create(model: DraftModel): Observable<DraftModel> {
     const URL = this.baseUrl;
 
-    return this.http.post<DraftModel>(URL, model, this.jwtService.getRequestOptionsNew());
+    return this.http.post<DraftModel>(URL, model, this.jwtService.getRequestOptions());
   }
 
   update(model: DraftModel): Observable<DraftModel> {
     const URL = `${this.baseUrl}/${model._id}`;
 
-    return this.http.put<DraftModel>(URL, model, this.jwtService.getRequestOptionsNew());
+    return this.http.put<DraftModel>(URL, model, this.jwtService.getRequestOptions());
   }
 
   delete(_id: string): Observable<DraftModel>  {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.delete<DraftModel>(URL, this.jwtService.getRequestOptionsNew());
+    return this.http.delete<DraftModel>(URL, this.jwtService.getRequestOptions());
   }
 
   getMineCount(): Observable<Number> {

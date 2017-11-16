@@ -25,7 +25,7 @@ export class CommentService {
   get(condition: Object, withUser: boolean = false, withArticle: boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>> {
     const URL = this.baseCommentUrl;
 
-    const headers = this.jwtService.getHeadersNew();
+    const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
       .set('condition', JSON.stringify(condition))
       .set('withUser', withUser + '')
@@ -36,7 +36,8 @@ export class CommentService {
 
   register(comment: CommentModel): Observable<CommentModel> {
     const URL = this.baseCommentUrl;
-    const headers: HttpHeaders = this.jwtService.getHeadersNew()
+
+    const headers: HttpHeaders = this.jwtService.getHeaders()
       .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
 
     return this.http.post<CommentModel>(URL, comment, { headers });
@@ -46,7 +47,7 @@ export class CommentService {
   update(comment: CommentModel): Observable<CommentModel> {
     const URL = `${this.baseCommentUrl}/${comment._id}`;
 
-    const headers: HttpHeaders = this.jwtService.getHeadersNew()
+    const headers: HttpHeaders = this.jwtService.getHeaders()
       .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
 
     return this.http.put<CommentModel>(URL, comment, { headers });
@@ -55,14 +56,14 @@ export class CommentService {
   delete(commentId: String): Observable<CommentModel> {
     const URL = `${this.baseCommentUrl}/${commentId}`;
 
-    return this.http.delete<CommentModel>(URL, this.jwtService.getRequestOptionsNew());
+    return this.http.delete<CommentModel>(URL, this.jwtService.getRequestOptions());
   }
 
 
   getOfArticle(_idOfArticle: string, withUser: Boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel>> {
     const URL = `${this.baseCommentUrl}/ofArticle/${_idOfArticle}`;
 
-    const headers = this.jwtService.getHeadersNew();
+    const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
       .set('withUser', withUser + '');
 

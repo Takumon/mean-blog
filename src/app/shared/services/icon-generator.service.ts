@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, URLSearchParams, Headers, ResponseContentType } from '@angular/http';
+import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
@@ -12,20 +12,16 @@ export class IconGeneratorService {
   private baseUrl = '/api/authenticate';
 
   constructor(
-    public http: Http,
+    public http: HttpClient,
   ) { }
 
 
   getGravatarImage(userId): Observable<any> {
     const URL = `${this.baseUrl}/generate-icon`;
 
+    const params = new HttpParams()
+      .set('userId', userId);
 
-    const search = new URLSearchParams();
-    search.set('userId', userId);
-
-    return this.http
-      .get(URL, { search })
-      .map(res => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<any>(URL, { params });
   }
 }

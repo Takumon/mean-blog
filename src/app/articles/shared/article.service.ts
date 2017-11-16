@@ -26,7 +26,7 @@ export class ArticleService {
   // 複数件取得
   get(condition: Object, withUser: Boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
     const URL = this.baseUrl;
-    const headers = this.jwtService.getHeadersNew();
+    const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
       .set('condition', JSON.stringify(condition))
       .set('withUser', withUser + '');
@@ -37,7 +37,7 @@ export class ArticleService {
   // １件取得
   getOne(_id: string, withUser: Boolean = false): Observable<ArticleModel | ArticleWithUserModel> {
     const URL = `${this.baseUrl}/${_id}`;
-    const headers = this.jwtService.getHeadersNew();
+    const headers = this.jwtService.getHeaders();
     const params = new HttpParams().set('withUser', '' + withUser);
 
     return this.httpClient.get<ArticleModel | ArticleWithUserModel>(URL, { headers, params });
@@ -47,21 +47,21 @@ export class ArticleService {
   update(article: ArticleModel): Observable<ArticleModel> {
     const URL = `${this.baseUrl}/${article._id}`;
 
-    return this.httpClient.put<ArticleModel>(URL, article, this.jwtService.getRequestOptionsNew());
+    return this.httpClient.put<ArticleModel>(URL, article, this.jwtService.getRequestOptions());
   }
 
   // 登録
   register(article: ArticleModel): Observable<ArticleModel> {
     const URL = this.baseUrl;
 
-    return this.httpClient.post<ArticleModel>(URL, article, this.jwtService.getRequestOptionsNew());
+    return this.httpClient.post<ArticleModel>(URL, article, this.jwtService.getRequestOptions());
   }
 
   // 削除
   delete(_id: string): Observable<ArticleModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.httpClient.delete<ArticleModel>(URL, this.jwtService.getRequestOptionsNew());
+    return this.httpClient.delete<ArticleModel>(URL, this.jwtService.getRequestOptions());
   }
 
 
@@ -70,23 +70,21 @@ export class ArticleService {
   // 登録
   registerVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
-    const headers: HttpHeaders = this.jwtService.getHeadersNew()
-      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
 
-    return this.httpClient.post(URL, {'voter': _idOfUser}, { headers });
+    return this.httpClient.post(URL, {'voter': _idOfUser}, this.jwtService.getRequestOptions());
   }
 
   // 削除
   deleteVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote/${_idOfUser}`;
 
-    return this.httpClient.delete(URL, this.jwtService.getRequestOptionsNew());
+    return this.httpClient.delete(URL, this.jwtService.getRequestOptions());
   }
 
   // １件取得
   getVoteOne(_idOfArticle: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
-    return this.httpClient.get(URL, this.jwtService.getRequestOptionsNew());
+    return this.httpClient.get(URL, this.jwtService.getRequestOptions());
   }
 }

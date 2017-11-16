@@ -14,25 +14,7 @@ export class JwtService {
     private localStrageService: LocalStrageService
   ) {}
 
-  getHeaders() {
-    if (!this.localStrageService.has(KEY.TOKEN)) {
-      return;
-    }
-
-    return new Headers({
-      'x-access-token': this.localStrageService.get(KEY.TOKEN)
-    });
-  }
-
-  getRequestOptions() {
-    if (!this.localStrageService.has(KEY.TOKEN)) {
-      return;
-    }
-
-    return new RequestOptions({ headers: this.getHeaders() });
-  }
-
-  getHeadersNew(): HttpHeaders {
+  getHeaders(): HttpHeaders {
     if (!this.localStrageService.has(KEY.TOKEN)) {
       return;
     }
@@ -42,11 +24,11 @@ export class JwtService {
     });
   }
 
-  getRequestOptionsNew(): {headers: HttpHeaders} {
+  getRequestOptions(): {headers: HttpHeaders} {
     if (!this.localStrageService.has(KEY.TOKEN)) {
       return;
     }
 
-    return { headers: this.getHeadersNew() };
+    return { headers: this.getHeaders() };
   }
 }

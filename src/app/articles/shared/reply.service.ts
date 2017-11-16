@@ -24,120 +24,63 @@ export class ReplyService {
   get(condition: Object, withUser: boolean = false, withArticle: boolean = false): Observable<Array<ReplyModel> | Array<ReplyWithUserModel>> {
     const URL = this.baseUrl;
 
-    const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    search.set('condition', JSON.stringify(condition));
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
-    if (withArticle) {
-      search.set('withArticle', 'true');
-    }
+    const headers: HttpHeaders = this.jwtService.getHeaders();
+    const params = new HttpParams()
+      .set('condition', JSON.stringify(condition))
+      .set('withUser', withUser + '')
+      .set('withArticle', withArticle + '');
 
-    const options = {
-      headers, search
-    };
-
-    return this.http
-      .get(URL, options)
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
   }
 
   // 一件取得
   getById(_id: string, withUser: boolean = false, withArticle: boolean = false): Observable<Array<ReplyModel> | Array<ReplyWithUserModel>> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
-    if (withArticle) {
-      search.set('withArticle', 'true');
-    }
+    const headers: HttpHeaders = this.jwtService.getHeaders();
+    const params = new HttpParams()
+      .set('withUser', withUser + '')
+      .set('withArticle', withArticle + '');
 
-    const options = {
-      headers, search
-    };
-
-    return this.http
-      .get(URL, options)
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
   }
 
   // 登録
   register(reply: ReplyModel, withUser: boolean = false , withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel> {
     const URL = this.baseUrl;
 
-    const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
-    if (withArticle) {
-      search.set('withArticle', 'true');
-    }
+    const headers: HttpHeaders = this.jwtService.getHeaders()
+      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
+    const params = new HttpParams()
+      .set('withUser', withUser + '')
+      .set('withArticle', withArticle + '');
 
-    const options = {
-      'Content-Type': this.Constant.POST_CONTENT_TYPE,
-      headers,
-      search,
-    };
 
-    return this.http
-      .post(URL, reply, options)
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.post<ReplyModel | ReplyWithUserModel>(URL, reply,  { headers, params });
   }
 
   // 更新（差分更新）
   update(reply: ReplyModel, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel> {
     const URL = `${this.baseUrl}/${reply._id}`;
 
-    const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
-    if (withArticle) {
-      search.set('withArticle', 'true');
-    }
+    const headers: HttpHeaders = this.jwtService.getHeaders()
+     .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
+    const params = new HttpParams()
+      .set('withUser', withUser + '')
+      .set('withArticle', withArticle + '');
 
-    const options = {
-      'Content-Type': this.Constant.POST_CONTENT_TYPE,
-      headers,
-      search,
-    };
-
-    return this.http
-      .put(URL, reply, options)
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.put<ReplyModel | ReplyWithUserModel>(URL, reply,  { headers, params });
   }
 
   // 物理削除
   delete(replyId: String, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel> {
     const URL = `${this.baseUrl}/${replyId}`;
 
-    const headers = this.jwtService.getHeaders();
-    const search = new URLSearchParams();
-    if (withUser) {
-      search.set('withUser', 'true');
-    }
-    if (withArticle) {
-      search.set('withArticle', 'true');
-    }
+    const headers: HttpHeaders = this.jwtService.getHeaders();
+    const params = new HttpParams()
+     .set('withUser', withUser + '')
+     .set('withArticle', withArticle + '');
 
-    const options = {
-      headers,
-      search,
-    };
-
-    return this.http
-      .delete(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => res.json())
-      .catch((error: Response) => Observable.throw(error.json()));
+    return this.http.delete<ReplyModel | ReplyWithUserModel>(URL, { headers, params });
   }
 }
