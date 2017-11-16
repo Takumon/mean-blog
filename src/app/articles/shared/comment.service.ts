@@ -28,7 +28,7 @@ export class CommentService {
     const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
       .set('condition', JSON.stringify(condition))
-      .set('withUser', withUser + '')
+      .set('withUser', withUser ? 'true' : null)
       .set('withArticle', withArticle + '');
 
     return this.http.get<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>>(URL, { headers, params });
@@ -65,7 +65,7 @@ export class CommentService {
 
     const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
-      .set('withUser', withUser + '');
+      .set('withUser', withUser ? 'true' : null);
 
     return this.http.get<Array<CommentModel> | Array<CommentWithUserModel>>(URL, { headers, params });
   }

@@ -29,7 +29,7 @@ export class ArticleService {
     const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
       .set('condition', JSON.stringify(condition))
-      .set('withUser', withUser + '');
+      .set('withUser', withUser ? 'true' : null);
 
     return this.httpClient.get<Array<ArticleModel | ArticleWithUserModel>>(URL, { headers, params });
   }
@@ -38,7 +38,7 @@ export class ArticleService {
   getOne(_id: string, withUser: Boolean = false): Observable<ArticleModel | ArticleWithUserModel> {
     const URL = `${this.baseUrl}/${_id}`;
     const headers = this.jwtService.getHeaders();
-    const params = new HttpParams().set('withUser', '' + withUser);
+    const params = new HttpParams().set('withUser', withUser ? 'true' : null);
 
     return this.httpClient.get<ArticleModel | ArticleWithUserModel>(URL, { headers, params });
   }

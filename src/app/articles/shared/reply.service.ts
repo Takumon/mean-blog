@@ -27,8 +27,8 @@ export class ReplyService {
     const headers: HttpHeaders = this.jwtService.getHeaders();
     const params = new HttpParams()
       .set('condition', JSON.stringify(condition))
-      .set('withUser', withUser + '')
-      .set('withArticle', withArticle + '');
+      .set('withUser', withUser ? 'true' : null)
+      .set('withArticle', withArticle ? 'true' : null);
 
     return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
   }
@@ -39,8 +39,8 @@ export class ReplyService {
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
     const params = new HttpParams()
-      .set('withUser', withUser + '')
-      .set('withArticle', withArticle + '');
+      .set('withUser', withUser ? 'true' : null)
+      .set('withArticle', withArticle ? 'true' : null);
 
     return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
   }
@@ -52,8 +52,8 @@ export class ReplyService {
     const headers: HttpHeaders = this.jwtService.getHeaders()
       .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
     const params = new HttpParams()
-      .set('withUser', withUser + '')
-      .set('withArticle', withArticle + '');
+      .set('withUser', withUser ? 'true' : null)
+      .set('withArticle', withArticle ? 'true' : null);
 
 
     return this.http.post<ReplyModel | ReplyWithUserModel>(URL, reply,  { headers, params });
@@ -66,8 +66,8 @@ export class ReplyService {
     const headers: HttpHeaders = this.jwtService.getHeaders()
      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
     const params = new HttpParams()
-      .set('withUser', withUser + '')
-      .set('withArticle', withArticle + '');
+      .set('withUser', withUser ? 'true' : null)
+      .set('withArticle', withArticle ? 'true' : null);
 
     return this.http.put<ReplyModel | ReplyWithUserModel>(URL, reply,  { headers, params });
   }
@@ -78,8 +78,8 @@ export class ReplyService {
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
     const params = new HttpParams()
-     .set('withUser', withUser + '')
-     .set('withArticle', withArticle + '');
+     .set('withUser', withUser ? 'true' : null)
+     .set('withArticle', withArticle ? 'true' : null);
 
     return this.http.delete<ReplyModel | ReplyWithUserModel>(URL, { headers, params });
   }
