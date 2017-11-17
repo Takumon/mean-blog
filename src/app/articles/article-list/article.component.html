@@ -28,7 +28,9 @@
     </ng-template>
   </div>
 
-  <div class="article__operation">
+  <div
+    *ngIf="auth.isLogin()"
+    class="article__operation">
     <button
       *ngIf="!containMineVote()"
       mat-button
@@ -145,6 +147,7 @@
         [matTooltipShowDelay]="Constant.TOOL_TIP_SHOW_DELAY"
         type="button"
         class="article__comments-detail__close-btn_bottom"
+        [class.is-login]="auth.isLogin()"
         (click)='toggleDetail()'
         ><i class="fa fa-fw fa-chevron-up"></i>
       </button>

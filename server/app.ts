@@ -39,11 +39,15 @@ class App {
       res.sendFile(path.join(__dirname, 'public/index.html'));
     });
 
+    // 認証不要のAPI
     this.express.use('/api/authenticate', authenticateRouter);
     this.express.use('/api/images', imageRouter);
 
+    // データ参照以外の操作は認証が必要なAPI
+    this.express.post(/^\/api\/.*$/, authenticate.verifyToken);
+    this.express.put(/^\/api\/.*$/, authenticate.verifyToken);
+    this.express.delete(/^\/api\/.*$/, authenticate.verifyToken);
 
-    this.express.use(authenticate.verifyToken);
 
     this.express.use('/api/users', userRouter);
     this.express.use('/api/articles', articleRouter);

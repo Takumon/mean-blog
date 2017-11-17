@@ -16,7 +16,7 @@ import { LocalStrageService, KEY } from './local-strage.service';
 @Injectable()
 export class AuthenticationService {
   loginUser: UserModel;
-  isFinishedCheckState: boolean;
+  isFinishedCheckState = false;
 
   private base_url = '/api/authenticate';
 
@@ -25,13 +25,8 @@ export class AuthenticationService {
     private jwtService: JwtService,
     private localStrageService: LocalStrageService,
   ) {
-    this.initLoginUser();
   }
 
-  initLoginUser() {
-    this.loginUser = null;
-    this.isFinishedCheckState = false;
-  }
 
   login(user: {
     userId: string,
@@ -72,22 +67,22 @@ export class AuthenticationService {
       .map((res: Response) => this.setToken(res) );
   }
 
-  isLogin(): Boolean {
-    return !!this.localStrageService.get(KEY.TOKEN);
-  }
-
   checkState(): Observable<any> {
     const URL = `${this.base_url}/check-state`;
 
     return this.http
       .get<any>(URL, this.jwtService.getRequestOptions())
-      .map((res: Response) => this.setToken(res));
+      .map(res => this.setToken(res))
+      .catch(res => {
+        this.isFinishedCheckState = true;
+        return Observable.throw(res);
+      });
   }
 
 
   // ログイン画面に戻る時に使用する
   logout() {
-    this.initLoginUser();
+    this.loginUser = null;
     this.localStrageService.remove(KEY.TOKEN);
   }
 
@@ -102,6 +97,10 @@ export class AuthenticationService {
     this.isFinishedCheckState = true;
 
     return res;
+  }
+
+  isLogin(): boolean {
+    return !!this.loginUser;
   }
 
   getToken(): String {

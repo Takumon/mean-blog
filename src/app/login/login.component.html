@@ -1,14 +1,8 @@
 <mat-card class="login-box">
-  <mat-toolbar *ngIf="passwordChageMode" class="login-title" color="primary">
-    <span class="subtitle">パスワード変更</span>
-  </mat-toolbar>
-
-  <mat-toolbar *ngIf="!passwordChageMode" class="login-title" color="primary">
-    <h1 class="title">Material Blog</h1>
-    <mat-toolbar-row>
-      <span *ngIf="isLoginMode" class="subtitle">ログイン</span>
-      <span *ngIf="!isLoginMode" class="subtitle">ユーザ登録</span>
-    </mat-toolbar-row>
+  <mat-toolbar class="login-title" color="primary">
+    <span class="subtitle" *ngIf="passwordChageMode" >パスワード変更</span>
+    <span class="subtitle" *ngIf="!passwordChageMode && isLoginMode">ログイン</span>
+    <span class="subtitle" *ngIf="!passwordChageMode && !isLoginMode">ユーザ登録</span>
   </mat-toolbar>
 
 

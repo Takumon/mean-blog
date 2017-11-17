@@ -143,7 +143,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private articleService: ArticleService,
     public paginatorService: MatPaginatorIntl,
-    private auth: AuthenticationService,
+    public auth: AuthenticationService,
     private userService: UserService,
   ) {
   }
@@ -160,9 +160,13 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         case Mode.VOTER:
           this.getArticles();
           break;
-          case Mode.FAVORITE:
-          this.showPrograssBar = true;
-          // 子コンポーネントの検索条件初期化が終わったらgetArticlesを呼ぶ
+        case Mode.FAVORITE:
+          if (!this.auth.isLogin()) {
+            this.getArticles();
+          } else {
+            // 子コンポーネントの検索条件初期化が終わったらgetArticlesを呼ぶ
+            this.showPrograssBar = true;
+          }
           break;
       }
     });
@@ -186,9 +190,12 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         .subscribe(this.onFinishGetArticles.bind(this));
         break;
       case Mode.FAVORITE:
+        // 検索条件がない時Mode.ALLと同じ
         if (!this.searchConditionComponent) {
-          this.showPrograssBar = false;
-          return;
+          this.articleService
+          .get({}, withUser)
+          .subscribe(this.onFinishGetArticles.bind(this));
+          break;
         }
 
         this.seaerchConditions = this.searchConditionComponent.createCondition();

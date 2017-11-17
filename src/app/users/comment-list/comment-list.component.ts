@@ -23,7 +23,6 @@ export class CommentListComponent implements OnInit, OnDestroy {
   public user: UserModel;
 
   private onDestroy = new Subject();
-  private isMine: Boolean;
 
   constructor(
     private router: Router,
@@ -50,7 +49,6 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   private getUser(userId: string): void {
     this.userService.getById(userId).subscribe(user => {
-      this.isMine = user._id === this.auth.loginUser._id;
       this.user = user as UserModel;
       this.getComments(this.user);
     });

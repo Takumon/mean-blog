@@ -1,10 +1,9 @@
-<mat-toolbar *ngIf="isActiveHeader" class="toolbar" color="primary">
+<mat-toolbar class="toolbar" color="primary">
   <button
     mat-button
     class="toolbar__app-logo"
     [routerLink]="auth.loginUser ? '': 'articles'"
-    routerLinkActive="active">{{title}}</button>
-
+    routerLinkActive="active">{{Constant.APP_TITLE}}</button>
 
   <nav *ngIf="isActiveNavbar" mat-tab-nav-bar class="toolbar__tab navbar ink-bar-white">
     <a mat-tab-link
@@ -40,25 +39,24 @@
         <i class="fa fa-fw fa-pencil fa-2x"></i>
     </button>
 
-    <button
-      mat-button
-      class="toolbar__btn_color_white"
-      *ngIf="!auth.loginUser"
-      [routerLink]="['login']"
-      [queryParams]="{register: 'true'}"
-      >
+    <ng-container *ngIf="!auth.isLogin() && !isLoginPage()">
+      <button
+        mat-button
+        class="toolbar__btn_color_white"
+        (click)="registerUser()"
+        >
       <i class="fa fa-fw fa-sign-in"></i>  ユーザ登録
-    </button>
+      </button>
 
-    <button
-      mat-button
-      class="toolbar__btn"
-      color="normal"
-      *ngIf="!auth.loginUser"
-      [routerLink]="['login']"
-      >
+      <button
+        mat-button
+        class="toolbar__btn_color_white"
+        color="normal"
+        (click)="login()"
+        >
       <i class="fa fa-fw fa-sign-in"></i>  ログイン
-    </button>
+      </button>
+    </ng-container>
 
     <div
       *ngIf="auth.loginUser"

@@ -169,8 +169,24 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
+  private isMine(article: ArticleWithUserModel) {
+    if (!article) {
+      return false;
+    }
+
+    if (!this.auth.isLogin()) {
+      return false;
+    }
+
+    return this.auth.loginUser.userId === article.author.userId;
+  }
+
   private containMineVote(votes: Array<UserModel>): boolean {
     if (!votes) {
+      return false;
+    }
+
+    if (!this.auth.isLogin()) {
       return false;
     }
 

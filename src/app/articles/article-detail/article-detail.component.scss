@@ -17,7 +17,7 @@
 
   &__header {
     background: #ffffff;
-    padding: 42px;    
+    padding: 42px;
     padding-bottom: 12px;
   }
 
@@ -57,20 +57,20 @@
     font-size: 0.8em;
     white-space: nowrap;
   }
-  
+
   &__operation {
     display: flex;
     width: 100%;
-  
+
     .spacer {
       flex: 1 1 auto;
     }
-    
+
     button{
       border: #dadada 1px solid;
       height: 28px;
       line-height: 24px;
-    } 
+    }
   }
 
 
@@ -85,13 +85,13 @@
       -webkit-font-smoothing: antialiased;
       box-sizing: border-box;
       min-width: 100%;
-      
+
       .markdown-body {
         width: 100%;
       }
       .plain-text-body {
-        width: 100%;        
-        white-space: pre;          
+        width: 100%;
+        white-space: pre;
         white-space: pre-wrap;
         white-space: pre-line;
         white-space: -pre-wrap;
@@ -136,7 +136,7 @@
 
 .info-summary {
   color: gray;
-  
+
   &__factor-wrapper {
     display: flex;
   }
@@ -178,7 +178,7 @@
   &__voter-icons {
     display: flex;
     width: 200px;
-    flex-wrap: wrap;    
+    flex-wrap: wrap;
   }
 
   &__voter-icon-wrapper {
@@ -198,7 +198,7 @@
       opacity: 0.6;
     }
     &:focus {
-      outline: 0;      
+      outline: 0;
     }
   }
 

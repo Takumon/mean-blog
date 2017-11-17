@@ -9,7 +9,7 @@ const authenticate = {
 
     if (!token) {
       res.status(403).send({ errors: [{
-        msg: 'トークンが存在しません。'
+        msg: 'ログインが必要な操作です。'
       }]});
       return;
     }
@@ -23,7 +23,7 @@ const authenticate = {
         }
 
         return res.status(403).json({ errors: [{
-          msg: 'トークン認証に失敗しました。'
+          msg: 'ログインが必要な操作です。'
         }]});
       }
 

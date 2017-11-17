@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material';
 
 
 import { Constant } from '../shared/constant';
+import { RouteNamesService } from '../shared/services/route-names.service';
 import { AuthenticationService } from '../shared/services/authentication.service';
 
 @Component({
@@ -18,10 +19,12 @@ export class LoginComponent implements OnInit {
   private returnUrl: string;
 
   constructor(
-    private snackBar: MatSnackBar,
-    private authenticationService: AuthenticationService,
-    private route: ActivatedRoute,
     private router: Router,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+
+    private authenticationService: AuthenticationService,
+    private routeNamesService: RouteNamesService,
   ) {
     const url: String = this.router.url;
     // パスワード変更の場合はログインしたまま表示する
@@ -31,7 +34,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.routeNamesService.name.next(``);
     const url: String = this.router.url;
+
     // パスワード変更
     if (url === '/passwordChange') {
       this.passwordChageMode = true;

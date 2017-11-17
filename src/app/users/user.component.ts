@@ -31,7 +31,6 @@ import { UserService } from './shared/user.service';
 export class UserComponent implements OnInit, OnDestroy {
   public Constant = Constant;
   public user: UserModel;
-  public isMine: Boolean;
   public editMode: Boolean = false;
   public form: FormGroup;
   public avatorForPreview: string;
@@ -73,7 +72,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private getUser(userId: string): void {
     this.userService.getById(userId).subscribe(user => {
-      this.isMine = user._id === this.auth.loginUser._id;
       this.user = user as UserModel;
       // ユーザ変更後、タブのrouterLinkが変わるので
       // それに合わせてアクティブタブをリフレッシュするため
@@ -83,6 +81,13 @@ export class UserComponent implements OnInit, OnDestroy {
         exact : true
       };
     });
+  }
+
+  isMine(): boolean {
+    if (!this.auth.isLogin()) {
+      return false;
+    }
+    return  this.user._id === this.auth.loginUser._id;
   }
 
   onSubmit(): void {

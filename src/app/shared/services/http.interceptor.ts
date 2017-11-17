@@ -6,8 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { MessageBarService } from '../../shared/services/message-bar.service';
-import { LocalStrageService, KEY } from './local-strage.service';
-
+import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 
 @Injectable()
 export class AppHttpInterceptor implements HttpInterceptor {
@@ -29,13 +28,11 @@ export class AppHttpInterceptor implements HttpInterceptor {
             this.messageBarService.showValidationError({errors: errors});
           }
 
-
+          // クライアント側にトークンあるのに403になる場合はトークンの有効期限切れなので
+          // ログイン画面に遷移させる
           if (hasToken) {
-            // クライアント側にトークンあるのに403になる場合はトークンの有効期限切れなので
-            // ログイン画面に遷移させる
             this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
           }
-          break;
       }
 
       return Observable.throw(JSON.parse(res.error));
