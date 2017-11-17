@@ -24,13 +24,13 @@ export class ArticleTocComponent implements OnInit, OnDestroy {
   @Input() toc: string;
   @Input() title: string;
   @Input() baseUrl: string;
-  private activeIndex: number | null = null;
+  public activeIndex: number | null = null;
   private onDestroy = new Subject();
 
   constructor(
     private route: ActivatedRoute,
     private tocService: TocService,
-    private scrollService: ScrollService,
+    public scrollService: ScrollService,
   ) {
   }
 

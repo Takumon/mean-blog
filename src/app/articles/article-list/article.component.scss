@@ -137,7 +137,11 @@
 
       &_bottom {
         @extend #{$parent};
-        bottom: 252px;
+        bottom: 24px;
+        &.is-login {
+          //　コメント欄分上に配置
+          bottom: 252px;
+        }
 
         &:hover {
           background-color: #B8BFE0;

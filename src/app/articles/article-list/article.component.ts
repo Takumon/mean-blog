@@ -155,6 +155,10 @@ export class ArticleComponent {
       return false;
     }
 
+    if (!this.auth.isLogin()) {
+      return false;
+    }
+
     const _idOfMine = this.auth.loginUser._id;
     return this.item.vote.some(v => _idOfMine === v._id);
   }

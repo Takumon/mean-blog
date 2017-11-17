@@ -26,21 +26,23 @@
       </div>
 
       <div class="info-summary__vote-button-wrapper">
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="registerVote()"
-          *ngIf="!containMineVote(article.vote)"
-          >
-          <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
-        </button>
-        <button
-          mat-raised-button
-          (click)="deleteVote()"
-          *ngIf="containMineVote(article.vote)"
-          >
-          <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
-        </button>
+        <ng-container *ngIf="auth.isLogin()">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="registerVote()"
+            *ngIf="!containMineVote(article.vote)"
+            >
+            <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
+          </button>
+          <button
+            mat-raised-button
+            (click)="deleteVote()"
+            *ngIf="containMineVote(article.vote)"
+            >
+            <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
+          </button>
+        </ng-container>
       </div>
       <div *ngIf="article.vote" class="info-summary__voter-icons">
         <div
@@ -69,27 +71,28 @@
       class="article__author"
       [routerLink]="['/', article.author.userId, 'articles']">{{article.author.userId}}</div>
     <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
-    <div
-      *ngIf="auth.loginUser.userId === article.author.userId"
-      class="article__operation">
-      <button
-        mat-button
-        [routerLink]="['/drafts', article._id, 'edit']"
-        routerLinkActive="active">
-        <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
-      </button>
-      <span class="spacer"></span>
-      <button
-        mat-button
-        [matMenuTriggerFor]="menu">
-        <i class="fa fa-fw fa-cog"></i>  設定
-      </button>
-      <mat-menu #menu="matMenu">
-        <div mat-menu-item disabled></div>
-        <a mat-menu-item (click)="deleteArticle()">
-          <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
-        </a>
-      </mat-menu>
+    <div class="article__operation">
+      <ng-container *ngIf="isMine(article)">
+        <button
+          mat-button
+          [routerLink]="['/drafts', article._id, 'edit']"
+          routerLinkActive="active">
+          <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
+        </button>
+        <span class="spacer"></span>
+        <button
+          mat-button
+          [matMenuTriggerFor]="menu">
+          <i class="fa fa-fw fa-cog"></i>  設定
+        </button>
+        <mat-menu #menu="matMenu">
+          <div mat-menu-item disabled></div>
+          <a mat-menu-item (click)="deleteArticle()">
+            <i class="fa fa-fw fa-trash-o"></i><span>  削除</span>
+          </a>
+        </mat-menu>
+    </ng-container>
+
     </div>
   </div>
   <div class="article__main">

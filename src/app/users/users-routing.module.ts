@@ -11,7 +11,6 @@ const routes: Routes = [
   {
     path: ':_userId',
     component: UserComponent,
-    canActivate: [AuthGuard],
     children: [
       {
         path: '',
@@ -22,7 +21,6 @@ const routes: Routes = [
         path: 'articles',
         component: ArticleListComponent,
         data: {mode: Mode.USER },
-        canActivate: [AuthGuard]
       },
       {
         path: 'comments',
@@ -32,7 +30,6 @@ const routes: Routes = [
         path: 'votes',
         component: ArticleListComponent,
         data: {mode: Mode.VOTER },
-        canActivate: [AuthGuard]
       },
     ]
   },

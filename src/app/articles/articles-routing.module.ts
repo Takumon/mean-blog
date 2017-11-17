@@ -14,13 +14,11 @@ const routes: Routes = [
     component: ArticleListComponent,
     pathMatch: 'full',
     data: {mode: Mode.FAVORITE},
-    canActivate: [AuthGuard]
   },
   {
     path: 'articles',
     component: ArticleListComponent,
     data: {mode: Mode.ALL},
-    canActivate: [AuthGuard]
   },
   {
     path: 'drafts/new',
@@ -48,7 +46,6 @@ const routes: Routes = [
   {
     path: ':userId/articles/:_id',
     component: ArticleDetailComponent,
-    canActivate: [AuthGuard]
   },
 ];
 

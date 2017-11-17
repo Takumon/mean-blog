@@ -20,8 +20,7 @@ export class AppComponent implements OnInit {
   title: String = 'Material Blog';
   routerName: String;
 
-  isActiveHeader: Boolean;
-  isActiveNavbar: Boolean;
+  isActiveNavbar: boolean;
 
   constructor(
     private router: Router,
@@ -37,7 +36,6 @@ export class AppComponent implements OnInit {
        return;
       }
 
-      this.refreshActiveHeader();
       this.refreshActiveNavbar();
       // 記事詳細はハッシュタグでスクロール制御するので除外
       if (!this.router.url.includes('/articles/')) {
@@ -49,20 +47,12 @@ export class AppComponent implements OnInit {
       setTimeout(() => this.routerName = name);
     });
 
-    if (this.auth.isLogin()) {
-      this.checkLoginState();
-    }
+    this.checkLoginState();
   }
 
   checkLoginState() {
-    this.auth.checkState().subscribe(res => {
-      if (res.success !== true) {
-        return;
-      }
-    }, error => {
-      // ログイン後に元々表示しようとしていた画面を表示させる
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
-  });
+    // 実処理はauthでやるためここは呼び出しのみ
+    this.auth.checkState().subscribe(res => {});
   }
 
   isLoginPage(): boolean {
@@ -87,11 +77,6 @@ export class AppComponent implements OnInit {
     return true;
   }
 
-  refreshActiveHeader(): void {
-    const url: String = this.router.url;
-    // 前方一致
-    this.isActiveHeader = ! url.startsWith('/login');
-  }
 
   refreshActiveNavbar(): void {
     const url: String = this.router.url;
@@ -102,6 +87,14 @@ export class AppComponent implements OnInit {
     } else {
       this.isActiveNavbar = false;
     }
+  }
+
+  login() {
+    this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
+  }
+
+  registeruser() {
+    this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url,  }});
   }
 
 }
