@@ -37,8 +37,7 @@ export class CommentService {
   register(comment: CommentModel): Observable<CommentModel> {
     const URL = this.baseCommentUrl;
 
-    const headers: HttpHeaders = this.jwtService.getHeaders()
-      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
+    const headers: HttpHeaders = this.jwtService.getHeaders();
 
     return this.http.post<CommentModel>(URL, comment, { headers });
   }
@@ -47,8 +46,7 @@ export class CommentService {
   update(comment: CommentModel): Observable<CommentModel> {
     const URL = `${this.baseCommentUrl}/${comment._id}`;
 
-    const headers: HttpHeaders = this.jwtService.getHeaders()
-      .set('Content-Type', this.Constant.POST_CONTENT_TYPE);
+    const headers: HttpHeaders = this.jwtService.getHeaders();
 
     return this.http.put<CommentModel>(URL, comment, { headers });
   }
