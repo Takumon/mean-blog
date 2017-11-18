@@ -8,8 +8,10 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 
 import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
 import { CommentService } from '../../articles/shared/comment.service';
+import { ReplyService } from '../../articles/shared/reply.service';
 import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../shared/user.service';
+import { ReplyWithArticleModel } from '../../articles/shared/reply-with-article.model';
 
 
 @Component({
@@ -19,7 +21,7 @@ import { UserService } from '../shared/user.service';
 })
 export class CommentListComponent implements OnInit, OnDestroy {
   public Constant = Constant;
-  public comments: Array<CommentWithArticleModel>;
+  public commentAndReplyList: Array<CommentWithArticleModel>;
   public user: UserModel;
 
   private onDestroy = new Subject();
@@ -29,6 +31,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private auth: AuthenticationService,
     private commentService: CommentService,
+    private replyService: ReplyService,
     private userService: UserService,
   ) {
   }
@@ -54,6 +57,21 @@ export class CommentListComponent implements OnInit, OnDestroy {
     });
   }
 
+  private descCreated(a: CommentWithArticleModel, b: CommentWithArticleModel): number {
+    if (a.created > b.created) {
+      return -1;
+    }
+    if (a.created < b.created) {
+      return 1;
+    }
+    return 0;
+  }
+
+  /**
+   * 指定したユーザにひもづくコメントとリプライ両方取得する
+   *
+   * @param user
+   */
   private getComments(user: UserModel): void {
     const withUser = false;
     const withArticle = true;
@@ -66,7 +84,18 @@ export class CommentListComponent implements OnInit, OnDestroy {
     this.commentService
     .get(condition, withUser, withArticle)
     .subscribe(comments => {
-      this.comments = comments as Array<CommentWithArticleModel>;
+      const commentAndReplyList = comments as Array<CommentWithArticleModel>;
+
+      this.replyService
+      .get(condition, withUser, withArticle)
+      .subscribe(replies => {
+        const _replies = replies as Array<ReplyWithArticleModel>;
+        _replies.forEach(rep => {
+          commentAndReplyList.push(rep as CommentWithArticleModel);
+        });
+
+        this.commentAndReplyList = commentAndReplyList.sort(this.descCreated);
+      });
     });
   }
 }
