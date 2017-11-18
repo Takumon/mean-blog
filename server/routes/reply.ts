@@ -15,37 +15,37 @@ const router: Router = Router();
 // 複数件検索
 router.get('/', (req, res, next) => {
 
-  const query = req.query;
-  const source = query.condition ?
-    JSON.parse(query.condition) :
-    {};
+  constructCondition(req, function(error, condition) {
+    const cb = (err, doc) => {
+      if (error) {
+        return res.status(500).json({
+          title: v.MESSAGE_KEY.default,
+          error: error.message
+        });
+      }
 
-  const condition = {};
-  const userIds = source && source.userId;
-  if (userIds) {
-    condition['author'] = userIds instanceof Array
-      ? { $in: userIds }
-      : userIds;
-  }
+      return res.status(200).json(doc);
+    };
 
-  const articleIds = source && source.articleId;
-  if (articleIds) {
-    condition['articleId'] = articleIds instanceof Array
-      ? { $in: articleIds }
-      : articleIds;
-  }
+    let findFunction = Reply.find(condition);
 
-  Reply
-  .find(condition)
-  .exec((err, doc) => {
-    if (err) {
-      return res.status(500).json({
-        title: DEFAULT_ERR_MSG,
-        error: err.message
-      });
+    if (!!req.query.withUser) {
+      findFunction = findFunction
+        .populate('user', '-password');
     }
 
-    return res.status(200).json(doc);
+    if (!!req.query.withArticle) {
+      findFunction = findFunction
+        .populate({
+          path: 'articleId',
+          populate: {
+            path: 'author',
+            select: '-password',
+          }
+        });
+    }
+
+    findFunction.exec(cb);
   });
 });
 
@@ -76,6 +76,55 @@ router.get('/:_id', (req, res, next) => {
     return res.status(200).json(doc[0]);
   });
 });
+
+
+
+function constructCondition(req: any, cb: Function): void {
+  const query = req.query;
+  const source = query.condition ?
+    JSON.parse(query.condition) :
+    {};
+
+  const condition = {};
+
+  const userIds = source.user.userId;
+  // ユーザIDの場合はユーザ検索して_idに変換する
+  if (userIds) {
+    const userFindCondition = userIds instanceof Array
+      ? { userId: { $in: userIds }}
+      : { userId: userIds };
+
+    return User.find(userFindCondition, function (err, users) {
+      if (err) {
+        return cb(err, null);
+      }
+
+      if (!users || !users.length) {
+        return cb(new mongoose.Error(`指定したユーザ(${userIds})が見つかりません`), null);
+      }
+
+      condition['user']  = {
+          $in: users.map(user => user._id)
+      };
+
+      return cb(null, condition);
+    });
+  }
+
+
+  const _ids = source.user && source.user._id;
+  if (_ids) {
+    if (_ids instanceof Array) {
+      condition['user'] = {
+        $in: _ids.map(id =>  new mongoose.Types.ObjectId(id))
+      };
+    } else {
+      condition['user'] =  new mongoose.Types.ObjectId(_ids);
+    }
+  }
+
+  return cb(null, condition);
+}
 
 
 
