@@ -26,46 +26,24 @@ router.get('/', (req, res, next) => {
       return res.status(200).json(doc);
     };
 
-
-    const withUser: boolean = !!req.query.withUser;
-    const withArticle: boolean = !!req.query.withArticle;
-    if (withUser) {
-      if (withArticle) {
-        Comment
-        .find(condition)
-        .populate('user', '-password')
-        .populate({
-          path: 'articleId',
-          populate: {
-            path: 'author',
-            select: '-password',
-          }
-        })
-        .exec(cb);
-      } else {
-        Comment
-        .find(condition)
-        .populate('user', '-password')
-        .exec(cb);
-      }
-    } else {
-      if (withArticle) {
-        Comment
-        .find(condition)
-        .populate({
-          path: 'articleId',
-          populate: {
-            path: 'author',
-            select: '-password',
-          }
-        })
-        .exec(cb);
-      } else {
-        Comment
-        .find(condition)
-        .exec(cb);
-      }
+    let findFunction = Comment.find(condition);
+    if (!!req.query.withUser) {
+      findFunction = findFunction
+      .populate('user', '-password');
     }
+
+    if (!!req.query.withArticle) {
+      findFunction = findFunction
+        .populate({
+          path: 'articleId',
+          populate: {
+            path: 'author',
+            select: '-password',
+          }
+        });
+    }
+
+    findFunction.exec(cb);
   });
 });
 
@@ -82,20 +60,12 @@ function getCondition(req: any, cb: Function): void {
     deleted: { $eq: null}
   };
 
-  const userIds = source.user && source.user.userId;
+  const userIds = source.user.userId;
+  // ユーザIDの場合はユーザ検索して_idに変換する
   if (userIds) {
-    let userFindCondition;
-    if (userIds instanceof Array) {
-      userFindCondition = {
-        userId: {
-          $in: userIds
-        }
-      };
-    } else {
-      userFindCondition = {
-        userId: userIds
-      };
-    }
+    const userFindCondition = userIds instanceof Array
+      ? { userId: { $in: userIds }}
+      : { userId: userIds };
 
     return User.find(userFindCondition, function (err, users) {
       if (err) {
