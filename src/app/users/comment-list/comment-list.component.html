@@ -1,10 +1,10 @@
-<ng-container *ngIf="!comments">
+<ng-container *ngIf="!commentAndReplyList">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </ng-container>
 
-<ng-container *ngIf="comments">
+<ng-container *ngIf="commentAndReplyList">
   <div class="comment-list">
-    <div *ngFor="let comment of comments" class="comment-list__comment comment">
+    <div *ngFor="let comment of commentAndReplyList" class="comment-list__comment comment">
       <img
         class="comment__author-icon"
         lazyLoad="/api/images/avator/{{ user._id}}"
@@ -15,7 +15,7 @@
           <img
             class="comment__article__author-icon"
             [routerLink]="['/', comment.articleId.author.userId, 'articles']"
-            lazyLoad="/api/images/avator/{{ user._id}}"
+            lazyLoad="/api/images/avator/{{ comment.articleId.author._id}}"
             [offset]="this.Constant.LAZY_LOAD_OFFSET"
             >
           <div class="comment__article__author-wrapper">
@@ -33,7 +33,7 @@
             <span>にコメント</span>
           </div>
           <!-- TODO　記事が削除されている場合のスタイル -->
-          <div class="comment__created">{{comment.articleId.updated | date: 'yyyy/MM/dd HH:mm' }}</div>
+          <div class="comment__created">{{comment.articleId.updated | date: 'yyyy/MM/dd HH:mm' }}に{{comment.articleId.updated === comment.articleId.created ? '登録' : '更新'}}</div>
         </div>
         <pre [innerHTML]="comment.text" class="comment__text"></pre>
       </div>
