@@ -105,11 +105,13 @@
     border-radius: 4px;
     box-shadow: 0 0 8px 1px grey;
     image-rendering: -webkit-optimize-contrast;
-    cursor: pointer;
     box-sizing: border-box;
-
+    cursor: pointer;
     &:hover {
       opacity: 0.9;
+    }
+    &:focus {
+      outline: 0;
     }
   }
 
@@ -164,14 +166,6 @@
     }
   }
 
-  &__input {
-    flex: 1;
-
-    &__textarea {
-      height: 100px;
-      resize: no;
-    }
-  }
 
   &__output {
     flex: 1;
@@ -188,6 +182,9 @@
       color: #3F3F3F;
       padding-bottom: 2px;
       border-bottom: 1px solid #949494;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       $parent: &;
       &_textarea {
