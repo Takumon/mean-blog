@@ -13,8 +13,13 @@
       class="user__avator"
       lazyLoad="/api/images/avator/{{user._id}}"
       [offset]="this.Constant.LAZY_LOAD_OFFSET"
+      [routerLink]="['/', user.userId, 'articles']"
       >
-    <div  class="user__user-id">{{user.userId}}</div>
+    <div
+      class="user__user-id"
+      [routerLink]="['/', user.userId, 'articles']"
+      mat-ripple
+      >{{user.userId}}</div>
     <div class="user__content">
       <div class="data">
         <div class="data__output">

@@ -32,11 +32,17 @@
     height: 42px;
     position: absolute;
     background: white;
-    top: 89px;
+    top: 90px;
     left: 12px;
     border-radius: 4px;
     box-shadow: 0 0 8px 1px grey;
     image-rendering: -webkit-optimize-contrast;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    &:hover {
+      opacity: 0.9;
+    }
   }
 
   &__user-id {
@@ -44,6 +50,13 @@
     left: 63px;
     font-size: 18px;
     color: #333456;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.6;
+    }
+    &:focus {
+      outline: 0;
+    }
   }
 
   &__content {
