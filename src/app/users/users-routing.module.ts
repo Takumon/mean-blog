@@ -4,10 +4,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user.component';
 import { ArticleListComponent, Mode } from '../articles/article-list/article-list.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
-import { AuthGuard } from '../shared/auth.guard';
+import { UserListComponent } from './user-list/user-list.component';
+import { AdminAuthGuard } from '../shared/admin-auth.guard';
 
 
 const routes: Routes = [
+  {
+    path: 'users',
+    component: UserListComponent,
+    canActivate: [AdminAuthGuard]
+  },
   {
     path: ':_userId',
     component: UserComponent,

@@ -1,0 +1,110 @@
+<div class="wrapper">
+
+  <div class="prograss-bar" *ngIf="showPrograssBar" >
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!showPrograssBar && users?.length > 0">
+    <div class="operation operation_top">
+      <div class="operation__sort-item">
+        <ng-container *ngFor="let key of sortFactorKeys">
+          <button
+            mat-button
+            [class.checked]="sortFactors[key].direction !== direction.NONE"
+            (click)="sortAndRefresh(key)">
+              {{sortFactors[key].label}}
+              <i *ngIf="sortFactors[key].direction === direction.ASC" class="fa fa-fw fa-long-arrow-up"></i>
+              <i *ngIf="sortFactors[key].direction === direction.DESC" class="fa fa-fw fa-long-arrow-down"></i>
+          </button>
+        </ng-container>
+      </div>
+      <div class="operation__spacer"></div>
+      <mat-paginator
+        class="operation__paginator"
+        (page)="refreshPage($event)"
+        [length]="users.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="DEFAILT_PER_PAGES">
+      </mat-paginator>
+    </div>
+
+    <div class="user-list">
+      <div
+        *ngFor="let user of ($usersPerPage | async)"
+        class="user-list__user user"
+        >
+        <div class="user__profile-background-wrapper">
+          <img
+            class="user__profile-background"
+            lazyLoad="/api/images/profileBackground/{{user._id}}"
+            [offset]="this.Constant.LAZY_LOAD_OFFSET"
+            >
+        </div>
+        <img
+          class="user__avator"
+          lazyLoad="/api/images/avator/{{user._id}}"
+          [offset]="this.Constant.LAZY_LOAD_OFFSET"
+          [routerLink]="['/', user.userId, 'articles']"
+          >
+        <div
+          class="user__user-id"
+          [routerLink]="['/', user.userId, 'articles']"
+          mat-ripple
+          >{{user.userId}}</div>
+        <div class="user__content">
+          <div class="data">
+            <div class="data__output">
+              <div class="data__output__label">ブログタイトル</div>
+              <div  class="data__output__value">{{user.blogTitle}}</div>
+            </div>
+          </div>
+          <div class="data">
+            <div class="data__output">
+              <div class="data__output__label">ユーザ名</div>
+              <div  class="data__output__value">{{user.userName}}</div>
+            </div>
+          </div>
+          <div class="data">
+            <div class="data__output">
+              <div class="data__output__label">Mail</div>
+              <div  class="data__output__value">{{user.email}}</div>
+            </div>
+          </div>
+
+          <div class="data">
+            <div class="data__output">
+              <div class="data__output__label">自己紹介</div>
+              <pre class="data__output__value_textarea">{{user.userDescription}}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="operation operation_bottom">
+      <div class="operation__sort-item">
+        <ng-container *ngFor="let key of sortFactorKeys">
+          <button
+            mat-button
+            [class.checked]="sortFactors[key].direction !== direction.NONE"
+            (click)="sortAndRefresh(key)">
+              {{sortFactors[key].label}}
+              <i *ngIf="sortFactors[key].direction === direction.ASC" class="fa fa-fw fa-long-arrow-up"></i>
+              <i *ngIf="sortFactors[key].direction === direction.DESC" class="fa fa-fw fa-long-arrow-down"></i>
+          </button>
+        </ng-container>
+      </div>
+      <div class="operation__spacer"></div>
+      <mat-paginator
+        class="operation__paginator"
+        (page)="refreshPage($event)"
+        [length]="users.length"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="DEFAILT_PER_PAGES">
+      </mat-paginator>
+    </div>
+  </ng-container>
+
+</div>

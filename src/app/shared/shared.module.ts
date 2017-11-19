@@ -28,12 +28,14 @@ import {
 } from '@angular/material';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
+import { SharedRoutingModule } from './shared-routing.module';
 
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { ConfirmDialogComponent } from './components/confirm.dialog';
 import { MessageBarComponent } from './components/message-bar.component';
 import { CustomErrorStateMatcher } from './custom-error-state-matcher';
+import { Error403Component } from './components/error-403.component';
 
 @NgModule({
   declarations: [
@@ -41,10 +43,13 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
     DragAndDropDirective,
     ConfirmDialogComponent,
     MessageBarComponent,
+    Error403Component,
   ],
   imports: [
     BrowserModule,
     LazyLoadImageModule,
+
+    SharedRoutingModule,
 
     MatToolbarModule,
     MatProgressBarModule,

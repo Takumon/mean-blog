@@ -28,6 +28,8 @@ import { ScrollService } from './shared/services/scroll.service';
 import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
 import { TocService } from './shared/services/toc.service';
 import { AuthGuard } from './shared/auth.guard';
+import { AdminAuthGuard } from './shared/admin-auth.guard';
+
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
 
 @NgModule({
@@ -58,6 +60,7 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
     AuthenticationService,
     LocalStrageService,
     AuthGuard,
+    AdminAuthGuard,
     ErrorStateMatcherContainParentGroup,
     {
       provide: ErrorStateMatcher,

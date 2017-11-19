@@ -47,7 +47,10 @@ export class AppComponent implements OnInit {
       setTimeout(() => this.routerName = name);
     });
 
-    this.checkLoginState();
+    // auth.guardで認証していない場合のみ認証チェックを行う
+    if (!this.auth.isFinishedCheckState) {
+      this.checkLoginState();
+    }
   }
 
   checkLoginState() {
