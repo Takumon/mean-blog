@@ -8,12 +8,15 @@ import { SharedModule } from '../shared/shared.module';
 import { UsersRoutingModule } from './users-routing.module';
 import { UserComponent } from './user.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
+import { UserListComponent } from './user-list/user-list.component';
 import { UserService } from './shared/user.service';
+
 
 @NgModule({
   declarations: [
     UserComponent,
     CommentListComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,

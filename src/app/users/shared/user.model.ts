@@ -4,7 +4,7 @@ export class UserModel {
   password: string;
   email: string;
   userName: string;
-  isAdmin: Boolean;
+  isAdmin: boolean;
   blogTitle: string;
   userDescription: string;
   created: string;

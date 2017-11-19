@@ -45,7 +45,7 @@
         class="toolbar__btn_color_white"
         (click)="registerUser()"
         >
-      <i class="fa fa-fw fa-sign-in"></i>  ユーザ登録
+      <i class="fa fa-fw fa-user-plus"></i>  ユーザ登録
       </button>
 
       <button
@@ -72,6 +72,7 @@
       <mat-menu #menu="matMenu" class="menu-btn__menu">
         <div mat-menu-item disabled class="menu-btn__menu__description"><span class="menu-btn__menu__username">{{auth.loginUser.userId}}</span>としてログイン済</div>
         <button
+          *ngIf="!auth.isAdmin()"
           mat-menu-item
           [routerLink]="[auth.loginUser.userId, 'articles']"
           routerLinkActive="active">
@@ -79,10 +80,19 @@
         </button>
 
         <button
+          *ngIf="!auth.isAdmin()"
           mat-menu-item
           [routerLink]="['drafts']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-files-o"></i><span> 下書き一覧</span>
+        </button>
+
+        <button
+          *ngIf="auth.isAdmin()"
+          mat-menu-item
+          [routerLink]="['users']"
+          routerLinkActive="active">
+          <i class="fa fa-fw fa-user-circle-o"></i><span> ユーザ一覧</span>
         </button>
 
         <button

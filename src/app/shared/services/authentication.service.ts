@@ -103,6 +103,10 @@ export class AuthenticationService {
     return !!this.loginUser;
   }
 
+  isAdmin(): boolean {
+    return this.isLogin() && this.loginUser.isAdmin;
+  }
+
   getToken(): String {
     return this.localStrageService.get(KEY.TOKEN);
   }
