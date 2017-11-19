@@ -225,8 +225,7 @@
           lazyLoad="/api/images/avator/{{user._id}}"
           [offset]="this.Constant.LAZY_LOAD_OFFSET"
           >
-
-        <div *ngIf="isMine()" class="profile__operation">
+        <div *ngIf="isMine() || auth.isAdmin()" class="profile__operation">
           <button
             mat-button
             color="primary"

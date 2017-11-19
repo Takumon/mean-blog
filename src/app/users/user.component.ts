@@ -50,7 +50,7 @@ export class UserComponent implements OnInit, OnDestroy {
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     private messageBarService: MessageBarService,
-    private auth: AuthenticationService,
+    public auth: AuthenticationService,
     private userService: UserService,
   ) {
   }
@@ -97,7 +97,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
     const val = this.form.value;
     const model = new UserModel();
-    model._id = this.auth.loginUser._id;
+    model._id = this.user._id;
     model.blogTitle = val.blogTitle;
     model.email = val.email;
     model.userDescription = val.userDescription;
