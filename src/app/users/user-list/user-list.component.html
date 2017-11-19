@@ -1,3 +1,46 @@
-<div>
-  User List
+<div class="user-list">
+  <div
+    *ngFor="let user of ($users | async)"
+    class="user-list__user user"
+    >
+
+    <img
+      class="user__profile-background"
+      lazyLoad="/api/images/profileBackground/{{user._id}}"
+      [offset]="this.Constant.LAZY_LOAD_OFFSET"
+      >
+    <img
+      class="user__avator"
+      lazyLoad="/api/images/avator/{{user._id}}"
+      [offset]="this.Constant.LAZY_LOAD_OFFSET"
+      >
+    <div  class="user__user-id">{{user.userId}}</div>
+    <div class="user__content">
+      <div class="data">
+        <div class="data__output">
+          <div class="data__output__label">ブログタイトル</div>
+          <div  class="data__output__value">{{user.blogTitle}}</div>
+        </div>
+      </div>
+      <div class="data">
+        <div class="data__output">
+          <div class="data__output__label">ユーザ名</div>
+          <div  class="data__output__value">{{user.userName}}</div>
+        </div>
+      </div>
+      <div class="data">
+        <div class="data__output">
+          <div class="data__output__label">Mail</div>
+          <div  class="data__output__value">{{user.email}}</div>
+        </div>
+      </div>
+
+      <div class="data">
+        <div class="data__output">
+          <div class="data__output__label">自己紹介</div>
+          <pre class="data__output__value_textarea">{{user.userDescription}}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

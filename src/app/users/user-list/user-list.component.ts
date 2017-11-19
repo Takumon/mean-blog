@@ -1,5 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
+import { UserService } from '../shared/user.service';
+import { UserModel } from '../shared/user.model';
+import { Observable } from 'rxjs/Observable';
+import { Constant } from '../../shared/constant';
 
 @Component({
   selector: 'app-user-list',
@@ -7,16 +10,22 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit, OnDestroy {
-  constructor(
+  public Constant = Constant;
+  public $users: Observable<Array<UserModel>>;
 
+  constructor(
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
-    console.log('init');
+    this.getUser();
   }
 
   ngOnDestroy(): void {
     console.log('destroy');
   }
 
+  private getUser(): void {
+    this.$users = this.userService.getAll();
+  }
 }
