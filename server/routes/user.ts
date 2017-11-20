@@ -57,6 +57,13 @@ userRouter.get('/:userId', (req, res, next) => {
         error: err.message
       });
     }
+
+    if (!doc || !doc[0]) {
+      return res.status(404).json({
+        title: `ユーザ(userId=${req.params.userId})が見つかりませんでした。`,
+      });
+    }
+
     return res.status(200).json(doc[0]);
   };
 
