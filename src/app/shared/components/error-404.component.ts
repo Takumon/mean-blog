@@ -17,6 +17,5 @@ export class Error404Component implements OnInit {
   ngOnInit(): void {
     this.errorCode = '404';
     this.errorMessage = 'ページがつかりません';
-    console.log('init');
   }
 }
