@@ -22,6 +22,9 @@ export class AppHttpInterceptor implements HttpInterceptor {
     const hasToken = this.localStrageService.has(KEY.TOKEN);
     return next.handle(req).catch(res => {
       switch (res.status) {
+        case 400:
+          // 入力チェックエラーは個別にハンドリング
+          return Observable.throw(JSON.parse(res.error));
         case 403:
           const errors = JSON.parse(res.error).errors;
           if (errors && errors.length > 0) {
@@ -33,9 +36,16 @@ export class AppHttpInterceptor implements HttpInterceptor {
           if (hasToken) {
             this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
           }
-      }
+          return;
+        case 404:
+          this.router.navigate(['/error/404']);
+          return;
+        case 500:
+          this.router.navigate(['/error/500']);
+          return;
+        }
 
-      return Observable.throw(JSON.parse(res.error));
-    });
+        return Observable.throw(JSON.parse(res.error));
+      });
   }
 }

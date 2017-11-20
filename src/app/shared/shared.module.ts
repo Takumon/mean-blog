@@ -36,6 +36,8 @@ import { ConfirmDialogComponent } from './components/confirm.dialog';
 import { MessageBarComponent } from './components/message-bar.component';
 import { CustomErrorStateMatcher } from './custom-error-state-matcher';
 import { Error403Component } from './components/error-403.component';
+import { Error404Component } from './components/error-404.component';
+import { Error500Component } from './components/error-500.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { Error403Component } from './components/error-403.component';
     ConfirmDialogComponent,
     MessageBarComponent,
     Error403Component,
+    Error404Component,
+    Error500Component,
   ],
   imports: [
     BrowserModule,
