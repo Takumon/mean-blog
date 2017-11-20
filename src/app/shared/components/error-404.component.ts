@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
-  selector: 'app-error-403',
+  selector: 'app-error-404',
   templateUrl: './error.component.html',
   styleUrls: ['./error.component.scss']
 })
-export class Error403Component implements OnInit {
+export class Error404Component implements OnInit {
   public errorCode: string;
   public errorMessage: string;
 
@@ -15,7 +15,7 @@ export class Error403Component implements OnInit {
   }
 
   ngOnInit(): void {
-    this.errorCode = '403';
-    this.errorMessage = '権限エラーです';
+    this.errorCode = '404';
+    this.errorMessage = 'ページがつかりません';
   }
 }

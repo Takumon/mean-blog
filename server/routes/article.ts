@@ -180,6 +180,12 @@ function getCondition(req: any, cb: (error: any, condition: ArticleCondition) =>
 
 // 一件検索
 router.get('/:_id', (req, res, next) => {
+  if ( !req.params._id ||  !req.params._id.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(404).json({
+      title: `記事(_id=${req.params._id})が見つかりませんでした。`,
+    });
+  }
+
   const condition = {
     _id: req.params._id,
     deleted: { $eq: null}  // 削除記事は除外
@@ -208,7 +214,7 @@ router.get('/:_id', (req, res, next) => {
     }
 
     if (!doc[0]) {
-      return res.status(500).json({
+      return res.status(404).json({
         title: `記事(_id=${req.params._id})が見つかりませんでした。`,
       });
     }
