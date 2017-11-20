@@ -11,3 +11,6 @@
 * Express4 ・・・ サーバ側
 * Node ・・・ 実行環境
 * MongoDB3 ・・・ DB
+
+## インストール方法
+dockerを使う
