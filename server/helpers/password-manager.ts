@@ -13,6 +13,7 @@ const PasswordManager = {
   compare: (plainPass, hashword): Boolean => {
     return bcrypt.compareSync(plainPass, hashword);
   }
+
 };
 
 export { PasswordManager };

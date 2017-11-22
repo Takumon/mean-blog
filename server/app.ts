@@ -2,11 +2,11 @@ import * as express from 'express';
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
-import * as jwt from 'jsonWebToken';
+import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
 import * as morgan from 'morgan';
 
-import { MONGO_URL, SECRET } from './config';
+import * as config from './config';
 import { authenticateRouter } from './routes/authenticate';
 import { authenticate } from './middleware/authenticate';
 import { articleRouter } from './routes/article';
@@ -21,6 +21,10 @@ import { PasswordManager } from './helpers/password-manager';
 import { Image, ImageType } from './models/image';
 
 import { User } from './models/user';
+
+
+console.log('設定値の値');
+console.log(config);
 
 class App {
   public express: express.Application;
@@ -90,8 +94,8 @@ class App {
         }
 
         const rootUser = new User();
-        rootUser.userId = ROOT_USER_ID;
-        rootUser.password = PasswordManager.crypt(ROOT_USER_PASSWORD);
+        rootUser.userId = config.ROOT_USER_ID;
+        rootUser.password = PasswordManager.crypt(config.ROOT_USER_PASSWORD);
         rootUser.isAdmin = true;
         rootUser.save(err2 => {
           if (err2) {

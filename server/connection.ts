@@ -1,9 +1,9 @@
 import * as mongoose from 'mongoose';
 
-import { MONGO_URL } from './config';
+import * as config from './config';
 
 // 接続する MongoDB の設定
-const connection = mongoose.connect(process.env.MONGO_URL || MONGO_URL, {
+const connection = mongoose.connect(config.MONGO_URL, {
   useMongoClient: true,
 });
 

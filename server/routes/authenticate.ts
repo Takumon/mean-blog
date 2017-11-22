@@ -7,7 +7,7 @@ import { matchedData, sanitize } from 'express-validator/filter';
 
 import { User } from '../models/user';
 import { Image, ImageType } from '../models/image';
-import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
+import * as config from '../config';
 import { authenticate } from '../middleware/authenticate';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
@@ -44,8 +44,8 @@ router.post('/login', [
       return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE_KEY.login_error)}] });
     }
 
-    const token = jwt.sign({ _id: user._id }, SECRET, {
-      expiresIn: TOKEN_EFFECTIVE_SECOND
+    const token = jwt.sign({ _id: user._id }, config.SECRET, {
+      expiresIn: config.TOKEN_EFFECTIVE_SECOND
     });
 
     // パスワードはクライアント側に送信しない
@@ -114,8 +114,8 @@ router.post('/register', [
         });
       }
 
-      const token = jwt.sign({ _id: newUser._id }, SECRET, {
-        expiresIn : TOKEN_EFFECTIVE_SECOND
+      const token = jwt.sign({ _id: newUser._id }, config.SECRET, {
+        expiresIn : config.TOKEN_EFFECTIVE_SECOND
       });
 
 
@@ -220,7 +220,7 @@ router.get('/check-state', (req, res) => {
     return;
   }
 
-  jwt.verify(token, SECRET, (err, decoded) => {
+  jwt.verify(token, config.SECRET, (err, decoded) => {
     if (err || !decoded._id) {
       return res.status(403).json({
         success: false,
