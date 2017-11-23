@@ -18,7 +18,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # ビルドしたアプリ資産をコピー
-RUN mv /usr/src/temp/dist/server /usr/src/app
+RUN mv /usr/src/temp/dist/server/* /usr/src/app
 RUN rm -rf /usr/src/temp
 
 # ライブラリをインストール
