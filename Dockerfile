@@ -1,4 +1,4 @@
-FROM node:8.1.4-alpine
+FROM node:8.9.1-alpine
 
 # アプリをビルド
 RUN mkdir -p /use/src/tmp
@@ -27,4 +27,5 @@ COPY package-lock.json /usr/src/app
 RUN npm install --only=production
 
 EXPOSE 3000
+ENV NODE_ENV production
 CMD [ "node", "./bin/www.js" ]
