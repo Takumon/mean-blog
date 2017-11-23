@@ -5,10 +5,9 @@ import * as jdenticon from 'jdenticon';
 import { check, oneOf, body, validationResult } from 'express-validator/check';
 import { matchedData, sanitize } from 'express-validator/filter';
 
-import { User } from '../models/user';
-import { Image, ImageType } from '../models/image';
+import { User } from '../models/user.model';
+import { Image, ImageType } from '../models/image.model';
 import * as config from '../config';
-import { authenticate } from '../middleware/authenticate';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
 

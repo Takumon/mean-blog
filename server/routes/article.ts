@@ -3,11 +3,10 @@ import * as http from 'http';
 import { Router, Response } from 'express';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
-
 import { validateHelper as v } from '../helpers/validate-helper';
-import { Article } from '../models/article';
-import { Comment } from '../models/comment';
-import { User } from '../models/user';
+import { Article } from '../models/article.model';
+import { Comment } from '../models/comment.model';
+import { User } from '../models/user.model';
 
 const MODEL_NAME = '記事';
 const router: Router = Router();

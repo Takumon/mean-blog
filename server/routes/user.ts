@@ -5,11 +5,9 @@ import * as multer from 'multer';
 import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
-import { inspect } from 'util';
 
-import { User } from '../models/user';
-import { Image, ImageType } from '../models/image';
-import { authenticate } from '../middleware/authenticate';
+import { User } from '../models/user.model';
+import { Image, ImageType } from '../models/image.model';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
 

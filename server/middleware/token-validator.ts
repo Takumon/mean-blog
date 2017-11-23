@@ -2,9 +2,9 @@
 import * as jwt from 'jsonwebtoken';
 import * as config from '../config';
 
-const authenticate = {
+const tokenValidator = {
 
-  verifyToken: ( (req, res, next) => {
+  verify: ( (req, res, next) => {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (!token) {
@@ -34,4 +34,4 @@ const authenticate = {
 };
 
 
-export { authenticate };
+export { tokenValidator };

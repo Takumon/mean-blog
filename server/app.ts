@@ -8,7 +8,7 @@ import * as morgan from 'morgan';
 
 import * as config from './config';
 import { authenticateRouter } from './routes/authenticate';
-import { authenticate } from './middleware/authenticate';
+import { tokenValidator } from './middleware/token-validator';
 import { articleRouter } from './routes/article';
 import { draftRouter } from './routes/draft';
 import { commentRouter } from './routes/comment';
@@ -18,9 +18,8 @@ import { imageRouter } from './routes/image';
 import { searchConditionRouter } from './routes/search-condition';
 import { ROOT_USER_ID, ROOT_USER_PASSWORD } from './config';
 import { PasswordManager } from './helpers/password-manager';
-import { Image, ImageType } from './models/image';
-
-import { User } from './models/user';
+import { Image, ImageType } from './models/image.model';
+import { User } from './models/user.model';
 
 
 console.log('設定値の値');
@@ -60,9 +59,9 @@ class App {
     this.express.use('/api/images', imageRouter);
 
     // データ参照以外の操作は認証が必要なAPI
-    this.express.post(/^\/api\/.*$/, authenticate.verifyToken);
-    this.express.put(/^\/api\/.*$/, authenticate.verifyToken);
-    this.express.delete(/^\/api\/.*$/, authenticate.verifyToken);
+    this.express.post(/^\/api\/.*$/, tokenValidator.verify);
+    this.express.put(/^\/api\/.*$/, tokenValidator.verify);
+    this.express.delete(/^\/api\/.*$/, tokenValidator.verify);
 
 
     this.express.use('/api/users', userRouter);

@@ -1,11 +1,11 @@
 
-import { Draft } from '../models/draft';
-import { User } from '../models/user';
-import { Image } from '../models/image';
-import { Article } from '../models/article';
-import { Comment } from '../models/comment';
-import { Reply } from '../models/reply';
-import { SearchCondition } from '../models/search-condition';
+import { Draft } from '../models/draft.model';
+import { User } from '../models/user.model';
+import { Image } from '../models/image.model';
+import { Article } from '../models/article.model';
+import { Comment } from '../models/comment.model';
+import { Reply } from '../models/reply.model';
+import { SearchCondition } from '../models/search-condition.model';
 
 class Validation {
   isDate(str: string): boolean {

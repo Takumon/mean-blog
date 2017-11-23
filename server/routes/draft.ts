@@ -4,8 +4,8 @@ import { Router, Response } from 'express';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
 import { validateHelper as v } from '../helpers/validate-helper';
-import { Draft } from '../models/draft';
-import { User } from '../models/user';
+import { Draft } from '../models/draft.model';
+import { User } from '../models/user.model';
 
 
 const MODEL_NAME = '下書き';
