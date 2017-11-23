@@ -3,6 +3,7 @@ export const {
   SECRET = 'blogAppServerSecret',
   TOKEN_EFFECTIVE_SECOND = 86400,
   MONGO_URL = 'mongodb://localhost:27017/test',
+  MONGO_RETRY_INTERVAL = 20, // 単位は秒
   ROOT_USER_ID = 'root',
   ROOT_USER_PASSWORD = 'root',
 } = process.env;

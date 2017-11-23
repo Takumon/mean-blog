@@ -73,4 +73,5 @@ function onListening(): void {
   const bind = (typeof addr === 'string')
     ? `pipe ${addr}`
     : `port ${addr.port}`;
+  console.log('bind = ' + bind);
 }

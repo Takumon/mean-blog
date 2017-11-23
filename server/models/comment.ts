@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import {connection} from '../connection';
+import '../connection';
 
 // コメントは記事に対してのみ
 // コメントに対するコメントReplyという別モデルで管理

@@ -14,6 +14,7 @@ const router: Router = Router();
 
 // 複数件検索
 router.get('/', (req, res, next) => {
+  console.log('/api/articlesにきました');
   getCondition(req, function(error: any, condition: ArticleCondition) {
     if (error) {
       return res.status(500).json({
@@ -22,6 +23,7 @@ router.get('/', (req, res, next) => {
       });
     }
 
+    console.log('Article/findします');
     Article
     .find(condition)
     .populate('author', 'userId userName deleted')
@@ -51,6 +53,10 @@ router.get('/', (req, res, next) => {
       }],
     })
     .exec((err, doc) => {
+      console.log('Article/findのexecにきました');
+      console.log('err = ' + err);
+      console.log('doc = ' + doc);
+
       if (err) {
         return res.status(500).json({
           title: v.MESSAGE_KEY.default,
@@ -58,7 +64,6 @@ router.get('/', (req, res, next) => {
         });
       }
 
-      // TODO ユーザアイコンはサイズが大きいので別にする
       // 削除ユーザのコメントを削除
       doc.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
 
