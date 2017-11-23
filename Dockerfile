@@ -3,12 +3,7 @@ FROM node:8.9.1-alpine
 # アプリをビルド
 RUN mkdir -p /use/src/tmp
 WORKDIR /usr/src/temp
-COPY ./server /usr/src/temp/server
-COPY ./src /usr/src/temp/src
-COPY ./.angular-cli.json /usr/src/temp/.angular-cli.json
-COPY ./tsconfig.json /usr/src/temp/tsconfig.json
-COPY ./package.json /usr/src/temp/package.json
-COPY ./package-lock.json /usr/src/temp/package-lock.json
+COPY ./ /usr/src/temp/
 
 RUN npm install
 RUN npm run build
@@ -27,4 +22,4 @@ RUN npm install
 
 EXPOSE 3000
 ENV NODE_ENV production
-# CMD [ "node", "./bin/www.js" ]
+CMD [ "node", "./bin/www.js" ]
