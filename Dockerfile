@@ -5,7 +5,6 @@ RUN mkdir -p /use/src/tmp
 WORKDIR /usr/src/temp
 COPY ./server /usr/src/temp/server
 COPY ./src /usr/src/temp/src
-COPY ./server /usr/src/temp/server
 COPY ./.angular-cli.json /usr/src/temp/.angular-cli.json
 COPY ./tsconfig.json /usr/src/temp/tsconfig.json
 COPY ./package.json /usr/src/temp/package.json
@@ -24,7 +23,7 @@ RUN rm -rf /usr/src/temp
 # ライブラリをインストール
 COPY package.json /usr/src/app/
 COPY package-lock.json /usr/src/app
-RUN npm install --only=production
+RUN npm install
 
 EXPOSE 3000
 ENV NODE_ENV production
