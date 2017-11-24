@@ -1,5 +1,5 @@
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 /**
  * パスワードを暗号化、比較するためのユーティルクラス
