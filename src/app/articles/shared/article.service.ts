@@ -24,12 +24,15 @@ export class ArticleService {
   ) {}
 
   // 複数件取得
-  get(condition: Object, withUser: Boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
+  get(condition: Object, withUser: boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('condition', JSON.stringify(condition))
-      .set('withUser', withUser ? 'true' : null);
+    let params = new HttpParams()
+      .set('condition', JSON.stringify(condition));
+
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
 
     return this.http.get<Array<ArticleModel | ArticleWithUserModel>>(URL, { headers, params });
   }

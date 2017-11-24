@@ -26,10 +26,14 @@ export class ReplyService {
     const URL = this.baseUrl;
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('condition', JSON.stringify(condition))
-      .set('withUser', withUser ? 'true' : null)
-      .set('withArticle', withArticle ? 'true' : null);
+    let params = new HttpParams()
+      .set('condition', JSON.stringify(condition));
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
+    if (withArticle) {
+      params = params.set('withArticle', 'true');
+    }
 
     return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
   }
@@ -39,9 +43,13 @@ export class ReplyService {
     const URL = `${this.baseUrl}/${_id}`;
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('withUser', withUser ? 'true' : null)
-      .set('withArticle', withArticle ? 'true' : null);
+    let params = new HttpParams();
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
+    if (withArticle) {
+      params = params.set('withArticle', 'true');
+    }
 
     return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
   }
@@ -51,9 +59,13 @@ export class ReplyService {
     const URL = this.baseUrl;
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('withUser', withUser ? 'true' : null)
-      .set('withArticle', withArticle ? 'true' : null);
+    let params = new HttpParams();
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
+    if (withArticle) {
+      params = params.set('withArticle', 'true');
+    }
 
     return this.http.post<ReplyModel | ReplyWithUserModel>(URL, reply,  { headers, params });
   }
@@ -63,9 +75,13 @@ export class ReplyService {
     const URL = `${this.baseUrl}/${reply._id}`;
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('withUser', withUser ? 'true' : null)
-      .set('withArticle', withArticle ? 'true' : null);
+    let params = new HttpParams();
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
+    if (withArticle) {
+      params = params.set('withArticle', 'true');
+    }
 
     return this.http.put<ReplyModel | ReplyWithUserModel>(URL, reply,  { headers, params });
   }
@@ -75,9 +91,13 @@ export class ReplyService {
     const URL = `${this.baseUrl}/${replyId}`;
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
-    const params = new HttpParams()
-     .set('withUser', withUser ? 'true' : null)
-     .set('withArticle', withArticle ? 'true' : null);
+    let params = new HttpParams();
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
+    if (withArticle) {
+      params = params.set('withArticle', 'true');
+    }
 
     return this.http.delete<ReplyModel | ReplyWithUserModel>(URL, { headers, params });
   }

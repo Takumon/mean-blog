@@ -26,10 +26,15 @@ export class CommentService {
     const URL = this.baseCommentUrl;
 
     const headers = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('condition', JSON.stringify(condition))
-      .set('withUser', withUser ? 'true' : null)
-      .set('withArticle', withArticle + '');
+    let params = new HttpParams()
+      .set('condition', JSON.stringify(condition));
+
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
+    if (withArticle) {
+      params = params.set('withArticle', 'true');
+    }
 
     return this.http.get<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>>(URL, { headers, params });
   }
@@ -58,12 +63,14 @@ export class CommentService {
   }
 
 
-  getOfArticle(_idOfArticle: string, withUser: Boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel>> {
+  getOfArticle(_idOfArticle: string, withUser: boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel>> {
     const URL = `${this.baseCommentUrl}/ofArticle/${_idOfArticle}`;
 
     const headers = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('withUser', withUser ? 'true' : null);
+    let params = new HttpParams();
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
 
     return this.http.get<Array<CommentModel> | Array<CommentWithUserModel>>(URL, { headers, params });
   }
