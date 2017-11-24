@@ -36,6 +36,7 @@ import { ArticleService } from '../shared/article.service';
 import { DraftModel } from '../shared/draft.model';
 import { DraftService } from '../shared/draft.service';
 import { EditMode } from './edit-mode.enum';
+import { TargetLocator } from 'selenium-webdriver';
 
 const IS_RESUME = 'resume';
 
@@ -508,7 +509,7 @@ export class ArticleEditComponent implements OnInit {
     const previouseCaretPosStart = this.caretPosStart;
     const previouseCaretPosEnd = this.caretPosEnd;
 
-    this.insertText(text, this.searchLineStart());
+    this.insertText(text, this.searchCurrentLineStartIndex());
     this.moveCaretPosition(previouseCaretPosStart + text.length, previouseCaretPosEnd + text.length);
   }
 
@@ -517,7 +518,7 @@ export class ArticleEditComponent implements OnInit {
    *
    * @return 現在キャレットがある行冒頭のポジション
    */
-  searchLineStart(): number {
+  searchCurrentLineStartIndex(): number {
     const value = this.body.value;
     // 遡って行末の改行を探す
 
@@ -576,6 +577,21 @@ export class ArticleEditComponent implements OnInit {
     }
   }
 
+  /**
+   * 現在キャレットがある行がリスト形式か判断する
+   *
+   * @param lineStartIndex 指定行の始まりのインデックス
+   */
+  isListLine(): boolean {
+    const lineStartIndex = this.searchCurrentLineStartIndex();
+
+    const temp = this.body.value.substring(lineStartIndex);
+    const taregetLine = temp.substring(0, temp.indexOf('\n') === -1 ? temp.length : temp.indexOf('\n'));
+    const listLine = /^\s*\*\s/;
+
+    return listLine.test(taregetLine);
+  }
+
   insertIndentifTab($event) {
     const TAB = '    ';
     if ($event.keyCode !== 9) {
@@ -586,12 +602,15 @@ export class ArticleEditComponent implements OnInit {
 
     // インデントを追加
     if (!$event.shiftKey) {
-      this.insertContent(TAB, '');
-      return;
+      if (this.isListLine()) {
+        return this.insertContentToCurrentLineStart(TAB);
+      } else {
+        return this.insertContentToCaretPosition(TAB, '');
+      }
     }
 
     // インデントを削除
-    if (this.caretPosStart > 4
+    if (this.caretPosStart >= 4
       && TAB === this.body.value.substring(this.caretPosStart - 4, this.caretPosStart)) {
 
       // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
@@ -613,18 +632,35 @@ export class ArticleEditComponent implements OnInit {
     return this.caretPosStart !== this.caretPosEnd;
   }
 
+
   /**
    * 指定したpreffixをキャレット開始位置に、指定したsuffixをキャレット終了位置に挿入する
    * @param preffix
    * @param suffix
    */
-  insertContent(preffix: string, suffix: string) {
+  insertContentToCaretPosition(preffix: string, suffix: string) {
     // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
     const previouseCaretPosStart = this.caretPosStart;
     const previouseCaretPosEnd = this.caretPosEnd;
 
     this.insertPreffixAndSuffix(preffix, previouseCaretPosStart, suffix, previouseCaretPosEnd);
     this.moveCaretPosition(previouseCaretPosStart + preffix.length, previouseCaretPosEnd + preffix.length);
+  }
+
+  /**
+   * 指定したtextをキャレットがある行冒頭に挿入する
+   *
+   * @param value
+   */
+  insertContentToCurrentLineStart(value: string) {
+    // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+    const previouseCaretPosStart = this.caretPosStart;
+    const previouseCaretPosEnd = this.caretPosEnd;
+
+    const lineStartIndex = this.searchCurrentLineStartIndex();
+
+    this.insertPreffixAndSuffix(value, lineStartIndex, '', lineStartIndex);
+    this.moveCaretPosition(previouseCaretPosStart + value.length, previouseCaretPosEnd + value.length);
   }
 
   insertCodeWrapper() {
@@ -634,15 +670,15 @@ export class ArticleEditComponent implements OnInit {
 
     // 範囲選択時はそれを囲む
     if (this.isSelectRange()) {
-      this.insertContent('`', '`');
+      this.insertContentToCaretPosition('`', '`');
       this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
-    } else if (this.caretPosStart === this.searchLineStart()) {
+    } else if (this.caretPosStart === this.searchCurrentLineStartIndex()) {
       // 行冒頭の場合
       this.insertText('```\n\n```\n', this.caretPosStart);
       this.moveCaretPosition(previouseCaretPosStart + 4, previouseCaretPosEnd + 4);
     } else {
       // それ以外の場合
-      this.insertContent('`', '`');
+      this.insertContentToCaretPosition('`', '`');
       this.moveCaretPosition(previouseCaretPosStart + 1, previouseCaretPosEnd + 1);
     }
   }
