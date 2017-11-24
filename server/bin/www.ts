@@ -61,7 +61,8 @@ function onError(error): void {
       process.exit(1);
       break;
     default:
-      throw error;
+  　  console.error('error:' + error);
+　　  throw error;
   }
 }
 
