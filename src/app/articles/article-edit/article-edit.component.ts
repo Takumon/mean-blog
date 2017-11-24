@@ -526,24 +526,8 @@ export class ArticleEditComponent implements OnInit {
       return 0;
     }
 
-    const last = value[this.caretPosStart];
-    if (!last) {
-      // キャレトが一番最後にある場合に一個前が改行の場合は、キャレットの位置が行冒頭とみなす
-      if (value[this.caretPosStart - 1] === '\n') {
-        return this.caretPosStart;
-      }
-    }
-
-    for (let i = this.caretPosStart; i > 0; i--) {
+    for (let i = this.caretPosStart - 1; i > 0; i--) {
       if (value[i] === '\n') {
-        if (i > 1 && value[i - 1] === '\n') {
-          // ひとつ前も改行であれば行冒頭とみなす
-          return i;
-        } else if ( i === this.caretPosStart) {
-          // 行末とみなす
-          continue;
-        }
-        // そうでない場合は一つ後が行冒頭
         return i + 1;
       }
     }
@@ -586,11 +570,9 @@ export class ArticleEditComponent implements OnInit {
    * ＠param textareaElement テキストエリアのDOM要素
    */
   saveCaretPos(textareaElement) {
-    if (textareaElement.selectionStart || textareaElement.selectionStart === '0') {
+    if (textareaElement.selectionStart || textareaElement.selectionStart === 0) {
       this.caretPosStart = textareaElement.selectionStart;
       this.caretPosEnd = textareaElement.selectionEnd;
-
-      console.log(this.caretPosStart + ' - ' + this.caretPosEnd);
     }
   }
 
