@@ -96,8 +96,7 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url }});
   }
 
-  registeruser() {
+  registerUser() {
     this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url,  }});
   }
-
 }

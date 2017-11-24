@@ -4,7 +4,7 @@ import { Router, Response } from 'express';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
 import { validateHelper as v } from '../helpers/validate-helper';
-import { SearchCondition } from '../models/search-condition';
+import { SearchCondition } from '../models/search-condition.model';
 
 
 // TODO 日付期間はenum化

@@ -17,7 +17,7 @@ export class SearchConditionService {
     private jwtService: JwtService,
   ) { }
 
-  getAll(condition, withUser: Boolean = false): Observable<Array<SearchConditionModel>> {
+  getAll(condition, withUser: boolean = false): Observable<Array<SearchConditionModel>> {
     const modifiedCondition = {};
     if (condition) {
       if (condition.userId) {
@@ -30,19 +30,23 @@ export class SearchConditionService {
     const URL = this.baseUrl;
 
     const headers = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('condition', JSON.stringify(modifiedCondition))
-      .set('withUser', withUser + '');
+    let params = new HttpParams()
+      .set('condition', JSON.stringify(modifiedCondition));
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
 
     return this.http.get<Array<SearchConditionModel>>(URL, { headers, params });
   }
 
-  getById(_id: string, withUser: Boolean = false): Observable<SearchConditionModel> {
+  getById(_id: string, withUser: boolean = false): Observable<SearchConditionModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
     const headers = this.jwtService.getHeaders();
-    const params = new HttpParams()
-      .set('withUser', withUser + '');
+    let params = new HttpParams();
+    if (withUser) {
+      params = params.set('withUser', 'true');
+    }
 
     return this.http.get<SearchConditionModel>(URL, { headers, params });
   }
@@ -50,7 +54,7 @@ export class SearchConditionService {
   create(user: SearchConditionModel): Observable<any> {
     const URL = this.baseUrl;
 
-    return this.http.post(URL, user, this.jwtService.getRequestOptions())
+    return this.http.post(URL, user, this.jwtService.getRequestOptions());
   }
 
   update(searchCondition: SearchConditionModel) {

@@ -3,17 +3,17 @@ import * as http from 'http';
 import { Router, Response } from 'express';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
-
 import { validateHelper as v } from '../helpers/validate-helper';
-import { Article } from '../models/article';
-import { Comment } from '../models/comment';
-import { User } from '../models/user';
+import { Article } from '../models/article.model';
+import { Comment } from '../models/comment.model';
+import { User } from '../models/user.model';
 
 const MODEL_NAME = '記事';
 const router: Router = Router();
 
 // 複数件検索
 router.get('/', (req, res, next) => {
+  console.log('/api/articlesにきました');
   getCondition(req, function(error: any, condition: ArticleCondition) {
     if (error) {
       return res.status(500).json({
@@ -22,6 +22,7 @@ router.get('/', (req, res, next) => {
       });
     }
 
+    console.log('Article/findします');
     Article
     .find(condition)
     .populate('author', 'userId userName deleted')
@@ -51,6 +52,10 @@ router.get('/', (req, res, next) => {
       }],
     })
     .exec((err, doc) => {
+      console.log('Article/findのexecにきました');
+      console.log('err = ' + err);
+      console.log('doc = ' + doc);
+
       if (err) {
         return res.status(500).json({
           title: v.MESSAGE_KEY.default,
@@ -58,7 +63,6 @@ router.get('/', (req, res, next) => {
         });
       }
 
-      // TODO ユーザアイコンはサイズが大きいので別にする
       // 削除ユーザのコメントを削除
       doc.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
 

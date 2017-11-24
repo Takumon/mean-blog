@@ -1,9 +1,33 @@
 import * as mongoose from 'mongoose';
 
-import { MONGO_URL } from './config';
+import * as config from './config';
 
-// 接続する MongoDB の設定
-const connection = mongoose.connect(process.env.MONGO_URL || MONGO_URL, {
+function createConnection (dbURL, options) {
+  const db = mongoose.connect(dbURL, options);
+
+  db.on('error', function (err) {
+      // See: https://github.com/Automattic/mongoose/issues/5169
+      if (err.message && err.message.match(/failed to connect to server .* on first connect/)) {
+          console.log(new Date(), String(err));
+
+          setTimeout(function () {
+              console.log('Retrying first connect...');
+              db.openUri(dbURL).catch(() => {});
+          }, config.MONGO_RETRY_INTERVAL * 1000);
+      } else {
+          // Some other error occurred.  Log it.
+          console.error(new Date(), String(err));
+      }
+  });
+
+  db.once('open', function () {
+      console.log('Connection to db established.');
+  });
+
+  return mongoose.connection;
+}
+
+const connection = createConnection(config.MONGO_URL, {
   useMongoClient: true,
 });
 

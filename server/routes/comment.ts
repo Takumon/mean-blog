@@ -4,8 +4,8 @@ import * as mongoose from 'mongoose';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
 import { validateHelper as v } from '../helpers/validate-helper';
-import { Comment } from '../models/comment';
-import { User } from '../models/user';
+import { Comment } from '../models/comment.model';
+import { User } from '../models/user.model';
 
 
 const MODEL_NAME = 'コメント';

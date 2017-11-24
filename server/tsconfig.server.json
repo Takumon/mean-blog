@@ -3,7 +3,7 @@
   "compilerOptions": {
     "preserveConstEnums": true,
     "outDir": "../dist/server",
-    "mapRoot": "../dist/server",
-    "module": "commonjs"
+    "module": "commonjs",
+    "sourceMap": false
   }
 }

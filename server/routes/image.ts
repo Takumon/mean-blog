@@ -4,10 +4,8 @@ import { Router, Response } from 'express';
 import * as multer from 'multer';
 import { check, oneOf, body, param, validationResult } from 'express-validator/check';
 
-
-
-import { User } from '../models/user';
-import { Image, ImageType } from '../models/image';
+import { User } from '../models/user.model';
+import { Image, ImageType } from '../models/image.model';
 import { validateHelper as v } from '../helpers/validate-helper';
 
 

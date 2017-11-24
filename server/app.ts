@@ -2,13 +2,13 @@ import * as express from 'express';
 import * as path from 'path';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
-import * as jwt from 'jsonWebToken';
+import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
 import * as morgan from 'morgan';
 
-import { MONGO_URL, SECRET } from './config';
+import * as config from './config';
 import { authenticateRouter } from './routes/authenticate';
-import { authenticate } from './middleware/authenticate';
+import { tokenValidator } from './middleware/token-validator';
 import { articleRouter } from './routes/article';
 import { draftRouter } from './routes/draft';
 import { commentRouter } from './routes/comment';
@@ -18,9 +18,12 @@ import { imageRouter } from './routes/image';
 import { searchConditionRouter } from './routes/search-condition';
 import { ROOT_USER_ID, ROOT_USER_PASSWORD } from './config';
 import { PasswordManager } from './helpers/password-manager';
-import { Image, ImageType } from './models/image';
+import { Image, ImageType } from './models/image.model';
+import { User } from './models/user.model';
 
-import { User } from './models/user';
+
+console.log('設定値の値');
+console.log(config);
 
 class App {
   public express: express.Application;
@@ -56,9 +59,9 @@ class App {
     this.express.use('/api/images', imageRouter);
 
     // データ参照以外の操作は認証が必要なAPI
-    this.express.post(/^\/api\/.*$/, authenticate.verifyToken);
-    this.express.put(/^\/api\/.*$/, authenticate.verifyToken);
-    this.express.delete(/^\/api\/.*$/, authenticate.verifyToken);
+    this.express.post(/^\/api\/.*$/, tokenValidator.verify);
+    this.express.put(/^\/api\/.*$/, tokenValidator.verify);
+    this.express.delete(/^\/api\/.*$/, tokenValidator.verify);
 
 
     this.express.use('/api/users', userRouter);
@@ -90,8 +93,8 @@ class App {
         }
 
         const rootUser = new User();
-        rootUser.userId = ROOT_USER_ID;
-        rootUser.password = PasswordManager.crypt(ROOT_USER_PASSWORD);
+        rootUser.userId = config.ROOT_USER_ID;
+        rootUser.password = PasswordManager.crypt(config.ROOT_USER_PASSWORD);
         rootUser.isAdmin = true;
         rootUser.save(err2 => {
           if (err2) {

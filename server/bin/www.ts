@@ -1,15 +1,13 @@
 import * as http from 'http';
-import { SERVER_PORT } from '../config';
+import * as config from '../config';
 import app from '../app';
-
 
 
 /**
  * ポートの設定.
  */
-const port = normalizePort(process.env.PORT || SERVER_PORT);
+const port = normalizePort(config.SERVER_PORT);
 app.set('port', port);
-
 
 /**
  * HTTPサーバ生成.
@@ -23,6 +21,7 @@ server.on('listening', onListening);
  * ポートを正規化.
  */
 function normalizePort(val): number|string|boolean  {
+
 
   const normalizedPort: number = (typeof val === 'string')
     ? parseInt(val, 10)
@@ -62,7 +61,8 @@ function onError(error): void {
       process.exit(1);
       break;
     default:
-      throw error;
+  　  console.error('error:' + error);
+　　  throw error;
   }
 }
 
@@ -74,4 +74,5 @@ function onListening(): void {
   const bind = (typeof addr === 'string')
     ? `pipe ${addr}`
     : `port ${addr.port}`;
+  console.log('bind = ' + bind);
 }

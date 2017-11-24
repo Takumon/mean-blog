@@ -463,7 +463,7 @@ export class ArticleEditComponent implements OnInit {
     this.imageService.create(fileList[0])
     .subscribe((res: any) => {
       this.snackBar.open('画像をアップロードしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      const image = JSON.parse(res._body).obj;
+      const image = res.obj;
       this.imageForDisplayList.push({
         _id: image._id,
         fileName: image.fileName,

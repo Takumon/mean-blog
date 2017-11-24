@@ -1,10 +1,10 @@
 
 import * as jwt from 'jsonwebtoken';
-import { SECRET, TOKEN_EFFECTIVE_SECOND } from '../config';
+import * as config from '../config';
 
-const authenticate = {
+const tokenValidator = {
 
-  verifyToken: ( (req, res, next) => {
+  verify: ( (req, res, next) => {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (!token) {
@@ -14,7 +14,7 @@ const authenticate = {
       return;
     }
 
-    jwt.verify(token, SECRET, (err, decoded) => {
+    jwt.verify(token, config.SECRET, (err, decoded) => {
       if (err) {
         if (err.message === 'jwt expired') {
           return res.status(403).json({ errors: [{
@@ -34,4 +34,4 @@ const authenticate = {
 };
 
 
-export { authenticate };
+export { tokenValidator };

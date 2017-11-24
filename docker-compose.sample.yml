@@ -1,0 +1,26 @@
+version: "3.3"
+services:
+  web:
+    image: takumon/mean-blog_auto
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    environment:
+      MONGO_URL: mongodb://mongo:27017/test
+  mongo:
+    image: mongo:3.5.12
+    ports:
+      - 27017:27017
+    volumes:
+      - ./db:/data/db
+  db-viewer:
+    image: mongo-express:latest
+    ports:
+     - 8082:8081
+    depends_on:
+      - mongo
+    links:
+     - mongo

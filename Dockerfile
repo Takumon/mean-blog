@@ -1,14 +1,14 @@
-FROM node:8.1.4-alpine
+FROM node:8.9.1-alpine
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+# アプリをビルド
+RUN mkdir -p /use/src/tmp
+WORKDIR /usr/src/temp
+COPY ./ /usr/src/temp/
 
-# ライブラリをインストール
-COPY package.json /usr/src/app/
-RUN npm install --only=production
-
-# アプリ資産をコピー
-COPY ./dist/server /usr/src/app
+RUN npm install \
+     && npm run build
 
 EXPOSE 3000
-CMD [ "node", "./bin/www.js" ]
+CMD [ "npm", "run", "run:server" ]
+
+
