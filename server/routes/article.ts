@@ -7,14 +7,14 @@ import { validateHelper as v } from '../helpers/validate-helper';
 import { Article } from '../models/article.model';
 import { Comment } from '../models/comment.model';
 import { User } from '../models/user.model';
+import * as config from '../config';
 
 const MODEL_NAME = '記事';
 const router: Router = Router();
 
 // 複数件検索
 router.get('/', (req, res, next) => {
-  console.log('/api/articlesにきました');
-  getCondition(req, function(error: any, condition: ArticleCondition) {
+  extractCondition(req, function(error: any, condition: ArticleCondition) {
     if (error) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -22,7 +22,13 @@ router.get('/', (req, res, next) => {
       });
     }
 
-    console.log('Article/findします');
+    const pagingOptions = extractPagingOptions(req);
+
+    console.log('skip = ' + pagingOptions.skip);
+    console.log('limit = ' + pagingOptions.limit);
+    console.log('sort = ' + pagingOptions.sort);
+
+
     Article
     .find(condition)
     .populate('author', 'userId userName deleted')
@@ -51,10 +57,10 @@ router.get('/', (req, res, next) => {
         }
       }],
     })
+    .sort(pagingOptions.sort) // 必ずソートしてから
+    .skip(pagingOptions.skip) // ページングする
+    .limit(pagingOptions.limit)
     .exec((err, doc) => {
-      console.log('Article/findのexecにきました');
-      console.log('err = ' + err);
-      console.log('doc = ' + doc);
 
       if (err) {
         return res.status(500).json({
@@ -94,8 +100,13 @@ interface ArticleCondition {
   deleted: any;
 }
 
-// 検索条件にauthorUserIdの指定がある場合はユーザ情報を取得して_idに変換する
-function getCondition(req: any, cb: (error: any, condition: ArticleCondition) => void): void {
+/**
+ * 指定されたリクエストから検索条件を組み立てる
+ *
+ * @param req リクエストオブジェクト
+ * @param cb コールバック関数
+ */
+function extractCondition(req: any, cb: (error: any, condition: ArticleCondition) => void): void {
   const query = req.query;
   const source = query.condition ?
     JSON.parse(query.condition) :
@@ -181,6 +192,24 @@ function getCondition(req: any, cb: (error: any, condition: ArticleCondition) =>
   return cb && cb(null, condition);
 }
 
+/**
+ * 指定されたリクエストからページングオプションを組み立てる<br>
+ * 指定がない場合は全てデフォルト値が設定される
+ */
+function extractPagingOptions(req: any): {skip: number, limit: number, sort: Object} {
+  const pagingOptions: any = {};
+
+  const source = req.query.condition ?
+    JSON.parse(req.query.condition) :
+    {};
+
+  pagingOptions.skip = source.skip || 0;
+  pagingOptions.limit = source.limit || config.LIMIT_PER_PAGE;
+  pagingOptions.sort = source.sort || { created: -1};
+
+  return pagingOptions;
+}
+
 
 // 一件検索
 router.get('/:_id', (req, res, next) => {
@@ -226,6 +255,7 @@ router.get('/:_id', (req, res, next) => {
     return res.status(200).json(doc[0]);
   }
 });
+
 
 
 // 登録

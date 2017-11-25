@@ -27,6 +27,12 @@ export class ArticleService {
   get(condition: Object, withUser: boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
+
+    // TODO 仮検索条件
+    condition['skip'] = 2;
+    condition['limit'] = 2;
+    condition['sort'] = { 'updated': -1};
+
     let params = new HttpParams()
       .set('condition', JSON.stringify(condition));
 
