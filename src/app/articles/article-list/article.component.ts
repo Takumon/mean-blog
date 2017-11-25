@@ -92,7 +92,7 @@ export class ArticleComponent {
         this.item.vote = vote;
       });
     }, this.onValidationError.bind(this));
-}
+  }
 
 
   deleteVote() {
