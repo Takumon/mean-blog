@@ -610,6 +610,25 @@ export class ArticleEditComponent implements OnInit {
     }
 
     // インデントを削除
+    if (this.isListLine()) {
+      // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
+      const previouseCaretPosStart = this.caretPosStart;
+      const previouseCaretPosEnd = this.caretPosEnd;
+      const lineStartIndex = this.searchCurrentLineStartIndex();
+
+      const first4Charactor = this.body.value.substring(lineStartIndex, lineStartIndex + 4);
+      const indent  = first4Charactor.match(/^\s*/)[0];
+      const indentRemoved = first4Charactor.replace(/^\s*/, '');
+
+      const removed = this.body.value.substring(0, lineStartIndex)
+                    + indentRemoved
+                    + this.body.value.substring(lineStartIndex + 4);
+
+      this.body.setValue(removed);
+      this.moveCaretPosition(previouseCaretPosStart - indent.length, previouseCaretPosEnd - indent.length);
+      return;
+    }
+
     if (this.caretPosStart >= 4
       && TAB === this.body.value.substring(this.caretPosStart - 4, this.caretPosStart)) {
 
