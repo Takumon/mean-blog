@@ -7,14 +7,14 @@ import { validateHelper as v } from '../helpers/validate-helper';
 import { Article } from '../models/article.model';
 import { Comment } from '../models/comment.model';
 import { User } from '../models/user.model';
+import * as config from '../config';
 
 const MODEL_NAME = '記事';
 const router: Router = Router();
 
 // 複数件検索
 router.get('/', (req, res, next) => {
-  console.log('/api/articlesにきました');
-  getCondition(req, function(error: any, condition: ArticleCondition) {
+  extractCondition(req, function(error: any, condition: ArticleCondition) {
     if (error) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -22,7 +22,8 @@ router.get('/', (req, res, next) => {
       });
     }
 
-    console.log('Article/findします');
+    const pagingOptions = extractPagingOptions(req);
+
     Article
     .find(condition)
     .populate('author', 'userId userName deleted')
@@ -51,10 +52,8 @@ router.get('/', (req, res, next) => {
         }
       }],
     })
-    .exec((err, doc) => {
-      console.log('Article/findのexecにきました');
-      console.log('err = ' + err);
-      console.log('doc = ' + doc);
+    .sort(pagingOptions.sort)
+    .exec((err, allArticles) => {
 
       if (err) {
         return res.status(500).json({
@@ -63,28 +62,41 @@ router.get('/', (req, res, next) => {
         });
       }
 
-      // 削除ユーザのコメントを削除
-      doc.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
+      removeDeletedUserCommentAndVote(allArticles);
 
-        // 削除ユーザのリプライを削除
-        const temp = a.comments.filter(c => !c.user.deleted);
+      const count = allArticles.length;
+      const articles = allArticles.slice(pagingOptions.skip, pagingOptions.skip + pagingOptions.limit);
 
-        temp.filter(c => c.replies && c.replies.length > 0).forEach( (c, indexOfComments , commentsList) => {
-          commentsList[indexOfComments].replies = c.replies.filter(r => !r.user.deleted);
-        });
-
-        articlesList[indexOfArticles].comments = temp;
-      });
-
-      // 削除ユーザのいいねを削除
-      doc.filter(a => a.vote && a.vote.length > 0).forEach((a, i , articlesList) => {
-        articlesList[i].vote = a.vote.filter(voter => !voter.deleted);
-      });
-
-      return res.status(200).json(doc);
+      return res.status(200).json({count, articles});
     });
   });
 });
+
+
+/**
+ * 指定した記事一覧から削除済みユーザのコメントといいねを除去する
+ *
+ * @param articles 記事一覧
+ */
+function removeDeletedUserCommentAndVote(articles: any): void {
+  // 削除ユーザのコメントを削除
+  articles.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
+
+    // 削除ユーザのリプライを削除
+    const temp = a.comments.filter(c => !c.user.deleted);
+
+    temp.filter(c => c.replies && c.replies.length > 0).forEach( (c, indexOfComments , commentsList) => {
+      commentsList[indexOfComments].replies = c.replies.filter(r => !r.user.deleted);
+    });
+
+    articlesList[indexOfArticles].comments = temp;
+  });
+
+  // 削除ユーザのいいねを削除
+  articles.filter(a => a.vote && a.vote.length > 0).forEach((a, i , articlesList) => {
+    articlesList[i].vote = a.vote.filter(voter => !voter.deleted);
+  });
+}
 
 
 interface ArticleCondition {
@@ -94,8 +106,13 @@ interface ArticleCondition {
   deleted: any;
 }
 
-// 検索条件にauthorUserIdの指定がある場合はユーザ情報を取得して_idに変換する
-function getCondition(req: any, cb: (error: any, condition: ArticleCondition) => void): void {
+/**
+ * 指定されたリクエストから検索条件を組み立てる
+ *
+ * @param req リクエストオブジェクト
+ * @param cb コールバック関数
+ */
+function extractCondition(req: any, cb: (error: any, condition: ArticleCondition) => void): void {
   const query = req.query;
   const source = query.condition ?
     JSON.parse(query.condition) :
@@ -150,18 +167,16 @@ function getCondition(req: any, cb: (error: any, condition: ArticleCondition) =>
     }
   }
 
-  // 記事作成日の下限で絞り込み
-  if (source.dateFrom) {
-    condition.created = {
-      $gte: new Date(source.dateFrom)
-    };
-  }
+  // 記事作成日で絞り込み
+  if (source.dateFrom || source.dateTo) {
+    condition.created = {};
+    if (source.dateFrom) {
+      condition.created['$gte'] =  new Date(source.dateFrom);
+    }
 
-  // 記事作成日の上限で絞り込み
-  if (source.dateTo) {
-    condition.created = {
-        $lte: new Date(source.dateTo)
-    };
+    if (source.dateTo) {
+      condition.created['$lte'] = new Date(source.dateTo);
+    }
   }
 
   // 記事にいいねしたユーザの_idで絞り込み
@@ -179,6 +194,24 @@ function getCondition(req: any, cb: (error: any, condition: ArticleCondition) =>
   }
 
   return cb && cb(null, condition);
+}
+
+/**
+ * 指定されたリクエストからページングオプションを組み立てる<br>
+ * 指定がない場合は全てデフォルト値が設定される
+ */
+function extractPagingOptions(req: any): {skip: number, limit: number, sort: Object} {
+  const pagingOptions: any = {};
+
+  const source = req.query.condition ?
+    JSON.parse(req.query.condition) :
+    {};
+
+  pagingOptions.skip = source.skip || 0;
+  pagingOptions.limit = source.limit || config.LIMIT_PER_PAGE;
+  pagingOptions.sort = source.sort || { created: -1};
+
+  return pagingOptions;
 }
 
 
@@ -226,6 +259,7 @@ router.get('/:_id', (req, res, next) => {
     return res.status(200).json(doc[0]);
   }
 });
+
 
 
 // 登録

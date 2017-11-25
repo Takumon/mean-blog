@@ -44,67 +44,11 @@ const SortFactors = {
   CREATE_DATE: {
     label: '登録日',
     value: 'created',
-    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
-      const reverse = -1;
-      const nomal = 1;
-
-      return (a, b) => {
-        const a_factor = a['created'];
-        const b_factor =  b['created'];
-
-        if (a_factor > b_factor) {
-          return isAsc ? nomal : reverse;
-        } else if ( a_factor < b_factor) {
-          return isAsc ? reverse : nomal;
-        }
-
-        return 0;
-      };
-    },
-    direction: Direction.DESC,
+    direction: Direction.NONE,
   },
   UPDATE_DATE: {
     label: '更新日',
     value: 'updated',
-    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
-      const reverse = -1;
-      const nomal = 1;
-
-      return (a, b) => {
-        const a_factor = a['updated'];
-        const b_factor =  b['updated'];
-
-        if (a_factor > b_factor) {
-          return isAsc ? nomal : reverse;
-        } else if ( a_factor < b_factor) {
-          return isAsc ? reverse : nomal;
-        }
-
-        return 0;
-      };
-    },
-    direction: Direction.NONE
-  },
-  USER_ID: {
-    label: 'ユーザID',
-    value: 'author',
-    sortFunc: function(isAsc: boolean): (a: ArticleWithUserModel, b: ArticleWithUserModel) => number {
-      const reverse = -1;
-      const nomal = 1;
-
-      return (a, b) => {
-        const a_factor = a['author']['userId'];
-        const b_factor =  b['author']['userId'];
-
-        if (a_factor > b_factor) {
-          return isAsc ? nomal : reverse;
-        } else if ( a_factor < b_factor) {
-          return isAsc ? reverse : nomal;
-        }
-
-        return 0;
-      };
-    },
     direction: Direction.NONE
   },
 };
@@ -117,11 +61,9 @@ const SortFactors = {
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleListComponent implements OnInit, OnDestroy {
-  // TODO 定数科
   public DEFAULT_PER_PAGE = 20;
   public DEFAILT_PER_PAGES = [20, 50, 100];
-  public seaerchConditions: any;
-  public articles: Array<ArticleWithUserModel>;
+  public favoriteSeaerchConditionCount: number;
   public articlesPerPage: Subject<Array<ArticleWithUserModel>> = new Subject<Array<ArticleWithUserModel>>();
   public showPrograssBar: Boolean = false;
   public direction = Direction;
@@ -131,6 +73,14 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   // ページング用プロパティ
   public pageSize = this.DEFAULT_PER_PAGE;
   public pageIndex = 0;
+
+   /** 検索条件（ページング用に保持しておく） */
+  private searchCondition: any;
+
+  /** 検索結果 */
+  public articles: Array<ArticleWithUserModel>;
+  /** 検索結果件数 */
+  public count: number;
 
   private onDestroy = new Subject();
   @ViewChild(SearchConditionComponent)
@@ -149,7 +99,6 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // TODO 子コンポーネントの検索結果取得を待ってから記事検索する
     this.route.data
     .takeUntil(this.onDestroy)
     .subscribe((data: any) => {
@@ -180,37 +129,65 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     return item._id;
   }
 
+  /**
+   * 記事一覧を取得する
+   */
   getArticles(): void {
+    this.initPaging();
+    this.initSort();
+
+    this.constructSearchCondition(searchCondition => {
+      this.searchCondition = searchCondition;
+      this.refreshArticlesPerPage();
+    });
+  }
+
+  /**
+   * ページング初期化
+   */
+  initPaging() {
+    this.pageIndex = 0;
+  }
+  /**
+   * ソート条件初期化
+   */
+  initSort() {
+    for (const key of this.sortFactorKeys) {
+      const factor = this.sortFactors[key];
+      factor.direction = factor === SortFactors.CREATE_DATE
+        ? Direction.DESC
+        : Direction.NONE;
+    }
+  }
+
+  /**
+   * URLやmodeに応じた検索条件を組み立てる
+   *
+   * @param cb 検索条件組み立て後に呼ぶコールバック関数
+   */
+  constructSearchCondition(cb) {
     this.showPrograssBar = true;
     const withUser = true;
     switch (this.mode) {
       case Mode.ALL:
-        this.articleService
-        .get({}, withUser)
-        .subscribe(this.onFinishGetArticles.bind(this));
+        cb({});
         break;
       case Mode.FAVORITE:
         // 検索条件がない時Mode.ALLと同じ
         if (!this.searchConditionComponent) {
-          this.articleService
-          .get({}, withUser)
-          .subscribe(this.onFinishGetArticles.bind(this));
+          cb({});
           break;
         }
 
-        this.seaerchConditions = this.searchConditionComponent.createCondition();
-        this.articleService
-        .get( this.seaerchConditions, withUser)
-        .subscribe(this.onFinishGetArticles.bind(this));
+        this.favoriteSeaerchConditionCount = this.searchConditionComponent.seaerchConditions.length;
+        cb(this.searchConditionComponent.createCondition());
         break;
       case Mode.USER:
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => {
           const userId = params['_userId'];
-          this.articleService
-          .get({author: { userId: userId }}, withUser)
-          .subscribe(this.onFinishGetArticles.bind(this));
+          cb({author: { userId: userId }});
         });
         break;
       case Mode.VOTER:
@@ -221,21 +198,11 @@ export class ArticleListComponent implements OnInit, OnDestroy {
           this.userService
           .getById(userId)
           .subscribe(user => {
-            this.articleService
-            .get({ voter: user._id.toString()}, withUser)
-            .subscribe(this.onFinishGetArticles.bind(this));
+            cb({ voter: user._id.toString()});
           });
         });
         break;
     }
-  }
-
-  onFinishGetArticles(articles: Array<ArticleWithUserModel>) {
-    this.articles = articles;
-    this.showPrograssBar = false;
-    setTimeout(function() {
-      this.refreshArticlesPerPage(0, this.DEFAULT_PER_PAGE, articles.length);
-    }.bind(this), 0);
   }
 
   isFavoriteMode(): boolean {
@@ -249,6 +216,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   sortAndRefresh(selectedKey): void {
+    this.initPaging();
     for (const key of this.sortFactorKeys) {
       const factor = this.sortFactors[key];
 
@@ -282,17 +250,28 @@ export class ArticleListComponent implements OnInit, OnDestroy {
       }
     }
 
-    const asc: boolean = selectedSortFactor.direction === Direction.ASC;
-    const sortSetting = selectedSortFactor.sortFunc(asc);
-    const sroted = this.articles.sort(sortSetting);
+
+    const pageingOptions = {};
+    pageingOptions['sort'] = {};
+    pageingOptions['sort'][selectedSortFactor.value] = selectedSortFactor.direction === Direction.ASC ? 1 : -1;
+
+    const range = (this.paginatorService as PaginatorService).calcRange(this.pageIndex, this.pageSize, this.count);
+    pageingOptions['skip'] = range.startIndex;
+    pageingOptions['limit'] = range.endIndex - range.startIndex;
 
 
-    const range = (this.paginatorService as PaginatorService).calcRange(this.pageIndex, this.pageSize, this.articles.length);
-    const paged = sroted.slice(range.startIndex, range.endIndex);
+    const withUser = true;
+    this.articleService
+    .get(this.searchCondition, pageingOptions , withUser)
+    .subscribe(({count, articles}) => {
+      this.count = count;
+      this.articles = articles as Array<ArticleWithUserModel>;
+      this.showPrograssBar = false;
 
-    this.articlesPerPage.next(paged);
-    setTimeout(function() {
-      this.scrollService.scrollToTop();
-    }.bind(this), 0);
+      setTimeout(function() {
+        this.scrollService.scrollToTop();
+      }.bind(this), 0);
+    });
+
   }
 }
