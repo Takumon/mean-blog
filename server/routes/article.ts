@@ -58,9 +58,7 @@ router.get('/', (req, res, next) => {
       }],
     })
     .sort(pagingOptions.sort) // 必ずソートしてから
-    .skip(pagingOptions.skip) // ページングする
-    .limit(pagingOptions.limit)
-    .exec((err, doc) => {
+    .exec((err, allArticles) => {
 
       if (err) {
         return res.status(500).json({
@@ -69,28 +67,41 @@ router.get('/', (req, res, next) => {
         });
       }
 
-      // 削除ユーザのコメントを削除
-      doc.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
+      removeDeletedUserCommentAndVote(allArticles);
 
-        // 削除ユーザのリプライを削除
-        const temp = a.comments.filter(c => !c.user.deleted);
+      const count = allArticles.length;
+      const articles = allArticles.slice(pagingOptions.skip, pagingOptions.skip + pagingOptions.limit);
 
-        temp.filter(c => c.replies && c.replies.length > 0).forEach( (c, indexOfComments , commentsList) => {
-          commentsList[indexOfComments].replies = c.replies.filter(r => !r.user.deleted);
-        });
-
-        articlesList[indexOfArticles].comments = temp;
-      });
-
-      // 削除ユーザのいいねを削除
-      doc.filter(a => a.vote && a.vote.length > 0).forEach((a, i , articlesList) => {
-        articlesList[i].vote = a.vote.filter(voter => !voter.deleted);
-      });
-
-      return res.status(200).json(doc);
+      return res.status(200).json({count, articles});
     });
   });
 });
+
+
+/**
+ * 指定した記事一覧から削除済みユーザのコメントといいねを除去する
+ *
+ * @param articles 記事一覧
+ */
+function removeDeletedUserCommentAndVote(articles: any): void {
+  // 削除ユーザのコメントを削除
+  articles.filter(a => a.comments && a.comments.length > 0).forEach( (a, indexOfArticles, articlesList) => {
+
+    // 削除ユーザのリプライを削除
+    const temp = a.comments.filter(c => !c.user.deleted);
+
+    temp.filter(c => c.replies && c.replies.length > 0).forEach( (c, indexOfComments , commentsList) => {
+      commentsList[indexOfComments].replies = c.replies.filter(r => !r.user.deleted);
+    });
+
+    articlesList[indexOfArticles].comments = temp;
+  });
+
+  // 削除ユーザのいいねを削除
+  articles.filter(a => a.vote && a.vote.length > 0).forEach((a, i , articlesList) => {
+    articlesList[i].vote = a.vote.filter(voter => !voter.deleted);
+  });
+}
 
 
 interface ArticleCondition {

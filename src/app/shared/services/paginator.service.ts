@@ -14,7 +14,7 @@ export class PaginatorService extends MatPaginatorIntl {
     }
 
     const range = this.calcRange(pageIndex, pageSize, length);
-    return pageIndex + 1 + '/' + Math.ceil(length / pageSize) + ' ページ目';
+    return length + ' 件　　　' + (pageIndex + 1) + '/' + Math.ceil(length / pageSize) + 'ページ目';
   }
 
   calcRange(pageIndex, pageSize, length): {startIndex: number, endIndex: number} {

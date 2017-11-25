@@ -23,24 +23,25 @@ export class ArticleService {
     private jwtService: JwtService
   ) {}
 
-  // 複数件取得
-  get(condition: Object, withUser: boolean = false): Observable<Array<ArticleModel | ArticleWithUserModel>> {
+  /**
+   * 複数件取得
+   *
+   * @param condition 検索条件
+   * @param paginOptions ページング条件
+   * @param withUser ユーザ情報を検索結果に付与するか
+   */
+  get(condition: Object, paginOptions: {skip?: number, limit?: number, sort?: Object}, withUser: boolean = false): Observable<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
 
-    // TODO 仮検索条件
-    condition['skip'] = 2;
-    condition['limit'] = 2;
-    condition['sort'] = { 'updated': -1};
-
     let params = new HttpParams()
-      .set('condition', JSON.stringify(condition));
+      .set('condition', JSON.stringify(Object.assign({}, condition, paginOptions)));
 
     if (withUser) {
       params = params.set('withUser', 'true');
     }
 
-    return this.http.get<Array<ArticleModel | ArticleWithUserModel>>(URL, { headers, params });
+    return this.http.get<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}>(URL, { headers, params });
   }
 
   // １件取得
