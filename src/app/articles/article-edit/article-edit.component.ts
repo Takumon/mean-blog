@@ -516,9 +516,9 @@ export class ArticleEditComponent implements OnInit {
   /**
    * 現在キャレットがある行冒頭のポジションを取得する
    *
-   * @return 現在キャレットがある行冒頭のポジション
+   * @return キャレットポジション(デフォルトは現在キャレットポジション)
    */
-  searchCurrentLineStartIndex(): number {
+  searchCurrentLineStartIndex(caretPosStart: number = this.caretPosStart): number {
     const value = this.body.value;
     // 遡って行末の改行を探す
 
@@ -527,7 +527,7 @@ export class ArticleEditComponent implements OnInit {
       return 0;
     }
 
-    for (let i = this.caretPosStart - 1; i > 0; i--) {
+    for (let i = caretPosStart - 1; i > 0; i--) {
       if (value[i] === '\n') {
         return i + 1;
       }
@@ -578,31 +578,67 @@ export class ArticleEditComponent implements OnInit {
   }
 
   /**
-   * 現在キャレットがある行がリスト形式か判断する
+   * 指定したキャレットがある行がリスト形式か判断する
    *
-   * @param lineStartIndex 指定行の始まりのインデックス
+   * @param caretPosition キャレットポジション(デフォルトは現在のキャレットポジション)
    */
-  isListLine(): boolean {
-    const lineStartIndex = this.searchCurrentLineStartIndex();
+  extractListInfo(caretPosition: number = this.caretPosStart): {isListLine: boolean, indent?: string} {
+    const lineStartIndex = this.searchCurrentLineStartIndex(caretPosition);
 
     const temp = this.body.value.substring(lineStartIndex);
     const taregetLine = temp.substring(0, temp.indexOf('\n') === -1 ? temp.length : temp.indexOf('\n'));
-    const listLine = /^\s*\*\s/;
+    const listLinePattern = /^(\s*)\*\s/;
 
-    return listLine.test(taregetLine);
+    const isListLine = listLinePattern.test(taregetLine);
+    const result = {isListLine};
+
+    if (isListLine) {
+      result['indent'] = taregetLine.match(listLinePattern)[1];
+    }
+    return result;
   }
 
-  insertIndentifTab($event) {
-    const TAB = '    ';
-    if ($event.keyCode !== 9) {
+  /**
+   * タブやエンター押下時に必要に応じてインデント調整やリスト形式にフォーマットしたりする
+   */
+  textFormat($event) {
+    if ($event.keyCode === 9) {
+      $event.preventDefault();
+      this.adjustIndent($event);
       return;
     }
 
-    $event.preventDefault();
+    // 前行がリスト形式であれば、自動でインデントしてリスト形式にする
+    if ($event.keyCode === 13) {
+      const startIndexOfCurrentLine = this.searchCurrentLineStartIndex();
+      const listInfoOfCurrentLine = this.extractListInfo();
 
+      if (!listInfoOfCurrentLine.isListLine) {
+        return;
+      }
+
+      // キャレットが行冒頭にある場合は通常のEnterを押した時の挙動と同じにする
+      if (startIndexOfCurrentLine <= this.caretPosStart
+          &&  this.caretPosStart < startIndexOfCurrentLine + listInfoOfCurrentLine.indent.length + 2
+        ) {
+        return;
+      }
+
+      // ブラウザデフォルト処理を抑止し改行も本処理で挿入する
+      $event.preventDefault();
+      const listLinePreffix = '\n' + listInfoOfCurrentLine.indent + '* ';
+      this.insertContentToCaretPosition(listLinePreffix, '');
+    }
+  }
+
+  /**
+   * タブ押下時にテキストをフォーマットする
+   */
+  adjustIndent($event) {
+    const TAB = '    ';
     // インデントを追加
     if (!$event.shiftKey) {
-      if (this.isListLine()) {
+      if (this.extractListInfo().isListLine) {
         return this.insertContentToCurrentLineStart(TAB);
       } else {
         return this.insertContentToCaretPosition(TAB, '');
@@ -610,7 +646,7 @@ export class ArticleEditComponent implements OnInit {
     }
 
     // インデントを削除
-    if (this.isListLine()) {
+    if (this.extractListInfo().isListLine) {
       // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
       const previouseCaretPosStart = this.caretPosStart;
       const previouseCaretPosEnd = this.caretPosEnd;
@@ -643,6 +679,7 @@ export class ArticleEditComponent implements OnInit {
       this.moveCaretPosition(previouseCaretPosStart - TAB.length, previouseCaretPosEnd - TAB.length);
     }
   }
+
 
   /**
    * テキストエリアで範囲選択中か判断する
