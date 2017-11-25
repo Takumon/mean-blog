@@ -61,11 +61,9 @@ const SortFactors = {
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleListComponent implements OnInit, OnDestroy {
-  // TODO 定数化
   public DEFAULT_PER_PAGE = 20;
   public DEFAILT_PER_PAGES = [20, 50, 100];
-  // TODO 型指定
-  public favoriteSeaerchConditions: any;
+  public favoriteSeaerchConditionCount: number;
   public articlesPerPage: Subject<Array<ArticleWithUserModel>> = new Subject<Array<ArticleWithUserModel>>();
   public showPrograssBar: Boolean = false;
   public direction = Direction;
@@ -181,8 +179,8 @@ export class ArticleListComponent implements OnInit, OnDestroy {
           break;
         }
 
-        this.favoriteSeaerchConditions = this.searchConditionComponent.createCondition();
-        cb(this.favoriteSeaerchConditions);
+        this.favoriteSeaerchConditionCount = this.searchConditionComponent.seaerchConditions.length;
+        cb(this.searchConditionComponent.createCondition());
         break;
       case Mode.USER:
         this.route.parent.params
