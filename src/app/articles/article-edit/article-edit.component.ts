@@ -36,7 +36,6 @@ import { ArticleService } from '../shared/article.service';
 import { DraftModel } from '../shared/draft.model';
 import { DraftService } from '../shared/draft.service';
 import { EditMode } from './edit-mode.enum';
-import { TargetLocator } from 'selenium-webdriver';
 
 const IS_RESUME = 'resume';
 
