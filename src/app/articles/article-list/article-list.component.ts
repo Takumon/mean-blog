@@ -135,7 +135,8 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    * 記事一覧を取得する
    */
   getArticles(): void {
-    this.initPagingAndSort();
+    this.initPaging();
+    this.initSort();
 
     this.constructSearchCondition(searchCondition => {
       this.searchCondition = searchCondition;
@@ -144,11 +145,15 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * ソート条件とページング条件を初期化する
+   * ページング初期化
    */
-  initPagingAndSort() {
-    this.pageSize = this.DEFAULT_PER_PAGE;
+  initPaging() {
     this.pageIndex = 0;
+  }
+  /**
+   * ソート条件初期化
+   */
+  initSort() {
     for (const key of this.sortFactorKeys) {
       const factor = this.sortFactors[key];
       factor.direction = factor === SortFactors.CREATE_DATE
@@ -213,6 +218,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   sortAndRefresh(selectedKey): void {
+    this.initPaging();
     for (const key of this.sortFactorKeys) {
       const factor = this.sortFactors[key];
 
