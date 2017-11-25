@@ -24,11 +24,6 @@ router.get('/', (req, res, next) => {
 
     const pagingOptions = extractPagingOptions(req);
 
-    console.log('skip = ' + pagingOptions.skip);
-    console.log('limit = ' + pagingOptions.limit);
-    console.log('sort = ' + pagingOptions.sort);
-
-
     Article
     .find(condition)
     .populate('author', 'userId userName deleted')
@@ -172,18 +167,16 @@ function extractCondition(req: any, cb: (error: any, condition: ArticleCondition
     }
   }
 
-  // 記事作成日の下限で絞り込み
-  if (source.dateFrom) {
-    condition.created = {
-      $gte: new Date(source.dateFrom)
-    };
-  }
+  // 記事作成日で絞り込み
+  if (source.dateFrom || source.dateTo) {
+    condition.created = {};
+    if (source.dateFrom) {
+      condition.created['$gte'] =  new Date(source.dateFrom);
+    }
 
-  // 記事作成日の上限で絞り込み
-  if (source.dateTo) {
-    condition.created = {
-        $lte: new Date(source.dateTo)
-    };
+    if (source.dateTo) {
+      condition.created['$lte'] = new Date(source.dateTo);
+    }
   }
 
   // 記事にいいねしたユーザの_idで絞り込み
