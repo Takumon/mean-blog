@@ -57,7 +57,7 @@ router.get('/', (req, res, next) => {
         }
       }],
     })
-    .sort(pagingOptions.sort) // 必ずソートしてから
+    .sort(pagingOptions.sort)
     .exec((err, allArticles) => {
 
       if (err) {
