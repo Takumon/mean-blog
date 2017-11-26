@@ -1,6 +1,8 @@
 import * as http from 'http';
 import * as ENV from '../environment-config';
 import app from '../app';
+import { systemLogger, accessLogger, errorLogger } from '../logger';
+
 
 
 /**
@@ -13,7 +15,7 @@ app.set('port', port);
  * HTTPサーバ生成.
  */
 const server = http.createServer(app);
-server.listen(port, () => console.log(`API running on localhost:${port}`));
+server.listen(port, () => systemLogger.info(`API running on :${port}`));
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -53,15 +55,15 @@ function onError(error): void {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      errorLogger.error(bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      errorLogger.error(bind + ' is already in use');
       process.exit(1);
       break;
     default:
-  　  console.error('error:' + error);
+    　errorLogger.error('error:' + error);
 　　  throw error;
   }
 }
@@ -74,5 +76,5 @@ function onListening(): void {
   const bind = (typeof addr === 'string')
     ? `pipe ${addr}`
     : `port ${addr.port}`;
-  console.log('bind = ' + bind);
+  systemLogger.info('bind = ' + bind);
 }
