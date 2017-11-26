@@ -38,19 +38,50 @@ describe('ReplyService', () => {
 
 
   describe('get', () => {
+    const mockResponse: Array<ReplyModel> =  [
+      {
+        _id: '123456789011',
+        articleId: '123456789022',
+        commentId:  '123456789033',
+        text: 'リプライコメント',
+        user: '123456789044',
+        created: '20150101 12:34:30',
+        updated: '20150101 12:34:30'
+      }
+    ];
 
-    it('リプライが取得できるか', () => {
-      const mockResponse: Array<ReplyModel> =  [
-        {
-          _id: '123456789011',
-          articleId: '123456789022',
-          commentId:  '123456789033',
-          text: 'リプライコメント',
-          user: '123456789044',
-          created: '20150101 12:34:30',
-          updated: '20150101 12:34:30'
-        }
-      ];
+    it ('withUserがtrue_withArticleがtrue', () => {
+
+      const arg_condition = {};
+      const arg_withUser = true;
+      const arg_withArtilce = true;
+
+      service.get(arg_condition, arg_withUser, arg_withArtilce).subscribe((res: Array<ReplyModel>) => {
+        expect(res.length).toEqual(1);
+        expect(res[0]._id).toEqual('123456789011');
+        expect(res[0].articleId).toEqual('123456789022');
+        expect(res[0].commentId).toEqual('123456789033');
+        expect(res[0].text).toEqual('リプライコメント');
+        expect(res[0].user).toEqual('123456789044');
+        expect(res[0].created).toEqual('20150101 12:34:30');
+        expect(res[0].updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.get('condition')).toEqual('{}');
+      expect(req.request.params.get('withUser')).toEqual('true');
+      expect(req.request.params.get('withArticle')).toEqual('true');
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
+
+    it ('withUserがtrue_withArticleがfalse', () => {
 
       const arg_condition = {};
       const arg_withUser = true;
@@ -81,6 +112,195 @@ describe('ReplyService', () => {
       req.flush(mockResponse);
     });
 
+    it ('withUserがfalse_withArticleがfalse', () => {
+
+      const arg_condition = {};
+      const arg_withUser = false;
+      const arg_withArtilce = false;
+
+      service.get(arg_condition, arg_withUser, arg_withArtilce).subscribe((res: Array<ReplyModel>) => {
+        expect(res.length).toEqual(1);
+        expect(res[0]._id).toEqual('123456789011');
+        expect(res[0].articleId).toEqual('123456789022');
+        expect(res[0].commentId).toEqual('123456789033');
+        expect(res[0].text).toEqual('リプライコメント');
+        expect(res[0].user).toEqual('123456789044');
+        expect(res[0].created).toEqual('20150101 12:34:30');
+        expect(res[0].updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.get('condition')).toEqual('{}');
+      expect(req.request.params.has('withUser')).toBeFalsy();
+      expect(req.request.params.has('withArticle')).toBeFalsy();
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
+
+
+    it ('withUser指定しない_withArticle指定しない', () => {
+
+      const arg_condition = {};
+
+      service.get(arg_condition).subscribe((res: Array<ReplyModel>) => {
+        expect(res.length).toEqual(1);
+        expect(res[0]._id).toEqual('123456789011');
+        expect(res[0].articleId).toEqual('123456789022');
+        expect(res[0].commentId).toEqual('123456789033');
+        expect(res[0].text).toEqual('リプライコメント');
+        expect(res[0].user).toEqual('123456789044');
+        expect(res[0].created).toEqual('20150101 12:34:30');
+        expect(res[0].updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.get('condition')).toEqual('{}');
+      expect(req.request.params.has('withUser')).toBeFalsy();
+      expect(req.request.params.has('withArticle')).toBeFalsy();
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
+
+  });
+
+
+  describe('getById', () => {
+    const mockResponse: ReplyModel =  {
+      _id: '123456789011',
+      articleId: '123456789022',
+      commentId:  '123456789033',
+      text: 'リプライコメント',
+      user: '123456789044',
+      created: '20150101 12:34:30',
+      updated: '20150101 12:34:30'
+    };
+
+    it ('withUserがtrue_withArticleがtrue', () => {
+
+      const arg_id = '123456789011';
+      const arg_withUser = true;
+      const arg_withArtilce = true;
+
+      service.getById(arg_id, arg_withUser, arg_withArtilce).subscribe((res: ReplyModel) => {
+        expect(res._id).toEqual('123456789011');
+        expect(res.articleId).toEqual('123456789022');
+        expect(res.commentId).toEqual('123456789033');
+        expect(res.text).toEqual('リプライコメント');
+        expect(res.user).toEqual('123456789044');
+        expect(res.created).toEqual('20150101 12:34:30');
+        expect(res.updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies/123456789011';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.get('withUser')).toEqual('true');
+      expect(req.request.params.get('withArticle')).toEqual('true');
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
+
+    it ('withUserがtrue_withArticleがfalse', () => {
+
+      const arg_id = '123456789011';
+      const arg_withUser = true;
+      const arg_withArtilce = false;
+
+      service.getById(arg_id, arg_withUser, arg_withArtilce).subscribe((res: ReplyModel) => {
+        expect(res._id).toEqual('123456789011');
+        expect(res.articleId).toEqual('123456789022');
+        expect(res.commentId).toEqual('123456789033');
+        expect(res.text).toEqual('リプライコメント');
+        expect(res.user).toEqual('123456789044');
+        expect(res.created).toEqual('20150101 12:34:30');
+        expect(res.updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies/123456789011';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.get('withUser')).toEqual('true');
+      expect(req.request.params.has('withArticle')).toBeFalsy();
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
+
+    it ('withUserがfalse_withArticleがfalse', () => {
+
+      const arg_id = '123456789011';
+      const arg_withUser = false;
+      const arg_withArtilce = false;
+
+      service.getById(arg_id, arg_withUser, arg_withArtilce).subscribe((res: ReplyModel) => {
+        expect(res._id).toEqual('123456789011');
+        expect(res.articleId).toEqual('123456789022');
+        expect(res.commentId).toEqual('123456789033');
+        expect(res.text).toEqual('リプライコメント');
+        expect(res.user).toEqual('123456789044');
+        expect(res.created).toEqual('20150101 12:34:30');
+        expect(res.updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies/123456789011';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.has('withUser')).toBeFalsy();
+      expect(req.request.params.has('withArticle')).toBeFalsy();
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
+
+
+    it ('withUser指定しない_withArticle指定しない', () => {
+
+      const arg_id = '123456789011';
+
+      service.getById(arg_id).subscribe((res: ReplyModel) => {
+        expect(res._id).toEqual('123456789011');
+        expect(res.articleId).toEqual('123456789022');
+        expect(res.commentId).toEqual('123456789033');
+        expect(res.text).toEqual('リプライコメント');
+        expect(res.user).toEqual('123456789044');
+        expect(res.created).toEqual('20150101 12:34:30');
+        expect(res.updated).toEqual('20150101 12:34:30');
+      });
+
+
+      const req = httpMock.expectOne((request: HttpRequest<any>) => {
+        return request.url === '/api/replies/123456789011';
+      });
+
+      expect(req.request.method).toEqual('GET');
+      expect(req.request.params.has('withUser')).toBeFalsy();
+      expect(req.request.params.has('withArticle')).toBeFalsy();
+
+      // レスポンス返却
+      req.flush(mockResponse);
+    });
   });
 });
 

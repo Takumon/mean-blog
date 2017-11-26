@@ -39,7 +39,7 @@ export class ReplyService {
   }
 
   // 一件取得
-  getById(_id: string, withUser: boolean = false, withArticle: boolean = false): Observable<Array<ReplyModel> | Array<ReplyWithUserModel> | Array<ReplyWithArticleModel>> {
+  getById(_id: string, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
     const headers: HttpHeaders = this.jwtService.getHeaders();
@@ -51,7 +51,7 @@ export class ReplyService {
       params = params.set('withArticle', 'true');
     }
 
-    return this.http.get<Array<ReplyModel> | Array<ReplyWithUserModel>>(URL, { headers, params });
+    return this.http.get<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel>(URL, { headers, params });
   }
 
   // 登録
