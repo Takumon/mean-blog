@@ -8,9 +8,9 @@ export class ReplyModel {
   // コメントしたユーザの_id
   user: string;
   created: string;
-  update: string;
+  updated: string;
 
   // 表示制御用
-  isEditable: boolean;
-  addReply: boolean;
+  isEditable?: boolean;
+  addReply?: boolean;
 }
