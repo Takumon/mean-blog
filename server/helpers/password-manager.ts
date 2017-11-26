@@ -12,8 +12,6 @@ const PasswordManager = {
   },
 
   compare: (plainPass, hashword): Boolean => {
-    systemLogger.debug('パスワードを比較します');
-    systemLogger.debug('bcrypt = ' + bcrypt);
     if (bcrypt) {
       systemLogger.debug('bcrypt.compareSync = ' + bcrypt.compareSync);
     }
