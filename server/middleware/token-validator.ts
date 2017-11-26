@@ -1,6 +1,6 @@
 
 import * as jwt from 'jsonwebtoken';
-import * as config from '../config';
+import * as ENV from '../environment-config';
 
 const tokenValidator = {
 
@@ -14,7 +14,7 @@ const tokenValidator = {
       return;
     }
 
-    jwt.verify(token, config.SECRET, (err, decoded) => {
+    jwt.verify(token, ENV.SECRET, (err, decoded) => {
       if (err) {
         if (err.message === 'jwt expired') {
           return res.status(403).json({ errors: [{

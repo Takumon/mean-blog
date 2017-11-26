@@ -1,5 +1,6 @@
 
 import * as bcrypt from 'bcryptjs';
+import { systemLogger } from '../logger';
 
 /**
  * パスワードを暗号化、比較するためのユーティルクラス
@@ -11,10 +12,8 @@ const PasswordManager = {
   },
 
   compare: (plainPass, hashword): Boolean => {
-    console.log('パスワードを比較します');
-    console.log('bcrypt = ' + bcrypt);
     if (bcrypt) {
-      console.log('bcrypt.compareSync = ' + bcrypt.compareSync);
+      systemLogger.debug('bcrypt.compareSync = ' + bcrypt.compareSync);
     }
     return bcrypt.compareSync(plainPass, hashword);
   }

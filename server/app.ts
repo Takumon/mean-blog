@@ -4,9 +4,11 @@ import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
-import * as morgan from 'morgan';
+import * as util from 'util';
+import * as config from 'config';
 
-import * as config from './config';
+import * as ENV from './environment-config';
+import { systemLogger, errorLogger, accessLogHandler } from './logger';
 import { authenticateRouter } from './routes/authenticate';
 import { tokenValidator } from './middleware/token-validator';
 import { articleRouter } from './routes/article';
@@ -16,33 +18,29 @@ import { replyRouter } from './routes/reply';
 import { userRouter } from './routes/user';
 import { imageRouter } from './routes/image';
 import { searchConditionRouter } from './routes/search-condition';
-import { ROOT_USER_ID, ROOT_USER_PASSWORD } from './config';
 import { PasswordManager } from './helpers/password-manager';
 import { Image, ImageType } from './models/image.model';
 import { User } from './models/user.model';
 
 
-console.log('設定値の値');
-console.log(config);
 
 class App {
   public express: express.Application;
 
   constructor() {
     this.express = express();
+    systemLogger.debug('NODE_ENV = ' + this.express.get('env'));
+    systemLogger.debug('設定（環境変数）=' + util.inspect(ENV, {showHidden: false, depth: null}));
+    systemLogger.debug('設定ファイル =' + util.inspect(config, {showHidden: false, depth: null}));
     this.middleware();
     this.routes();
     this.initDB();
   }
 
   private middleware(): void {
-    if (this.express.get('env') === 'production') {
-      this.express.use(morgan());
-    } else {
-      this.express.use(morgan({ format: 'dev', immediate: false }));
-    }
     this.express.use(bodyParser.json({limit: '50mb'}));
     this.express.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
+    this.express.use(accessLogHandler);
     mongoose.Promise = global.Promise;
   }
 
@@ -80,11 +78,11 @@ class App {
   // アプリ初期化時に管理者権限のユーザを作成する
   private initDB(): void {
     User
-      .findOne({ userId : ROOT_USER_ID })
+      .findOne({ userId : ENV.ROOT_USER_ID })
       .exec((err, user) => {
         if (err) {
           // TODO エラー処理
-          console.log('ユーザ検索でエラーが発生しました。', err);
+          errorLogger.error('ユーザ検索でエラーが発生しました。', err);
           return;
         }
 
@@ -93,13 +91,13 @@ class App {
         }
 
         const rootUser = new User();
-        rootUser.userId = config.ROOT_USER_ID;
-        rootUser.password = PasswordManager.crypt(config.ROOT_USER_PASSWORD);
+        rootUser.userId = ENV.ROOT_USER_ID;
+        rootUser.password = PasswordManager.crypt(ENV.ROOT_USER_PASSWORD);
         rootUser.isAdmin = true;
         rootUser.save(err2 => {
           if (err2) {
             // TODO エラー処理
-            console.log('管理者ユーザ登録時にエラーが発生しました。', err2);
+            errorLogger.error('管理者ユーザ登録時にエラーが発生しました。', err2);
             return;
           }
 
@@ -115,7 +113,7 @@ class App {
           rootAvator.save((err3) => {
             if (err3) {
               // TODO エラー処理
-              console.log('管理者ユーザのアバター登録時にエラーが発生しました。', err3);
+              errorLogger.error('管理者ユーザのアバター登録時にエラーが発生しました。', err3);
               return;
             }
           });

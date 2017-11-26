@@ -7,7 +7,7 @@ import { validateHelper as v } from '../helpers/validate-helper';
 import { Article } from '../models/article.model';
 import { Comment } from '../models/comment.model';
 import { User } from '../models/user.model';
-import * as config from '../config';
+import * as ENV from '../environment-config';
 
 const MODEL_NAME = '記事';
 const router: Router = Router();
@@ -208,7 +208,7 @@ function extractPagingOptions(req: any): {skip: number, limit: number, sort: Obj
     {};
 
   pagingOptions.skip = source.skip || 0;
-  pagingOptions.limit = source.limit || config.LIMIT_PER_PAGE;
+  pagingOptions.limit = source.limit || ENV.LIMIT_PER_PAGE;
   pagingOptions.sort = source.sort || { created: -1};
 
   return pagingOptions;

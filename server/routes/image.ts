@@ -85,20 +85,19 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post('/ofArticle', upload.fields([
   { name: 'image', maxCount: 1 },
 ]), [
-  // check('image')
-  //   .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['画像ファイル']))
+  check('image')
+    .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['画像ファイル']))
 ], (req, res, next) => {
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ errors: errors.array() });
-  // }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
 
   // TODO ファイル名重複防ぐため同ファイル名があれば末尾に連番つけて保存
 
   // アバター登録
   const imageFile = req.files['image'][0];
-  console.log(imageFile);
   const image = new Image();
   image.data = imageFile.buffer;
   image.contentType = imageFile.mimetype;
@@ -128,9 +127,7 @@ router.delete('/ofArticle/:_id', [
   param('_id')
     .custom(v.validation.isExistedImage).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['画像'])),
 ], (req, res, next) => {
-  console.log('hoge');
   const errors = validationResult(req);
-  console.log(errors.array());
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
