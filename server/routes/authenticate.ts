@@ -7,7 +7,7 @@ import { matchedData, sanitize } from 'express-validator/filter';
 
 import { User } from '../models/user.model';
 import { Image, ImageType } from '../models/image.model';
-import * as config from '../config';
+import * as ENV from '../environment-config';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
 
@@ -46,8 +46,8 @@ router.post('/login', [
     }
     console.log('パスワード比較 OK');
 
-    const token = jwt.sign({ _id: user._id }, config.SECRET, {
-      expiresIn: config.TOKEN_EFFECTIVE_SECOND
+    const token = jwt.sign({ _id: user._id }, ENV.SECRET, {
+      expiresIn: ENV.TOKEN_EFFECTIVE_SECOND
     });
 
     // パスワードはクライアント側に送信しない
@@ -116,8 +116,8 @@ router.post('/register', [
         });
       }
 
-      const token = jwt.sign({ _id: newUser._id }, config.SECRET, {
-        expiresIn : config.TOKEN_EFFECTIVE_SECOND
+      const token = jwt.sign({ _id: newUser._id }, ENV.SECRET, {
+        expiresIn : ENV.TOKEN_EFFECTIVE_SECOND
       });
 
 
@@ -222,7 +222,7 @@ router.get('/check-state', (req, res) => {
     return;
   }
 
-  jwt.verify(token, config.SECRET, (err, decoded) => {
+  jwt.verify(token, ENV.SECRET, (err, decoded) => {
     if (err || !decoded._id) {
       return res.status(403).json({
         success: false,

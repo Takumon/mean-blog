@@ -1,12 +1,12 @@
 import * as http from 'http';
-import * as config from '../config';
+import * as ENV from '../environment-config';
 import app from '../app';
 
 
 /**
  * ポートの設定.
  */
-const port = normalizePort(config.SERVER_PORT);
+const port = normalizePort(ENV.SERVER_PORT);
 app.set('port', port);
 
 /**

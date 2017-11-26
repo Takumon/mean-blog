@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import * as config from './config';
+import * as ENV from './environment-config';
 
 function createConnection (dbURL, options) {
   const db = mongoose.connect(dbURL, options);
@@ -13,7 +13,7 @@ function createConnection (dbURL, options) {
           setTimeout(function () {
               console.log('Retrying first connect...');
               db.openUri(dbURL).catch(() => {});
-          }, config.MONGO_RETRY_INTERVAL * 1000);
+          }, ENV.MONGO_RETRY_INTERVAL * 1000);
       } else {
           // Some other error occurred.  Log it.
           console.error(new Date(), String(err));
@@ -27,7 +27,7 @@ function createConnection (dbURL, options) {
   return mongoose.connection;
 }
 
-const connection = createConnection(config.MONGO_URL, {
+const connection = createConnection(ENV.MONGO_URL, {
   useMongoClient: true,
 });
 
