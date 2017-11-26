@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose';
 import * as jwt from 'jsonwebtoken';
 import * as jdenticon from 'jdenticon';
 import * as util from 'util';
+import * as config from 'config';
 
 import * as ENV from './environment-config';
 import { systemLogger, errorLogger, accessLogHandler } from './logger';
@@ -29,7 +30,8 @@ class App {
   constructor() {
     this.express = express();
     systemLogger.debug('NODE_ENV = ' + this.express.get('env'));
-    systemLogger.debug('設定値（環境変数）=' + util.inspect(ENV, {showHidden: false, depth: null}));
+    systemLogger.debug('設定（環境変数）=' + util.inspect(ENV, {showHidden: false, depth: null}));
+    systemLogger.debug('設定ファイル =' + util.inspect(config, {showHidden: false, depth: null}));
     this.middleware();
     this.routes();
     this.initDB();
