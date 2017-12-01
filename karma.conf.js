@@ -10,7 +10,8 @@ module.exports = function (config) {
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular/cli/plugins/karma')
+      require('@angular/cli/plugins/karma'),
+      require('karma-scss-preprocessor')
     ],
     client:{
       clearContext: false // leave Jasmine Spec Runner output visible in browser
@@ -28,6 +29,17 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false
+    singleRun: false,
+    files: [
+      { pattern: './src/assets/js/vendor/moment.js', watched: false, included: true },
+      { pattern: './src/assets/js/vendor/hammer.min.js', watched: false, included: true },
+      { pattern: './src/test.ts', watched: false },
+      { pattern: './node_modules/@angular/material/prebuilt-themes/indigo-pink.css', watched: false,  included: false ,served: true},
+      { pattern: './src/styles.scss', watched: false,  included: true, served: true }
+    ],
+    preprocessors: {
+      './src/test.ts': ['@angular/cli'],
+      './src/styles.scss': ['scss']
+    },
   });
 };
