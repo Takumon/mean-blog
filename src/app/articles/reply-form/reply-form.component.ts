@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+  AfterViewChecked,
+} from '@angular/core';
 import {
   ReactiveFormsModule,
   FormsModule,
@@ -25,7 +33,7 @@ import { ReplyService } from '../shared/reply.service';
   templateUrl: './reply-form.component.html',
   styleUrls: ['./reply-form.component.scss']
 })
-export class ReplyFormComponent implements OnInit {
+export class ReplyFormComponent implements OnInit, AfterViewChecked {
   public Constant = Constant;
 
   @Input() isAuthfocuse: boolean;
@@ -41,6 +49,7 @@ export class ReplyFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
+    private ref: ChangeDetectorRef,
 
     public messageService: MessageService,
     private messageBarService: MessageBarService,
@@ -53,6 +62,10 @@ export class ReplyFormComponent implements OnInit {
     this.createForm();
     this.isRegister = !this.model.created;
     this.action = this.isRegister ?  '追加' : '更新';
+  }
+
+  ngAfterViewChecked(): void {
+    this.ref.detectChanges();
   }
 
 
@@ -102,6 +115,7 @@ export class ReplyFormComponent implements OnInit {
         }, this.onValidationError.bind(this));
       }
   }
+
 
   // TODO 共通化できるか検討
   private onValidationError(error: any): void {

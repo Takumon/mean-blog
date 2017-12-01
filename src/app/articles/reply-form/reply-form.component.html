@@ -8,7 +8,7 @@
       lazyLoad="/api/images/avator/{{ auth.loginUser._id }}"
       [offset]="this.Constant.LAZY_LOAD_OFFSET"
       />
-    <mat-input-container
+    <mat-form-field
       class="comment-form__textarea-wrapper">
       <textarea
         *ngIf="isAuthfocuse"
@@ -37,7 +37,7 @@
           {{msg}}<br>
         </ng-container>
       </mat-error>
-    </mat-input-container>
+    </mat-form-field>
   </div>
   <div class="comment-form__operation">
     <div class="comment-form__operation__spacer"></div>

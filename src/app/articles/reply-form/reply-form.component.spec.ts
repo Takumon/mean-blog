@@ -13,6 +13,14 @@ import { APP_BASE_HREF } from '@angular/common';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import {
+  ErrorStateMatcher,
+} from '@angular/material';
+
+import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
+import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
+
+
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { MessageService } from '../../shared/services/message.service';
 import { SharedModule } from '../../shared/shared.module';
@@ -30,13 +38,44 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
+// テスト用Component
+import { Component } from '@angular/core';
+
+@Component({
+  template: `
+  <app-reply-form
+    [model]="model"
+    [hasCancelBtn]="hasCancelBtn"
+    [isAuthfocuse]="isAuthfocuse"
+    (complete)="refreshComments()"
+    (cancel)="cancel()"
+  ></app-reply-form>
+`
+})
+class TestHostComponent {
+  model: ReplyModel;
+  hasCancelBtn = true;
+  isAuthfocuse = false;
+
+  constructor() {
+    const model = new ReplyModel();
+    model.text = 'テスト用リプライコメント';
+    model.created = '20171130 12:30';
+    this.model = model;
+  }
+
+  refreshComments() {
+    console.log('refreshComments');
+  }
+  cancel() {
+    console.log('cancel');
+  }
+}
+
 
 
 describe('ReplyFormComponent', () => {
-  let comp: ReplyFormComponent;
-  let fixture: ComponentFixture<ReplyFormComponent>;
-  let de: DebugElement;
-  let el: HTMLElement;
+
 
 
   class MockAuthenticationService {
@@ -83,10 +122,19 @@ describe('ReplyFormComponent', () => {
   }
 
 
-  beforeEach(() => {
+
+  let comp: ReplyFormComponent;
+  let fixture: ComponentFixture<ReplyFormComponent>;
+
+
+  // let testHost: TestHostComponent;
+  // let fixture: ComponentFixture<TestHostComponent>;
+  // let heroEl: DebugElement;
+
+  beforeEach(async() => {
 
     TestBed.configureTestingModule({
-      declarations: [ ReplyFormComponent ],
+      declarations: [ ReplyFormComponent, TestHostComponent ],
       imports: [
         BrowserAnimationsModule,
         RouterTestingModule,
@@ -95,6 +143,11 @@ describe('ReplyFormComponent', () => {
         FormsModule,
       ],
       providers: [
+        ErrorStateMatcherContainParentGroup,
+        {
+          provide: ErrorStateMatcher,
+          useClass: CustomErrorStateMatcher
+        },
         { provide: APP_BASE_HREF, useValue: '/' },
         { provide: ReplyService, useClass: MockReplyService },
         { provide: AuthenticationService, useClass: MockAuthenticationService },
@@ -102,28 +155,118 @@ describe('ReplyFormComponent', () => {
         MessageService,
       ]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ReplyFormComponent);
     comp = fixture.componentInstance;
-    de = fixture.debugElement.query(By.css('.comment-form'));
-    el = de.nativeElement;
+  });
+
+  describe('キャンセルボタンフラグがfalse_自動フォーカスフラグがfalse_modelが新規の場合', () => {
+    beforeEach(() => {
+      comp.hasCancelBtn = false;
+      comp.isAuthfocuse = false;
+      const model = new ReplyModel();
+      comp.model = model;
+      fixture.detectChanges();
+    });
+
+    it('プレースホルダーが追加パターンになるべき', () => {
+      const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+      expect($textArea.getAttribute('placeholder')).toEqual('コメントを追加する');
+    });
+
+    it('キャンセルボタンが存在せず、追加ボタンのみ存在すべき', () => {
+      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      expect($buttons.length).toEqual(1);
+      expect($buttons[0].nativeElement.textContent).toEqual('  追加');
+    });
+
+    it('追加ボタンは非活性であるべき', () => {
+      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
+    });
+
+    it('入力チェックエラーが存在すべき', () => {
+      expect(comp.form.valid).toEqual(false);
+    });
+
+    describe('一文字入力した時', () => {
+      beforeEach(() => {
+        const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+        $textArea.value = 'a';
+        $textArea.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+      });
+
+      it('入力チェックエラーが存在しないべき', () => {
+        expect(comp.form.valid).toEqual(true);
+      });
+
+      it('追加ボタンは活性であるべき', () => {
+        const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+        expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
+      });
+
+      describe('さらに入力した文字を削除した時', () => {
+        beforeEach(async() => {
+          const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+          $textArea.value = '';
+          $textArea.dispatchEvent(new Event('input'));
+          fixture.detectChanges();
+        });
+
+        it('入力チェックエラーが存在すべき', () => {
+          expect(comp.form.valid).toEqual(false);
+          const $errors = fixture.debugElement.queryAll(By.css('.mat-error'));
+          expect($errors[0].nativeElement.textContent.trim()).toEqual('コメント本文を入力してください');
+        });
+
+        it('追加ボタンは活性であるべき', () => {
+          fixture.whenStable().then(() => {
+            const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+            expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
+          });
+        });
+      });
+    });
 
 
-    // comp.isAuthfocuse = false;
-    // comp.hasCancelBtn = false;
-    // const model = new ReplyModel();
-    // model.text = 'テスト用リプライコメント';
-    // model.created = '20171130 12:30';
-    // comp.model = model;
+  });
 
-    // fixture.detectChanges();
+  describe('キャンセルボタンフラグがfalse_自動フォーカスフラグがfalse_modelが既存の場合', () => {
+    beforeEach(() => {
+      comp.hasCancelBtn = false;
+      comp.isAuthfocuse = false;
+      const model = new ReplyModel();
+      model.text = 'ほげほげ';
+      model._id = '123456789012';
+      model.created = '201712021230';
+      model.updated = '201712021230';
+      comp.model = model;
+      fixture.detectChanges();
+    });
+
+    it('プレースホルダーが更新パターンになるべき', () => {
+      const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+      expect($textArea.getAttribute('placeholder')).toEqual('コメントを更新する');
+    });
+
+    it('キャンセルボタンが存在せず、更新ボタンのみ存在すべき', () => {
+      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      expect($buttons.length).toEqual(1);
+      expect($buttons[0].nativeElement.textContent).toEqual('  更新');
+    });
+
+    it('更新ボタンは活性であるべき', () => {
+      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
+    });
+
+    it('入力チェックエラーが存在しないべき', () => {
+      expect(comp.form.valid).toEqual(true);
+    });
   });
 
 
-  it('try', () => {
-    expect(true).toEqual(true);
-  });
-  // it('actionが更新か', async(() => {
-  //   expect(comp.action).toEqual('更新');
-  // }));
 });
