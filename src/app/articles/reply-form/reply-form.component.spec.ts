@@ -125,6 +125,7 @@ describe('ReplyFormComponent', () => {
 
   let comp: ReplyFormComponent;
   let fixture: ComponentFixture<ReplyFormComponent>;
+  let de: DebugElement;
 
 
   // let testHost: TestHostComponent;
@@ -160,6 +161,7 @@ describe('ReplyFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ReplyFormComponent);
     comp = fixture.componentInstance;
+    de = fixture.debugElement;
   });
 
   describe('キャンセルボタンフラグがfalse_自動フォーカスフラグがfalse_modelが新規の場合', () => {
@@ -172,18 +174,23 @@ describe('ReplyFormComponent', () => {
     });
 
     it('プレースホルダーが追加パターンになるべき', () => {
-      const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+      const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
       expect($textArea.getAttribute('placeholder')).toEqual('コメントを追加する');
     });
 
+    it('textareaにフォーカスが当たっているべきでない', () => {
+      const $focused = de.query(By.css(':focus'));
+      expect($focused).toEqual(null);
+    });
+
     it('キャンセルボタンが存在せず、追加ボタンのみ存在すべき', () => {
-      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      const $buttons = de.queryAll(By.css('.comment-form__operation button'));
       expect($buttons.length).toEqual(1);
-      expect($buttons[0].nativeElement.textContent).toEqual('  追加');
+      expect($buttons[0].nativeElement.textContent.trim()).toEqual('追加');
     });
 
     it('追加ボタンは非活性であるべき', () => {
-      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      const $buttons = de.queryAll(By.css('.comment-form__operation button'));
       expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
     });
 
@@ -191,43 +198,122 @@ describe('ReplyFormComponent', () => {
       expect(comp.form.valid).toEqual(false);
     });
 
-    describe('一文字入力した時', () => {
+    it('入力チェックエラーメッセージが存在べきでない', () => {
+      const $errors = de.queryAll(By.css('.mat-error'));
+      expect($errors.length).toEqual(0);
+    });
+
+    it('入力文字数が表示されるべき', () => {
+      const $hints = de.queryAll(By.css('.mat-hint'));
+      expect($hints.length).toEqual(1);
+      expect($hints[0].nativeElement.textContent).toEqual('0 / 400文字');
+    });
+
+
+    describe('1文字入力した時', () => {
       beforeEach(() => {
-        const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+        const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
         $textArea.value = 'a';
         $textArea.dispatchEvent(new Event('input'));
         fixture.detectChanges();
       });
 
-      it('入力チェックエラーが存在しないべき', () => {
+      it('入力チェックエラーが存在すべきでない', () => {
         expect(comp.form.valid).toEqual(true);
       });
 
       it('追加ボタンは活性であるべき', () => {
-        const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+        const $buttons = de.queryAll(By.css('.comment-form__operation button'));
         expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
+      });
+
+      it('入力文字数が表示されるべき', () => {
+        const $hints = de.queryAll(By.css('.mat-hint'));
+        expect($hints.length).toEqual(1);
+        expect($hints[0].nativeElement.textContent).toEqual('1 / 400文字');
       });
 
       describe('さらに入力した文字を削除した時', () => {
         beforeEach(async() => {
-          const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+          const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
           $textArea.value = '';
           $textArea.dispatchEvent(new Event('input'));
           fixture.detectChanges();
         });
 
+        it('入力文字数が表示されるべきでない', () => {
+          const $hints = de.queryAll(By.css('.mat-hint'));
+          expect($hints.length).toEqual(0);
+        });
+
         it('入力チェックエラーが存在すべき', () => {
           expect(comp.form.valid).toEqual(false);
-          const $errors = fixture.debugElement.queryAll(By.css('.mat-error'));
+        });
+
+        it('必須入力チェックエラーメッセージが存在すべき', () => {
+          const $errors = de.queryAll(By.css('.mat-error'));
           expect($errors[0].nativeElement.textContent.trim()).toEqual('コメント本文を入力してください');
         });
 
-        it('追加ボタンは活性であるべき', () => {
+        it('追加ボタンが活性であるべき', () => {
           fixture.whenStable().then(() => {
-            const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+            const $buttons = de.queryAll(By.css('.comment-form__operation button'));
             expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
           });
         });
+      });
+    });
+
+
+    describe('400文字入力した時', () => {
+      beforeEach(() => {
+        const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
+        let text = '';
+        for (let i = 0; i < 400; i++) {
+          text += 'a';
+        }
+        $textArea.value = text;
+
+        $textArea.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+      });
+
+      it('入力チェックエラーが存在すべきでない', () => {
+        expect(comp.form.valid).toEqual(true);
+      });
+
+      it('追加ボタンは活性であるべき', () => {
+        const $buttons = de.queryAll(By.css('.comment-form__operation button'));
+        expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
+      });
+    });
+
+
+    describe('401文字入力した時', () => {
+      beforeEach(() => {
+        const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
+        let text = '';
+        for (let i = 0; i < 401; i++) {
+          text += 'a';
+        }
+        $textArea.value = text;
+
+        $textArea.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+      });
+
+      it('入力チェックエラーが存在すべき', () => {
+        expect(comp.form.valid).toEqual(false);
+      });
+
+      it('追加ボタンは非活性であるべき', () => {
+        const $buttons = de.queryAll(By.css('.comment-form__operation button'));
+        expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
+      });
+
+      it('最大桁数入力チェックエラーメッセージが存在すべき', () => {
+        const $errors = de.queryAll(By.css('.mat-error'));
+        expect($errors[0].nativeElement.textContent.trim()).toEqual('コメント本文は400文字以下にしてください 401 / 400文字');
       });
     });
 
@@ -248,25 +334,57 @@ describe('ReplyFormComponent', () => {
     });
 
     it('プレースホルダーが更新パターンになるべき', () => {
-      const $textArea = fixture.debugElement.query(By.css('.comment-form__textarea')).nativeElement;
+      const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
       expect($textArea.getAttribute('placeholder')).toEqual('コメントを更新する');
     });
 
-    it('キャンセルボタンが存在せず、更新ボタンのみ存在すべき', () => {
-      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
-      expect($buttons.length).toEqual(1);
-      expect($buttons[0].nativeElement.textContent).toEqual('  更新');
-    });
-
     it('更新ボタンは活性であるべき', () => {
-      const $buttons = fixture.debugElement.queryAll(By.css('.comment-form__operation button'));
+      const $buttons = de.queryAll(By.css('.comment-form__operation button'));
+      expect($buttons[0].nativeElement.textContent.trim()).toEqual('更新');
       expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
     });
 
-    it('入力チェックエラーが存在しないべき', () => {
+    it('入力文字数が表示されるべき', () => {
+      const $hints = de.queryAll(By.css('.mat-hint'));
+      expect($hints.length).toEqual(1);
+      expect($hints[0].nativeElement.textContent).toEqual('4 / 400文字');
+    });
+
+    it('入力チェックエラーが存在すべきでない', () => {
       expect(comp.form.valid).toEqual(true);
     });
   });
 
 
+  describe('キャンセルボタンフラグがtrue_自動フォーカスフラグがfalse_modelが新規の場合', () => {
+    beforeEach(() => {
+      comp.hasCancelBtn = true;
+      comp.isAuthfocuse = false;
+      const model = new ReplyModel();
+      comp.model = model;
+      fixture.detectChanges();
+    });
+
+    it('キャンセルボタンが存在すべき', () => {
+      const $buttons = de.queryAll(By.css('.comment-form__operation button'));
+      expect($buttons.length).toEqual(2);
+      expect($buttons[0].nativeElement.textContent.trim()).toEqual('キャンセル');
+    });
+  });
+
+  describe('キャンセルボタンフラグがfalse_自動フォーカスフラグがtrue_modelが新規の場合', () => {
+    beforeEach(() => {
+      comp.hasCancelBtn = false;
+      comp.isAuthfocuse = true;
+      const model = new ReplyModel();
+      comp.model = model;
+      fixture.detectChanges();
+    });
+
+    it('textareaにフォーカスが当たっているべき', () => {
+      const $focused = de.query(By.css(':focus')).nativeElement;
+      const $textarea = de.query(By.css('.comment-form__textarea')).nativeElement;
+      expect($focused).toEqual($textarea);
+    });
+  });
 });
