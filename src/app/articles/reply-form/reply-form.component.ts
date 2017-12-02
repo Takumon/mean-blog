@@ -95,27 +95,22 @@ export class ReplyFormComponent implements OnInit, AfterViewChecked {
 
     this.model.text = form.value['text'];
 
-    if (this.isRegister) {
-      this.replyService
-        .register(this.model)
-        .subscribe(res => {
-          this.snackBar.open('リプライを追加しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-          this.complete.emit();
-          this.form.reset();
-          f.resetForm();
-        }, this.onValidationError.bind(this));
-    } else {
-      this.replyService
-        .update(this.model)
-        .subscribe(res => {
-          this.snackBar.open('リプライを更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-          this.complete.emit();
-          this.form.reset();
-          f.resetForm();
-        }, this.onValidationError.bind(this));
-      }
+    const action = this.isRegister
+      ? this.replyService.register(this.model)
+      : this.replyService.update(this.model);
+
+    action.subscribe(
+      this.onSuccess.bind(this, f),
+      this.onValidationError.bind(this)
+    );
   }
 
+  private onSuccess(f: NgForm, res: any): void {
+    this.snackBar.open(`リプライを${this.action}しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
+    this.complete.emit();
+    this.form.reset();
+    f.resetForm();
+  }
 
   // TODO 共通化できるか検討
   private onValidationError(error: any): void {

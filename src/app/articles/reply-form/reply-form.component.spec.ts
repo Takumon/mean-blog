@@ -2,7 +2,10 @@ import {
   ComponentFixture,
   TestBed,
   async,
-  inject } from '@angular/core/testing';
+  inject,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { HttpRequest } from '@angular/common/http';
@@ -12,6 +15,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { APP_BASE_HREF } from '@angular/common';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
+import { MatSnackBar } from '@angular/material';
 
 import {
   ErrorStateMatcher,
@@ -20,6 +24,7 @@ import {
 import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 
+import { Constant } from '../../shared/constant';
 
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { MessageService } from '../../shared/services/message.service';
@@ -105,32 +110,14 @@ describe('ReplyFormComponent', () => {
   }
 
   class MockReplyService {
-    // 登録
-    register(reply: ReplyModel, withUser: boolean = false , withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
-      reply._id = '123456789012';
-      reply.created = '2017/11/30 12:30';
-      reply.updated = '2017/11/30 12:30';
-
-      return Observable.of(reply);
-    }
-
-    // 更新（差分更新）
-    update(reply: ReplyModel, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
-      reply.updated = '2017/12/1 12:30';
-      return Observable.of(reply);
-    }
+    update() {}
+    register() {}
   }
-
-
 
   let comp: ReplyFormComponent;
   let fixture: ComponentFixture<ReplyFormComponent>;
   let de: DebugElement;
 
-
-  // let testHost: TestHostComponent;
-  // let fixture: ComponentFixture<TestHostComponent>;
-  // let heroEl: DebugElement;
 
   beforeEach(async() => {
 
@@ -210,6 +197,49 @@ describe('ReplyFormComponent', () => {
     });
 
 
+    describe('追加ボタン押下した場合', () => {
+      let replyService: ReplyService;
+      let spyOfUpsert;
+      let spyOfRegisterOfReplyService;
+      let spyOfUpdateOfReplyService;
+
+      beforeEach(() => {
+        spyOfUpsert = spyOn(comp, 'upsert').and.callThrough();
+        replyService = de.injector.get(ReplyService);
+        spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
+        spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+        // 追加ボタン押下前
+        expect(comp.model._id).toEqual(undefined);
+        expect(comp.model.articleId).toEqual(undefined);
+        expect(comp.model.commentId).toEqual(undefined);
+        expect(comp.model.text).toEqual(undefined);
+        expect(comp.model.user).toEqual(undefined);
+        expect(comp.model.created).toEqual(undefined);
+        expect(comp.model.updated).toEqual(undefined);
+        expect(comp.model.isEditable).toEqual(undefined);
+        expect(comp.model.addReply).toEqual(undefined);
+        const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+        $upsertBtn.triggerEventHandler('click', null);
+
+      });
+
+      it('upsertが呼ばれるべき', fakeAsync((done) => {
+        fixture.detectChanges();
+        tick();
+
+        expect(spyOfUpsert).toHaveBeenCalled();
+      }));
+
+      it('ReplyService#updateとReplyService#registerは呼ばれるべきでない', fakeAsync(() => {
+        fixture.detectChanges();
+        tick();
+
+        expect(spyOfUpdateOfReplyService).not.toHaveBeenCalled();
+        expect(spyOfRegisterOfReplyService).not.toHaveBeenCalled();
+      }));
+    });
+
+
     describe('1文字入力した時', () => {
       beforeEach(() => {
         const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
@@ -231,6 +261,87 @@ describe('ReplyFormComponent', () => {
         const $hints = de.queryAll(By.css('.mat-hint'));
         expect($hints.length).toEqual(1);
         expect($hints[0].nativeElement.textContent).toEqual('1 / 400文字');
+      });
+
+
+      describe('追加ボタン押下した場合', () => {
+        let replyService: ReplyService;
+        let spyOfUpsert;
+        let spyOfRegisterOfReplyService;
+        let spyOfUpdateOfReplyService;
+        let snackbar: MatSnackBar;
+        let spyOfOpenOfSnackbar;
+
+
+        beforeEach(() => {
+          spyOfUpsert = spyOn(comp, 'upsert').and.callThrough();
+          replyService = de.injector.get(ReplyService);
+          spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
+          spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+          snackbar = de.injector.get(MatSnackBar);
+          spyOfOpenOfSnackbar = spyOn(snackbar, 'open');
+
+          // 追加ボタン押下前
+          expect(comp.model._id).toEqual(undefined);
+          expect(comp.model.articleId).toEqual(undefined);
+          expect(comp.model.commentId).toEqual(undefined);
+          expect(comp.model.text).toEqual(undefined);
+          expect(comp.model.user).toEqual(undefined);
+          expect(comp.model.created).toEqual(undefined);
+          expect(comp.model.updated).toEqual(undefined);
+          expect(comp.model.isEditable).toEqual(undefined);
+          expect(comp.model.addReply).toEqual(undefined);
+
+          const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+          $upsertBtn.triggerEventHandler('click', null);
+        });
+
+        it('upsertが呼ばれるべき', fakeAsync((done) => {
+          fixture.detectChanges();
+          tick();
+
+          expect(spyOfUpsert).toHaveBeenCalled();
+        }));
+
+        it('completeイベントが発生すべき', fakeAsync((done) => {
+          comp.complete.subscribe(() => {
+            done();
+          });
+
+          fixture.detectChanges();
+          tick();
+        }));
+
+        it('formがリセットされるべき', fakeAsync((done) => {
+          fixture.detectChanges();
+          tick();
+
+          expect(comp.text.value).toEqual(null);
+        }));
+
+        it('modelにformのtextがセットされるべき', fakeAsync((done) => {
+          fixture.detectChanges();
+          tick();
+
+          expect(comp.model.text).toEqual('a');
+        }));
+
+        it('ReplyService#registerが呼ばれるべき', fakeAsync((done) => {
+          fixture.detectChanges();
+          tick();
+
+          expect(spyOfRegisterOfReplyService).toHaveBeenCalled();
+          expect(spyOfUpdateOfReplyService).not.toHaveBeenCalled();
+        }));
+
+        it('SnackBarが呼ばれるべき', fakeAsync((done) => {
+          fixture.detectChanges();
+          tick();
+
+          expect(spyOfOpenOfSnackbar).toHaveBeenCalled();
+          expect(spyOfOpenOfSnackbar).toHaveBeenCalledWith('リプライを追加しました。', null, Constant.SNACK_BAR_DEFAULT_OPTION);
+        }));
+
       });
 
       describe('さらに入力した文字を削除した時', () => {
@@ -287,7 +398,6 @@ describe('ReplyFormComponent', () => {
         expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
       });
     });
-
 
     describe('401文字入力した時', () => {
       beforeEach(() => {
@@ -353,6 +463,93 @@ describe('ReplyFormComponent', () => {
     it('入力チェックエラーが存在すべきでない', () => {
       expect(comp.form.valid).toEqual(true);
     });
+
+    describe('リプライを変更して更新ボタン押下した場合', () => {
+      let replyService: ReplyService;
+      let spyOfUpsert;
+      let spyOfRegisterOfReplyService;
+      let spyOfUpdateOfReplyService;
+      let snackbar: MatSnackBar;
+      let spyOfOpenOfSnackbar;
+
+
+      beforeEach(() => {
+        const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
+        $textArea.value = $textArea.value + 'ふが';
+        $textArea.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+
+
+        spyOfUpsert = spyOn(comp, 'upsert').and.callThrough();
+        replyService = de.injector.get(ReplyService);
+        spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
+        spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+        snackbar = de.injector.get(MatSnackBar);
+        spyOfOpenOfSnackbar = spyOn(snackbar, 'open');
+
+
+        // ボタン押下前
+        expect(comp.model._id).toEqual('123456789012');
+        expect(comp.model.articleId).toEqual(undefined);
+        expect(comp.model.commentId).toEqual(undefined);
+        expect(comp.model.text).toEqual('ほげほげ');
+        expect(comp.model.user).toEqual(undefined);
+        expect(comp.model.created).toEqual('201712021230');
+        expect(comp.model.updated).toEqual('201712021230');
+        expect(comp.model.isEditable).toEqual(undefined);
+        expect(comp.model.addReply).toEqual(undefined);
+
+        const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+        $upsertBtn.triggerEventHandler('click', null);
+      });
+
+      it('upsertが呼ばれるべき', fakeAsync((done) => {
+        fixture.detectChanges();
+        tick();
+
+        expect(spyOfUpsert).toHaveBeenCalled();
+      }));
+
+      it('completeイベントが発生すべき', fakeAsync((done) => {
+        comp.complete.subscribe(() => {
+          done();
+        });
+
+        fixture.detectChanges();
+        tick();
+      }));
+
+      it('formがリセットされるべき', fakeAsync((done) => {
+        fixture.detectChanges();
+        tick();
+
+        expect(comp.text.value).toEqual(null);
+      }));
+
+      it('modelにformのtextがセットされるべき', fakeAsync((done) => {
+        fixture.detectChanges();
+        tick();
+
+        expect(comp.model.text).toEqual('ほげほげふが');
+      }));
+
+      it('ReplyService#updateが呼ばれるべき', fakeAsync((done) => {
+        fixture.detectChanges();
+        tick();
+
+        expect(spyOfRegisterOfReplyService).not.toHaveBeenCalled();
+        expect(spyOfUpdateOfReplyService).toHaveBeenCalled();
+      }));
+
+      it('SnackBarが呼ばれるべき', fakeAsync((done) => {
+        fixture.detectChanges();
+        tick();
+
+        expect(spyOfOpenOfSnackbar).toHaveBeenCalled();
+        expect(spyOfOpenOfSnackbar).toHaveBeenCalledWith('リプライを更新しました。', null, Constant.SNACK_BAR_DEFAULT_OPTION);
+      }));
+
+    });
   });
 
 
@@ -370,6 +567,16 @@ describe('ReplyFormComponent', () => {
       expect($buttons.length).toEqual(2);
       expect($buttons[0].nativeElement.textContent.trim()).toEqual('キャンセル');
     });
+
+    it('キャンセルボタン押下時にcancelイベントが発生すべき', (done) => {
+      comp.cancel.subscribe(() => {
+        expect(true).toEqual(true);
+        done();
+      });
+
+      const $cancelBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+      $cancelBtn.triggerEventHandler('click', null);
+    }, 5000);
   });
 
   describe('キャンセルボタンフラグがfalse_自動フォーカスフラグがtrue_modelが新規の場合', () => {
@@ -378,12 +585,13 @@ describe('ReplyFormComponent', () => {
       comp.isAuthfocuse = true;
       const model = new ReplyModel();
       comp.model = model;
-      fixture.detectChanges();
     });
 
     it('textareaにフォーカスが当たっているべき', () => {
-      const $focused = de.query(By.css(':focus')).nativeElement;
+      fixture.detectChanges();
+
       const $textarea = de.query(By.css('.comment-form__textarea')).nativeElement;
+      const $focused = de.query(By.css(':focus')).nativeElement;
       expect($focused).toEqual($textarea);
     });
   });
