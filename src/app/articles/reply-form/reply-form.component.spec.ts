@@ -43,45 +43,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
-// テスト用Component
-import { Component } from '@angular/core';
-
-@Component({
-  template: `
-  <app-reply-form
-    [model]="model"
-    [hasCancelBtn]="hasCancelBtn"
-    [isAuthfocuse]="isAuthfocuse"
-    (complete)="refreshComments()"
-    (cancel)="cancel()"
-  ></app-reply-form>
-`
-})
-class TestHostComponent {
-  model: ReplyModel;
-  hasCancelBtn = true;
-  isAuthfocuse = false;
-
-  constructor() {
-    const model = new ReplyModel();
-    model.text = 'テスト用リプライコメント';
-    model.created = '20171130 12:30';
-    this.model = model;
-  }
-
-  refreshComments() {
-    console.log('refreshComments');
-  }
-  cancel() {
-    console.log('cancel');
-  }
-}
-
-
-
 describe('ReplyFormComponent', () => {
-
-
 
   class MockAuthenticationService {
     loginUser = new UserModel();
@@ -122,7 +84,7 @@ describe('ReplyFormComponent', () => {
   beforeEach(async() => {
 
     TestBed.configureTestingModule({
-      declarations: [ ReplyFormComponent, TestHostComponent ],
+      declarations: [ ReplyFormComponent ],
       imports: [
         BrowserAnimationsModule,
         RouterTestingModule,
@@ -160,9 +122,9 @@ describe('ReplyFormComponent', () => {
       fixture.detectChanges();
     });
 
-    it('プレースホルダーが追加パターンになるべき', () => {
+    it('プレースホルダーが登録パターンになるべき', () => {
       const $textArea = de.query(By.css('.comment-form__textarea')).nativeElement;
-      expect($textArea.getAttribute('placeholder')).toEqual('コメントを追加する');
+      expect($textArea.getAttribute('placeholder')).toEqual('コメントを登録する');
     });
 
     it('textareaにフォーカスが当たっているべきでない', () => {
@@ -170,13 +132,13 @@ describe('ReplyFormComponent', () => {
       expect($focused).toEqual(null);
     });
 
-    it('キャンセルボタンが存在せず、追加ボタンのみ存在すべき', () => {
+    it('キャンセルボタンが存在せず、登録ボタンのみ存在すべき', () => {
       const $buttons = de.queryAll(By.css('.comment-form__operation button'));
       expect($buttons.length).toEqual(1);
-      expect($buttons[0].nativeElement.textContent.trim()).toEqual('追加');
+      expect($buttons[0].nativeElement.textContent).toContain('登録');
     });
 
-    it('追加ボタンは非活性であるべき', () => {
+    it('登録ボタンは非活性であるべき', () => {
       const $buttons = de.queryAll(By.css('.comment-form__operation button'));
       expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
     });
@@ -197,7 +159,7 @@ describe('ReplyFormComponent', () => {
     });
 
 
-    describe('追加ボタン押下した場合', () => {
+    describe('登録ボタン押下した場合', () => {
       let replyService: ReplyService;
       let spyOfUpsert;
       let spyOfRegisterOfReplyService;
@@ -208,7 +170,7 @@ describe('ReplyFormComponent', () => {
         replyService = de.injector.get(ReplyService);
         spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
         spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
-        // 追加ボタン押下前
+        // 登録ボタン押下前
         expect(comp.model._id).toEqual(undefined);
         expect(comp.model.articleId).toEqual(undefined);
         expect(comp.model.commentId).toEqual(undefined);
@@ -252,7 +214,7 @@ describe('ReplyFormComponent', () => {
         expect(comp.form.valid).toEqual(true);
       });
 
-      it('追加ボタンは活性であるべき', () => {
+      it('登録ボタンは活性であるべき', () => {
         const $buttons = de.queryAll(By.css('.comment-form__operation button'));
         expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
       });
@@ -264,7 +226,7 @@ describe('ReplyFormComponent', () => {
       });
 
 
-      describe('追加ボタン押下した場合', () => {
+      describe('登録ボタン押下した場合', () => {
         let replyService: ReplyService;
         let spyOfUpsert;
         let spyOfRegisterOfReplyService;
@@ -276,12 +238,10 @@ describe('ReplyFormComponent', () => {
         beforeEach(() => {
           spyOfUpsert = spyOn(comp, 'upsert').and.callThrough();
           replyService = de.injector.get(ReplyService);
-          spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
-          spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
           snackbar = de.injector.get(MatSnackBar);
           spyOfOpenOfSnackbar = spyOn(snackbar, 'open');
 
-          // 追加ボタン押下前
+          // 登録ボタン押下前
           expect(comp.model._id).toEqual(undefined);
           expect(comp.model.articleId).toEqual(undefined);
           expect(comp.model.commentId).toEqual(undefined);
@@ -292,57 +252,158 @@ describe('ReplyFormComponent', () => {
           expect(comp.model.isEditable).toEqual(undefined);
           expect(comp.model.addReply).toEqual(undefined);
 
-          const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
-          $upsertBtn.triggerEventHandler('click', null);
         });
 
-        it('upsertが呼ばれるべき', fakeAsync((done) => {
-          fixture.detectChanges();
-          tick();
-
-          expect(spyOfUpsert).toHaveBeenCalled();
-        }));
-
-        it('completeイベントが発生すべき', fakeAsync((done) => {
-          comp.complete.subscribe(() => {
-            done();
+        describe('登録に成功する場合', () => {
+          beforeEach(() => {
+            spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
+            spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+            const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+            $upsertBtn.triggerEventHandler('click', null);
           });
 
-          fixture.detectChanges();
-          tick();
-        }));
 
-        it('formがリセットされるべき', fakeAsync((done) => {
-          fixture.detectChanges();
-          tick();
+          it('upsertが呼ばれるべき', fakeAsync((done) => {
+            fixture.detectChanges();
+            tick();
 
-          expect(comp.text.value).toEqual(null);
-        }));
+            expect(spyOfUpsert).toHaveBeenCalled();
+          }));
 
-        it('modelにformのtextがセットされるべき', fakeAsync((done) => {
-          fixture.detectChanges();
-          tick();
+          it('completeイベントが発生すべき', fakeAsync((done) => {
+            comp.complete.subscribe(() => {
+              done();
+            });
 
-          expect(comp.model.text).toEqual('a');
-        }));
+            fixture.detectChanges();
+            tick();
+          }));
 
-        it('ReplyService#registerが呼ばれるべき', fakeAsync((done) => {
-          fixture.detectChanges();
-          tick();
+          it('formがリセットされるべき', fakeAsync((done) => {
+            fixture.detectChanges();
+            tick();
 
-          expect(spyOfRegisterOfReplyService).toHaveBeenCalled();
-          expect(spyOfUpdateOfReplyService).not.toHaveBeenCalled();
-        }));
+            expect(comp.text.value).toEqual(null);
+          }));
 
-        it('SnackBarが呼ばれるべき', fakeAsync((done) => {
-          fixture.detectChanges();
-          tick();
+          it('modelにformのtextがセットされるべき', fakeAsync((done) => {
+            fixture.detectChanges();
+            tick();
 
-          expect(spyOfOpenOfSnackbar).toHaveBeenCalled();
-          expect(spyOfOpenOfSnackbar).toHaveBeenCalledWith('リプライを追加しました。', null, Constant.SNACK_BAR_DEFAULT_OPTION);
-        }));
+            expect(comp.model.text).toEqual('a');
+          }));
 
+          it('ReplyService#registerが呼ばれるべき', fakeAsync((done) => {
+            fixture.detectChanges();
+            tick();
+
+            expect(spyOfRegisterOfReplyService).toHaveBeenCalled();
+            expect(spyOfUpdateOfReplyService).not.toHaveBeenCalled();
+          }));
+
+          it('SnackBarが呼ばれるべき', fakeAsync((done) => {
+            fixture.detectChanges();
+            tick();
+
+            expect(spyOfOpenOfSnackbar).toHaveBeenCalled();
+            expect(spyOfOpenOfSnackbar).toHaveBeenCalledWith('リプライを登録しました。', null, Constant.SNACK_BAR_DEFAULT_OPTION);
+          }));
+        });
+
+        describe('登録に失敗する場合', () => {
+
+          describe('リプライコメントの入力チェックエラー2件の場合', () => {
+            beforeEach(() => {
+              spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.throw({
+                errors: [
+                  {
+                    param: 'text',
+                    msg: 'コメント本文の入力チェックエラー1件目'
+                  },
+                  {
+                    param: 'text',
+                    msg: 'コメント本文の入力チェックエラー2件目'
+                  }
+                ]
+              }));
+              spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+              const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+              $upsertBtn.triggerEventHandler('click', null);
+            });
+
+            it('upsertが呼ばれるべき', fakeAsync(() => {
+              fixture.detectChanges();
+              tick();
+
+              expect(spyOfUpsert).toHaveBeenCalled();
+            }));
+
+            it('ReplyService#registerが呼ばれるべき', fakeAsync(() => {
+              fixture.detectChanges();
+              tick();
+
+              expect(spyOfRegisterOfReplyService).toHaveBeenCalled();
+            }));
+
+            it('入力チェックエラーメッセージが表示されるべき', fakeAsync(() => {
+              fixture.detectChanges();
+              tick();
+
+              const errorMessages = de.queryAll(By.css('.mat-error'))[0].nativeElement.textContent;
+              expect(errorMessages).toContain('コメント本文の入力チェックエラー1件目');
+              expect(errorMessages).toContain('コメント本文の入力チェックエラー2件目');
+            }));
+          });
+
+
+          describe('共通入力チェックエラー2件の場合', () => {
+            let messageBarService: MessageBarService;
+            let spyOfshowValidationErrorOfMessageBarService;
+
+            beforeEach(() => {
+              messageBarService = de.injector.get(MessageBarService);
+              spyOfshowValidationErrorOfMessageBarService = spyOn(messageBarService, 'showValidationError').and.callThrough();
+              spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.throw({
+                errors: [
+                  {
+                    param: 'common',
+                    msg: '共通入力チェックエラー1件目'
+                  },
+                  {
+                    param: 'common',
+                    msg: '共通入力チェックエラー2件目'
+                  }
+                ]
+              }));
+              spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+              const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
+              $upsertBtn.triggerEventHandler('click', null);
+            });
+
+            it('エラーメッセージがSnackbarで表示されるべき', fakeAsync(() => {
+              fixture.detectChanges();
+              tick();
+
+              expect(de.queryAll(By.css('.mat-error')).length).toEqual(0);
+              expect(spyOfshowValidationErrorOfMessageBarService).toHaveBeenCalledWith({
+                errors: [
+                  {
+                    param: 'common',
+                    msg: '共通入力チェックエラー1件目'
+                  },
+                  {
+                    param: 'common',
+                    msg: '共通入力チェックエラー2件目'
+                  }
+                ]
+              });
+            }));
+          });
+
+        });
       });
+
+
 
       describe('さらに入力した文字を削除した時', () => {
         beforeEach(async() => {
@@ -363,10 +424,10 @@ describe('ReplyFormComponent', () => {
 
         it('必須入力チェックエラーメッセージが存在すべき', () => {
           const $errors = de.queryAll(By.css('.mat-error'));
-          expect($errors[0].nativeElement.textContent.trim()).toEqual('コメント本文を入力してください');
+          expect($errors[0].nativeElement.textContent).toContain('コメント本文を入力してください');
         });
 
-        it('追加ボタンが活性であるべき', () => {
+        it('登録ボタンが活性であるべき', () => {
           fixture.whenStable().then(() => {
             const $buttons = de.queryAll(By.css('.comment-form__operation button'));
             expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
@@ -393,7 +454,7 @@ describe('ReplyFormComponent', () => {
         expect(comp.form.valid).toEqual(true);
       });
 
-      it('追加ボタンは活性であるべき', () => {
+      it('登録ボタンは活性であるべき', () => {
         const $buttons = de.queryAll(By.css('.comment-form__operation button'));
         expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
       });
@@ -416,14 +477,14 @@ describe('ReplyFormComponent', () => {
         expect(comp.form.valid).toEqual(false);
       });
 
-      it('追加ボタンは非活性であるべき', () => {
+      it('登録ボタンは非活性であるべき', () => {
         const $buttons = de.queryAll(By.css('.comment-form__operation button'));
         expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(true);
       });
 
       it('最大桁数入力チェックエラーメッセージが存在すべき', () => {
         const $errors = de.queryAll(By.css('.mat-error'));
-        expect($errors[0].nativeElement.textContent.trim()).toEqual('コメント本文は400文字以下にしてください 401 / 400文字');
+        expect($errors[0].nativeElement.textContent).toContain('コメント本文は400文字以下にしてください 401 / 400文字');
       });
     });
 
@@ -450,7 +511,7 @@ describe('ReplyFormComponent', () => {
 
     it('更新ボタンは活性であるべき', () => {
       const $buttons = de.queryAll(By.css('.comment-form__operation button'));
-      expect($buttons[0].nativeElement.textContent.trim()).toEqual('更新');
+      expect($buttons[0].nativeElement.textContent).toContain('更新');
       expect($buttons[0].nativeElement.hasAttribute('disabled')).toEqual(false);
     });
 
@@ -565,7 +626,7 @@ describe('ReplyFormComponent', () => {
     it('キャンセルボタンが存在すべき', () => {
       const $buttons = de.queryAll(By.css('.comment-form__operation button'));
       expect($buttons.length).toEqual(2);
-      expect($buttons[0].nativeElement.textContent.trim()).toEqual('キャンセル');
+      expect($buttons[0].nativeElement.textContent).toContain('キャンセル');
     });
 
     it('キャンセルボタン押下時にcancelイベントが発生すべき', (done) => {
