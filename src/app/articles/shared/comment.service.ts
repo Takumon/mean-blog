@@ -11,11 +11,16 @@ import { CommentWithUserModel } from './comment-with-user.model';
 import { CommentWithArticleModel } from './comment-with-article.model';
 
 
+interface HttpOption {
+  condition?: Object;
+  withUser: boolean;
+  withArticle: boolean;
+}
+
 @Injectable()
 export class CommentService {
   private Constant = Constant;
   private baseCommentUrl = '/api/comments';
-  private baseReplyUrl = '/api/replies';
 
   constructor(
     private http: HttpClient,
@@ -25,54 +30,43 @@ export class CommentService {
   get(condition: Object, withUser: boolean = false, withArticle: boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>> {
     const URL = this.baseCommentUrl;
 
-    const headers = this.jwtService.getHeaders();
-    let params = new HttpParams()
-      .set('condition', JSON.stringify(condition));
+    const options = this.constructOptions({ condition, withUser, withArticle });
 
-    if (withUser) {
-      params = params.set('withUser', 'true');
-    }
-    if (withArticle) {
-      params = params.set('withArticle', 'true');
-    }
-
-    return this.http.get<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>>(URL, { headers, params });
+    return this.http.get<Array<CommentModel> | Array<CommentWithUserModel> | Array<CommentWithArticleModel>>(URL, options);
   }
 
-  register(comment: CommentModel): Observable<CommentModel> {
+  register(comment: CommentModel, withUser: boolean = false , withArticle: boolean = false): Observable<CommentModel | CommentWithUserModel | CommentWithArticleModel> {
     const URL = this.baseCommentUrl;
 
-    const headers: HttpHeaders = this.jwtService.getHeaders();
+    const options = this.constructOptions({ withUser, withArticle });
 
-    return this.http.post<CommentModel>(URL, comment, { headers });
+    return this.http.post<CommentModel | CommentWithUserModel | CommentWithArticleModel>(URL, comment, options);
   }
 
   // 必ず差分更新とする
-  update(comment: CommentModel): Observable<CommentModel> {
+  update(comment: CommentModel, withUser: boolean = false, withArticle: boolean = false): Observable<CommentModel | CommentWithUserModel | CommentWithArticleModel> {
     const URL = `${this.baseCommentUrl}/${comment._id}`;
 
-    const headers: HttpHeaders = this.jwtService.getHeaders();
+    const options = this.constructOptions({ withUser, withArticle });
 
-    return this.http.put<CommentModel>(URL, comment, { headers });
+    return this.http.put<CommentModel | CommentWithUserModel | CommentWithArticleModel>(URL, comment, options);
   }
 
-  delete(commentId: String): Observable<CommentModel> {
+  delete(commentId: string, withUser: boolean = false, withArticle: boolean = false): Observable<CommentModel | CommentWithUserModel | CommentWithArticleModel> {
     const URL = `${this.baseCommentUrl}/${commentId}`;
 
-    return this.http.delete<CommentModel>(URL, this.jwtService.getRequestOptions());
+    const options = this.constructOptions({ withUser, withArticle });
+
+    return this.http.delete<CommentModel | CommentWithUserModel | CommentWithArticleModel>(URL, options);
   }
 
 
-  getOfArticle(_idOfArticle: string, withUser: boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel>> {
+  getOfArticle(_idOfArticle: string, withUser: boolean = false, withArticle: boolean = false): Observable<Array<CommentModel> | Array<CommentWithUserModel>> {
     const URL = `${this.baseCommentUrl}/ofArticle/${_idOfArticle}`;
 
-    const headers = this.jwtService.getHeaders();
-    let params = new HttpParams();
-    if (withUser) {
-      params = params.set('withUser', 'true');
-    }
+    const options = this.constructOptions({ withUser, withArticle });
 
-    return this.http.get<Array<CommentModel> | Array<CommentWithUserModel>>(URL, { headers, params });
+    return this.http.get<Array<CommentModel> | Array<CommentWithUserModel>>(URL, options);
   }
 
 
@@ -91,5 +85,24 @@ export class CommentService {
     });
 
     return count;
+  }
+
+  private constructOptions(httpOption: HttpOption): {params: HttpParams, headers: HttpHeaders} {
+    const headers = this.jwtService.getHeaders();
+    let params = new HttpParams();
+
+    if (httpOption.condition) {
+      params = params.set('condition', JSON.stringify(httpOption.condition));
+    }
+
+    if (httpOption.withUser) {
+      params = params.set('withUser', 'true');
+    }
+
+    if (httpOption.withArticle) {
+      params = params.set('withArticle', 'true');
+    }
+
+    return { headers, params };
   }
 }

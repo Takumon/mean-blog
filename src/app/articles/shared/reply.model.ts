@@ -7,7 +7,7 @@ export class ReplyModel {
   articleId: string;
   /** リプライ先のコメントの_id */
   commentId: string;
-  /** リプライコメント */
+  /** リプライコメント本文 */
   text: string;
   /*+ コメントしたユーザの_id */
   user: string;
@@ -16,8 +16,8 @@ export class ReplyModel {
   /** 更新日時 */
   updated: string;
 
-  /** （表示制御用）編集可能か */
+  /** （表示制御用）編集中か */
   isEditable?: boolean;
-  /** （表示制御様）本リプライに対してリプライをしようとしているか */
+  /** （表示制御様）リプライに対してリプライを追加しようとしているか */
   addReply?: boolean;
 }
