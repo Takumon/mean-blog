@@ -101,7 +101,7 @@ export class CommentListComponent implements OnInit {
   }
 
 
-  deleteComment(commentId: String): void {
+  deleteComment(commentId: string): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'コメント削除',
