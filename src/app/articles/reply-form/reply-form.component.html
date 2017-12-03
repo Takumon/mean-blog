@@ -8,7 +8,7 @@
       lazyLoad="/api/images/avator/{{ auth.loginUser._id }}"
       [offset]="this.Constant.LAZY_LOAD_OFFSET"
       />
-    <mat-input-container
+    <mat-form-field
       class="comment-form__textarea-wrapper">
       <textarea
         *ngIf="isAuthfocuse"
@@ -30,14 +30,14 @@
         {{ messageService.get('required',['コメント本文']) }}
       </mat-error>
       <mat-error *ngIf="messageService.hasError(text, 'maxlength')">
-        {{ messageService.get('maxlength',['コメント本文' , text.getError('maxlength').requiredLength]) }} {{text.value?.length || 0}} / 400文字
+        {{ messageService.get('maxNumberOfCharacters',['コメント本文' , text.getError('maxlength').requiredLength]) }} {{text.value?.length || 0}} / 400文字
       </mat-error>
       <mat-error *ngIf="messageService.hasErrorWithoutDirty(text, 'remote')">
         <ng-container *ngFor="let msg of text.getError('remote')">
           {{msg}}<br>
         </ng-container>
       </mat-error>
-    </mat-input-container>
+    </mat-form-field>
   </div>
   <div class="comment-form__operation">
     <div class="comment-form__operation__spacer"></div>

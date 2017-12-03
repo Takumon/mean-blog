@@ -24,6 +24,8 @@ export class MessageService {
     required: '{0}を入力してください',
     minlength: '{0}は{1}桁以上にしてください',
     maxlength: '{0}は{1}桁以下にしてください',
+    minNumberOfCharacters: '{0}は{1}文字桁以上にしてください',
+    maxNumberOfCharacters: '{0}は{1}文字以下にしてください',
     passwordMatch: 'パスワードと確認用パスワードが一致しません',
     changingPassowrd: '新しいパスワードが現在のパスワードを同じです',
     pattern_hankakueisuji: '{0}は半角英数字で入力してください',
