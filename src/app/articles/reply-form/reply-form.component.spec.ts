@@ -1,34 +1,21 @@
-import {
-  ComponentFixture,
-  TestBed,
-  async,
-  inject,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-import { HttpRequest } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ReactiveFormsModule, FormsModule　} from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
-import { APP_BASE_HREF } from '@angular/common';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
-import { MatSnackBar } from '@angular/material';
 
-import {
-  ErrorStateMatcher,
-} from '@angular/material';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { DebugElement } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
+import { By } from '@angular/platform-browser';
+import { MatSnackBar, ErrorStateMatcher } from '@angular/material';
+
+import { SharedModule } from '../../shared/shared.module';
 
 import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
-
 import { Constant } from '../../shared/constant';
-
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { MessageService } from '../../shared/services/message.service';
-import { SharedModule } from '../../shared/shared.module';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 
 import { ReplyService } from '../shared/reply.service';
@@ -39,7 +26,6 @@ import { ReplyWithArticleModel } from '../shared/reply-with-article.model';
 
 import { ReplyFormComponent } from './reply-form.component';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -86,11 +72,8 @@ describe('ReplyFormComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ReplyFormComponent ],
       imports: [
-        BrowserAnimationsModule,
         RouterTestingModule,
         SharedModule,
-        ReactiveFormsModule,
-        FormsModule,
       ],
       providers: [
         ErrorStateMatcherContainParentGroup,

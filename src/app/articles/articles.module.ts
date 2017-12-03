@@ -1,7 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateAdapter, MatPaginatorIntl } from '@angular/material';
 
 import { SharedModule } from '../shared/shared.module';
@@ -79,11 +76,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     DraftDetailComponent,
   ],
   imports: [
-    BrowserModule,
     ArticlesRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
 
     SharedModule,
   ],

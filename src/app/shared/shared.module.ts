@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule, FormsModule　} from '@angular/forms';
 
 import {
   ErrorStateMatcher,
@@ -51,7 +53,10 @@ import { Error500Component } from './components/error-500.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     LazyLoadImageModule,
+    ReactiveFormsModule,
+    FormsModule,
 
     SharedRoutingModule,
 
@@ -85,6 +90,14 @@ import { Error500Component } from './components/error-500.component';
     MessageBarComponent,
   ],
   exports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    FormsModule,
+
+    SharedRoutingModule,
+
+
     AutofocusDirective,
     DragAndDropDirective,
     ConfirmDialogComponent,
