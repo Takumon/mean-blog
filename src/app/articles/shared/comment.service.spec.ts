@@ -557,5 +557,176 @@ describe('CommentService', () => {
       req.flush(mockResponse);
     });
   });
+
+
+  describe('count', () => {
+
+    it ('引数がnullの場合 件数は0と判断されるべき', () => {
+      const arg_comments = null;
+
+      const count = service.count(arg_comments);
+
+      expect(count).toEqual(0);
+    });
+
+    it ('引数が空配列の場合 件数は0と判断されるべき', () => {
+      const arg_comments = [];
+
+      const count = service.count(arg_comments);
+
+      expect(count).toEqual(0);
+    });
+
+    it ('引数が全て論理削除されたコメントリストの場合 件数は0と判断されるべき', () => {
+      const arg_comments: Array<CommentWithUserModel> = [
+        {
+          _id: '123456789011',
+          articleId: '123456789022',
+          text: 'コメント本文',
+          user: {
+            _id: '123456789044',
+            userId: 'userId1',
+            created: '20150101 12:34:30',
+            updated: '20150101 12:34:30',
+            isAdmin: false,
+          },
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30',
+          deleted: '20150101 12:34:30',
+          replies: []
+        },
+        {
+          _id: '123456789012',
+          articleId: '123456789022',
+          text: 'コメント本文',
+          user: {
+            _id: '123456789044',
+            userId: 'userId1',
+            created: '20150101 12:34:30',
+            updated: '20150101 12:34:30',
+            isAdmin: false,
+          },
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30',
+          deleted: '20150101 12:34:30',
+          replies: []
+        },
+      ];
+
+      const count = service.count(arg_comments);
+
+      expect(count).toEqual(0);
+    });
+
+
+    it ('引数が全て論理削除されていないコメントリストかつコメントがリプライを持たない場合 件数はコメントの件数と判断されるべき', () => {
+      const arg_comments: Array<CommentWithUserModel> = [
+        {
+          _id: '123456789011',
+          articleId: '123456789022',
+          text: 'コメント本文',
+          user: {
+            _id: '123456789044',
+            userId: 'userId1',
+            created: '20150101 12:34:30',
+            updated: '20150101 12:34:30',
+            isAdmin: false,
+          },
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30',
+          replies: []
+        },
+        {
+          _id: '123456789012',
+          articleId: '123456789022',
+          text: 'コメント本文',
+          user: {
+            _id: '123456789044',
+            userId: 'userId1',
+            created: '20150101 12:34:30',
+            updated: '20150101 12:34:30',
+            isAdmin: false,
+          },
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30',
+          replies: []
+        },
+      ];
+
+      const count = service.count(arg_comments);
+
+      expect(count).toEqual(2);
+    });
+
+    it ('引数が全て論理削除されていないコメントリストかつコメントがリプライを持つ場合 件数はコメントとリプライを足した件数と判断されるべき', () => {
+      const arg_comments: Array<CommentWithUserModel> = [
+        {
+          _id: '123456789011',
+          articleId: '123456789022',
+          text: 'コメント本文',
+          user: {
+            _id: '123456789044',
+            userId: 'userId1',
+            created: '20150101 12:34:30',
+            updated: '20150101 12:34:30',
+            isAdmin: false,
+          },
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30',
+          replies: [
+            {
+              _id: '123456789013',
+              articleId: '123456789022',
+              commentId: '123456789011',
+              text: 'リプライ本文',
+              user: {
+                _id: '123456789044',
+                userId: 'userId1',
+                created: '20150101 12:34:30',
+                updated: '20150101 12:34:30',
+                isAdmin: false,
+              },
+              created: '20150101 12:34:30',
+              updated: '20150101 12:34:30',
+            },
+            {
+              _id: '123456789014',
+              articleId: '123456789022',
+              commentId: '123456789011',
+              text: 'リプライ本文',
+              user: {
+                _id: '123456789044',
+                userId: 'userId1',
+                created: '20150101 12:34:30',
+                updated: '20150101 12:34:30',
+                isAdmin: false,
+              },
+              created: '20150101 12:34:30',
+              updated: '20150101 12:34:30',
+            },
+          ]
+        },
+        {
+          _id: '123456789012',
+          articleId: '123456789022',
+          text: 'コメント本文',
+          user: {
+            _id: '123456789044',
+            userId: 'userId1',
+            created: '20150101 12:34:30',
+            updated: '20150101 12:34:30',
+            isAdmin: false,
+          },
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30',
+        },
+      ];
+
+      const count = service.count(arg_comments);
+
+      expect(count).toEqual(4);
+    });
+
+  });
 });
 

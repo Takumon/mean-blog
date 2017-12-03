@@ -11,7 +11,7 @@ export class CommentWithUserModel {
   articleId: string;
   /** コメント本文 */
   text: string;
-  /*+ コメントしたユーザのモデル */
+  /*+ コメントしたユーザ情報のモデル */
   user: UserModel;
   /** 登録日時 */
   created: string;
@@ -20,7 +20,7 @@ export class CommentWithUserModel {
   /** （論理）削除日時 */
   deleted?: string;
   /** コメントに対するリプライモデルの配列 */
-  replies: Array<ReplyWithUserModel>;
+  replies?: Array<ReplyWithUserModel>;
 
   /** （表示制御用）編集中か */
   isEditable?: boolean;

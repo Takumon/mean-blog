@@ -10,6 +10,9 @@ import { ReplyModel } from './reply.model';
 import { ReplyWithUserModel } from './reply-with-user.model';
 import { ReplyWithArticleModel } from './reply-with-article.model';
 
+/**
+ * Http通信用オプション
+ */
 interface HttpOption {
   condition?: Object;
   withUser: boolean;
@@ -34,12 +37,12 @@ export class ReplyService {
   ) {}
 
   /**
-   * コメントを複数件取得
+   * 複数件取得
    *
    * @param condition 検索条件
    * @param withUser 取得情報にユーザ情報を付与するか
    * @param withArticle  取得情報に元記事情報を付与するか
-   * @return 指定した検索条件に一致するコメント情報リスト
+   * @return 指定した検索条件に一致するモデルのリスト
    */
   get(condition: Object, withUser: boolean = false, withArticle: boolean = false): Observable<Array<ReplyModel> | Array<ReplyWithUserModel> | Array<ReplyWithArticleModel>> {
     const URL = this.baseUrl;
@@ -50,12 +53,12 @@ export class ReplyService {
   }
 
   /**
-   * コメントを一件取得
+   * 1件取得
    *
-   * @param _id 取得対象のコメントの_id
+   * @param _id 取得対象モデルの_id
    * @param withUser 取得情報にユーザ情報を付与するか
    * @param withArticle 取得情報に元記事情報を付与するか
-   * @return 指定した_idに一致するコメント情報
+   * @return 指定した_idに一致するモデル情報
    */
   getById(_id: string, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
     const URL = `${this.baseUrl}/${_id}`;
@@ -66,47 +69,47 @@ export class ReplyService {
   }
 
   /**
-   * コメントを登録
+   * 登録
    *
-   * @param reply 登録するコメントモデル
+   * @param reply 登録するモデル
    * @param withUser 取得情報にユーザ情報を付与するか
    * @param withArticle 取得情報に元記事情報を付与するか
-   * @return 登録後のコメント情報
+   * @return 登録後のモデル
    */
-  register(reply: ReplyModel, withUser: boolean = false , withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
+  register(model: ReplyModel, withUser: boolean = false , withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
     const URL = this.baseUrl;
 
     const options = this.constructOptions({ withUser, withArticle });
 
-    return this.http.post<ReplyModel | ReplyWithUserModel>(URL, reply, options);
+    return this.http.post<ReplyModel | ReplyWithUserModel>(URL, model, options);
   }
 
   /**
-   * コメントを更新（差分更新）
+   * 更新（差分更新）
    *
-   * @param reply 更新するコメントモデル(更新対象のプロパティのみ定義したモデル)
+   * @param reply 更新するモデル(更新対象のプロパティのみ定義したモデル)
    * @param withUser 取得情報にユーザ情報を付与するか
    * @param withArticle 取得情報に元記事情報を付与するか
-   * @return 更新後のコメント情報
+   * @return 更新後のモデル
    */
-  update(reply: ReplyModel, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
-    const URL = `${this.baseUrl}/${reply._id}`;
+  update(model: ReplyModel, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
+    const URL = `${this.baseUrl}/${model._id}`;
 
     const options = this.constructOptions({ withUser, withArticle });
 
-    return this.http.put<ReplyModel | ReplyWithUserModel>(URL, reply, options);
+    return this.http.put<ReplyModel | ReplyWithUserModel>(URL, model, options);
   }
 
   /**
-   * コメントを削除（論理削除）
+   * 削除（論理削除）
    *
-   * @param _id 削除対象のコメントの_id
+   * @param _id 削除対象モデルの_id
    * @param withUser 取得情報にユーザ情報を付与するか
    * @param withArticle 取得情報に元記事情報を付与するか
-   * @return 削除したコメント情報
+   * @return 削除したモデル
    */
-  delete(replyId: String, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
-    const URL = `${this.baseUrl}/${replyId}`;
+  delete(_id: String, withUser: boolean = false, withArticle: boolean = false): Observable<ReplyModel | ReplyWithUserModel | ReplyWithArticleModel> {
+    const URL = `${this.baseUrl}/${_id}`;
 
     const options = this.constructOptions({ withUser, withArticle });
 
