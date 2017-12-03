@@ -28,7 +28,7 @@ import { ReplyModel } from '../shared/reply.model';
 import { ReplyService } from '../shared/reply.service';
 
 /**
- * リプライコメント入力フォームのコンポーネント
+ * リプライ入力フォームのコンポーネント
  */
 @Component({
   selector: 'app-reply-form',
@@ -39,13 +39,13 @@ export class ReplyFormComponent implements OnInit, AfterViewChecked {
   /** 定数クラス */
   public Constant = Constant;
 
-  /** コンポーネント初期表示時にリプライコメント入力エリアにフォーカスを当てるか */
+  /** コンポーネント初期表示時にリプライ入力エリアにフォーカスを当てるか */
   @Input() isAuthfocuse: boolean;
 
   /**
-   * リプライコメント入力用のモデル<br>
+   * 処理対象のリプライモデル<br>
    * 更新時は既存のモデルを指定する<br>
-   * 登録時は新規作成したモデルに
+   * 登録時は新規作成したモデルにarticleIdとuserを設定したものを指定する
    */
   @Input() model: ReplyModel;
 
@@ -64,9 +64,7 @@ export class ReplyFormComponent implements OnInit, AfterViewChecked {
   /** 処理名(登録または更新) */
   public action: '登録' | '更新';
 
-  /**
-   * コンストラクタ
-   */
+  /** コンストラクタ */
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
@@ -81,7 +79,7 @@ export class ReplyFormComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.createForm();
-    this.action = !this.model.created ?  '登録' : '更新';
+    this.action = this.model.created ?  '更新' : '登録';
   }
 
   ngAfterViewChecked(): void {
@@ -118,9 +116,9 @@ export class ReplyFormComponent implements OnInit, AfterViewChecked {
    * NgForm#resetFormを呼ぶ
    * </p>
    *
-   * @param f 更新または登録後にフォームを初期化するために引数にとる
+   * @param ngForm 更新または登録後にフォームを初期化するために引数にとる
    */
-  upsert(f: NgForm) {
+  upsert(ngForm: NgForm) {
     const form = this.form;
     if (!form.valid ) {
       return false;
@@ -133,7 +131,7 @@ export class ReplyFormComponent implements OnInit, AfterViewChecked {
       : this.replyService.update(this.model);
 
     action.subscribe(
-      this.onSuccess.bind(this, f),
+      this.onSuccess.bind(this, ngForm),
       this.onValidationError.bind(this)
     );
   }
