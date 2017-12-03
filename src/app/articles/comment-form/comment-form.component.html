@@ -30,7 +30,7 @@
         {{ messageService.get('required',['コメント本文']) }}
       </mat-error>
       <mat-error *ngIf="messageService.hasError(text, 'maxlength')">
-        {{ messageService.get('maxlength',['コメント本文' , text.getError('maxlength').requiredLength]) }} {{text.value?.length || 0}} / 400文字
+        {{ messageService.get('maxNumberOfCharacters',['コメント本文' , text.getError('maxlength').requiredLength]) }} {{text.value?.length || 0}} / 400文字
       </mat-error>
       <mat-error *ngIf="messageService.hasErrorWithoutDirty(text, 'remote')">
         <ng-container *ngFor="let msg of text.getError('remote')">
