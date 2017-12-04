@@ -17,3 +17,10 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: npm run test:client
+      - store_test_results:
+          path: /dist/tests
+      - store_artifacts:
+          path: /coverage
+          destination: coverage
+
+
