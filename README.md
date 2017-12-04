@@ -1,8 +1,8 @@
 [![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master)
 
 ## チームでナレッジ共有&蓄積するためのブログアプリ
-* dockerイメージを提供しておりイントラでの利用を想定
-* Markdown入力補助機能付き！プレーンテキスト形式でも書ける!
+* dockerイメージを提供しておりイントラでの利用を想定
+* Markdown入力補助機能付き！プレーンテキスト形式でも書ける!
   * Markdownへの壁を低くしてMarkdownで書く文化を浸透させられる
   * Markdownを知らなくてもリスト形式、テーブルなど簡単入力できる
 * 記事に対してコメントがしやすい!いいね機能も付いている!

@@ -8,6 +8,7 @@ module.exports = function (config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
+      require('karma-html-reporter'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular/cli/plugins/karma'),
@@ -24,7 +25,7 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['progress', 'kjhtml', 'junit'],
+    reporters: ['progress', 'kjhtml', 'html', 'junit'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -42,8 +43,19 @@ module.exports = function (config) {
       './src/test.ts': ['@angular/cli'],
       './src/styles.scss': ['scss']
     },
+    htmlReporter: {
+      outputDir: 'dist/tests/html',
+      templatePath: null,
+      focusOnFailures: true,
+      namedFiles: false,
+      pageTitle: null,
+      urlFriendlyName: false,
+      reportName: 'test-results',
+      preserveDescribeNesting: false,
+      foldAll: false,
+    },
     junitReporter: {
-       outputDir: 'dist/tests',
+       outputDir: 'dist/tests/xml',
        outputFile: 'test-results.xml',
        suite: '',
        useBrowserName: false
