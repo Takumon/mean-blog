@@ -1,30 +1,33 @@
 import { TestBed, async, inject } from '@angular/core/testing';
-import {HttpModule, BaseRequestOptions, Http, Response, ResponseOptions} from '@angular/http';
-import {MockBackend, MockConnection} from '@angular/http/testing';
-import { RequestMethod } from '@angular/http';
+import { HttpRequest } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+
+import { JwtService } from '../../shared/services/jwt.service';
+import { LocalStrageService } from '../../shared/services/local-strage.service';
 
 import { ArticleService } from './article.service';
 
 
 describe('ArticleService', () => {
-  class MockError extends Response implements Error {
-    name: any;
-    message: any;
-  }
+  let service: ArticleService;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpModule],
-      providers: [ArticleService, {
-        provide: Http,
-        useFactory: (backend, options) => new Http(backend, options),
-        deps: [MockBackend, BaseRequestOptions]
-      }, MockBackend, BaseRequestOptions]
+      imports: [ HttpClientTestingModule ],
+      providers: [
+        JwtService,
+        LocalStrageService,
+        ArticleService
+      ],
     });
+
+    service = TestBed.get(ArticleService);
+    httpMock = TestBed.get(HttpTestingController);
   });
 
-  it('オブジェクトが生成されるか', async(inject([MockBackend, ArticleService], (backend: MockBackend , service: ArticleService) => {
+  it('オブジェクトが生成されるべき', () => {
     expect(service).toBeTruthy();
-  })));
+  });
 
 });
