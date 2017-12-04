@@ -1,79 +1,90 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
+import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { DebugElement } from '@angular/core';
+import { APP_BASE_HREF } from '@angular/common';
+import { By } from '@angular/platform-browser';
+import { MatSnackBar, ErrorStateMatcher } from '@angular/material';
+
+import { SharedModule } from './shared/shared.module';
+
+import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
+import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
+import { Constant } from './shared/constant';
+
 import { AppComponent } from './app.component';
-import { ArticleService } from './articles/shared/article.service';
+import { ScrollService } from './shared/services/scroll.service';
+import { RouteNamesService } from './shared/services/route-names.service';
+import { AuthenticationService } from './shared/services/authentication.service';
+import { UserModel } from './users/shared/user.model';
+
 
 describe('AppComponent', () => {
-  // テスト対象のComponent
-  let component: AppComponent;
 
-  // テスト対象のFixture
-  let fixture: ComponentFixture<AppComponent>;
+  class MockAuthenticationService {
+    loginUser = new UserModel();
+    isFinishedCheckState = true;
 
-  // ArticleServiceのモック
-  class ArticleServiceMock {
-    getAll(): Observable<any> {
-      const response =  { articles : [
-          {
-            title: 'テスト用タイトル1',
-            body: 'テスト用ボティ1',
-            date:  '20150101 12:30:30'
-          },
-          {
-            title: 'テスト用タイトル2',
-            body: 'テスト用ボティ2',
-            date:  '20150101 12:34:30'
-          },
-          {
-            title: 'テスト用タイトル3',
-            body: 'テスト用ボティ3',
-            date:  '20150101 12:31:30'
-          }
-      ]};
-
-      return Observable.from([response]);
+    checkState(): Observable<any> {
+      return Observable.of('token');
+    }
+    logout() {
+      console.log('logout');
+    }
+    isLogin(): boolean {
+      return true;
     }
 
-  regist(title: string, body: string): Observable<any> {
-      return Observable.from([{
-        message: '記事を登録しました。',
-        obj: {
-          title: title,
-          body: body,
-          date: '20150101 12:31:30'
-        }
-      }]);
+    isAdmin(): boolean {
+      return false;
+    }
+    getToken(): String {
+      return 'token';
+    }
+
+    hasToken(): boolean {
+      return true;
     }
   }
 
+  let comp: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+  let de: DebugElement;
+
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule ],
-      declarations: [
-        AppComponent
+      declarations: [ AppComponent ],
+      imports: [
+        RouterTestingModule,
+        SharedModule,
       ],
-    })
-
-    .overrideComponent(AppComponent, {
-      set: {
-        providers: [
-          { provide: ArticleService, useClass: ArticleServiceMock },
-        ]
-      }
-    })
-
-    .compileComponents();
-
-    fixture = TestBed.createComponent(AppComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+      providers: [
+        ErrorStateMatcherContainParentGroup,
+        {
+          provide: ErrorStateMatcher,
+          useClass: CustomErrorStateMatcher
+        },
+        { provide: APP_BASE_HREF, useValue: '/' },
+        { provide: AuthenticationService, useClass: MockAuthenticationService },
+        RouteNamesService,
+        ScrollService,
+      ]
+    }).compileComponents();
   }));
 
-  it('オブジェクトが生成されるか', async(() => {
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    comp = fixture.componentInstance;
+    de = fixture.debugElement;
+    fixture.detectChanges();
+  });
+
+
+  it('オブジェクトが生成されるべき', async(() => {
+    expect(comp).toBeTruthy();
   }));
 });
