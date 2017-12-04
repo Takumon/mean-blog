@@ -53,14 +53,14 @@ export class MarkdownParseService {
       }
     };
 
-    const text =  marked(rawText, {
+    const markedText =  marked(rawText, {
       renderer: renderer
     });
 
     if (baseUrl) {
-      return { text, toc };
+      return { text: markedText, toc };
     } else {
-      return { text };
+      return { text: markedText };
     }
   }
 }

@@ -45,7 +45,7 @@ export class ArticleService {
   }
 
   // １件取得
-  getOne(_id: string, withUser: Boolean = false): Observable<ArticleModel | ArticleWithUserModel> {
+  getById(_id: string, withUser: Boolean = false): Observable<ArticleModel | ArticleWithUserModel> {
     const URL = `${this.baseUrl}/${_id}`;
     const headers = this.jwtService.getHeaders();
     const params = new HttpParams().set('withUser', withUser ? 'true' : null);

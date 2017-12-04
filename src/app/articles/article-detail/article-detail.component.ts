@@ -1,4 +1,3 @@
-import { DomSanitizer } from '@angular/platform-browser';
 import {
   Component,
   OnInit,
@@ -51,7 +50,6 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   private activeIndex: number | null = null;
 
   constructor(
-    private sanitized: DomSanitizer,
     public auth: AuthenticationService,
 
     private snackBar: MatSnackBar,
@@ -89,7 +87,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       const userId = params['userId'];
       const _idOfArticle = params['_id'];
       const withUser = true;
-      this.articleService.getOne(_idOfArticle, withUser)
+      this.articleService.getById(_idOfArticle, withUser)
       .subscribe( (article: ArticleWithUserModel) => {
 
         if (userId !== article.author.userId) {
@@ -105,6 +103,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
         } else {
           this.text = this.article.body;
         }
+
       });
     });
   }

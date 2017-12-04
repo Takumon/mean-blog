@@ -205,7 +205,7 @@ export class ArticleEditComponent implements OnInit {
           this.routeNamesService.name.next(`記事を${this.action}する`);
 
           this.articleService
-          .getOne(_id, true)
+          .getById(_id, true)
           .subscribe(article => {
             this.previousArticle = article as ArticleWithUserModel;
             this.form.patchValue({
