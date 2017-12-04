@@ -18,9 +18,9 @@ jobs:
 
       - run: npm run test:client
       - store_test_results:
-          path: /dist/tests
+          path: ./dist/tests
       - store_artifacts:
-          path: /coverage
+          path: ./coverage
           destination: coverage
 
 
