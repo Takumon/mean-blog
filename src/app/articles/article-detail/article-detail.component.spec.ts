@@ -113,11 +113,7 @@ describe('ArticleDetailComponent', () => {
 
   class MockMarkdownParseService {
     parse(rawText: string, baseUrl: string = null): any {
-
-      const toc = [
-      ];
-
-      return { text: rawText, toc };
+      return { text: rawText, toc: [] };
     }
   }
 
