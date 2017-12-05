@@ -91,7 +91,7 @@ export class DraftListComponent implements OnInit, OnDestroy {
     }
 
     drafts.forEach(d => {
-      if (d.posted) {
+      if (d.articleId) {
         result.posted.push(d);
       } else {
         result.notPosted.push(d);

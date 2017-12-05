@@ -11,4 +11,6 @@ export class Constant {
   public static POST_CONTENT_TYPE = 'application/x-www-form-urlencoded';
   /** 画像遅延表示ときのoffset */
   public static LAZY_LOAD_OFFSET = 50;
+  /** １ユーザが登録できる下書きの最大件数 */
+  public static MAX_DRAFT_COUNT = 10;
 }
