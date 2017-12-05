@@ -1,7 +1,19 @@
 {
-  "name": "angular4-express4-typescritp2",
-  "version": "0.0.0",
+  "name": "mean-blog",
+  "version": "0.0.1",
   "license": "MIT",
+  "author": {
+    "name": "Takumon",
+    "email": "inouetakumon@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Takumon/mean-blog"
+  },
+  "engines": {
+    "node": "v8.9.X",
+    "npm": "5.5.X"
+  },
   "scripts": {
     "ng": "ng",
     "start": "npm-run-all -s build:server -p start:*",
