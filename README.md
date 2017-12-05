@@ -1,5 +1,8 @@
 [![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master)
 
+## License
+MIT
+
 ## チームでナレッジ共有&蓄積するためのブログアプリ
 * イントラでの利用を想定
   * Dockerで簡単インストール
@@ -10,6 +13,7 @@
 
 ## インストール方法
 * docker-compose.yml作成
+
 ```
 version: "3.3"
 services:
@@ -38,7 +42,9 @@ services:
     links:
      - mongo
 ```
+
 * コンテナを起動
+
 ```
 $ docker-compose up -d
 ```
