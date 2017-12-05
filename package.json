@@ -25,7 +25,7 @@
     "boot:server": "NODE_CONFIG_DIR=./dist/server/config NODE_ENV=dev nodemon ./dist/server/bin/www.js",
     "boot:server_test": "nodemon ./dist/server_test/test.server.js",
     "build": "run-s build:server build:client",
-    "build:client": "ng build --prod --output-path=./dist/server/public",
+    "build:client": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 ./node_modules/@angular/cli/bin/ng build --prod --output-path=./dist/server/public",
     "build:server": "run-s servercompile:ts servercompile:resources",
     "servercompile:ts": "tsc -p ./server/tsconfig.server.json",
     "servercompile:resources": "cpx \"./server/config/*\" ./dist/server/config -u",
