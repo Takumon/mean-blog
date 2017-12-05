@@ -163,7 +163,8 @@ export class ArticleEditComponent implements OnInit {
     } else {
       // 記事を更新または登録する場合、下書きの上限件数を確認し
       // これ以上下書き保存できない場合は下書き保存できないようにする
-      this.draftService.canRegisterDraft().subscribe(result => this.canRegisterDraft = result);
+      this.draftService.canRegisterDraft(this.auth.loginUser.userId)
+      .subscribe(result => this.canRegisterDraft = result);
 
       if (_id) {
         this.action = '更新';
@@ -270,7 +271,7 @@ export class ArticleEditComponent implements OnInit {
     if (this.previousDraft) {
       // TODO トランザクション
       // 公開した記事の下書きの場合は記事を更新
-      if (this.previousDraft.posted) {
+      if (this.previousDraft.articleId) {
         article._id = this.previousDraft.articleId;
         this.articleService
         .update(article)
@@ -380,11 +381,10 @@ export class ArticleEditComponent implements OnInit {
       // 公開済みの記事を下書き保存する場合
       if (this.previousArticle) {
         draft.articleId = this.previousArticle._id;
-        draft.posted = true;
       }
 
       this.draftService
-        .create(draft)
+        .register(draft)
         .subscribe((res: any) => {
           this.snackBar.open('下書きを保存しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
           this.goToDraft(res.obj._id);
