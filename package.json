@@ -40,7 +40,7 @@
     "protractor": "protractor protractor.conf.js",
     "lint": "ng lint",
     "heroku-prebuild": "echo This runs before Heroku installs your dependencies.",
-    "heroku-postbuild": "echo This runs afterwards."
+    "heroku-postbuild": "npm run build"
   },
   "private": true,
   "dependencies": {

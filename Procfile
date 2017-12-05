@@ -1,1 +1,1 @@
-web: npm run buildRun
+web: npm run run:server
