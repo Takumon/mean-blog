@@ -21,11 +21,11 @@ router.get('/', (req, res, next) => {
     {};
 
   const condition = {};
-  const userIds = source && source.userId;
-  if (userIds) {
-    condition['author'] = userIds instanceof Array
-      ? { $in: userIds }
-      : userIds;
+  const authors = source && source.author;
+  if (authors) {
+    condition['author'] = authors instanceof Array
+      ? { $in: authors }
+      : authors;
   }
 
   const articleIds = source && source.articleId;

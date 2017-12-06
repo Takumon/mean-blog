@@ -92,11 +92,11 @@ export class DraftService {
   /**
    * 指定したユーザが下書きを新規登録できるか
    *
-   * @param userId ユーザモデルのuserId
+   * @param _id ユーザモデルの_id
    * @return 新規登録できる場合はtrue できない場合はfalse
    */
-  canRegisterDraft(userId: string): Observable<boolean> {
-    return this.get({ userId })
+  canRegisterDraft(_id: string): Observable<boolean> {
+    return this.get({ author: _id })
             .map(drafts => drafts ? drafts.length : 0)
             // MAX_DRAFT_COUNTちょうどの場合はこれ以上下書きを保存できないのでfalseとみなす
             .map(count => count < this.Constant.MAX_DRAFT_COUNT);
