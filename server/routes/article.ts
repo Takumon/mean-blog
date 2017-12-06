@@ -338,12 +338,13 @@ router.put('/:_id', [
   const article = req.body;
   delete article.created;
   article.updated = new Date();
+
   model['$set'] = article;
 
-  if (req.body.image && req.body.image.length > 0) {
-    article.image = req.body.image;
-  } else {
-    model['$unset'] = { image: ''};
+
+  if (!article.image || article.image.length === 0) {
+    delete article.image;
+    model['$unset'] = { image: '1'};
   }
 
 
