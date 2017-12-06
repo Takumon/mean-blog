@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && (favoriteSeaerchConditionCount === 0)">
+  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && !hasSearchCondition">
     <div class="message-area__main">
       <div class="message-area__main__icon">
         <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
@@ -19,13 +19,13 @@
     </div>
   </div>
 
-  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && !(favoriteSeaerchConditionCount === 0)">
+  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && hasSearchCondition">
     <div class="message-area__main">
       <div class="message-area__main__icon">
         <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
       </div>
       <div class="message-area__main__message">
-        検索結果に一致する記事は見つかりませんでした。検索条件を変えて再度検索してください。
+        検索結果に一致する記事は見つかりませんでした。
       </div>
     </div>
   </div>

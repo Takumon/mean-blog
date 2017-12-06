@@ -63,7 +63,8 @@ const SortFactors = {
 export class ArticleListComponent implements OnInit, OnDestroy {
   public DEFAULT_PER_PAGE = 20;
   public DEFAILT_PER_PAGES = [20, 50, 100];
-  public favoriteSeaerchConditionCount: number;
+  /** 記事検索時に検索条件を指定したか(例：　お気に入り検索時、特定ユーザがいいねした記事検索時など) */
+  public hasSearchCondition = false;
   public articlesPerPage: Subject<Array<ArticleWithUserModel>> = new Subject<Array<ArticleWithUserModel>>();
   public showPrograssBar: Boolean = false;
   public direction = Direction;
@@ -179,10 +180,11 @@ export class ArticleListComponent implements OnInit, OnDestroy {
           break;
         }
 
-        this.favoriteSeaerchConditionCount = this.searchConditionComponent.seaerchConditions.length;
+        this.hasSearchCondition = this.searchConditionComponent.seaerchConditions.length >= 1;
         cb(this.searchConditionComponent.createCondition());
         break;
       case Mode.USER:
+        this.hasSearchCondition = true;
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => {
@@ -191,6 +193,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         });
         break;
       case Mode.VOTER:
+        this.hasSearchCondition = true;
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => {
