@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master)　[![Maintainability](https://api.codeclimate.com/v1/badges/c1ef7ae841d9c3d82a0c/maintainability)](https://codeclimate.com/github/Takumon/mean-blog/maintainability)
+[![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master)　
+
 
 ## License
 MIT
