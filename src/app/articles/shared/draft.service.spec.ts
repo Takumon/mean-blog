@@ -241,7 +241,7 @@ describe('DraftService', () => {
       });
 
       expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"userId":"123456789012"}');
+      expect(req.request.params.get('condition')).toEqual('{"author":"123456789012"}');
 
       // レスポンス返却
       req.flush(mockResponse);
@@ -261,7 +261,7 @@ describe('DraftService', () => {
       });
 
       expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"userId":"123456789012"}');
+      expect(req.request.params.get('condition')).toEqual('{"author":"123456789012"}');
 
       // レスポンス返却
       req.flush(mockResponse);
@@ -363,7 +363,7 @@ describe('DraftService', () => {
       });
 
       expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"userId":"123456789012"}');
+      expect(req.request.params.get('condition')).toEqual('{"author":"123456789012"}');
 
       // レスポンス返却
       req.flush(mockResponse);
@@ -474,7 +474,7 @@ describe('DraftService', () => {
       });
 
       expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"userId":"123456789012"}');
+      expect(req.request.params.get('condition')).toEqual('{"author":"123456789012"}');
 
       // レスポンス返却
       req.flush(mockResponse);

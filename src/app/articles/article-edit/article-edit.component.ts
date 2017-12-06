@@ -163,7 +163,7 @@ export class ArticleEditComponent implements OnInit {
     } else {
       // 記事を更新または登録する場合、下書きの上限件数を確認し
       // これ以上下書き保存できない場合は下書き保存できないようにする
-      this.draftService.canRegisterDraft(this.auth.loginUser.userId)
+      this.draftService.canRegisterDraft(this.auth.loginUser._id)
       .subscribe(result => this.canRegisterDraft = result);
 
       if (_id) {
