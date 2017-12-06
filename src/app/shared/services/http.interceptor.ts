@@ -24,9 +24,9 @@ export class AppHttpInterceptor implements HttpInterceptor {
       switch (res.status) {
         case 400:
           // 入力チェックエラーは個別にハンドリング
-          return Observable.throw(JSON.parse(res.error));
+          return Observable.throw(res.error);
         case 403:
-          const errors = JSON.parse(res.error).errors;
+          const errors = res.error.errors;
           if (errors && errors.length > 0) {
             this.messageBarService.showValidationError({errors: errors});
           }
