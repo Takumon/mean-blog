@@ -5,6 +5,10 @@
 ## License
 MIT
 
+## デモ環境
+https://material-blog-demo.herokuapp.com/
+  * ユーザID/パスは `DemoUser` / `DemoUser1234#`
+
 ## チームでナレッジ共有&蓄積するためのブログアプリ
 * イントラでの利用を想定
   * Dockerで簡単インストール
