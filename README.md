@@ -2,13 +2,6 @@
 [![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master) 
 [![Maintainability](https://api.codeclimate.com/v1/badges/c1ef7ae841d9c3d82a0c/maintainability)](https://codeclimate.com/github/Takumon/mean-blog/maintainability)
 
-## License
-MIT
-
-## デモ環境
-https://material-blog-demo.herokuapp.com/
-  * ユーザID/パスは `DemoUser` / `DemoUser1234#`
-
 ## チームでナレッジ共有&蓄積するためのブログアプリ
 * イントラでの利用を想定
   * Dockerで簡単インストール
@@ -16,6 +9,13 @@ https://material-blog-demo.herokuapp.com/
   * Markdownへの壁を低くしてMarkdownで書く文化を浸透させられる
   * Markdownを知らなくてもリストやテーブルなどが簡単に入力できる
 * 記事に対してコメントがしやすい!いいね機能も付いている!
+
+## License
+MIT
+
+## デモ環境
+https://material-blog-demo.herokuapp.com/
+  * ユーザID/パスは `DemoUser` / `DemoUser1234#`
 
 ## インストール方法
 * docker-compose.yml作成
