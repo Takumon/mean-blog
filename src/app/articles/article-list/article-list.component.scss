@@ -60,8 +60,8 @@
     font-size: 12px;
     align-items: center;
     margin: 12px 0;
-    padding: 0 24px 0 36px;
-    border-radius: 24px;
+    padding: 0 12px 2px;
+    border-radius: 12px;
 
     &_top {
       margin-top: 0;
@@ -75,12 +75,12 @@
       display: flex;
 
       button {
-        margin-right: 12px;
+        margin-right: 6px;
         background: #fdfdfd;
-        font-size: 12px;
+        font-size: 1em;
         line-height: 32px;
         height: 32px;
-        border-radius: 16px;
+        border-radius: 4px;
       }
 
       button.checked {
@@ -89,7 +89,7 @@
       }
     }
     &__sort-direction {
-      width: 6em;
+      width: 5em;
       margin-right: 24px;
     }
 
