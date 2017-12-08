@@ -34,15 +34,19 @@
 }
 
 .prograss-bar {
-  width: 810px;
-  margin: 24px auto 72px;
+  margin: 0 auto;
+  padding: 24px 24px 72px;
+  max-width: 810px;
+  min-width: 400px;
+
   display: flex;
   justify-content: center;
 }
 
 .article-list {
-  width: 810px;
-  margin: 24px auto 72px;
+  margin: 24px 24px 72px;
+  max-width: 720px;
+  min-width: 400px;
 
   &__item {
     margin-bottom: 24px;
@@ -95,9 +99,15 @@
 
     &__paginator {
       margin: 0;
+      height: 100%;
       background: transparent;
     }
   }
+}
 
-
+.search-condition {
+  margin: 0 0 0 auto;
+  padding: 24px;
+  min-width: 300px;
+  max-width: 480px;
 }

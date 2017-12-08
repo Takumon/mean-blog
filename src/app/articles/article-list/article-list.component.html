@@ -96,11 +96,12 @@
     </div>
   </ng-container>
 
-
-  <app-search-condition
-    *ngIf="auth.isLogin() && isFavoriteMode()"
-    (changeSeaerchCondition)="getArticles()"
-    ></app-search-condition>
+  <div class="search-condition">
+    <app-search-condition
+      *ngIf="auth.isLogin() && isFavoriteMode()"
+      (changeSeaerchCondition)="getArticles()"
+      ></app-search-condition>
+  </div>
 
 </div>
 
