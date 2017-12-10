@@ -96,7 +96,7 @@
     </div>
   </ng-container>
 
-  <div class="search-condition">
+  <div *ngIf="auth.isLogin() && isFavoriteMode()" class="search-condition">
     <app-search-condition
       *ngIf="auth.isLogin() && isFavoriteMode()"
       (changeSeaerchCondition)="getArticles()"
