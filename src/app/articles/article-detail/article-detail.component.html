@@ -110,12 +110,14 @@
     </div>
 
     <ng-container *ngIf="showToc">
-      <app-article-toc
-      [toc]="toc"
-      [title]="article.title"
-      [baseUrl]="baseUrl"
-      ></app-article-toc>
-    </ng-container>
+      <div class="article__main__toc">
+        <app-article-toc
+        [toc]="toc"
+        [title]="article.title"
+        [baseUrl]="baseUrl"
+        ></app-article-toc>
+      </div>
+  </ng-container>
 
   </div>
 </div>
