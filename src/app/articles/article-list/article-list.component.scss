@@ -2,9 +2,10 @@
   display: flex;
 }
 .message-area {
-  margin: 24px;
+  margin: 24px 24px 72px;
+  max-width: 720px;
+  min-width: 400px;
   border-radius: 4px;
-  width: 810px;
   color: #464545;
   background: #d2d2d2;
   padding: 24px;
@@ -34,15 +35,18 @@
 }
 
 .prograss-bar {
-  width: 810px;
-  margin: 24px auto 72px;
+  margin: 24px 24px 72px;
+  max-width: 720px;
+  min-width: 400px;
+
   display: flex;
   justify-content: center;
 }
 
 .article-list {
-  width: 810px;
-  margin: 24px auto 72px;
+  margin: 24px 24px 72px;
+  max-width: 720px;
+  min-width: 400px;
 
   &__item {
     margin-bottom: 24px;
@@ -56,8 +60,8 @@
     font-size: 12px;
     align-items: center;
     margin: 12px 0;
-    padding: 0 24px 0 36px;
-    border-radius: 24px;
+    padding: 0 12px 2px;
+    border-radius: 12px;
 
     &_top {
       margin-top: 0;
@@ -71,12 +75,12 @@
       display: flex;
 
       button {
-        margin-right: 12px;
+        margin-right: 6px;
         background: #fdfdfd;
-        font-size: 12px;
+        font-size: 1em;
         line-height: 32px;
         height: 32px;
-        border-radius: 16px;
+        border-radius: 4px;
       }
 
       button.checked {
@@ -85,7 +89,7 @@
       }
     }
     &__sort-direction {
-      width: 6em;
+      width: 5em;
       margin-right: 24px;
     }
 
@@ -95,9 +99,16 @@
 
     &__paginator {
       margin: 0;
+      height: 100%;
       background: transparent;
+      padding-bottom: 6px;
     }
   }
+}
 
-
+.search-condition {
+  margin: 0 0 0 auto;
+  padding: 24px;
+  min-width: 300px;
+  max-width: 480px;
 }

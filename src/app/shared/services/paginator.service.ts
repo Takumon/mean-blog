@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 
 
 export class PaginatorService extends MatPaginatorIntl {
-  itemsPerPageLabel = '1ページあたりの件数';
+  itemsPerPageLabel = '';
   nextPageLabel     = '次ページ';
   previousPageLabel = '前ページ';
 

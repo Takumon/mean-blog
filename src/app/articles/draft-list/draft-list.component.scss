@@ -1,6 +1,5 @@
 .wrapper {
   display: flex;
-  flex-wrap: wrap;
   min-height: 100vh;
 }
 .message-area {
@@ -133,4 +132,9 @@
 
   &__text {
   }
+}
+
+.draft-detail {
+  margin: 48px 48px 92px 48px;
+  width: 100%;
 }
