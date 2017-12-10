@@ -2,9 +2,10 @@
   display: flex;
 }
 .message-area {
-  margin: 24px;
+  margin: 24px 24px 72px;
+  max-width: 720px;
+  min-width: 400px;
   border-radius: 4px;
-  width: 810px;
   color: #464545;
   background: #d2d2d2;
   padding: 24px;
@@ -34,9 +35,8 @@
 }
 
 .prograss-bar {
-  margin: 0 auto;
-  padding: 24px 24px 72px;
-  max-width: 810px;
+  margin: 24px 24px 72px;
+  max-width: 720px;
   min-width: 400px;
 
   display: flex;
