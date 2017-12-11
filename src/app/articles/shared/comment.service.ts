@@ -71,10 +71,10 @@ export class CommentService {
   /**
    * 更新（差分更新）
    *
-   * @param recommentply 更新するモデル(更新対象のプロパティのみ定義したモデル)
+   * @param model 更新するモデル(更新対象のプロパティのみ定義したモデル)
    * @param withUser 取得情報にユーザ情報を付与するか
    * @param withArticle 取得情報に元記事情報を付与するか
-   * @return 更新後のコメント情報
+   * @return 更新後のモデル
    */
   update(model: CommentModel, withUser: boolean = false, withArticle: boolean = false): Observable<CommentModel | CommentWithUserModel | CommentWithArticleModel> {
     const URL = `${this.baseUrl}/${model._id}`;
