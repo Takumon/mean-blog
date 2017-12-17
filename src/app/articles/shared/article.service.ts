@@ -109,28 +109,42 @@ export class ArticleService {
 
 
 
-  // 登録
+  /**
+   * いいね登録
+   *
+   * @param _idOfArticle いいねの対象記事の_id
+   * @param _idOfUser いいねをするユーザの_id
+   */
   registerVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
     return this.http.post(URL, {'voter': _idOfUser}, this.jwtService.getRequestOptions());
   }
 
-  // 削除
+  /**
+   * いいね削除
+   *
+   * @param _idOfArticle いいねの対象記事の_id
+   * @param _idOfUser いいねをするユーザの_id
+   */
   deleteVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote/${_idOfUser}`;
 
     return this.http.delete(URL, this.jwtService.getRequestOptions());
   }
 
-  // １件取得
+  /**
+   * 指定した記事_idに紐づくいいねを検索
+   *
+   * @param _idOfArticle 記事_id
+   */
   getVoteOne(_idOfArticle: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
     return this.http.get(URL, this.jwtService.getRequestOptions());
   }
 
-    /**
+  /**
    * 指定した引数を元にHttp通信用オプションを生成する
    *
    * @param httpOption
