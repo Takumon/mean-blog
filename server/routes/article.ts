@@ -416,7 +416,7 @@ router.post('/:_id/vote', [
     _id: req.params._id
   }, {$push: {
     vote: new mongoose.Types.ObjectId(_idOfUser)
-  } }, (err, result) => {
+  } }, (err, article) => {
 
     if (err) {
       return res.status(500).json({
@@ -427,7 +427,7 @@ router.post('/:_id/vote', [
 
     return res.status(200).json({
       message: '記事にいいねしました。',
-      obj: result
+      obj: article.vote
     });
   });
 });
@@ -447,7 +447,7 @@ router.delete('/:_id/vote/:_idOfVorter', [
     _id: req.params._id
   }, {$pull: {
     vote: new mongoose.Types.ObjectId(req.params._idOfVorter)
-  } }, (err, result) => {
+  } }, (err, article) => {
 
     if (err) {
       return res.status(500).json({
@@ -458,7 +458,7 @@ router.delete('/:_id/vote/:_idOfVorter', [
 
     return res.status(200).json({
       message: 'いいねを取り消しました。',
-      obj: result
+      obj: article.vote
     });
   });
 });
@@ -477,7 +477,7 @@ router.get('/:_id/vote', (req, res, next) => {
     .populate('vote', '-password')
     .exec(cbFind);
 
-  function cbFind(err, doc): any {
+  function cbFind(err, articles): any {
     if (err) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -485,13 +485,13 @@ router.get('/:_id/vote', (req, res, next) => {
       });
     }
 
-    if (!doc[0]) {
+    if (!articles[0]) {
       return res.status(500).json({
         title: `記事(_id=${req.params._id})が見つかりませんでした。`,
       });
     }
 
-    return res.status(200).json(doc[0].vote);
+    return res.status(200).json(articles[0].vote);
   }
 });
 

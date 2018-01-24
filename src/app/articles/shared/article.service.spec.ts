@@ -8,6 +8,8 @@ import { LocalStrageService } from '../../shared/services/local-strage.service';
 import { ArticleService } from './article.service';
 import { ArticleModel } from './article.model';
 import { ArticleComponent } from '../article-list/article.component';
+import { UserModel } from '../../users/shared/user.model';
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser/src/dom/events/hammer_gestures';
 
 
 describe('ArticleService', () => {
@@ -28,10 +30,6 @@ describe('ArticleService', () => {
     injector = getTestBed();
     service = injector.get(ArticleService);
     httpMock = injector.get(HttpTestingController);
-  });
-
-  it('オブジェクトが生成されるべき', () => {
-    expect(service).toBeTruthy();
   });
 
   describe('get', () => {
@@ -572,5 +570,128 @@ describe('ArticleService', () => {
       req.flush(mockResponse);
     });
   });
+
+
+
+
+  it('getVote', () => {
+    const mockResponse: Array<UserModel> = [
+      {
+        _id: '123456789011',
+        userId: 'TestUserId',
+        email: 'testUser@hoge.com',
+        userName: 'テストユーザ',
+        isAdmin: false,
+        blogTitle: 'テストユーザのブログ',
+        userDescription: 'テストユーザです。よろしくお願いします。',
+        created: '20150101 12:34:30',
+        updated: '20150101 12:34:30'
+      }
+    ];
+
+
+    const arg_idOfArticle = '123456789099';
+
+    service.getVote(arg_idOfArticle).subscribe(voters => {
+      expect(voters[0]._id).toEqual('123456789011');
+      expect(voters[0].userId).toEqual('TestUserId');
+      expect(voters[0].email).toEqual('testUser@hoge.com');
+      expect(voters[0].userName).toEqual('テストユーザ');
+      expect(voters[0].isAdmin).toEqual(false);
+      expect(voters[0].blogTitle).toEqual('テストユーザのブログ');
+      expect(voters[0].userDescription).toEqual('テストユーザです。よろしくお願いします。');
+      expect(voters[0].created).toEqual('20150101 12:34:30');
+      expect(voters[0].updated).toEqual('20150101 12:34:30');
+    });
+
+
+    const req = httpMock.expectOne((request: HttpRequest<any>) => {
+      return request.url === '/api/articles/123456789099/vote';
+    });
+
+    expect(req.request.method).toEqual('GET');
+
+    // レスポンス返却
+    req.flush(mockResponse);
+  });
+
+
+
+
+  it('registerVote', () => {
+    const mockResponse: any = {
+      message: '記事にいいねしました。',
+      obj: [
+        {
+          _id: '123456789011',
+          userId: 'TestUserId',
+          email: 'testUser@hoge.com',
+          userName: 'テストユーザ',
+          isAdmin: false,
+          blogTitle: 'テストユーザのブログ',
+          userDescription: 'テストユーザです。よろしくお願いします。',
+          created: '20150101 12:34:30',
+          updated: '20150101 12:34:30'
+        }
+      ]
+    };
+
+
+    const arg_idOfArticle = '123456789099';
+    const arg__idOfUser = '123456789011';
+
+
+    service.registerVote(arg_idOfArticle, arg__idOfUser).subscribe(result => {
+      expect(result.message).toEqual('記事にいいねしました。');
+      expect(result.obj[0]._id).toEqual('123456789011');
+      expect(result.obj[0].userId).toEqual('TestUserId');
+      expect(result.obj[0].email).toEqual('testUser@hoge.com');
+      expect(result.obj[0].userName).toEqual('テストユーザ');
+      expect(result.obj[0].isAdmin).toEqual(false);
+      expect(result.obj[0].blogTitle).toEqual('テストユーザのブログ');
+      expect(result.obj[0].userDescription).toEqual('テストユーザです。よろしくお願いします。');
+      expect(result.obj[0].created).toEqual('20150101 12:34:30');
+      expect(result.obj[0].updated).toEqual('20150101 12:34:30');
+    });
+
+
+    const req = httpMock.expectOne((request: HttpRequest<any>) => {
+      return request.url === '/api/articles/123456789099/vote';
+    });
+
+    expect(req.request.method).toEqual('POST');
+
+    // レスポンス返却
+    req.flush(mockResponse);
+  });
+
+
+
+
+  it('deleteVote', () => {
+    const mockResponse: any = {
+      message: 'いいねを取り消しました。',
+      obj: []
+    };
+
+    const arg_idOfArticle = '123456789099';
+    const arg__idOfUser = '123456789011';
+
+    service.deleteVote(arg_idOfArticle, arg__idOfUser).subscribe(result => {
+      expect(result.message).toEqual('いいねを取り消しました。');
+      expect(result.obj.length).toEqual(0);
+    });
+
+    const req = httpMock.expectOne((request: HttpRequest<any>) => {
+      return request.url === '/api/articles/123456789099/vote/123456789011';
+    });
+
+    expect(req.request.method).toEqual('DELETE');
+
+    // レスポンス返却
+    req.flush(mockResponse);
+  });
+
+
 
 });

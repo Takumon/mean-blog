@@ -135,7 +135,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       .registerVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
         this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        this.articleService.getVoteOne(this.article._id)
+        this.articleService.getVote(this.article._id)
           .subscribe(vote => {
             this.article.vote = vote;
           });
@@ -160,7 +160,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       .deleteVote(this.article._id, this.auth.loginUser._id)
       .subscribe(article => {
         this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        this.articleService.getVoteOne(this.article._id)
+        this.articleService.getVote(this.article._id)
         .subscribe(vote => {
           this.article.vote = vote;
         });

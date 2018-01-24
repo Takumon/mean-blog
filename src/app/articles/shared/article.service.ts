@@ -138,7 +138,7 @@ export class ArticleService {
    *
    * @param _idOfArticle 記事_id
    */
-  getVoteOne(_idOfArticle: string): Observable<any> {
+  getVote(_idOfArticle: string): Observable<any> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
     return this.http.get(URL, this.jwtService.getRequestOptions());

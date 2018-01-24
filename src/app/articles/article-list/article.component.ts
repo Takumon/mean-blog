@@ -87,7 +87,7 @@ export class ArticleComponent {
     .registerVote(this.item._id, this.auth.loginUser._id)
     .subscribe(article => {
       this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      this.articleService.getVoteOne(this.item._id)
+      this.articleService.getVote(this.item._id)
       .subscribe(vote => {
         this.item.vote = vote;
       });
@@ -112,7 +112,7 @@ export class ArticleComponent {
       .deleteVote(this.item._id, this.auth.loginUser._id)
       .subscribe(article => {
         this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        this.articleService.getVoteOne(this.item._id)
+        this.articleService.getVote(this.item._id)
         .subscribe(vote => {
           this.item.vote = vote;
         });
