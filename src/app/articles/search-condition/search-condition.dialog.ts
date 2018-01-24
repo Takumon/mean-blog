@@ -136,7 +136,7 @@ export class SearchConditionDialogComponent implements OnInit {
 
           const checkedUsers: Array<string> = condition.users || [];
 
-          this.userService.getAll()
+          this.userService.get()
             .subscribe(users => {
               this.checkUserList = [];
               this.unCheckUserList = [];
@@ -168,7 +168,7 @@ export class SearchConditionDialogComponent implements OnInit {
         });
     } else {
       // 新規登録時
-      this.userService.getAll()
+      this.userService.get()
         .subscribe(users => {
           this.checkUserList = [];
           this.unCheckUserList = users.map(user => {

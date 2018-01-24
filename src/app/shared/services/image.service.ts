@@ -15,7 +15,7 @@ export class ImageService {
     private jwtService: JwtService,
   ) { }
 
-  getAll(): Observable<Array<ImageModel>> {
+  get(): Observable<Array<ImageModel>> {
     const URL = this.baseUrl;
 
     return this.http.get<Array<ImageModel>>(URL);

@@ -17,7 +17,7 @@ export class SearchConditionService {
     private jwtService: JwtService,
   ) { }
 
-  getAll(condition, withUser: boolean = false): Observable<Array<SearchConditionModel>> {
+  get(condition, withUser: boolean = false): Observable<Array<SearchConditionModel>> {
     const modifiedCondition = {};
     if (condition) {
       if (condition.userId) {

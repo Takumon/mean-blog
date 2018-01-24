@@ -46,7 +46,7 @@ export class SearchConditionComponent implements OnInit {
   getSearchCondition() {
     const withUser = true;
 
-    this.searchConditionService.getAll({
+    this.searchConditionService.get({
       userId: this.auth.loginUser._id.toString()
     }, withUser).subscribe(con => {
       this.seaerchConditions = con as Array<SearchConditionModel>;
