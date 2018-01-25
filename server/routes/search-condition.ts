@@ -14,14 +14,14 @@ const router: Router = Router();
 
 // 複数件検索
 router.get('/', (req, res, next) => {
-  const cb = (error, doc) => {
+  const cb = (error, searchConditions) => {
     if (error) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
-    return res.status(200).json(doc);
+    return res.status(200).json(searchConditions);
   };
 
   const query = req.query;
@@ -46,39 +46,45 @@ router.get('/', (req, res, next) => {
     }
   }
 
-  if (query.withPassword) {
-    // TODO 管理者権限チェック
-    SearchCondition
-      .find(condition)
-      .populate('users')
-      .exec(cb);
+
+  if (query.withUser) {
+    if (query.withPassword) {
+      // TODO 管理者権限チェック
+      SearchCondition
+        .find(condition)
+        .populate('users')
+        .exec(cb);
+    } else {
+      SearchCondition
+        .find(condition)
+        .populate('users', '-password')
+        .exec(cb);
+    }
   } else {
     SearchCondition
-      .find(condition)
-      .populate('users', '-password')
-      .exec(cb);
+    .find(condition)
+    .exec(cb);
   }
 });
 
 
 // 1件検索
 router.get('/:_id', (req, res, next) => {
-  const cb = (error, doc) => {
+  const cb = (error, searchConditions) => {
     if (error) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
         error: error.message
       });
     }
-    return res.status(200).json(doc[0]);
+    return res.status(200).json(searchConditions[0]);
   };
 
-  const withUser: boolean = !!req.query.withUser;
   const condition = {
     _id: new mongoose.Types.ObjectId(req.params._id),
   };
 
-  if (withUser) {
+  if (req.query.withUser) {
     if (req.query.withPassword) {
       // TODO 管理者権限チェック
       SearchCondition
@@ -106,6 +112,7 @@ const isCollectedPattern = (value: string) => {
   }
   return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value) !== -1;
 };
+
 const isExistDateRange = (value: string, {req}) => {
   if (!value) {
     return true;
@@ -117,6 +124,7 @@ const isExistDateRange = (value: string, {req}) => {
 
   return true;
 };
+
 const isCollectedDateRange = (value: string, {req}) => {
   if (!value) {
     return true;
@@ -180,7 +188,7 @@ router.post('/', [
     }
   }
 
-  searchCondition.save((error, target) => {
+  searchCondition.save((error, createdSearchCondition) => {
     if (error) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -190,7 +198,7 @@ router.post('/', [
 
     return res.status(200).json({
       message: `${MODEL_NAME}を登録しました。`,
-      obj: target
+      obj: createdSearchCondition
     });
   });
 });
@@ -260,7 +268,7 @@ router.put('/:_id', [
     model['$unset'] = unset;
   }
 
-  SearchCondition.findByIdAndUpdate(req.params._id, model, {new: true}, (error, target) => {
+  SearchCondition.findByIdAndUpdate(req.params._id, model, {new: true}, (error, updatedSearchCondition) => {
     // 更新対象の存在チェックは入力チェックで実施済みなのでここでは特に対象しない
 
     if (error) {
@@ -272,7 +280,7 @@ router.put('/:_id', [
 
     return res.status(200).json({
       message: `${MODEL_NAME}を更新しました。`,
-      obj: target
+      obj: updatedSearchCondition
     });
   });
 });
