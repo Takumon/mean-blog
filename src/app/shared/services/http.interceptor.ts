@@ -18,7 +18,9 @@ export class AppHttpInterceptor implements HttpInterceptor {
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const req = request.clone();
+    const req = request.clone({
+      headers: request.headers.set('x-access-token', this.localStrageService.get(KEY.TOKEN))
+    });
     const hasToken = this.localStrageService.has(KEY.TOKEN);
     return next.handle(req).catch(res => {
       switch (res.status) {

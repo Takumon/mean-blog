@@ -3,7 +3,6 @@ import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
-import { JwtService } from '../../shared/services/jwt.service';
 
 import { SearchConditionModel } from './search-condition.model';
 
@@ -33,7 +32,6 @@ export class SearchConditionService {
   /** コンストラクタ */
   constructor(
     private http: HttpClient,
-    private jwtService: JwtService,
   ) { }
 
   /**
@@ -43,18 +41,17 @@ export class SearchConditionService {
    * @param withUser 取得情報にユーザ情報を付与するか
    * @return 指定した検索条件に一致するモデルのリスト
    */
-  get(condition: Condition, withUser = false): Observable<Array<SearchConditionModel>> {
+  get(condition: Condition, withUser = false): Observable<SearchConditionModel[]> {
     const URL = this.baseUrl;
 
-    const headers = this.jwtService.getHeaders();
     let params = new HttpParams().set('condition', JSON.stringify(condition));
     if (withUser) {
       params = params.set('withUser', 'true');
     }
 
-    const options = { headers, params };
+    const options = { params };
 
-    return this.http.get<Array<SearchConditionModel>>(URL, options);
+    return this.http.get<SearchConditionModel[]>(URL, options);
   }
 
   /**
@@ -67,13 +64,12 @@ export class SearchConditionService {
   getById(_id: string, withUser = false): Observable<SearchConditionModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    const headers = this.jwtService.getHeaders();
     let params = new HttpParams();
     if (withUser) {
       params = params.set('withUser', 'true');
     }
 
-    const options = { headers, params };
+    const options = { params };
 
     return this.http.get<SearchConditionModel>(URL, options);
   }
@@ -87,7 +83,7 @@ export class SearchConditionService {
   register(searchCondition: SearchConditionModel): Observable<CudResponse> {
     const URL = this.baseUrl;
 
-    return this.http.post<CudResponse>(URL, searchCondition, this.jwtService.getRequestOptions());
+    return this.http.post<CudResponse>(URL, searchCondition);
   }
 
   /**
@@ -96,10 +92,10 @@ export class SearchConditionService {
 　 * @param searchCondition 更新するモデル(更新対象のプロパティのみ定義したモデル)
    * @return 更新後のモデル
    */
-  update(searchCondition: SearchConditionModel): Observable<{message: string, obj: SearchConditionModel}> {
+  update(searchCondition: SearchConditionModel): Observable<CudResponse> {
     const URL = `${this.baseUrl}/${searchCondition._id}`;
 
-    return this.http.put<{message: string, obj: SearchConditionModel}>(URL, searchCondition, this.jwtService.getRequestOptions());
+    return this.http.put<CudResponse>(URL, searchCondition);
   }
 
   /**
@@ -108,9 +104,9 @@ export class SearchConditionService {
    * @param _id 削除対象モデルの_id
    * @return 削除したモデル
    */
-  delete(_id: string): Observable<{message: string, obj: SearchConditionModel}> {
+  delete(_id: string): Observable<CudResponse> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.delete<{message: string, obj: SearchConditionModel}>(URL, this.jwtService.getRequestOptions());
+    return this.http.delete<CudResponse>(URL);
   }
 }

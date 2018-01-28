@@ -7,8 +7,10 @@ import { validateHelper as v } from '../helpers/validate-helper';
 import { SearchCondition } from '../models/search-condition.model';
 
 
-// TODO 日付期間はenum化
+/** dataSearchPatternのデフォルト値 */
 const COSTOME_RANGE: String = '6';
+/** dataSearchPatternが取りうる値 */
+const DATE_SEARCH_PATTERNS = ['0', '1', '2', '3', '4', '5', '6'];
 const MODEL_NAME = 'お気に入り検索条件';
 const router: Router = Router();
 
@@ -26,9 +28,9 @@ router.get('/', (req, res, next) => {
 
   const query = req.query;
   // TODO 検索条件
-  const source = query.condition ?
-  JSON.parse(query.condition) :
-  {};
+  const source = query.condition
+    ? JSON.parse(query.condition)
+    : {};
 
   let condition = {};
   const userIds = source && source.userId;
@@ -110,7 +112,7 @@ const isCollectedPattern = (value: string) => {
   if (!value) {
     return true;
   }
-  return ['0', '1', '2', '3', '4', '5', '6'].indexOf(value) !== -1;
+  return DATE_SEARCH_PATTERNS.indexOf(value) !== -1;
 };
 
 const isExistDateRange = (value: string, {req}) => {
@@ -245,7 +247,7 @@ router.put('/:_id', [
     unset.users = '';
   }
 
-  if (['0', '1', '2', '3', '4', '5', '6'].indexOf(req.body.dateSearchPattern) === -1) {
+  if (DATE_SEARCH_PATTERNS.indexOf(req.body.dateSearchPattern) === -1) {
     unset.dateSearchPattern = '';
   } else {
     set.dateSearchPattern = req.body.dateSearchPattern;
