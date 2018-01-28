@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-
-import { UserModel } from '../../users/shared/user.model';
 
 
 enum KEY {
