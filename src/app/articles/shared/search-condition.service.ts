@@ -7,13 +7,17 @@ import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { SearchConditionModel } from './search-condition.model';
 
 
-// 登録(Create)、更新(Update)、削除時(delete)のレスポンス
+/**
+ * 登録(Create)、更新(Update)、削除時(delete)のレスポンス
+ */
 interface CudResponse {
   message: string;
   obj: SearchConditionModel;
 }
 
-// 検索条件を複数件取得する際の検索条件
+/**
+ * 検索条件を複数件取得するときの検索条件
+ */
 interface Condition {
   userId?: string | string[];
 }

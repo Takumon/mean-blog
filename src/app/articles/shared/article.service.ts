@@ -5,19 +5,48 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/Rx';
 
 import { Constant } from '../../shared/constant';
-import { JwtService } from '../../shared/services/jwt.service';
 
 import { ArticleModel } from './article.model';
 import { ArticleWithUserModel } from './article-with-user.model';
-import { CommentModel } from './comment.model';
+import { UserModel } from '../../users/shared/user.model';
+
+
+/**
+ * 登録(Create)、更新(Update)、削除時(delete)のレスポンス
+ */
+interface CudResponse {
+  message: string;
+  obj: ArticleModel;
+}
+
+/**
+ * いいねの登録(Create)、更新(Update)、削除時(delete)のレスポンス
+ */
+interface VoteCudResponse {
+  message: string;
+  obj: string[];
+}
+
+
+/**
+ * 検索条件を複数件取得する際の検索条件
+ */
+export interface Condition {
+  author?: {
+    _id?: string | string[];
+    userId?: string | string[];
+  };
+  dateFrom?: string;
+  dateTo?: string;
+  voter?: string | string[];
+}
 
 /**
  * Http通信用オプション
  */
 interface HttpOption {
-  condition?: Object;
+  condition?: Condition;
   withUser?: boolean;
-  withArticle?: boolean;
 }
 
 @Injectable()
@@ -27,7 +56,6 @@ export class ArticleService {
 
   constructor(
     private http: HttpClient,
-    private jwtService: JwtService
   ) {}
 
   /**
@@ -38,7 +66,10 @@ export class ArticleService {
    * @param withUser 取得情報にユーザ情報を付与するか
    * @return 指定した検索条件とページング条件に一致するモデルのリスト
    */
-  get(condition: Object, paginOptions: {skip?: number, limit?: number, sort?: Object}, withUser: boolean = false): Observable<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}> {
+  get(
+    condition: Condition,
+    paginOptions: {skip?: number, limit?: number, sort?: Object},
+    withUser: boolean = false): Observable<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}> {
     const URL = this.baseUrl;
 
     // 検索条件にページング条件をマージする
@@ -66,83 +97,78 @@ export class ArticleService {
    * 登録
    *
    * @param model 登録するモデル
-   * @param withUser 取得情報にユーザ情報を付与するか
    * @return 登録後のモデル
    */
-  update(model: ArticleModel, withUser: boolean = false): Observable<ArticleModel> {
+  update(model: ArticleModel): Observable<CudResponse> {
     const URL = `${this.baseUrl}/${model._id}`;
 
-    const options = this.constructOptions({ withUser });
-
-    return this.http.put<ArticleModel>(URL, model, options);
+    return this.http.put<CudResponse>(URL, model);
   }
 
   /**
    * 更新（差分更新）
    *
    * @param model 更新するモデル(更新対象のプロパティのみ定義したモデル)
-   * @param withUser 取得情報にユーザ情報を付与するか
    * @return 更新後のモデル
    */
-  register(model: ArticleModel, withUser: boolean = false): Observable<ArticleModel> {
+  register(model: ArticleModel): Observable<CudResponse> {
     const URL = this.baseUrl;
 
-    const options = this.constructOptions({ withUser });
-
-    return this.http.post<ArticleModel>(URL, model, options);
+    return this.http.post<CudResponse>(URL, model);
   }
 
   /**
    * 削除（論理削除）
    *
    * @param _id 削除対象モデルの_id
-   * @param withUser 取得情報にユーザ情報を付与するか
    * @return 削除したモデル
    */
-  delete(_id: string, withUser: boolean = false): Observable<ArticleModel> {
+  delete(_id: string): Observable<CudResponse> {
     const URL = `${this.baseUrl}/${_id}`;
+
+    return this.http.delete<CudResponse>(URL);
+  }
+
+
+
+  /**
+   * いいねを検索
+   *
+   * @param _idOfArticle 記事_id
+   * @param withUser 取得情報にユーザ情報を付与するか
+   */
+  getVote(_idOfArticle: string, withUser = false): Observable<string[] | UserModel[]> {
+    const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
     const options = this.constructOptions({ withUser });
 
-    return this.http.delete<ArticleModel>(URL, options);
+    return this.http.get<string[]>(URL, options);
   }
 
-
-
   /**
-   * いいね登録
+   * いいねを登録
    *
    * @param _idOfArticle いいねの対象記事の_id
    * @param _idOfUser いいねをするユーザの_id
    */
-  registerVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
+  registerVote(_idOfArticle: string, _idOfUser: string): Observable<VoteCudResponse> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
 
-    return this.http.post(URL, {'voter': _idOfUser}, this.jwtService.getRequestOptions());
+    return this.http.post<VoteCudResponse>(URL, {'voter': _idOfUser});
   }
 
   /**
-   * いいね削除
+   * いいねを削除
    *
    * @param _idOfArticle いいねの対象記事の_id
    * @param _idOfUser いいねをするユーザの_id
    */
-  deleteVote(_idOfArticle: string, _idOfUser: string): Observable<any> {
+  deleteVote(_idOfArticle: string, _idOfUser: string): Observable<VoteCudResponse> {
     const URL = `${this.baseUrl}/${_idOfArticle}/vote/${_idOfUser}`;
 
-    return this.http.delete(URL, this.jwtService.getRequestOptions());
+    return this.http.delete<VoteCudResponse>(URL);
   }
 
-  /**
-   * 指定した記事_idに紐づくいいねを検索
-   *
-   * @param _idOfArticle 記事_id
-   */
-  getVote(_idOfArticle: string): Observable<any> {
-    const URL = `${this.baseUrl}/${_idOfArticle}/vote`;
-
-    return this.http.get(URL, this.jwtService.getRequestOptions());
-  }
 
   /**
    * 指定した引数を元にHttp通信用オプションを生成する
@@ -150,8 +176,7 @@ export class ArticleService {
    * @param httpOption
    * @return http通信用オプション
    */
-  private constructOptions(httpOption: HttpOption): {params: HttpParams, headers: HttpHeaders} {
-    const headers = this.jwtService.getHeaders();
+  private constructOptions(httpOption: HttpOption): {params: HttpParams} {
     let params = new HttpParams();
 
     if (httpOption.condition) {
@@ -162,10 +187,6 @@ export class ArticleService {
       params = params.set('withUser', 'true');
     }
 
-    if (httpOption.withArticle) {
-      params = params.set('withArticle', 'true');
-    }
-
-    return { headers, params };
+    return { params };
   }
 }

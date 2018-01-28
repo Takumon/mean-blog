@@ -87,8 +87,9 @@ export class ArticleComponent {
     .registerVote(this.item._id, this.auth.loginUser._id)
     .subscribe(article => {
       this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      this.articleService.getVote(this.item._id)
-      .subscribe(vote => {
+      const withUser = true;
+      this.articleService.getVote(this.item._id, withUser)
+      .subscribe( (vote: UserModel[]) => {
         this.item.vote = vote;
       });
     }, this.onValidationError.bind(this));
@@ -112,8 +113,9 @@ export class ArticleComponent {
       .deleteVote(this.item._id, this.auth.loginUser._id)
       .subscribe(article => {
         this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
+        const withUser = true;
         this.articleService.getVote(this.item._id)
-        .subscribe(vote => {
+        .subscribe((vote: UserModel[]) => {
           this.item.vote = vote;
         });
       }, this.onValidationError.bind(this));
