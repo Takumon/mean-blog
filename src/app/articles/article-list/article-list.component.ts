@@ -18,7 +18,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
 import { UserService } from '../../users/shared/user.service';
 import { UserModel } from '../../users/shared/user.model';
-import { ArticleService } from '../shared/article.service';
+import { ArticleService, Condition } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 
@@ -76,7 +76,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public pageIndex = 0;
 
    /** 検索条件（ページング用に保持しておく） */
-  private searchCondition: any;
+  private searchCondition: Condition;
 
   /** 検索結果 */
   public articles: Array<ArticleWithUserModel>;
@@ -166,7 +166,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    *
    * @param cb 検索条件組み立て後に呼ぶコールバック関数
    */
-  constructSearchCondition(cb) {
+  constructSearchCondition(cb: (searchCondition: Condition) => void ) {
     this.showPrograssBar = true;
     const withUser = true;
     switch (this.mode) {
@@ -188,7 +188,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => {
-          const userId = params['_userId'];
+          const userId: string = params['_userId'];
           cb({author: { userId: userId }});
         });
         break;

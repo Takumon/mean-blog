@@ -160,7 +160,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
 
   private getUser(): void {
-    this.userService.getAll()
+    this.userService.get()
     .takeUntil(this.onDestroy)
     .subscribe(users => {
       this.users = users;

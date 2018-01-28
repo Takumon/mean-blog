@@ -16,7 +16,7 @@ export class UserService {
     private jwtService: JwtService,
   ) { }
 
-  getAll(condition: { limit: number, offset: number} = {limit: 100, offset: 0}): Observable<Array<UserModel>> {
+  get(condition: { limit: number, offset: number} = {limit: 100, offset: 0}): Observable<Array<UserModel>> {
     const URL = this.baseUrl;
 
     return this.http.get<Array<UserModel>>(URL, this.jwtService.getRequestOptions());

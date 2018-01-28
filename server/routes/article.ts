@@ -12,7 +12,9 @@ import * as ENV from '../environment-config';
 const MODEL_NAME = '記事';
 const router: Router = Router();
 
-// 複数件検索
+/**
+ * 指定した検索条件で記事を複数件検索
+ */
 router.get('/', (req, res, next) => {
   extractCondition(req, function(error: any, condition: ArticleCondition) {
     if (error) {
@@ -215,7 +217,9 @@ function extractPagingOptions(req: any): {skip: number, limit: number, sort: Obj
 }
 
 
-// 一件検索
+/**
+ * 指定したIDの記事を検索
+ */
 router.get('/:_id', (req, res, next) => {
   if ( !req.params._id ||  !req.params._id.match(/^[0-9a-fA-F]{24}$/)) {
     return res.status(404).json({
@@ -262,7 +266,9 @@ router.get('/:_id', (req, res, next) => {
 
 
 
-// 登録
+/**
+ * 記事を登録
+ */
 router.post('/', [
   body('title')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['タイトル']))
@@ -312,7 +318,9 @@ router.post('/', [
 });
 
 
-// 更新（差分更新）
+/**
+ * 指定した記事を更新（差分更新）
+ */
 router.put('/:_id', [
   // 形式チェックは行わず存在するかだけを確認する
   param('_id')
@@ -366,7 +374,9 @@ router.put('/:_id', [
 });
 
 
-// 論理削除
+/**
+ * 指定した記事を削除
+ */
 router.delete('/:_id', [
   // ユーザIDの形式チェックは行わず存在するかだけを確認する
   param('_id')
@@ -396,8 +406,10 @@ router.delete('/:_id', [
 });
 
 
-// いいね登録
-router.post('/:_id/vote', [
+/**
+ * 指定した記事にいいね登録
+ */
+router.post('/:articleId/vote', [
   body('voter')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['いいねの投稿者'])),
   body('voter').optional({checkFalsy: true})
@@ -410,13 +422,13 @@ router.post('/:_id/vote', [
   return res.status(400).json({ errors: errors.array() });
   }
 
-  const _idOfUser = req.body.voter;
+  const voterId = req.body.voter;
 
   Article.update({
-    _id: req.params._id
+    _id: req.params.articleId
   }, {$push: {
-    vote: new mongoose.Types.ObjectId(_idOfUser)
-  } }, (err, result) => {
+    vote: new mongoose.Types.ObjectId(voterId)
+  } }, (err, article) => {
 
     if (err) {
       return res.status(500).json({
@@ -427,14 +439,17 @@ router.post('/:_id/vote', [
 
     return res.status(200).json({
       message: '記事にいいねしました。',
-      obj: result
+      obj: article.vote
     });
   });
 });
 
-// いいね削除
-router.delete('/:_id/vote/:_idOfVorter', [
-  param('_idOfVorter')
+
+/**
+ * 指定した記事の指定したいいねを削除
+ */
+router.delete('/:articleId/vote/:voterId', [
+  param('voterId')
     .custom(v.validation.isExistedVote).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['いいね'])),
 ], (req, res, next) => {
 
@@ -444,10 +459,10 @@ router.delete('/:_id/vote/:_idOfVorter', [
   }
 
   Article.update({
-    _id: req.params._id
+    _id: req.params.articleId
   }, {$pull: {
-    vote: new mongoose.Types.ObjectId(req.params._idOfVorter)
-  } }, (err, result) => {
+    vote: new mongoose.Types.ObjectId(req.params.voterId)
+  } }, (err, article) => {
 
     if (err) {
       return res.status(500).json({
@@ -458,26 +473,37 @@ router.delete('/:_id/vote/:_idOfVorter', [
 
     return res.status(200).json({
       message: 'いいねを取り消しました。',
-      obj: result
+      obj: article.vote
     });
   });
 });
 
 
-// 複数件検索
-router.get('/:_id/vote', (req, res, next) => {
+/**
+ * 指定した記事のいいねを検索
+ */
+router.get('/:articleId/vote', (req, res, next) => {
 
   const condition = {
-    _id: req.params._id,
+    _id: req.params.articleId,
     deleted: { $eq: null}  // 削除記事は除外
   };
 
-  Article
+
+  if (req.query.withUser) {
+    Article
     .find(condition)
     .populate('vote', '-password')
     .exec(cbFind);
 
-  function cbFind(err, doc): any {
+  } else {
+    Article
+    .find(condition)
+    .exec(cbFind);
+  }
+
+
+  function cbFind(err, articles): any {
     if (err) {
       return res.status(500).json({
         title: v.MESSAGE_KEY.default,
@@ -485,13 +511,13 @@ router.get('/:_id/vote', (req, res, next) => {
       });
     }
 
-    if (!doc[0]) {
+    if (!articles[0]) {
       return res.status(500).json({
         title: `記事(_id=${req.params._id})が見つかりませんでした。`,
       });
     }
 
-    return res.status(200).json(doc[0].vote);
+    return res.status(200).json(articles[0].vote);
   }
 });
 
