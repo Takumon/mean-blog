@@ -44,7 +44,7 @@ describe('ArticleService', () => {
 
     it ('withUserがtrue', () => {
 
-      const arg_condition = {author: '123456789044'};
+      const arg_condition = {author: {_id: '123456789044'}};
       const arg_pageCondition = {skip: 0, limit: 10};
       const arg_withUser = true;
 
@@ -65,7 +65,7 @@ describe('ArticleService', () => {
       });
 
       expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"author":"123456789044","skip":0,"limit":10}');
+      expect(req.request.params.get('condition')).toEqual('{"author":{"_id":"123456789044"},"skip":0,"limit":10}');
       expect(req.request.params.get('withUser')).toEqual('true');
 
       // レスポンス返却
@@ -74,7 +74,7 @@ describe('ArticleService', () => {
 
     it ('withUserがfalse', () => {
 
-      const arg_condition = {author: '123456789044'};
+      const arg_condition = {author: {_id: '123456789044'}};
       const arg_pageCondition = {skip: 0, limit: 10};
       const arg_withUser = false;
 
@@ -86,8 +86,6 @@ describe('ArticleService', () => {
         return request.url === '/api/articles';
       });
 
-      expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"author":"123456789044","skip":0,"limit":10}');
       expect(req.request.params.has('withUser')).toBeFalsy('false');
 
       // レスポンス返却
@@ -98,7 +96,7 @@ describe('ArticleService', () => {
 
     it ('withUserを指定しない', () => {
 
-      const arg_condition = {author: '123456789044'};
+      const arg_condition = {author: {_id: '123456789044'}};
       const arg_pageCondition = {skip: 0, limit: 10};
 
       service.get(arg_condition, arg_pageCondition).subscribe(({count, articles}) => {
@@ -109,8 +107,6 @@ describe('ArticleService', () => {
         return request.url === '/api/articles';
       });
 
-      expect(req.request.method).toEqual('GET');
-      expect(req.request.params.get('condition')).toEqual('{"author":"123456789044","skip":0,"limit":10}');
       expect(req.request.params.has('withUser')).toBeFalsy('false');
 
       // レスポンス返却
@@ -169,7 +165,6 @@ describe('ArticleService', () => {
         return request.url === '/api/articles/123456789011';
       });
 
-      expect(req.request.method).toEqual('GET');
       expect(req.request.params.has('withUser')).toBeFalsy();
 
       // レスポンス返却
@@ -187,7 +182,6 @@ describe('ArticleService', () => {
         return request.url === '/api/articles/123456789011';
       });
 
-      expect(req.request.method).toEqual('GET');
       expect(req.request.params.has('withUser')).toBeFalsy();
 
       // レスポンス返却
