@@ -259,7 +259,7 @@ class Validation {
   }
 }
 
-const MESSAGE_KEY = {
+const MESSAGE_KEY: { [key: string]: string} = {
   default: 'エラーが発生しました',
   required: '{0}を入力してください',
   minlength: '{0}は{1}桁以上にしてください',
