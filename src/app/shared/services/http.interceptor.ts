@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { MessageBarService } from '../../shared/services/message-bar.service';
-import { LocalStrageService, KEY } from '../../shared/services/local-strage.service';
+import { LocalStorageService, KEY } from '../../shared/services/local-storage.service';
 
 @Injectable()
 export class AppHttpInterceptor implements HttpInterceptor {
@@ -14,14 +14,14 @@ export class AppHttpInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     private messageBarService: MessageBarService,
-    private localStrageService: LocalStrageService,
+    private localStorageService: LocalStorageService,
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const req = request.clone({
-      headers: request.headers.set('x-access-token', this.localStrageService.get(KEY.TOKEN))
+      headers: request.headers.set('x-access-token', this.localStorageService.get(KEY.TOKEN))
     });
-    const hasToken = this.localStrageService.has(KEY.TOKEN);
+    const hasToken = this.localStorageService.has(KEY.TOKEN);
     return next.handle(req).catch(res => {
       switch (res.status) {
         case 400:

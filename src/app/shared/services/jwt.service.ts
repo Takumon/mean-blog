@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
 import { HttpHeaders,  } from '@angular/common/http';
 
-import { LocalStrageService, KEY } from './local-strage.service';
+import { LocalStorageService, KEY } from './local-storage.service';
 
 /**
  * 認証が必要なサーバリクエストのリクエストヘッダーを生成する
@@ -11,21 +11,21 @@ import { LocalStrageService, KEY } from './local-strage.service';
 export class JwtService {
 
   constructor(
-    private localStrageService: LocalStrageService
+    private localStorageService: LocalStorageService
   ) {}
 
   getHeaders(): HttpHeaders {
-    if (!this.localStrageService.has(KEY.TOKEN)) {
+    if (!this.localStorageService.has(KEY.TOKEN)) {
       return;
     }
 
     return new HttpHeaders({
-      'x-access-token': this.localStrageService.get(KEY.TOKEN)
+      'x-access-token': this.localStorageService.get(KEY.TOKEN)
     });
   }
 
   getRequestOptions(): {headers: HttpHeaders} {
-    if (!this.localStrageService.has(KEY.TOKEN)) {
+    if (!this.localStorageService.has(KEY.TOKEN)) {
       return;
     }
 
