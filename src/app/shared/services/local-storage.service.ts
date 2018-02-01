@@ -12,7 +12,7 @@ export { KEY };
  * ローカルストレージ管理サービス
  */
 @Injectable()
-export class LocalStrageService {
+export class LocalStorageService {
 
   get(key: KEY): string {
     return localStorage.getItem(key.toString());

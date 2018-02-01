@@ -18,7 +18,7 @@ import { AppHttpInterceptor } from './shared/services/http.interceptor';
 import { RouteNamesService } from './shared/services/route-names.service';
 import { JwtService } from './shared/services/jwt.service';
 import { AuthenticationService } from './shared/services/authentication.service';
-import { LocalStrageService } from './shared/services/local-strage.service';
+import { LocalStorageService } from './shared/services/local-storage.service';
 import { ScrollSpyService } from './shared/services/scroll-spy.service';
 import { ScrollService } from './shared/services/scroll.service';
 import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
@@ -49,7 +49,7 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
     RouteNamesService,
     JwtService,
     AuthenticationService,
-    LocalStrageService,
+    LocalStorageService,
     AuthGuard,
     AdminAuthGuard,
     ErrorStateMatcherContainParentGroup,

@@ -3,7 +3,7 @@ import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { JwtService } from '../../shared/services/jwt.service';
-import { LocalStrageService } from '../../shared/services/local-strage.service';
+import { LocalStorageService } from '../../shared/services/local-storage.service';
 
 
 import { CommentService } from './comment.service';
@@ -22,7 +22,7 @@ describe('CommentService', () => {
       imports: [ HttpClientTestingModule ],
       providers: [
         JwtService,
-        LocalStrageService,
+        LocalStorageService,
         CommentService
       ],
     });

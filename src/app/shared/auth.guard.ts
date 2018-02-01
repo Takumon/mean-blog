@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { LocalStrageService, KEY } from './services/local-strage.service';
+import { LocalStorageService, KEY } from './services/local-storage.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private localStrageService: LocalStrageService
+    private localStorageService: LocalStorageService
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (this.localStrageService.has(KEY.TOKEN)) {
+    if (this.localStorageService.has(KEY.TOKEN)) {
       return true;
     }
 
