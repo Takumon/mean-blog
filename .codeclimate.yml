@@ -1,2 +1,4 @@
+languages:
+  TypeScript: true
 exclude_paths:
 - "**/*.spec.ts"
