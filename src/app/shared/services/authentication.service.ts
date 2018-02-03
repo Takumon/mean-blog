@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 import { JwtService } from './jwt.service';
-import { LocalStorageService, KEY } from './local-storage.service';
+import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
 
 
 /**
@@ -83,7 +83,7 @@ export class AuthenticationService {
   // ログイン画面に戻る時に使用する
   logout() {
     this.loginUser = null;
-    this.localStorageService.remove(KEY.TOKEN);
+    this.localStorageService.remove(LOCALSTORAGE_KEY.TOKEN);
   }
 
 
@@ -92,7 +92,7 @@ export class AuthenticationService {
       return res;
     }
 
-    this.localStorageService.set(KEY.TOKEN, res.token);
+    this.localStorageService.set(LOCALSTORAGE_KEY.TOKEN, res.token);
     this.loginUser = res.user;
     this.isFinishedCheckState = true;
 
@@ -108,10 +108,10 @@ export class AuthenticationService {
   }
 
   getToken(): String {
-    return this.localStorageService.get(KEY.TOKEN);
+    return this.localStorageService.get(LOCALSTORAGE_KEY.TOKEN);
   }
 
   hasToken(): boolean {
-    return this.localStorageService.has(KEY.TOKEN);
+    return this.localStorageService.has(LOCALSTORAGE_KEY.TOKEN);
   }
 }

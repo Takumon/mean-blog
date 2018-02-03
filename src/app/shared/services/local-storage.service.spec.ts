@@ -3,7 +3,7 @@ import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { CudSuccessModel } from '../../shared/models/response/cud-success.model';
-import { LocalStorageService, KEY } from './local-storage.service';
+import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
 
 
 describe('UserService', () => {
@@ -50,44 +50,44 @@ describe('UserService', () => {
   describe('get', () => {
 
     it('ローカルストレージに値がない場合', () => {
-        expect(service.get(KEY.TOKEN)).toBeNull();
-        expect(service.get(KEY.SELECTED_CONDITION_ID)).toBeNull();
+        expect(service.get(LOCALSTORAGE_KEY.TOKEN)).toBeNull();
+        expect(service.get(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID)).toBeNull();
     });
 
     it('ローカルストレージに値がある場合', () => {
-      localStorage.setItem(KEY.TOKEN.toString(), 'SampleToken');
-      localStorage.setItem(KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
+      localStorage.setItem(LOCALSTORAGE_KEY.TOKEN.toString(), 'SampleToken');
+      localStorage.setItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
 
-      expect(service.get(KEY.TOKEN)).toEqual('SampleToken');
-      expect(service.get(KEY.SELECTED_CONDITION_ID)).toEqual('SampleId');
+      expect(service.get(LOCALSTORAGE_KEY.TOKEN)).toEqual('SampleToken');
+      expect(service.get(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID)).toEqual('SampleId');
     });
   });
 
   describe('set', () => {
 
     it('ローカルストレージに値がない場合', () => {
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toBeNull();
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
 
-      service.set(KEY.TOKEN, 'SampleToken');
-      service.set(KEY.SELECTED_CONDITION_ID, 'SampleId');
+      service.set(LOCALSTORAGE_KEY.TOKEN, 'SampleToken');
+      service.set(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID, 'SampleId');
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toEqual('SampleToken');
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toEqual('SampleToken');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
     });
 
     it('ローカルストレージに値がある場合', () => {
-      localStorage.setItem(KEY.TOKEN.toString(), 'SampleToken');
-      localStorage.setItem(KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
+      localStorage.setItem(LOCALSTORAGE_KEY.TOKEN.toString(), 'SampleToken');
+      localStorage.setItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toEqual('SampleToken');
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toEqual('SampleToken');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
 
-      service.set(KEY.TOKEN, 'SampleToken2');
-      service.set(KEY.SELECTED_CONDITION_ID, 'SampleId2');
+      service.set(LOCALSTORAGE_KEY.TOKEN, 'SampleToken2');
+      service.set(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID, 'SampleId2');
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toEqual('SampleToken2');
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId2');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toEqual('SampleToken2');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId2');
     });
   });
 
@@ -95,28 +95,28 @@ describe('UserService', () => {
   describe('remove', () => {
 
     it('ローカルストレージに値がない場合', () => {
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toBeNull();
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
 
-      service.remove(KEY.TOKEN);
-      service.remove(KEY.SELECTED_CONDITION_ID);
+      service.remove(LOCALSTORAGE_KEY.TOKEN);
+      service.remove(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID);
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toBeNull();
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
     });
 
     it('ローカルストレージに値がある場合', () => {
-      localStorage.setItem(KEY.TOKEN.toString(), 'SampleToken');
-      localStorage.setItem(KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
+      localStorage.setItem(LOCALSTORAGE_KEY.TOKEN.toString(), 'SampleToken');
+      localStorage.setItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toEqual('SampleToken');
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toEqual('SampleToken');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
 
-      service.remove(KEY.TOKEN);
-      service.remove(KEY.SELECTED_CONDITION_ID);
+      service.remove(LOCALSTORAGE_KEY.TOKEN);
+      service.remove(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID);
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toBeNull();
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
     });
   });
 
@@ -124,22 +124,22 @@ describe('UserService', () => {
   describe('has', () => {
 
     it('ローカルストレージに値がない場合', () => {
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toBeNull();
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toBeNull();
 
-      expect(service.has(KEY.TOKEN)).toBeFalsy();
-      expect(service.has(KEY.SELECTED_CONDITION_ID)).toBeFalsy();
+      expect(service.has(LOCALSTORAGE_KEY.TOKEN)).toBeFalsy();
+      expect(service.has(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID)).toBeFalsy();
     });
 
     it('ローカルストレージに値がある場合', () => {
-      localStorage.setItem(KEY.TOKEN.toString(), 'SampleToken');
-      localStorage.setItem(KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
+      localStorage.setItem(LOCALSTORAGE_KEY.TOKEN.toString(), 'SampleToken');
+      localStorage.setItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString(), 'SampleId');
 
-      expect(localStorage.getItem(KEY.TOKEN.toString())).toEqual('SampleToken');
-      expect(localStorage.getItem(KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toEqual('SampleToken');
+      expect(localStorage.getItem(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID.toString())).toEqual('SampleId');
 
-      expect(service.has(KEY.TOKEN)).toBeTruthy();
-      expect(service.has(KEY.SELECTED_CONDITION_ID)).toBeTruthy();
+      expect(service.has(LOCALSTORAGE_KEY.TOKEN)).toBeTruthy();
+      expect(service.has(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID)).toBeTruthy();
     });
   });
 

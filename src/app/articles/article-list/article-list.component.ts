@@ -15,7 +15,7 @@ import 'rxjs/add/operator/takeUntil';
 import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { LocalStorageService, KEY } from '../../shared/services/local-storage.service';
+import { LocalStorageService, LOCALSTORAGE_KEY } from '../../shared/services/local-storage.service';
 import { UserService } from '../../users/shared/user.service';
 import { UserModel } from '../../users/shared/user.model';
 import { ArticleService, Condition } from '../shared/article.service';
