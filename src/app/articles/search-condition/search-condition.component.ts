@@ -8,7 +8,7 @@ import * as moment from 'moment';
 
 import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { LocalStorageService, KEY } from '../../shared/services/local-storage.service';
+import { LocalStorageService, LOCALSTORAGE_KEY } from '../../shared/services/local-storage.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-pattern.enum';
 
@@ -55,11 +55,11 @@ export class SearchConditionComponent implements OnInit {
 
         let selectedId;
         // 選択している検索条件がない場合は一番先頭の検索条件を選択する
-        if (!this.localStorageService.has(KEY.SELECTED_CONDITION_ID)) {
+        if (!this.localStorageService.has(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID)) {
           selectedId = this.seaerchConditions[0]._id.toString();
-          this.localStorageService.set(KEY.SELECTED_CONDITION_ID, selectedId);
+          this.localStorageService.set(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID, selectedId);
         } else {
-          selectedId = this.localStorageService.get(KEY.SELECTED_CONDITION_ID);
+          selectedId = this.localStorageService.get(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID);
 
           // 選択している場合でも検索条件に一致するものがない場合は一番先頭の検索条件を選択する
           let foundSelected = false;
@@ -72,7 +72,7 @@ export class SearchConditionComponent implements OnInit {
 
           if (!foundSelected) {
             selectedId = this.seaerchConditions[0]._id.toString();
-            this.localStorageService.set(KEY.SELECTED_CONDITION_ID, selectedId);
+            this.localStorageService.set(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID, selectedId);
           }
         }
 
@@ -83,7 +83,7 @@ export class SearchConditionComponent implements OnInit {
         }
       } else {
         // 選択した検索条件を初期化する
-        this.localStorageService.remove(KEY.SELECTED_CONDITION_ID);
+        this.localStorageService.remove(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID);
       }
 
       this.changeSeaerchCondition.emit();
@@ -91,7 +91,7 @@ export class SearchConditionComponent implements OnInit {
   }
 
   selectCondition(selectedId: string) {
-    this.localStorageService.set(KEY.SELECTED_CONDITION_ID, selectedId);
+    this.localStorageService.set(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID, selectedId);
     for (const condition of this.seaerchConditions) {
       condition.checked  = selectedId === condition._id.toString();
     }

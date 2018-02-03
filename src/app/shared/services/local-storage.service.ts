@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 
 
-enum KEY {
+export enum LOCALSTORAGE_KEY {
   TOKEN,
   SELECTED_CONDITION_ID,
 }
 
-export { KEY };
 
 /**
  * ローカルストレージ管理サービス
@@ -14,19 +13,19 @@ export { KEY };
 @Injectable()
 export class LocalStorageService {
 
-  get(key: KEY): string {
+  get(key: LOCALSTORAGE_KEY): string {
     return localStorage.getItem(key.toString());
   }
 
-  set(key: KEY, value: string) {
+  set(key: LOCALSTORAGE_KEY, value: string) {
     localStorage.setItem(key.toString(), value);
   }
 
-  remove(key: KEY): void {
+  remove(key: LOCALSTORAGE_KEY): void {
     localStorage.removeItem(key.toString());
   }
 
-  has(key: KEY): boolean {
+  has(key: LOCALSTORAGE_KEY): boolean {
     return !!this.get(key);
   }
 }
