@@ -460,7 +460,7 @@ export class ArticleEditComponent implements OnInit {
 
 
     // TODO 複数件アップロード
-    this.imageService.create(fileList[0])
+    this.imageService.register(fileList[0])
     .subscribe((res: any) => {
       this.snackBar.open('画像をアップロードしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
       const image = res.obj;
