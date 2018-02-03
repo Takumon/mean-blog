@@ -32,7 +32,7 @@
     "build:server_test": "tsc -p ./server/tsconfig.server.json",
     "buildRun": "run-s build run:server",
     "test": "run-p test:*",
-    "test:client": "ng test --watch=false --code-coverage",
+    "test:client": "ng test --watch=true --code-coverage",
     "test:server": "MONGO_URL=mongodb://localhost:27018/test npm-run-all -s build:server_test -p watch:server_test  boot:server_test",
     "e2e": "npm-run-all -s  webdriver:update -p webdriver:start protractor",
     "webdriver:update": "webdriver-manager update",
@@ -103,7 +103,7 @@
     "protractor": "~5.1.2",
     "supertest": "^3.0.0",
     "ts-node": "^3.3.0",
-    "tslint": "^5.8.0",
+    "tslint": "^5.9.1",
     "typescript": "^2.4.2"
   }
 }
