@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { JwtService } from '../../shared/services/jwt.service';
 import { ImageModel } from '../../shared/models/image.model';
 
 // 画像は更新なし
@@ -12,35 +11,32 @@ export class ImageService {
 
   constructor(
     private http: HttpClient,
-    private jwtService: JwtService,
   ) { }
 
-  get(): Observable<Array<ImageModel>> {
+  get(): Observable<ImageModel[]> {
     const URL = this.baseUrl;
 
-    return this.http.get<Array<ImageModel>>(URL);
+    return this.http.get<ImageModel[]>(URL);
   }
 
   getById(_id: string): Observable<ImageModel> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.get<ImageModel>(URL, this.jwtService.getRequestOptions());
+    return this.http.get<ImageModel>(URL);
   }
 
-  create(imageFile: File): Observable<any> {
+  register(imageFile: File): Observable<any> {
     const URL = this.baseUrl;
-
-    const headers: HttpHeaders = this.jwtService.getHeaders();
 
     const body = new FormData();
     body.append('image', imageFile);
 
-    return this.http.request('post', URL, { body, headers });
+    return this.http.request('post', URL, { body });
   }
 
   delete(_id: string): Observable<any> {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.delete(URL, this.jwtService.getRequestOptions());
+    return this.http.delete(URL);
   }
 }
