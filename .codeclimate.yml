@@ -1,9 +1,5 @@
 languages:
   TypeScript: true
-plugins:
-  tslint:
-    enabled: true
-    config: tslint.json
 exclude_paths:
 - "**/*.spec.ts"
 - "**/*.js"
