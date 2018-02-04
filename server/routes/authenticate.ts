@@ -38,16 +38,7 @@ router.post('/login', [
       });
     }
 
-    if (!user) {
-      return validationError(res, [{
-        param: 'common',
-        msg: v.message(v.MESSAGE_KEY.login_error),
-        value: '',
-        location: 'body'
-      }]);
-    }
-
-    if (!PasswordManager.compare(reqUser.password, user.password)) {
+    if (!user || !PasswordManager.compare(reqUser.password, user.password)) {
       return validationError(res, [{
         param: 'common',
         msg: v.message(v.MESSAGE_KEY.login_error),
