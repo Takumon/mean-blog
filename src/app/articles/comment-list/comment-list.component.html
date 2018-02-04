@@ -135,7 +135,7 @@
           </div>
         </div>
         <!-- リプライ登録 -->
-        <div *ngIf="auth.login() && comment.addReply" class="reply">
+        <div *ngIf="auth.isLogin() && comment.addReply" class="reply">
           <app-reply-form
             [model]="replyOfForm(comment, false)"
             [hasCancelBtn]="true"

@@ -30,6 +30,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
+    browserDisconnectTolerance: 2,
+    browserNoActivityTimeout: 50000,
     browsers: ['Chrome'],
     singleRun: false,
     files: [
