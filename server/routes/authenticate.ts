@@ -5,11 +5,13 @@ import * as jdenticon from 'jdenticon';
 import { check, oneOf, body, validationResult } from 'express-validator/check';
 import { matchedData, sanitize } from 'express-validator/filter';
 
-import { User } from '../models/user.model';
+import { User, UserDocument } from '../models/user.model';
 import { Image, ImageType } from '../models/image.model';
 import * as ENV from '../environment-config';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
+import { sysError, validationError, cudSuccess, forbiddenError } from '../helpers/response-util';
+import { MappedError } from 'express-validator/shared-typings';
 
 const router: Router = Router();
 
@@ -30,14 +32,28 @@ router.post('/login', [
     deleted: { $eq: null}
   }, function(err, user) {
     if (err) {
-      throw err;
+      return sysError(res, {
+        title: v.MESSAGE_KEY.default,
+        error: err.message
+      });
     }
+
     if (!user) {
-      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE_KEY.login_error)}] });
+      return validationError(res, [{
+        param: 'common',
+        msg: v.message(v.MESSAGE_KEY.login_error),
+        value: '',
+        location: 'body'
+      }]);
     }
 
     if (!PasswordManager.compare(reqUser.password, user.password)) {
-      return res.status(400).json({ errors: [{param: 'common', msg: v.message(v.MESSAGE_KEY.login_error)}] });
+      return validationError(res, [{
+        param: 'common',
+        msg: v.message(v.MESSAGE_KEY.login_error),
+        value: '',
+        location: 'body'
+      }]);
     }
 
     const token = jwt.sign({ _id: user._id }, ENV.SECRET, {
@@ -48,7 +64,6 @@ router.post('/login', [
     deleteProp(user, 'password');
 
     res.json({
-      success: true,
       message: '認証成功',
       token: token,
       user: user,
@@ -85,7 +100,7 @@ router.post('/register', [
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return validationError(res, errors.array());
   }
 
   const reqUser = req.body;
@@ -94,7 +109,10 @@ router.post('/register', [
     deleted: { $eq: null}
   }, (err, user) => {
     if (err) {
-      throw err;
+      return sysError(res, {
+        title: v.MESSAGE_KEY.default,
+        error: err.message
+      });
     }
 
     const newUser = new User();
@@ -104,9 +122,9 @@ router.post('/register', [
 
     newUser.save( (err2) => {
       if (err2) {
-        return res.status(500).json({
-          success: false,
-          message: err2,
+        return sysError(res, {
+          title: v.MESSAGE_KEY.default,
+          error: err2.message
         });
       }
 
@@ -127,9 +145,9 @@ router.post('/register', [
 
       avator.save((err3) => {
         if (err3) {
-          return res.status(500).json({
-            success: false,
-            message: err3,
+          return sysError(res, {
+            title: v.MESSAGE_KEY.default,
+            error: err3.message
           });
         }
 
@@ -179,7 +197,7 @@ router.put('/changePassword', [
 ], (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return validationError(res, errors.array());
   }
 
   const model = {$set: {
@@ -187,40 +205,52 @@ router.put('/changePassword', [
     updated: new Date()
   }};
 
-  User.findByIdAndUpdate(req.body._id, model, {new: true}, (err, target) => {
+  User.findByIdAndUpdate(req.body._id, model, {new: true}, (err, registeredUser: UserDocument) => {
     if (err) {
-      return res.status(500).json({
+      return sysError(res, {
         title: v.MESSAGE_KEY.default,
         error: err.message
       });
     }
-    // パスワードはクライアント側に送信しない
-    deleteProp(target, 'password');
 
-    return res.status(200).json({
+    // パスワードはクライアント側に送信しない
+    deleteProp(registeredUser, 'password');
+
+    return cudSuccess(res, {
       message: `パスワードを更新しました。`,
-      obj: target
+      obj: registeredUser
     });
   });
 });
 
 
+/**
+ * 認証済かチェックする
+ */
 router.get('/check-state', (req, res) => {
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
   if (!token) {
-    res.status(403).send({
+    res.send({
       success: false,
-      message: 'トークンが存在しません。'
+      message: 'トークンが存在しません。',
     });
-    return;
   }
 
   jwt.verify(token, ENV.SECRET, (err, decoded) => {
-    if (err || !decoded._id) {
-      return res.status(403).json({
+    if (err) {
+
+      res.send({
         success: false,
-        message: 'トークン認証に失敗しました。'
+        message: 'トークン認証に失敗しました。',
+        error: err.message
+      });
+    }
+
+    if (!decoded._id) {
+      res.send({
+        success: false,
+        message: 'トークン認証に失敗しました。',
       });
     }
 
@@ -232,14 +262,15 @@ router.get('/check-state', (req, res) => {
       .select('-password')
       .exec( (err2, doc) => {
         if (err2) {
-          return res.status(403).json({
+          res.send({
             success: false,
             message: 'ログインユーザ情報が取得できませんでした。',
+            error: err.message
           });
         }
 
         if (!doc[0]) {
-          return res.status(403).json({
+          res.send({
             success: false,
             message: 'ログインユーザ情報が取得できませんでした。',
           });
@@ -247,12 +278,11 @@ router.get('/check-state', (req, res) => {
 
         return res.send({
           success: true,
-          message: '認証成功',
+          message: '認証済',
           token: token,
           user: doc[0],
         });
       });
-
   });
 });
 

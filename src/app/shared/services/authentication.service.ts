@@ -6,8 +6,19 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
-import { JwtService } from './jwt.service';
 import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
+import { CudSuccessModel } from '../models/response/cud-success.model';
+
+export interface LoginSuccessInfo {
+  success: boolean;
+  message: string;
+  token?: string;
+  user?: UserModel;
+}
+
+export interface CheckStateInfo extends LoginSuccessInfo {
+  error?: string;
+}
 
 
 /**
@@ -22,21 +33,20 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient,
-    private jwtService: JwtService,
     private localStorageService: LocalStorageService,
   ) {
   }
 
 
   login(user: {
-    userId: string,
-    password: string,
-  }): Observable<Object> {
+      userId: string,
+      password: string
+    }): Observable<LoginSuccessInfo> {
     const URL = `${this.base_url}/login`;
 
     return this.http
-      .post<Object>(URL, user)
-      .map((res: Response) => this.setToken(res) );
+      .post<LoginSuccessInfo>(URL, user)
+      .map((res: LoginSuccessInfo) => this.setToken(res) );
   }
 
 
@@ -44,34 +54,38 @@ export class AuthenticationService {
     userId: string,
     password: string,
     confirmPassword: string,
-  }): Observable<Object> {
+  }): Observable<LoginSuccessInfo> {
     const URL = `${this.base_url}/register`;
 
     return this.http
       .post<Object>(URL, user)
-      .map((res: Response) => this.setToken(res) );
+      .map((res: LoginSuccessInfo) => this.setToken(res) );
   }
 
   changePassword(passwordInfo: {
     oldPassword: string,
     newPassword: string,
     newConfirmPassword: string
-  }): Observable<Object> {
+  }): Observable<CudSuccessModel<UserModel>> {
 
     const URL = `${this.base_url}/changePassword`;
 
     passwordInfo['_id'] = this.loginUser._id;
 
     return this.http
-      .put<Object>(URL, passwordInfo)
-      .map((res: Response) => this.setToken(res) );
+      .put<CudSuccessModel<UserModel>>(URL, passwordInfo)
+      .map(res => {
+        // tokenはパスワードに依存しないのでユーザ情報だけを更新する
+        this.loginUser = res.obj;
+        return res;
+      });
   }
 
-  checkState(): Observable<any> {
+  checkState(): Observable<CheckStateInfo> {
     const URL = `${this.base_url}/check-state`;
 
     return this.http
-      .get<any>(URL, this.jwtService.getRequestOptions())
+      .get<CheckStateInfo>(URL)
       .map(res => this.setToken(res))
       .catch(res => {
         this.isFinishedCheckState = true;
@@ -87,7 +101,7 @@ export class AuthenticationService {
   }
 
 
-  private setToken(res): Object {
+  private setToken(res: LoginSuccessInfo): LoginSuccessInfo {
     if ( res.success !== true ) {
       return res;
     }
