@@ -8,13 +8,12 @@ export class PaginatorService extends MatPaginatorIntl {
   nextPageLabel     = '次ページ';
   previousPageLabel = '前ページ';
 
-  getRangeLabel = (pageIndex, pageSize, length) => {
+  getRangeLabel = (pageIndex, pageSize, length): string => {
     if (length === 0 || pageSize === 0) {
       return '0 / ' + length;
     }
 
-    const range = this.calcRange(pageIndex, pageSize, length);
-    return length + ' 件　　　' + (pageIndex + 1) + '/' + Math.ceil(length / pageSize) + 'ページ目';
+    return length + ' 件　　　' + (pageIndex + 1) + ' / ' + Math.ceil(length / pageSize) + 'ページ目';
   }
 
   calcRange(pageIndex, pageSize, length): {startIndex: number, endIndex: number} {
