@@ -16,7 +16,6 @@ import { AppDateAdapter } from '../shared/app-date-adapter';
 import { CheckedListPipe } from '../shared/pipes/checked-list.pipe';
 import { NotCheckedListPipe } from '../shared/pipes/not-checked-list.pipe';
 import { KeysPipe } from '../shared/pipes/keys.pipe';
-import { SharedService } from '../shared/services/shared.service';
 import { MessageService } from '../shared/services/message.service';
 import { MessageBarService } from '../shared/services/message-bar.service';
 import { AuthenticationService } from '../shared/services/authentication.service';
@@ -46,6 +45,7 @@ import { DraftListComponent } from './draft-list/draft-list.component';
 import { DraftDetailComponent } from './draft-detail/draft-detail.component';
 
 import { ArticlesRoutingModule } from './articles-routing.module';
+import { DraftSharedService } from './shared/draft-shared.service';
 
 
 
@@ -81,7 +81,7 @@ import { ArticlesRoutingModule } from './articles-routing.module';
     SharedModule,
   ],
   providers: [
-    SharedService,
+    DraftSharedService,
     MessageService,
     MessageBarService,
     AuthenticationService,
