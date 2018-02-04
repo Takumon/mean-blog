@@ -7,10 +7,10 @@ import 'rxjs/add/operator/takeUntil';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { SharedService } from '../../shared/services/shared.service';
 
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
+import { DraftSharedService } from '../shared/draft-shared.service';
 
 interface GroupedDrafts {
   notPosted: Array<DraftModel>;
@@ -34,13 +34,13 @@ export class DraftListComponent implements OnInit, OnDestroy {
 
     private auth: AuthenticationService,
     private routeNamesService: RouteNamesService,
-    private sharedService: SharedService,
+    private draftSharedService: DraftSharedService,
     private draftService: DraftService,
   ) {
   }
 
   ngOnInit() {
-    this.sharedService.changeEmitted$
+    this.draftSharedService.changeEmitted$
     .takeUntil(this.onDestroy)
     .subscribe(text => {
       const isRefresh = true;

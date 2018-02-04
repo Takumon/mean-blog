@@ -8,12 +8,12 @@ import {
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
-import { Constant } from '../../shared/constant'
+import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { SharedService } from '../../shared/services/shared.service';
 
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
+import { DraftSharedService } from '../shared/draft-shared.service';
 
 @Component({
   selector: 'app-draft-detail',
@@ -31,7 +31,7 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
     public snackBar: MatSnackBar,
     private draftService: DraftService,
     public dialog: MatDialog,
-    private sharedService: SharedService,
+    private draftSharedService: DraftSharedService,
   ) {
   }
 
@@ -72,7 +72,7 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.draft = null;
         this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        this.sharedService.emitChange('Deleted draft');
+        this.draftSharedService.emitChange('Deleted draft');
       });
     });
   }
