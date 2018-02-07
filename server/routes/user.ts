@@ -297,4 +297,4 @@ router.delete('/:_id', [
   });
 });
 
-export { router };
+export { router as userRouter };

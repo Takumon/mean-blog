@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { ArticleListComponent, Mode } from './article-list/article-list.component';
+import { ArticleListComponent, ArticleSecrchMode } from './article-list/article-list.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
 import { DraftListComponent } from './draft-list/draft-list.component';
@@ -13,12 +13,12 @@ const routes: Routes = [
     path: '',
     component: ArticleListComponent,
     pathMatch: 'full',
-    data: {mode: Mode.FAVORITE},
+    data: {mode: ArticleSecrchMode.FAVORITE},
   },
   {
     path: 'articles',
     component: ArticleListComponent,
-    data: {mode: Mode.ALL},
+    data: {mode: ArticleSecrchMode.ALL},
   },
   {
     path: 'drafts/new',

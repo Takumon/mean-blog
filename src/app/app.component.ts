@@ -16,7 +16,9 @@ import { ScrollService } from './shared/services/scroll.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
   title: String = 'Material Blog';
   routerName: String;
 

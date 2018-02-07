@@ -38,6 +38,7 @@ import { CommentWithUserModel } from '../shared/comment-with-user.model';
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class ArticleComponent {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
   @Input() item: ArticleWithUserModel;
 

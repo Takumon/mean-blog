@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { UserComponent } from './user.component';
-import { ArticleListComponent, Mode } from '../articles/article-list/article-list.component';
+import { ArticleListComponent, ArticleSecrchMode } from '../articles/article-list/article-list.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { AdminAuthGuard } from '../shared/admin-auth.guard';
@@ -26,7 +26,7 @@ const routes: Routes = [
       {
         path: 'articles',
         component: ArticleListComponent,
-        data: {mode: Mode.USER },
+        data: {mode: ArticleSecrchMode.USER },
       },
       {
         path: 'comments',
@@ -35,7 +35,7 @@ const routes: Routes = [
       {
         path: 'votes',
         component: ArticleListComponent,
-        data: {mode: Mode.VOTER },
+        data: {mode: ArticleSecrchMode.VOTER },
       },
     ]
   },

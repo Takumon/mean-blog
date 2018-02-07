@@ -9,7 +9,9 @@ import { UserModel } from '../../users/shared/user.model';
   styleUrls: ['./voter-list.component.scss'],
 })
 export class VoterListComponent {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
   @Input() voters: Array<UserModel>;
 
   constructor() { }

@@ -36,7 +36,7 @@ import { CommentService } from '../shared/comment.service';
   styleUrls: ['./comment-form.component.scss']
 })
 export class CommentFormComponent implements OnInit, AfterViewChecked {
-  /** 定数クラス */
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
   /** コンポーネント初期表示時にリプライ入力エリアにフォーカスを当てるか */

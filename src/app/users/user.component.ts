@@ -29,7 +29,9 @@ import { UserService } from './shared/user.service';
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit, OnDestroy {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
   public user: UserModel;
   public editMode: Boolean = false;
   public form: FormGroup;

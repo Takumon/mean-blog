@@ -42,6 +42,15 @@ export interface Condition {
 }
 
 /**
+ * 検索時のページング、ソート条件
+ */
+export interface PageAndSortOption {
+  skip?: number;
+  limit?: number;
+  sort?: Object;
+}
+
+/**
  * Http通信用オプション
  */
 interface HttpOption {
@@ -62,18 +71,18 @@ export class ArticleService {
    * 複数件取得
    *
    * @param condition 検索条件
-   * @param paginOptions ページング条件
+   * @param paginAndSortOptions ページング条件とソート条件
    * @param withUser 取得情報にユーザ情報を付与するか
    * @return 指定した検索条件とページング条件に一致するモデルのリスト
    */
   get(
     condition: Condition,
-    paginOptions: {skip?: number, limit?: number, sort?: Object},
+    paginAndSortOptions: PageAndSortOption,
     withUser: boolean = false): Observable<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}> {
     const URL = this.baseUrl;
 
     // 検索条件にページング条件をマージする
-    const options = this.constructOptions({ condition: Object.assign({}, condition, paginOptions), withUser });
+    const options = this.constructOptions({ condition: Object.assign({}, condition, paginAndSortOptions), withUser });
 
     return this.http.get<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}>(URL, options);
   }

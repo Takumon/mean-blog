@@ -50,7 +50,9 @@ export interface UserListFactor {
   styleUrls: ['./search-condition.dialog.scss'],
 })
 export class SearchConditionDialogComponent implements OnInit {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
   public searchUserId: string;
   // formグループ化したい
   public form: FormGroup;
