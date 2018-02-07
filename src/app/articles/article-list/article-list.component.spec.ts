@@ -79,50 +79,53 @@ describe('ArticleListComponent', () => {
   }
 
   class MockArticleService {
-    get(conditin, pageingOption, withUser) {
-      const articles: {count: number, articles: ArticleModel[] } = {
-        count: 4,
-        articles: [
-          {
-            _id: '123456789011',
-            title: '記事タイトル1',
-            body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-            isMarkdown: true,
-            author: '1234589022',
-            created: '20150101 12:34:30',
-            updated: '20150101 12:34:30'
-          },
-          {
-            _id: '123456789012',
-            title: '記事タイトル2',
-            body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-            isMarkdown: true,
-            author: '1234589022',
-            created: '20150101 12:34:30',
-            updated: '20150101 12:34:30'
-          },
-          {
-            _id: '123456789013',
-            title: '記事タイトル3',
-            body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-            isMarkdown: true,
-            author: '1234589022',
-            created: '20150101 12:34:30',
-            updated: '20150101 12:34:30'
-          },
-          {
-            _id: '123456789014',
-            title: '記事タイトル4',
-            body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-            isMarkdown: true,
-            author: '1234589022',
-            created: '20150101 12:34:30',
-            updated: '20150101 12:34:30'
-          }
-        ]
-      };
-      return Observable.of(articles);
-    }
+    get = jasmine.createSpy('getHero').and.callFake(
+      (conditin, pageingOption, withUser) => {
+
+        const articles: {count: number, articles: ArticleModel[] } = {
+          count: 4,
+          articles: [
+            {
+              _id: '123456789011',
+              title: '記事タイトル1',
+              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
+              isMarkdown: true,
+              author: '1234589022',
+              created: '20150101 12:34:30',
+              updated: '20150101 12:34:30'
+            },
+            {
+              _id: '123456789012',
+              title: '記事タイトル2',
+              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
+              isMarkdown: true,
+              author: '1234589022',
+              created: '20150101 12:34:30',
+              updated: '20150101 12:34:30'
+            },
+            {
+              _id: '123456789013',
+              title: '記事タイトル3',
+              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
+              isMarkdown: true,
+              author: '1234589022',
+              created: '20150101 12:34:30',
+              updated: '20150101 12:34:30'
+            },
+            {
+              _id: '123456789014',
+              title: '記事タイトル4',
+              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
+              isMarkdown: true,
+              author: '1234589022',
+              created: '20150101 12:34:30',
+              updated: '20150101 12:34:30'
+            }
+          ]
+        };
+        return Observable.of(articles);
+      }
+    );
   }
 
   class MockUserService {
@@ -133,6 +136,7 @@ describe('ArticleListComponent', () => {
   let fixture: ComponentFixture<ArticleListComponent>;
   let de: DebugElement;
 
+  let articleServiceSpy: any;
 
 
   describe('モードが全件表示の場合', () => {
@@ -177,9 +181,11 @@ describe('ArticleListComponent', () => {
       fixture = TestBed.createComponent(ArticleListComponent);
       comp = fixture.componentInstance;
       de = fixture.debugElement;
+
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+
       fixture.detectChanges();
     });
-
 
     it('初期表示時 ページ数は1、件数は4で表示される', () => {
       const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
@@ -198,6 +204,17 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon).toBeNull();
+
+      expect(articleServiceSpy.get.calls.count()).toBe(1);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          created: -1,
+        },
+        skip: 0,
+        limit: 20
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
     it('登録日を1回クリックした時 登録日の昇順でソートされる', () => {
@@ -213,6 +230,18 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon).toBeNull();
+
+
+      expect(articleServiceSpy.get.calls.count()).toBe(2);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          created: 1,
+        },
+        skip: 0,
+        limit: 4
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
     it('登録日を1回クリックして更新日を1回クリックした時 更新日の降順でソートされる', () => {
@@ -229,9 +258,20 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+
+      expect(articleServiceSpy.get.calls.count()).toBe(3);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          updated: -1,
+        },
+        skip: 0,
+        limit: 4
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
-    it('登録日を2回クリックした時 登録日の昇順でソートされる', () => {
+    it('登録日を2回クリックした時 登録日の降順でソートされる', () => {
       const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
       createdSortButton.triggerEventHandler('click', null);
       createdSortButton.triggerEventHandler('click', null);
@@ -245,6 +285,17 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon).toBeNull();
+
+      expect(articleServiceSpy.get.calls.count()).toBe(3);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          created: -1,
+        },
+        skip: 0,
+        limit: 4
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
     it('更新日を1回クリックした時 更新日の降順でソートされる', () => {
@@ -259,6 +310,17 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+
+      expect(articleServiceSpy.get.calls.count()).toBe(2);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          updated: -1,
+        },
+        skip: 0,
+        limit: 4
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
     it('更新日を1回クリックして登録日を1回クリックした時 登録日の降順でソートされる', () => {
@@ -276,6 +338,17 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon).toBeNull();
+
+      expect(articleServiceSpy.get.calls.count()).toBe(3);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          created: -1,
+        },
+        skip: 0,
+        limit: 4
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
     it('更新日を2回クリックした時 更新日の昇順でソートされる', () => {
@@ -291,6 +364,17 @@ describe('ArticleListComponent', () => {
 
       const updatedArrowIcon = updatedSortButton.query(By.css('i'));
       expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-up');
+
+      expect(articleServiceSpy.get.calls.count()).toBe(3);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          updated: 1,
+        },
+        skip: 0,
+        limit: 4
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
     });
 
   });
