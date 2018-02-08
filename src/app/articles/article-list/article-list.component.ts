@@ -164,8 +164,20 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    * @param event ページングイベント
    */
   refreshPage(event: PageEvent): void {
+    // ページサイズを変更する時は現在のページが存在しない可能性があるので1ページに初期化
+    if (this.pageSize !== event.pageSize) {
+      this.pageSize = event.pageSize;
+      this.pageIndex = 0;
+      this.getArticles(this.searchCondition, {
+        pageIndex: this.pageIndex,
+        pageSize: this.pageSize,
+        count: this.count
+      });
+      return;
+    }
+
+　  this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
     this.getArticles(this.searchCondition, {
       pageIndex: this.pageIndex,
       pageSize: this.pageSize,

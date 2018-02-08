@@ -81,51 +81,33 @@ describe('ArticleListComponent', () => {
   class MockArticleService {
     get = jasmine.createSpy('getHero').and.callFake(
       (conditin, pageingOption, withUser) => {
-
         const articles: {count: number, articles: ArticleModel[] } = {
-          count: 4,
-          articles: [
-            {
-              _id: '123456789011',
-              title: '記事タイトル1',
-              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-              isMarkdown: true,
-              author: '1234589022',
-              created: '20150101 12:34:30',
-              updated: '20150101 12:34:30'
-            },
-            {
-              _id: '123456789012',
-              title: '記事タイトル2',
-              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-              isMarkdown: true,
-              author: '1234589022',
-              created: '20150101 12:34:30',
-              updated: '20150101 12:34:30'
-            },
-            {
-              _id: '123456789013',
-              title: '記事タイトル3',
-              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-              isMarkdown: true,
-              author: '1234589022',
-              created: '20150101 12:34:30',
-              updated: '20150101 12:34:30'
-            },
-            {
-              _id: '123456789014',
-              title: '記事タイトル4',
-              body: '##記事本文 ¥r¥n これは記事本文のサンプルです。',
-              isMarkdown: true,
-              author: '1234589022',
-              created: '20150101 12:34:30',
-              updated: '20150101 12:34:30'
-            }
-          ]
+          count: 201,
+          articles: createModels(20)
         };
         return Observable.of(articles);
       }
     );
+  }
+
+  function createModels (length: number): ArticleModel[] {
+    const models = [];
+    let id = 123456789000;
+    for (let i = 0; i < length; i++) {
+      models.push({
+        _id: id.toString(),
+        title: `記事タイトル${id}`,
+        body: `##記事本文 ¥r¥n これは記事本文のサンプルです。${id}`,
+        isMarkdown: true,
+        author: '1234580000',
+        created: '20150101 12:34:30',
+        updated: '20150101 12:34:30'
+      });
+
+      id++;
+    }
+
+    return models;
   }
 
   class MockUserService {
@@ -187,194 +169,614 @@ describe('ArticleListComponent', () => {
       fixture.detectChanges();
     });
 
-    it('初期表示時 ページ数は1、件数は4で表示される', () => {
-      const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
-      expect(paginatorRangeLable.nativeElement.textContent).toEqual('4 件　　　1 / 1ページ目');
+    describe('初期表示時', () => {
+      it('前へが非活性', () => {
+        const pagePrevButton = de.query(By.css('.mat-paginator-navigation-previous'));
+        expect(pagePrevButton.nativeElement.disabled).toBe(true);
+      });
+
+      it('次へが活性', () => {
+        const pagePrevButton = de.query(By.css('.mat-paginator-navigation-next'));
+        expect(pagePrevButton.nativeElement.disabled).toBe(false);
+      });
+
+      it('ページングラベルは1ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　1 / 11ページ目');
+      });
+
+      it('ソートボタンの登録日のオーダは降順', () => {
+        const createdArrowButton = de.queryAll(By.css('.sort_created'))[0];
+        fixture.detectChanges();
+        const createdArrowIcon = createdArrowButton.query(By.css('i'));
+        expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+      });
+
+      it('ソートボタンの更新日のオーダは未指定', () => {
+        const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+        fixture.detectChanges();
+        const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+        expect(updatedArrowIcon).toBeNull();
+      });
+
+      it('登録日の降順で検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(1);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: -1,
+          },
+          skip: 0,
+          limit: 20
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
     });
 
-    it('初期表示時 登録日の降順でソートされる', () => {
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
-
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
-
-      fixture.detectChanges();
-
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
-
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon).toBeNull();
-
-      expect(articleServiceSpy.get.calls.count()).toBe(1);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          created: -1,
-        },
-        skip: 0,
-        limit: 20
+    describe('前へボタンをクリック時', () => {
+      beforeEach(() => {
+        const previousPageButton = de.query(By.css('.mat-paginator-navigation-previous'));
+        previousPageButton.triggerEventHandler('click', null);
+        fixture.detectChanges();
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+      it('ページングラベルは1ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　1 / 11ページ目');
+      });
+
+      it('検索は走らない', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(1);
+      });
     });
 
-    it('登録日を1回クリックした時 登録日の昇順でソートされる', () => {
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
-      createdSortButton.triggerEventHandler('click', null);
-
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
-
-      fixture.detectChanges();
-
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-up');
-
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon).toBeNull();
 
 
-      expect(articleServiceSpy.get.calls.count()).toBe(2);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          created: 1,
-        },
-        skip: 0,
-        limit: 4
+    describe('次へボタンをクリック時', () => {
+
+      beforeEach(() => {
+        const nextPageButton = de.query(By.css('.mat-paginator-navigation-next'));
+        nextPageButton.triggerEventHandler('click', null);
+        fixture.detectChanges();
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+
+      it('前へが活性', () => {
+        const pagePrevButton = de.query(By.css('.mat-paginator-navigation-previous'));
+        expect(pagePrevButton.nativeElement.disabled).toBe(false);
+      });
+
+      it('次へが活性', () => {
+        const pagePrevButton = de.query(By.css('.mat-paginator-navigation-next'));
+        expect(pagePrevButton.nativeElement.disabled).toBe(false);
+      });
+
+      it('ソートボタンの登録日のオーダは降順', () => {
+        const createdArrowButton = de.queryAll(By.css('.sort_created'))[0];
+        fixture.detectChanges();
+        const createdArrowIcon = createdArrowButton.query(By.css('i'));
+        expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+      });
+
+      it('ソートボタンの更新日のオーダは未指定', () => {
+        const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+        fixture.detectChanges();
+        const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+        expect(updatedArrowIcon).toBeNull();
+      });
+
+      it('ページングラベルは2ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　2 / 11ページ目');
+      });
+
+      it('2ページ目が検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(2);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: -1,
+          },
+          skip: 20,
+          limit: 20
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
     });
 
-    it('登録日を1回クリックして更新日を1回クリックした時 更新日の降順でソートされる', () => {
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
-      createdSortButton.triggerEventHandler('click', null);
 
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
-      updatedSortButton.triggerEventHandler('click', null);
-
-      fixture.detectChanges();
-
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon).toBeNull();
-
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
-
-      expect(articleServiceSpy.get.calls.count()).toBe(3);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          updated: -1,
-        },
-        skip: 0,
-        limit: 4
+    describe('次へボタンをクリック時して最終ページを表示した時', () => {
+      beforeEach(() => {
+        // 11ページ目に遷移
+        for (let i = 0; i < 10; i++) {
+          const nextPageButton = de.query(By.css('.mat-paginator-navigation-next'));
+          nextPageButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        }
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+
+      it('前へが活性', () => {
+        const pagePrevButton = de.query(By.css('.mat-paginator-navigation-previous'));
+        expect(pagePrevButton.nativeElement.disabled).toBe(false);
+      });
+
+      it('次へが非活性', () => {
+        const pagePrevButton = de.query(By.css('.mat-paginator-navigation-next'));
+        expect(pagePrevButton.nativeElement.disabled).toBe(true);
+      });
+
+      it('ページングラベルは11ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　11 / 11ページ目');
+      });
+
+      it('11ページ目が検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(11);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: -1,
+          },
+          skip: 200,
+          limit: 1
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
+
+
+      describe('次へボタンをクリック時', () => {
+        beforeEach(() => {
+          const nextPageButton = de.query(By.css('.mat-paginator-navigation-next'));
+          nextPageButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('ページングラベルは11ページ目を示している', () => {
+          const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+          expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　11 / 11ページ目');
+        });
+
+        it('検索は走らない', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(11);
+        });
+      });
+
+
+      describe('前へボタンをクリック時', () => {
+        beforeEach(() => {
+          const previousPageButton = de.query(By.css('.mat-paginator-navigation-previous'));
+          previousPageButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('ページングラベルは10ページ目を示している', () => {
+          const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+          expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　10 / 11ページ目');
+        });
+
+        it('10ページ目が検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(12);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              created: -1,
+            },
+            skip: 180,
+            limit: 20
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+      });
+
+
+
+      describe('１ページあたりの件数を50件にした時', () => {
+        beforeEach(() => {
+          const pageSelect = de.query(By.css('mat-paginator .mat-select-trigger'));
+          pageSelect.triggerEventHandler('click', null);
+          fixture.detectChanges();
+
+          // 2番目＝50件を選択
+          const count20PerPage = de.queryAll(By.css('mat-option'))[1];
+          count20PerPage.triggerEventHandler('click', null);
+
+          fixture.detectChanges();
+        });
+
+        it('ページングラベルは1ページ目を示している', () => {
+          const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+          expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　1 / 5ページ目');
+        });
+
+        it('1ページ目が検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(12);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              created: -1,
+            },
+            skip: 0,
+            limit: 50
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+
+      });
     });
 
-    it('登録日を2回クリックした時 登録日の降順でソートされる', () => {
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
-      createdSortButton.triggerEventHandler('click', null);
-      createdSortButton.triggerEventHandler('click', null);
 
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
 
-      fixture.detectChanges();
+    describe('１ページあたりの件数を20件にした時', () => {
+      beforeEach(() => {
+        const pageSelect = de.query(By.css('mat-paginator .mat-select-trigger'));
+        pageSelect.triggerEventHandler('click', null);
+        fixture.detectChanges();
 
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+        // 1番目＝20件を選択
+        const count20PerPage = de.queryAll(By.css('mat-option'))[0];
+        count20PerPage.triggerEventHandler('click', null);
 
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon).toBeNull();
-
-      expect(articleServiceSpy.get.calls.count()).toBe(3);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          created: -1,
-        },
-        skip: 0,
-        limit: 4
+        fixture.detectChanges();
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+      it('ページングラベルは1ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　1 / 11ページ目');
+      });
+
+      it('登録日の降順で検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(2);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: -1,
+          },
+          skip: 0,
+          limit: 20
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
+
     });
 
-    it('更新日を1回クリックした時 更新日の降順でソートされる', () => {
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
 
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
-      updatedSortButton.triggerEventHandler('click', null);
-      fixture.detectChanges();
+    describe('１ページあたりの件数を50件にした時', () => {
+      beforeEach(() => {
+        const pageSelect = de.query(By.css('mat-paginator .mat-select-trigger'));
+        pageSelect.triggerEventHandler('click', null);
+        fixture.detectChanges();
 
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon).toBeNull();
+        // 2番目=50件を選択
+        const count20PerPage = de.queryAll(By.css('mat-option'))[1];
+        count20PerPage.triggerEventHandler('click', null);
 
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
-
-      expect(articleServiceSpy.get.calls.count()).toBe(2);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          updated: -1,
-        },
-        skip: 0,
-        limit: 4
+        fixture.detectChanges();
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+      it('ページングラベルは1ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　1 / 5ページ目');
+      });
+
+      it('登録日の降順で検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(2);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: -1,
+          },
+          skip: 0,
+          limit: 50
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
+
     });
 
-    it('更新日を1回クリックして登録日を1回クリックした時 登録日の降順でソートされる', () => {
 
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
-      updatedSortButton.triggerEventHandler('click', null);
 
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
-      createdSortButton.triggerEventHandler('click', null);
+    describe('１ページあたりの件数を100件にした時', () => {
+      beforeEach(() => {
+        const pageSelect = de.query(By.css('mat-paginator .mat-select-trigger'));
+        pageSelect.triggerEventHandler('click', null);
+        fixture.detectChanges();
 
-      fixture.detectChanges();
+        // 3番目=100件を選択
+        const count20PerPage = de.queryAll(By.css('mat-option'))[2];
+        count20PerPage.triggerEventHandler('click', null);
 
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
-
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon).toBeNull();
-
-      expect(articleServiceSpy.get.calls.count()).toBe(3);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          created: -1,
-        },
-        skip: 0,
-        limit: 4
+        fixture.detectChanges();
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+      it('ページングラベルは1ページ目を示している', () => {
+        const paginatorRangeLable = de.query(By.css('.mat-paginator-range-label'));
+        expect(paginatorRangeLable.nativeElement.textContent).toEqual('201 件　　　1 / 3ページ目');
+      });
+
+      it('登録日の降順で検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(2);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: -1,
+          },
+          skip: 0,
+          limit: 100
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
+
     });
 
-    it('更新日を2回クリックした時 更新日の昇順でソートされる', () => {
-      const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
 
-      const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
-      updatedSortButton.triggerEventHandler('click', null);
-      updatedSortButton.triggerEventHandler('click', null);
-      fixture.detectChanges();
 
-      const createdArrowIcon = createdSortButton.query(By.css('i'));
-      expect(createdArrowIcon).toBeNull();
 
-      const updatedArrowIcon = updatedSortButton.query(By.css('i'));
-      expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-up');
 
-      expect(articleServiceSpy.get.calls.count()).toBe(3);
-      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          updated: 1,
-        },
-        skip: 0,
-        limit: 4
+
+    describe('ソートボタン登録日をクリックした時', () => {
+      beforeEach(() => {
+        const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+        createdSortButton.triggerEventHandler('click', null);
+        fixture.detectChanges();
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+      it('登録日ボタンが昇順になっている', () => {
+        const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+        fixture.detectChanges();
+        const createdArrowIcon = createdSortButton.query(By.css('i'));
+        expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-up');
+      });
+
+      it('更新日ボタンのソートが未指定になっている', () => {
+        const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+        fixture.detectChanges();
+        const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+        expect(updatedArrowIcon).toBeNull();
+      });
+
+      it('登録日が昇順で検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(2);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            created: 1,
+          },
+          skip: 0,
+          limit: 20
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
+
+      describe('１ページあたりの件数を50件にした時', () => {
+        beforeEach(() => {
+          const pageSelect = de.query(By.css('mat-paginator .mat-select-trigger'));
+          pageSelect.triggerEventHandler('click', null);
+          fixture.detectChanges();
+
+          // 2番目＝50件を選択
+          const count20PerPage = de.queryAll(By.css('mat-option'))[1];
+          count20PerPage.triggerEventHandler('click', null);
+
+          fixture.detectChanges();
+        });
+
+
+        it('登録日ボタンが昇順になっている', () => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          fixture.detectChanges();
+          const createdArrowIcon = createdSortButton.query(By.css('i'));
+          expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-up');
+        });
+
+        it('更新日ボタンのソートが未指定になっている', () => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          fixture.detectChanges();
+          const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+          expect(updatedArrowIcon).toBeNull();
+        });
+
+        it('登録日が昇順で検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(3);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              created: 1,
+            },
+            skip: 0,
+            limit: 50
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+
+      });
+
+
+
+      describe('ソートボタン登録日をクリックした時', () => {
+        beforeEach(() => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          createdSortButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('登録日ボタンが降順になっている', () => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          fixture.detectChanges();
+          const createdArrowIcon = createdSortButton.query(By.css('i'));
+          expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+        });
+
+        it('更新日ボタンのソートが未指定になっている', () => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          fixture.detectChanges();
+          const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+          expect(updatedArrowIcon).toBeNull();
+        });
+
+        it('登録日が降順で検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(3);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              created: -1,
+            },
+            skip: 0,
+            limit: 20
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+
+      });
+
+
+
+      describe('ソートボタン更新日をクリックした時', () => {
+        beforeEach(() => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          updatedSortButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('登録日ボタンのソートが未指定なっている', () => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          fixture.detectChanges();
+          const createdArrowIcon = createdSortButton.query(By.css('i'));
+          expect(createdArrowIcon).toBeNull();
+        });
+
+        it('更新日ボタンのソートが降順になっている', () => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          fixture.detectChanges();
+          const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+          expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+        });
+
+        it('更新日が昇順で検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(3);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              updated: -1,
+            },
+            skip: 0,
+            limit: 20
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+      });
+
+    });
+
+
+
+    describe('ソートボタン更新日をクリックした時', () => {
+      beforeEach(() => {
+        const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+        updatedSortButton.triggerEventHandler('click', null);
+        fixture.detectChanges();
+      });
+
+      it('登録日ボタンのソートが未指定なっている', () => {
+        const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+        fixture.detectChanges();
+        const createdArrowIcon = createdSortButton.query(By.css('i'));
+        expect(createdArrowIcon).toBeNull();
+      });
+
+      it('更新日ボタンのソートが降順になっている', () => {
+        const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+        fixture.detectChanges();
+        const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+        expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+      });
+
+      it('更新日が降順で検索される', () => {
+        expect(articleServiceSpy.get.calls.count()).toBe(2);
+        expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+        expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+          sort: {
+            updated: -1,
+          },
+          skip: 0,
+          limit: 20
+        });
+        expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+      });
+
+
+
+      describe('ソートボタン更新日をクリックした時', () => {
+        beforeEach(() => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          updatedSortButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('登録日ボタンのソートが未指定なっている', () => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          fixture.detectChanges();
+          const createdArrowIcon = createdSortButton.query(By.css('i'));
+          expect(createdArrowIcon).toBeNull();
+        });
+
+        it('更新日ボタンのソートが降順になっている', () => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          fixture.detectChanges();
+          const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+          expect(updatedArrowIcon.nativeElement.classList).toContain('fa-long-arrow-up');
+        });
+
+        it('更新日が昇順で検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(3);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              updated: 1,
+            },
+            skip: 0,
+            limit: 20
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+      });
+
+
+      describe('ソートボタン登録日をクリックした時', () => {
+        beforeEach(() => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          createdSortButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('登録日ボタンが降順になっている', () => {
+          const createdSortButton = de.queryAll(By.css('.sort_created'))[0];
+          fixture.detectChanges();
+          const createdArrowIcon = createdSortButton.query(By.css('i'));
+          expect(createdArrowIcon.nativeElement.classList).toContain('fa-long-arrow-down');
+        });
+
+        it('更新日ボタンのソートが未指定になっている', () => {
+          const updatedSortButton = de.queryAll(By.css('.sort_updated'))[0];
+          fixture.detectChanges();
+          const updatedArrowIcon = updatedSortButton.query(By.css('i'));
+          expect(updatedArrowIcon).toBeNull();
+        });
+
+        it('登録日が降順で検索される', () => {
+          expect(articleServiceSpy.get.calls.count()).toBe(3);
+          expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+          expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+            sort: {
+              created: -1,
+            },
+            skip: 0,
+            limit: 20
+          });
+          expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+        });
+      });
+
     });
 
   });
