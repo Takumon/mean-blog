@@ -3,7 +3,7 @@ import 'rxjs/Rx';
 
 import { ActivatedRoute, Data } from '@angular/router';
 
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
@@ -78,6 +78,18 @@ describe('ArticleListComponent', () => {
     }
   }
 
+  class MockNoArticleService {
+    get = jasmine.createSpy('getHero').and.callFake(
+      (conditin, pageingOption, withUser) => {
+        const articles: {count: number, articles: ArticleModel[] } = {
+          count: 0,
+          articles: createModels(0)
+        };
+        return Observable.of(articles);
+      }
+    );
+  }
+
   class MockArticleService {
     get = jasmine.createSpy('getHero').and.callFake(
       (conditin, pageingOption, withUser) => {
@@ -121,6 +133,57 @@ describe('ArticleListComponent', () => {
   let articleServiceSpy: any;
 
 
+
+  describe('モードが全件表示の場合 検索結果が0件の場合', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockNoArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              data: Observable.of({mode: 100}) // ModeがALL
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+    });
+
+    it('エラー画面が表示される', () => {
+      const errorMessage = de.query(By.css('.message-area__main__message'));
+      expect(errorMessage.nativeElement.textContent).toContain('記事がまだ登録されていません。');
+    });
+  });
+
+
   describe('モードが全件表示の場合', () => {
     beforeEach(async() => {
 
@@ -151,7 +214,7 @@ describe('ArticleListComponent', () => {
           {
             provide: ActivatedRoute,
             useValue: {
-              data: Observable.of({mode: 100})
+              data: Observable.of({mode: 100}) // ModeがALL
             }
           },
           ScrollService,
@@ -779,5 +842,137 @@ describe('ArticleListComponent', () => {
 
     });
 
+  });
+
+
+
+
+
+
+
+  describe('モードがユーザの場合', () => {
+    beforeEach(async() => {
+
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockArticleService },
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 300}) // ModeがUSER
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+
+    });
+
+    it('初期表示時 ユーザに絞り込んだ検索がされる', () => {
+      expect(articleServiceSpy.get.calls.count()).toBe(1);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({
+        author: {
+          userId: 'testUser1'
+        }
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
+        sort: {
+          created: -1,
+        },
+        skip: 0,
+        limit: 20
+      });
+      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+
+
+    });
+  });
+
+
+  describe('初期表示時 検索結果が0件の場合', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockNoArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 300}) // ModeがUSER
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+    });
+
+    it('エラー画面が表示される', () => {
+
+      const errorMessage = de.query(By.css('.message-area__main__message'));
+      expect(errorMessage.nativeElement.textContent).toContain('検索結果に一致する記事は見つかりませんでした。');
+    });
   });
 });
