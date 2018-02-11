@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import marked from 'marked';
+import * as marked from 'marked';
 import hljs from 'highlight.js';
 
 const MARKDOWN_HEADER_CLASS = 'markdown-header';

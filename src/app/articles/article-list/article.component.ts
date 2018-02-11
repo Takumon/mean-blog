@@ -25,7 +25,7 @@ import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 
 import { UserModel } from '../../users/shared/user.model';
-import { ArticleService } from '../shared/article.service';
+import { ArticleService, VoteCudResponse } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
@@ -86,7 +86,7 @@ export class ArticleComponent {
   registerVote() {
     this.articleService
     .registerVote(this.item._id, this.auth.loginUser._id)
-    .subscribe(article => {
+    .subscribe( (res: VoteCudResponse) => {
       this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
       const withUser = true;
       this.articleService.getVote(this.item._id, withUser)
@@ -112,7 +112,7 @@ export class ArticleComponent {
 
       this.articleService
       .deleteVote(this.item._id, this.auth.loginUser._id)
-      .subscribe(article => {
+      .subscribe( (res: VoteCudResponse) => {
         this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
         const withUser = true;
         this.articleService.getVote(this.item._id)
