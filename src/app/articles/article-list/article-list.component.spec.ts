@@ -3,7 +3,7 @@ import 'rxjs/Rx';
 
 import { ActivatedRoute, Data } from '@angular/router';
 
-import { ComponentFixture, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
@@ -28,6 +28,10 @@ import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
 import { UserService } from '../../users/shared/user.service';
 import { ArticleModel } from '../shared/article.model';
+import { SearchConditionComponent } from '../search-condition/search-condition.component';
+import { SearchCondition } from '../../../../server/models/search-condition.model';
+import { LocalStorageService } from '../../shared/services/local-storage.service';
+import { SearchConditionService } from '../shared/search-condition.service';
 
 describe('ArticleListComponent', () => {
 
@@ -48,33 +52,43 @@ describe('ArticleListComponent', () => {
     selector: 'app-search-condition',
     template: '<p>Mock Serch Condition</p>'
   })
-  class MockSearchConditionComponent {
+  class MockSearchConditionComponent extends SearchConditionComponent {
     @Output() changeSeaerchCondition = new EventEmitter();
+
+    seaerchConditions = [{
+      _id: 'id1',
+      name: '検索条件1',
+      author: '123456789012',
+    }, {
+      _id: 'id2',
+      name: '検索条件2',
+      author: '123456789012',
+    }];
+
+    getSearchCondition() {}
+
+    triggerCondition() { this.changeSeaerchCondition.emit(); }
+  }
+
+  class MockSearchConditionService {
+
   }
 
   class MockAuthenticationService {
     loginUser = new UserModel();
     isFinishedCheckState = true;
 
-    checkState(): Observable<any> {
-      return Observable.of('token');
-    }
-    logout() {
-      console.log('logout');
-    }
     isLogin(): boolean {
       return true;
     }
+  }
 
-    isAdmin(): boolean {
+  class MockNoAuthenticationService {
+    loginUser = new UserModel();
+    isFinishedCheckState = true;
+
+    isLogin(): boolean {
       return false;
-    }
-    getToken(): String {
-      return 'token';
-    }
-
-    hasToken(): boolean {
-      return true;
     }
   }
 
@@ -123,7 +137,11 @@ describe('ArticleListComponent', () => {
   }
 
   class MockUserService {
-
+    getById = jasmine.createSpy('getById').and.callFake(
+      (userId) => {
+        return Observable.of({_id: '1234580000'});
+      }
+    );
   }
 
   let comp: ArticleListComponent;
@@ -131,10 +149,10 @@ describe('ArticleListComponent', () => {
   let de: DebugElement;
 
   let articleServiceSpy: any;
+  let userServiceSpy: any;
 
 
-
-  describe('モードが全件表示の場合 検索結果が0件の場合', () => {
+  describe('モードがALLの場合 検索結果が0件の場合', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         declarations: [
@@ -181,10 +199,15 @@ describe('ArticleListComponent', () => {
       const errorMessage = de.query(By.css('.message-area__main__message'));
       expect(errorMessage.nativeElement.textContent).toContain('記事がまだ登録されていません。');
     });
+
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
+    });
   });
 
 
-  describe('モードが全件表示の場合', () => {
+  describe('モードがALLの場合', () => {
     beforeEach(async() => {
 
       TestBed.configureTestingModule({
@@ -233,6 +256,11 @@ describe('ArticleListComponent', () => {
     });
 
     describe('初期表示時', () => {
+      it('お気に入り検索条件部が表示されない', () => {
+        const searchConditionArea = de.query(By.css('app-search-condition'));
+        expect(searchConditionArea).toBeNull();
+      });
+
       it('前へが非活性', () => {
         const pagePrevButton = de.query(By.css('.mat-paginator-navigation-previous'));
         expect(pagePrevButton.nativeElement.disabled).toBe(true);
@@ -850,7 +878,7 @@ describe('ArticleListComponent', () => {
 
 
 
-  describe('モードがユーザの場合', () => {
+  describe('モードがUSERの場合', () => {
     beforeEach(async() => {
 
       TestBed.configureTestingModule({
@@ -907,21 +935,16 @@ describe('ArticleListComponent', () => {
           userId: 'testUser1'
         }
       });
-      expect(articleServiceSpy.get.calls.mostRecent().args[1]).toEqual({
-        sort: {
-          created: -1,
-        },
-        skip: 0,
-        limit: 20
-      });
-      expect(articleServiceSpy.get.calls.mostRecent().args[2]).toEqual(true);
+    });
 
-
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
     });
   });
 
 
-  describe('初期表示時 検索結果が0件の場合', () => {
+  describe('モードがUSERの場合 初期表示時 検索結果が0件の場合', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         declarations: [
@@ -974,5 +997,437 @@ describe('ArticleListComponent', () => {
       const errorMessage = de.query(By.css('.message-area__main__message'));
       expect(errorMessage.nativeElement.textContent).toContain('検索結果に一致する記事は見つかりませんでした。');
     });
+
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
+    });
   });
+
+
+
+
+  describe('モードがVOTERの場合', () => {
+
+    beforeEach(async() => {
+
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockArticleService },
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 400}) // ModeがVOTER
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+      userServiceSpy = de.injector.get(UserService) as any;
+
+    });
+
+    it('初期表示時 ユーザに絞り込んだ検索がされる', () => {
+
+      expect(userServiceSpy.getById.calls.count()).toBe(1);
+      expect(userServiceSpy.getById.calls.mostRecent().args[0]).toEqual('testUser1');
+
+      expect(articleServiceSpy.get.calls.count()).toBe(1);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({
+        voter: '1234580000'
+      });
+    });
+
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
+    });
+
+  });
+
+
+  describe('モードがVOTERの場合 初期表示時 検索結果が0件の場合', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockNoArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 400}) // ModeがVOTER
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+    });
+
+    it('エラー画面が表示される', () => {
+
+      const errorMessage = de.query(By.css('.message-area__main__message'));
+      expect(errorMessage.nativeElement.textContent).toContain('検索結果に一致する記事は見つかりませんでした。');
+    });
+
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
+    });
+  });
+
+
+
+
+  describe('モードがFAVORITEの場合 未ログイン時', () => {
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          LocalStorageService,
+          { provide: SearchConditionService, useClass: MockSearchConditionService },
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockNoArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockNoAuthenticationService }, // 未ログイン時
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 200}) // ModeがFAVORITE
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+
+      // 未ログイン時は検索条件エリアが表示されないので
+      // そもそもイベントが発生しないため　本処理はコメントアウト
+      // comp.onChangeSearchCondition({});
+
+      fixture.detectChanges();
+    });
+
+    it('全件検索される', () => {
+      expect(articleServiceSpy.get.calls.count()).toBe(1);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({});
+    });
+
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
+    });
+
+  });
+
+
+  describe('モードがFAVORITEの場合 初期表示時 ログイン時 検索結果が0件の場合', () => {
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          LocalStorageService,
+          { provide: SearchConditionService, useClass: MockSearchConditionService },
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockNoArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 200}) // ModeがFAVORITE
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+
+      comp.onChangeSearchCondition({
+        author: {
+          _id: '123456789012'
+        }
+      });
+      fixture.detectChanges();
+    });
+
+    it('エラー画面が表示される', () => {
+
+      const errorMessage = de.query(By.css('.message-area__main__message'));
+      expect(errorMessage.nativeElement.textContent).toContain('検索結果に一致する記事は見つかりませんでした。');
+    });
+
+    it('お気に入り検索条件部が表示される', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).not.toBeNull();
+    });
+
+  });
+
+
+  describe('モードがFAVORITEの場合 初期表示時 未ログイン時 検索結果が0件の場合', () => {
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          LocalStorageService,
+          { provide: SearchConditionService, useClass: MockSearchConditionService },
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockNoArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockNoAuthenticationService }, // 未認証
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 200}) // ModeがFAVORITE
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+
+      // 未ログイン時は検索条件エリアが表示されないので
+      // そもそもイベントが発生しないため　本処理はコメントアウト
+      // comp.onChangeSearchCondition({
+      //   author: {
+      //     _id: '123456789012'
+      //   }
+      // });
+
+      fixture.detectChanges();
+    });
+
+    it('エラー画面が表示される', () => {
+      const errorMessage = de.query(By.css('.message-area__main__message'));
+      expect(errorMessage.nativeElement.textContent).toContain('記事がまだ登録されていません。');
+    });
+
+    it('お気に入り検索条件部が表示されない', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).toBeNull();
+    });
+  });
+
+
+  describe('モードがFAVORITEの場合 初期表示時', () => {
+
+    beforeEach(async(() => {
+
+      TestBed.configureTestingModule({
+        declarations: [
+          ArticleListComponent,
+          MockArticleComponent,
+          MockSearchConditionComponent,
+        ],
+        imports: [
+          RouterTestingModule,
+          SharedModule,
+        ],
+        providers: [
+          LocalStorageService,
+          { provide: SearchConditionService, useClass: MockSearchConditionService },
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorService
+          },
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ArticleService, useClass: MockArticleService }, // 検索結果0件
+          { provide: AuthenticationService, useClass: MockAuthenticationService }, // 未認証
+          { provide: UserService, useClass: MockUserService },
+          {
+            provide: ActivatedRoute,
+            useValue: {
+              parent: {
+                params: Observable.of({
+                  _userId: 'testUser1',
+                })
+              },
+              data: Observable.of({mode: 200}) // ModeがFAVORITE
+            }
+          },
+          ScrollService,
+        ],
+      });
+
+      fixture = TestBed.createComponent(ArticleListComponent);
+      comp = fixture.componentInstance;
+      de = fixture.debugElement;
+      articleServiceSpy = de.injector.get(ArticleService) as any;
+
+      comp.onChangeSearchCondition({
+        author: {
+          _id: '123456789012'
+        }
+      });
+      fixture.detectChanges();
+    }));
+
+    it('お気に入り検索条件で検索がされる', () => {
+      expect(articleServiceSpy.get.calls.count()).toBe(1);
+      expect(articleServiceSpy.get.calls.mostRecent().args[0]).toEqual({
+        author: {
+          _id: '123456789012'
+        }
+      });
+    });
+
+    it('お気に入り検索条件部が表示される', () => {
+      const searchConditionArea = de.query(By.css('app-search-condition'));
+      expect(searchConditionArea).not.toBeNull();
+    });
+  });
+
 });

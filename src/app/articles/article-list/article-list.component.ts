@@ -66,12 +66,6 @@ export class ArticleListComponent implements OnInit, OnDestroy {
 
 
   /**
-   * 記事検索時に検索条件がないか<br>
-   * 検索結果が0件時の文言出し分けのために使用する
-   **/
-  public noSearchCondition = false;
-
-  /**
    * プログレスバーを表示するか
    */
   public showPrograssBar = false;
@@ -83,7 +77,8 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public pageSize = Constant.DEFAULT_PER_PAGE;
   public pageIndex = 0;
 
-   /** 検索条件（ソート、ページング用に保持しておく） */
+
+  /** 検索条件（ソート、ページング用に保持しておく） */
   private searchCondition: Condition;
 
   /** 検索結果 */
@@ -92,8 +87,6 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   public count: number;
 
   private onDestroy = new Subject();
-  @ViewChild(SearchConditionComponent)
-  private searchConditionComponent: SearchConditionComponent;
   private mode;
 
   constructor(
@@ -131,6 +124,14 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 記事検索時に検索条件がないか<br>
+   * 検索結果が0件時の文言出し分けのために使用する
+   **/
+  public hasNoSearchCondition() {
+    return this.searchCondition && Object.keys(this.searchCondition).length === 0;
+  }
+
+  /**
    * コンポーネント初期化時の処理
    */
   init(): void {
@@ -146,6 +147,21 @@ export class ArticleListComponent implements OnInit, OnDestroy {
         pageSize: this.pageSize,
         count: this.count
       });
+    });
+  }
+
+  onChangeSearchCondition(searchCondition: Condition) {
+
+    this.initPaging();
+    this.initSort();
+
+    this.showPrograssBar = true;
+
+    this.searchCondition = searchCondition;
+    this.getArticles(this.searchCondition, {
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
+      count: this.count
     });
   }
 
@@ -245,29 +261,24 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * URLやmodeに応じた検索条件を組み立てる
+   * URLやmodeに応じた検索条件を組み立てる.
+   * <p>
+   * MODEがFAVORITの場合はonChangeSearchConditionで検索条件を設定するので本メソッドは実行されない
+   * </p>
    *
    * @param cb 検索条件を引数に渡すコールバック関数
    */
   private constructSearchCondition(cb: (searchCondition: Condition) => void ): void {
     switch (this.mode) {
       case ArticleSecrchMode.ALL:
-        this.noSearchCondition = true;
         cb({});
         break;
 
+      // 見ログイン時は全件検索と同様
       case ArticleSecrchMode.FAVORITE:
-        // 検索条件がない時Mode.ALLと同じ
-        if (!this.searchConditionComponent
-           || !this.searchConditionComponent.seaerchConditions
-           || this.searchConditionComponent.seaerchConditions.length === 0) {
-          this.noSearchCondition = true;
+        if (!this.auth.isLogin()) {
           cb({});
-          break;
         }
-
-        // お気に入り検索条件を使用する
-        cb(this.searchConditionComponent.createCondition());
         break;
 
       case ArticleSecrchMode.USER:
@@ -330,6 +341,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     // withUserをtrueに設定しているので戻り値の型を絞ってかえす
     this.articleService.get(searchCondition, pageingAndSortOption , true)
     .subscribe(({count, articles}) => {
+
       this.count = count;
       this.articles = articles as ArticleWithUserModel[];
       this.showPrograssBar = false;
@@ -337,6 +349,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
       // 画面条文にスクロールする
       setTimeout(function() {
         this.scrollService.scrollToTop();
+
       }.bind(this), 0);
     });
   }
