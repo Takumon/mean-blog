@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && !hasSearchCondition">
+  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && hasNoSearchCondition()">
     <div class="message-area__main">
       <div class="message-area__main__icon">
         <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && hasSearchCondition">
+  <div class="message-area" *ngIf="!showPrograssBar && articles?.length === 0 && !hasNoSearchCondition()">
     <div class="message-area__main">
       <div class="message-area__main__icon">
         <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
@@ -43,6 +43,7 @@
           <ng-container *ngFor="let key of sortFactorKeys">
             <button
               mat-button
+              class="sort_{{sortFactors[key].value}}"
               [class.checked]="sortFactors[key].direction !== direction.NONE"
               (click)="sortAndRefresh(key)">
                 {{sortFactors[key].label}}
@@ -58,7 +59,7 @@
           [length]="count"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
-          [pageSizeOptions]="DEFAILT_PER_PAGES">
+          [pageSizeOptions]="Constant.DEFAILT_PER_PAGES">
         </mat-paginator>
       </div>
 
@@ -90,7 +91,7 @@
           [length]="count"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
-          [pageSizeOptions]="DEFAILT_PER_PAGES">
+          [pageSizeOptions]="Constant.DEFAILT_PER_PAGES">
         </mat-paginator>
       </div>
     </div>
@@ -99,7 +100,7 @@
   <div *ngIf="auth.isLogin() && isFavoriteMode()" class="search-condition">
     <app-search-condition
       *ngIf="auth.isLogin() && isFavoriteMode()"
-      (changeSeaerchCondition)="getArticles()"
+      (changeSeaerchCondition)="onChangeSearchCondition($event)"
       ></app-search-condition>
   </div>
 

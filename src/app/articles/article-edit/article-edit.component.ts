@@ -46,7 +46,7 @@ const IS_RESUME = 'resume';
   styleUrls: ['./article-edit.component.scss'],
 })
 export class ArticleEditComponent implements OnInit {
-
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
   @ViewChild('mdTextArea') $mdTextArea;

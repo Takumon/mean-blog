@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { LocalStorageService, KEY } from './services/local-storage.service';
+import { LocalStorageService } from './services/local-storage.service';
 import { AuthenticationService } from './services/authentication.service';
 import { Observable } from 'rxjs/Rx';
 

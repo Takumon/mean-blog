@@ -25,7 +25,9 @@ import { ReplyWithUserModel } from '../shared/reply-with-user.model';
   styleUrls: ['./comment-list.component.scss'],
 })
 export class CommentListComponent implements OnInit {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
   @Input() replyCommentIndentMargin: Number = 42;
   @Input() replyCommentIndentLimit: Number = 4;
   @Input() _idOfArticle: string;

@@ -36,7 +36,7 @@ import { ReplyService } from '../shared/reply.service';
   styleUrls: ['./reply-form.component.scss']
 })
 export class ReplyFormComponent implements OnInit, AfterViewChecked {
-  /** 定数クラス */
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
   /** コンポーネント初期表示時にリプライ入力エリアにフォーカスを当てるか */

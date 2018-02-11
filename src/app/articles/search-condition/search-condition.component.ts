@@ -17,6 +17,7 @@ import { UserModel } from '../../users/shared/user.model';
 import { SearchConditionService } from '../shared/search-condition.service';
 import { SearchConditionModel } from '../shared/search-condition.model';
 import { SearchConditionDialogComponent } from './search-condition.dialog';
+import { Condition } from '../shared/article.service';
 
 @Component({
   selector: 'app-search-condition',
@@ -24,7 +25,9 @@ import { SearchConditionDialogComponent } from './search-condition.dialog';
   styleUrls: ['./search-condition.component.scss'],
 })
 export class SearchConditionComponent implements OnInit {
+  /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
   @Output() changeSeaerchCondition = new EventEmitter();
   seaerchConditions: Array<SearchConditionModel>;
   dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
@@ -86,7 +89,7 @@ export class SearchConditionComponent implements OnInit {
         this.localStorageService.remove(LOCALSTORAGE_KEY.SELECTED_CONDITION_ID);
       }
 
-      this.changeSeaerchCondition.emit();
+      this.changeSeaerchCondition.emit(this.createCondition());
     });
   }
 
@@ -96,11 +99,14 @@ export class SearchConditionComponent implements OnInit {
       condition.checked  = selectedId === condition._id.toString();
     }
 
-    this.changeSeaerchCondition.emit();
+    this.changeSeaerchCondition.emit(this.createCondition());
   }
 
 
-  createCondition(): Object {
+  /**
+   * お気に入り検索条件を元に記事検索時に使う検索条件を生成する
+   */
+  createCondition(): Condition {
     const noCondition = {};
 
     if (!this.seaerchConditions
