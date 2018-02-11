@@ -23,7 +23,7 @@ import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 import { Constant } from '../../shared/constant';
 
-export enum ArticleSecrchMode {
+export enum ArticleSearchMode {
   ALL = 100,
   FAVORITE = 200,
   USER = 300,
@@ -110,7 +110,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
       // ログイン時かつお気に入り検索時は
       // 検索条件初期化が終わったら、そのイベントを検知して
       // getArticlesを呼ぶためここでは呼び出さない
-      if (this.mode === ArticleSecrchMode.FAVORITE && this.auth.isLogin()) {
+      if (this.mode === ArticleSearchMode.FAVORITE && this.auth.isLogin()) {
         // プログレスバーを表示しておく
         this.showPrograssBar = true;
       } else {
@@ -171,7 +171,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    * @return modeがお気に入り検索の場合true. それ以外の場合false
    */
   isFavoriteMode(): boolean {
-    return this.mode && this.mode === ArticleSecrchMode.FAVORITE;
+    return this.mode && this.mode === ArticleSearchMode.FAVORITE;
   }
 
   /**
@@ -270,24 +270,24 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    */
   private constructSearchCondition(cb: (searchCondition: Condition) => void ): void {
     switch (this.mode) {
-      case ArticleSecrchMode.ALL:
+      case ArticleSearchMode.ALL:
         cb({});
         break;
 
       // 見ログイン時は全件検索と同様
-      case ArticleSecrchMode.FAVORITE:
+      case ArticleSearchMode.FAVORITE:
         if (!this.auth.isLogin()) {
           cb({});
         }
         break;
 
-      case ArticleSecrchMode.USER:
+      case ArticleSearchMode.USER:
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => cb({author: { userId: params['_userId'] }}));
         break;
 
-      case ArticleSecrchMode.VOTER:
+      case ArticleSearchMode.VOTER:
         this.route.parent.params
         .takeUntil(this.onDestroy)
         .subscribe( params => {
