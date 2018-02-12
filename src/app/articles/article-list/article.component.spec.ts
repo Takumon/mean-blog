@@ -157,8 +157,6 @@ describe('ArticleComponent', () => {
           {{comment.user.userId}}さんのコメント<br>
           {{comment.text}}
         </div>
-        <div>リプライのけんすう {{comment.replies.length}}</div>
-        <div>条件結果　{{(comment.replies && comment.replies.length > 0)}}</div>
         <ng-template *ngIf="comment.replies && comment.replies.length > 0">
           <div class="reply-mock-for-test" *ngFor="let rep of comment.replies">
             {{rep.user.userId}}さんのリプライ<br>
@@ -511,8 +509,13 @@ describe('ArticleComponent', () => {
         expect(commentForm).not.toBeNull();
       });
 
-      it('コメント詳細部閉じるボタンが表示される', () => {
+      it('コメント詳細部閉じるボタン上部が表示される', () => {
         const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_top'));
+        expect(closeCommentDetailBtn).not.toBeNull();
+      });
+
+      it('コメント詳細部閉じるボタン下部が表示される', () => {
+        const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_bottom'));
         expect(closeCommentDetailBtn).not.toBeNull();
       });
 
@@ -538,6 +541,32 @@ describe('ArticleComponent', () => {
 
         const replies = commentList.queryAll(By.css('.reply-mock-for-test'));
         expect(replies.length).toEqual(1);
+      });
+
+      describe('コメント詳細閉じるボタン上部クリック', () => {
+        beforeEach(() => {
+          const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_top'));
+          closeCommentDetailBtn.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('コメント詳細部が表示されない', () => {
+          const commentForm = de.query(By.css('.article__comments-detail'));
+          expect(commentForm).toBeNull();
+        });
+      });
+
+      describe('コメント詳細閉じるボタン下部クリック', () => {
+        beforeEach(() => {
+          const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_down'));
+          closeCommentDetailBtn.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('コメント詳細部が表示されない', () => {
+          const commentForm = de.query(By.css('.article__comments-detail'));
+          expect(commentForm).toBeNull();
+        });
       });
     });
 
