@@ -8,7 +8,7 @@ import { CommentModel } from '../shared/comment.model';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleComponent } from './article.component';
-import { ComponentFixture, TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
+import { ComponentFixture, TestBed, async, ComponentFixtureAutoDetect, fakeAsync, tick, inject, flush } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { ErrorStateMatcherContainParentGroup, MessageService } from '../../shared/services/message.service';
 import { ErrorStateMatcher } from '@angular/material';
@@ -24,6 +24,8 @@ import { CommentService } from '../shared/comment.service';
 import { ArticleModel } from '../shared/article.model';
 import { VoteCudResponse, ArticleService } from '../shared/article.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core/src/metadata/ng_module';
+import { ArticleWithUserModel } from '../shared/article-with-user.model';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 describe('ArticleComponent', () => {
 
@@ -32,7 +34,7 @@ describe('ArticleComponent', () => {
     template: '<div style="margin:10px"><app-article class="test-wrapper" [item]="item"></app-article></div>',
   })
   class TestCmpWrapperComponent {
-      item = {
+      item: ArticleWithUserModel = {
         _id: '12345678912',
         title: 'サンプルタイトル',
         body: `## セッションタイトル
@@ -47,15 +49,8 @@ describe('ArticleComponent', () => {
           updated: '2018-02-11T23:39:37.263Z'
         },
         vote: [{
-          _id: '123456789077',
-          userId: 'testAuthorUserId2',
-          isAdmin: false,
-          created: '2018-02-11T23:39:37.263Z',
-          updated: '2018-02-11T23:39:37.263Z'
-        },
-        {
-          _id: '123456789066',
-          userId: 'testAuthorUserId3',
+          _id: '123456789012',
+          userId: 'sampleUserId',
           isAdmin: false,
           created: '2018-02-11T23:39:37.263Z',
           updated: '2018-02-11T23:39:37.263Z'
@@ -74,10 +69,10 @@ describe('ArticleComponent', () => {
           replies: [{
             _id: '123456789044',
             articleId: '12345678912',
-            test: 'サンプルリプライ',
+            text: 'サンプルリプライ',
             user: {
-              _id: '123456789077',
-              userId: 'testAuthorUserId2',
+              _id: '123456789078',
+              userId: 'testAuthorUserId3',
               isAdmin: false,
               created: '2018-02-11T23:39:37.263Z',
               updated: '2018-02-11T23:39:37.263Z'
@@ -94,8 +89,8 @@ describe('ArticleComponent', () => {
           articleId: '12345678913',
           text: 'サンプルコメント2',
           user: {
-            _id: '123456789077',
-            userId: 'testAuthorUserId2',
+            _id: '123456789079',
+            userId: 'testAuthorUserId3',
             isAdmin: false,
             created: '2018-02-11T23:39:37.263Z',
             updated: '2018-02-11T23:39:37.263Z'
@@ -172,8 +167,17 @@ describe('ArticleComponent', () => {
   }
 
   class MockAuthenticationService {
-    loginUser = new UserModel();
+    loginUser: UserModel;
     isFinishedCheckState = true;
+
+    constructor() {
+      const loginUser = new UserModel();
+      loginUser._id = '123456789055';
+      loginUser.isAdmin = false;
+      loginUser.userId = 'SampleLoginUserId';
+      loginUser.userName = 'SampleLoginUserName';
+      this.loginUser = loginUser;
+    }
 
     isLogin(): boolean {
       return true;
@@ -205,22 +209,39 @@ describe('ArticleComponent', () => {
   }
 
   class MockArticleService {
+    private isRegistered = false;
+
     getVote = jasmine.createSpy('getHero').and.callFake(
       (articleId: string) => {
-        return Observable.of([{
+        const voters: UserModel[] = [];
+
+        voters.push({
           _id: '123456789012',
           userId: 'sampleUserId',
           isAdmin: false,
           created: '2018-02-11T23:39:37.263Z',
           updated: '2018-02-11T23:39:37.263Z'
-        }]);
+        });
+
+        if (this.isRegistered) {
+          voters.push({
+            _id: '123456789055',
+            userId: 'SampleLoginUserId',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          });
+        }
+
+        return Observable.of(voters);
       }
     );
 
     registerVote = jasmine.createSpy('getHero').and.callFake(
       (articleId: string, voterId: string) => {
+        this.isRegistered = true;
         const article: VoteCudResponse = {
-          message: 'いいねを登録しました。',
+          message: '記事にいいねしました。',
           obj: ['1234580000'],
         };
         return Observable.of(article);
@@ -229,8 +250,9 @@ describe('ArticleComponent', () => {
 
     deleteVote = jasmine.createSpy('getHero').and.callFake(
       (articleId: string, voterId: string) => {
+        this.isRegistered = false;
         const article: VoteCudResponse = {
-          message: 'いいねを削除しました。',
+          message: 'いいねを取り消しました。',
           obj: ['1234580000'],
         };
         return Observable.of(article);
@@ -265,8 +287,8 @@ describe('ArticleComponent', () => {
           { provide: CommentService, useClass: MockCommentService },
           { provide: ArticleService, useClass: MockArticleService },
           { provide: APP_BASE_HREF, useValue: '/' },
-          MarkdownParseService,
           { provide: ComponentFixtureAutoDetect, useValue: true },
+          MarkdownParseService,
           ErrorStateMatcherContainParentGroup,
           {
             provide: ErrorStateMatcher,
@@ -314,7 +336,7 @@ describe('ArticleComponent', () => {
     it('いいね数が表示される', () => {
       const countVote = de.query(By.css('.comments__count_vote'));
       expect(countVote).not.toBeNull();
-      expect(countVote.nativeElement.textContent).toContain('2人');
+      expect(countVote.nativeElement.textContent).toContain('1人');
     });
 
 
@@ -323,6 +345,158 @@ describe('ArticleComponent', () => {
       expect(countComment).not.toBeNull();
       expect(countComment.nativeElement.textContent).toContain('3件');
     });
-  });
 
+    describe('いいねクリック時', () => {
+      let overlayContainer: OverlayContainer;
+      let overlayContainerElement: HTMLElement;
+      let articleServiceSpy: any;
+
+      beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+        overlayContainer = oc;
+        overlayContainerElement = oc.getContainerElement();
+
+        articleServiceSpy = de.injector.get(ArticleService);
+
+        const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+        voteBtn.triggerEventHandler('click', null);
+        fixture.detectChanges();
+      }));
+
+      it('いいねが登録される', () => {
+        expect(articleServiceSpy.registerVote.calls.count()).toBe(1);
+        expect(articleServiceSpy.registerVote.calls.mostRecent().args[0]).toEqual('12345678912');
+        expect(articleServiceSpy.registerVote.calls.mostRecent().args[1]).toEqual('123456789055');
+      });
+
+      it('スナックバーでメッセージが表示される', () => {
+        const containerElement = overlayContainerElement.querySelector('snack-bar-container');
+        const snackBarText = containerElement.innerHTML;
+        expect(snackBarText).toContain('記事にいいねしました。');
+      });
+
+      it('いいね数が増える', () => {
+        const countVote = de.query(By.css('.comments__count_vote'));
+        expect(countVote).not.toBeNull();
+        expect(countVote.nativeElement.textContent).toContain('2人');
+      });
+
+      it('いいねボタンがいいね済みになる', () => {
+        const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+        expect(voteBtn).not.toBeNull();
+        expect(voteBtn.nativeElement.textContent).toContain('いいね済み');
+      });
+
+
+      describe('いいね済みクリック時', () => {
+
+        beforeEach(() => {
+          articleServiceSpy = de.injector.get(ArticleService);
+
+          const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+          voteBtn.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        afterEach(() => {
+          const cancelBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[0] as HTMLButtonElement;
+          if (cancelBtn) {
+            cancelBtn.click();
+            fixture.detectChanges();
+          }
+        });
+
+        it('確認ダイアログが表示される', () => {
+          const confirmMessage = overlayContainerElement.querySelector('app-confirm-dialog .mat-dialog-content');
+          expect(confirmMessage.innerHTML).toContain('いいねを取り消しますか？');
+        });
+
+        describe('いいえクリック時', () => {
+          beforeEach((done) => {
+            const cancelBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[0] as HTMLButtonElement;
+            cancelBtn.click();
+
+            fixture.detectChanges();
+
+            setTimeout(() => {
+              done();
+            }, 1000);
+
+          });
+
+          it('ダイアログが非表示になる', () => {
+            const dialog = overlayContainerElement.querySelector('app-confirm-dialog');
+            expect(dialog).toBeNull();
+          });
+
+          it('いいね削除処理は呼ばれない', () => {
+            expect(articleServiceSpy.deleteVote.calls.count()).toBe(0);
+          });
+        });
+
+        describe('はいクリック時', () => {
+          beforeEach((done) => {
+            const yesBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[1] as HTMLButtonElement;
+            yesBtn.click();
+
+            fixture.detectChanges();
+
+            setTimeout(() => {
+              done();
+            }, 1000);
+
+          });
+
+          it('ダイアログが非表示になる', () => {
+            const dialog = overlayContainerElement.querySelector('app-confirm-dialog');
+            expect(dialog).toBeNull();
+          });
+
+          it('いいね削除処理がよばれる', () => {
+            expect(articleServiceSpy.deleteVote.calls.count()).toBe(1);
+            expect(articleServiceSpy.deleteVote.calls.mostRecent().args[0]).toBe('12345678912');
+            expect(articleServiceSpy.deleteVote.calls.mostRecent().args[1]).toBe('123456789055');
+          });
+
+          it('スナックバーでメッセージが表示される', () => {
+            const containerElement = overlayContainerElement.querySelector('snack-bar-container');
+            const snackBarText = containerElement.innerHTML;
+            expect(snackBarText).toContain('いいねを取り消しました。');
+          });
+
+          it('いいね数が減る', () => {
+            const countVote = de.query(By.css('.comments__count_vote'));
+            expect(countVote).not.toBeNull();
+            expect(countVote.nativeElement.textContent).toContain('1人');
+          });
+
+          it('いいねボタンがいいねなる', () => {
+            const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+            expect(voteBtn).not.toBeNull();
+            expect(voteBtn.nativeElement.textContent).toContain('いいね!');
+          });
+        });
+      });
+    });
+
+
+
+
+  });
 });
+
+
+
+  // コメントするクリック
+  // タイトルエリアクリック
+  // マウスをコメントにホバー コメントがツールチップで表示される
+  // マウスをリプライにホバー リプライがツールチップで表示される
+  // コメント詳細開くボタンクリック
+  //    いいねの表示のしかた
+  //    コメントの表示のしかた
+  //    リプライの表示のしかた
+
+  // コメント詳細閉じるボタンクリック
+  //    いいねの表示のしかた
+  //    コメントの表示のしかた
+  //    リプライの表示のしかた
+
