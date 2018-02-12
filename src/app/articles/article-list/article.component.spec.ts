@@ -98,8 +98,8 @@ describe('ArticleComponent', () => {
           created: '2018-02-11T23:39:37.263Z',
           updated: '2018-02-11T23:39:37.263Z'
         }],
-        created: '2018-02-11T23:39:37.263Z',
-        updated: '2018-02-11T23:39:37.263Z'
+        created: '2018-02-11T23:30:00.000Z',
+        updated: '2018-02-11T23:40:00.000Z'
       };
   }
 
@@ -264,7 +264,7 @@ describe('ArticleComponent', () => {
   let fixture: ComponentFixture<TestCmpWrapperComponent>;
   let de: DebugElement;
 
-  describe('認証時 初期表示', () => {
+  describe('認証時', () => {
     beforeEach( () => {
       TestBed.configureTestingModule({
         declarations: [
@@ -304,16 +304,19 @@ describe('ArticleComponent', () => {
       fixture.detectChanges();
     });
 
-    it('初期表示時', () => {
-      expect(true).toBeTruthy();
+    it('ヘッダーバーにユーザ名が表示される', () => {
       const authorName = de.query(By.css('.article__author-name')).nativeElement.textContent;
       expect(authorName).toEqual('testAuthorUserId1');
+    });
 
-      const date = de.query(By.css('.article__date')).nativeElement.textContent;
-      expect(date).toContain('2018/02/12 08:39');
-
+    it('ヘッダーバーにタイトルが表示される', () => {
       const title = de.query(By.css('.article__title')).nativeElement.textContent;
       expect(title).toContain('サンプルタイトル');
+    });
+
+    it('ヘッダーバーに更新日が表示される', () => {
+      const date = de.query(By.css('.article__date')).nativeElement.textContent;
+      expect(date).toContain('2018/02/12 08:40');
     });
 
     it('markdown形式で記事が表示される', () => {
@@ -410,6 +413,7 @@ describe('ArticleComponent', () => {
           expect(confirmMessage.innerHTML).toContain('いいねを取り消しますか？');
         });
 
+        // ダイアログ閉じるテストだけ1秒待つ
         describe('いいえクリック時', () => {
           beforeEach((done) => {
             const cancelBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[0] as HTMLButtonElement;
@@ -427,12 +431,22 @@ describe('ArticleComponent', () => {
             const dialog = overlayContainerElement.querySelector('app-confirm-dialog');
             expect(dialog).toBeNull();
           });
+        });
+
+        describe('いいえクリック時', () => {
+          beforeEach(() => {
+            const cancelBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[0] as HTMLButtonElement;
+            cancelBtn.click();
+
+            fixture.detectChanges();
+          });
 
           it('いいね削除処理は呼ばれない', () => {
             expect(articleServiceSpy.deleteVote.calls.count()).toBe(0);
           });
         });
 
+        // ダイアログを閉じるテストだけ1秒待つ
         describe('はいクリック時', () => {
           beforeEach((done) => {
             const yesBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[1] as HTMLButtonElement;
@@ -449,6 +463,16 @@ describe('ArticleComponent', () => {
           it('ダイアログが非表示になる', () => {
             const dialog = overlayContainerElement.querySelector('app-confirm-dialog');
             expect(dialog).toBeNull();
+          });
+        });
+
+
+        describe('はいクリック時', () => {
+          beforeEach(() => {
+            const yesBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[1] as HTMLButtonElement;
+            yesBtn.click();
+
+            fixture.detectChanges();
           });
 
           it('いいね削除処理がよばれる', () => {
