@@ -137,7 +137,7 @@ describe('ArticleComponent', () => {
   @Component({
     selector: 'app-voter-list',
     template: `
-      <div style="border: 1px solid black" *ngFor="let voter of voters">いいね {{voter.userId}}<div>
+      <div class="vote-mock-for-test" style="border: 1px solid black" *ngFor="let voter of voters">いいね {{voter.userId}}<div>
     `
   })
   class MockVoterListComponent {
@@ -153,8 +153,18 @@ describe('ArticleComponent', () => {
     selector: 'app-comment-list',
     template: `
       <div style="border: 1px solid black" *ngFor="let comment of comments">
-        {{comment.user.userId}}さんのコメント<br>
-        {{comment.text}}
+        <div class="comment-mock-for-test">
+          {{comment.user.userId}}さんのコメント<br>
+          {{comment.text}}
+        </div>
+        <div>リプライのけんすう {{comment.replies.length}}</div>
+        <div>条件結果　{{(comment.replies && comment.replies.length > 0)}}</div>
+        <ng-template *ngIf="comment.replies && comment.replies.length > 0">
+          <div class="reply-mock-for-test" *ngFor="let rep of comment.replies">
+            {{rep.user.userId}}さんのリプライ<br>
+            {{rep.text}}
+          </div>
+        </ng-template>
       <div>
     `
   })
@@ -476,6 +486,60 @@ describe('ArticleComponent', () => {
     });
 
 
+    describe('コメントするをクリック', () => {
+      beforeEach(() => {
+        const voteBtn = de.queryAll(By.css('.article__operation-btn'))[1];
+        voteBtn.triggerEventHandler('click', null);
+        fixture.detectChanges();
+      });
+
+      it('コメント入力欄が表示される', () => {
+        const commentForm = de.query(By.css('app-comment-form'));
+        expect(commentForm).not.toBeNull();
+      });
+    });
+
+    describe('コメント詳細開くボタンをクリック', () => {
+      beforeEach(() => {
+        const openCommentDetailBtn = de.query(By.css('.comments__operation__show-detail-btn'));
+        openCommentDetailBtn.triggerEventHandler('click', null);
+        fixture.detectChanges();
+      });
+
+      it('コメント詳細部が表示される', () => {
+        const commentForm = de.query(By.css('.article__comments-detail'));
+        expect(commentForm).not.toBeNull();
+      });
+
+      it('コメント詳細部閉じるボタンが表示される', () => {
+        const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_top'));
+        expect(closeCommentDetailBtn).not.toBeNull();
+      });
+
+      it('コメント詳細にいいねが表示される', () => {
+        const voterList = de.query(By.css('app-voter-list'));
+        expect(voterList).not.toBeNull();
+
+        const votes = voterList.queryAll(By.css('.vote-mock-for-test'));
+        expect(votes.length).toEqual(1);
+      });
+
+      it('コメント詳細にコメントが表示される', () => {
+        const commentList = de.query(By.css('app-comment-list'));
+        expect(commentList).not.toBeNull();
+
+        const comments = commentList.queryAll(By.css('.comment-mock-for-test'));
+        expect(comments.length).toEqual(2);
+      });
+
+      it('コメント詳細にコメントが表示される', () => {
+        const commentList = de.query(By.css('app-comment-list'));
+        expect(commentList).not.toBeNull();
+
+        const replies = commentList.queryAll(By.css('.reply-mock-for-test'));
+        expect(replies.length).toEqual(1);
+      });
+    });
 
 
   });
@@ -483,14 +547,8 @@ describe('ArticleComponent', () => {
 
 
 
-  // コメントするクリック
   // タイトルエリアクリック
-  // マウスをコメントにホバー コメントがツールチップで表示される
-  // マウスをリプライにホバー リプライがツールチップで表示される
-  // コメント詳細開くボタンクリック
-  //    いいねの表示のしかた
-  //    コメントの表示のしかた
-  //    リプライの表示のしかた
+
 
   // コメント詳細閉じるボタンクリック
   //    いいねの表示のしかた
