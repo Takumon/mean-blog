@@ -40,9 +40,11 @@ import { CommentWithUserModel } from '../shared/comment-with-user.model';
 export class ArticleComponent {
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
+
+  /** 本コンポーネントに表示する記事はinputとして外部から受け取る */
   @Input() item: ArticleWithUserModel;
 
-
+  /** コンストラクタ */
   constructor(
     public auth: AuthenticationService,
     public messageService: MessageService,
@@ -55,12 +57,18 @@ export class ArticleComponent {
   ) {
   }
 
-  toggleDetail() {
+  /**
+   * いいねとコメントの詳細部分の表示/非表示を切り替える
+   */
+  toggleVoteAndCommentDetail(): void {
     this.item.showDetail = !this.item.showDetail;
   }
 
 
-  createNewComment() {
+  /**
+   * コメント入力欄を開く時に新しいコメントモデルを生成する
+   */
+  createNewComment(): void {
     const newComment = new CommentModel();
     newComment.user = this.auth.loginUser._id;
     newComment.articleId = this.item._id;
@@ -68,36 +76,57 @@ export class ArticleComponent {
     this.item.newComment = newComment;
   }
 
-  cancelNewComment() {
+  /**
+   * コメント欄を閉じる時に新しいコメントモデルを破棄する
+   */
+  cancelNewComment(): void {
     this.item.newComment = null;
   }
 
 
+  /**
+   * 記事に紐づくコメントを再取得して画面のコメント情報を更新する.<br>
+   * 新しいコメントモデルも破棄する.
+   */
   refreshComments() {
-    this.item.newComment = null;
+    const withUser = true;
 
     this.commentService
-    .getOfArticle(this.item._id, true)
+    .getOfArticle(this.item._id, withUser)
     .subscribe(comments => {
-      this.item.comments = comments as Array<CommentWithUserModel>;
+      this.item.comments = comments as CommentWithUserModel[];
+      this.cancelNewComment();
     });
   }
 
+  /**
+   * いいねを登録する.<br>
+   */
   registerVote() {
     this.articleService
     .registerVote(this.item._id, this.auth.loginUser._id)
     .subscribe( (res: VoteCudResponse) => {
       this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      const withUser = true;
-      this.articleService.getVote(this.item._id, withUser)
-      .subscribe( (vote: UserModel[]) => {
-        this.item.vote = vote;
-      });
+      this.refreshVotes();
     }, this.onValidationError.bind(this));
   }
 
+  /**
+   * 記事に紐づくいいねを取得し画面を更新する.
+   */
+  private refreshVotes(): void {
+    const withUser = true;
+    this.articleService.getVote(this.item._id, withUser)
+    .subscribe( (vote: UserModel[]) => {
+      this.item.vote = vote;
+    });
+  }
 
-  deleteVote() {
+
+  /**
+   * いいねを削除するか確認ダイアログを表示する.
+   */
+  confirmeDeleteVote(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: '確認',
@@ -110,17 +139,20 @@ export class ArticleComponent {
         return;
       }
 
-      this.articleService
-      .deleteVote(this.item._id, this.auth.loginUser._id)
-      .subscribe( (res: VoteCudResponse) => {
-        this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        const withUser = true;
-        this.articleService.getVote(this.item._id)
-        .subscribe((vote: UserModel[]) => {
-          this.item.vote = vote;
-        });
-      }, this.onValidationError.bind(this));
+      this.deleteVote();
     });
+  }
+
+  /**
+   * いいねを削除する
+   */
+  private deleteVote(): void {
+    this.articleService
+    .deleteVote(this.item._id, this.auth.loginUser._id)
+    .subscribe( (res: VoteCudResponse) => {
+      this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
+      this.refreshVotes();
+    }, this.onValidationError.bind(this));
   }
 
   /**
@@ -153,6 +185,9 @@ export class ArticleComponent {
   }
 
 
+  /**
+   * 記事にログインユーザのいいねが含まれるか.
+   */
   containMineVote(): boolean {
     if (!this.item.vote) {
       return false;

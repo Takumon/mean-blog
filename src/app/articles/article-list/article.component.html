@@ -45,7 +45,7 @@
       mat-button
       type="button"
       class="article__operation-btn"
-      (click)="deleteVote()"
+      (click)="confirmeDeleteVote()"
       >
       <i class="fa fa-fw fa-check"></i> いいね済み
     </button>
@@ -106,7 +106,7 @@
           [matTooltipShowDelay]="Constant.TOOL_TIP_SHOW_DELAY"
           type="button"
           class="comments__operation__show-detail-btn"
-          (click)="toggleDetail()"><i class="fa fa-fw fa-chevron-down"></i></button>
+          (click)="toggleVoteAndCommentDetail()"><i class="fa fa-fw fa-chevron-down"></i></button>
       </div>
     </div>
 
@@ -129,7 +129,7 @@
         matTooltipPosition="above"
         [matTooltipShowDelay]="Constant.TOOL_TIP_SHOW_DELAY"
         class="article__comments-detail__close-btn_top"
-        (click)='toggleDetail()'
+        (click)='toggleVoteAndCommentDetail()'
         ><i class="fa fa-fw fa-chevron-up"></i>
       </button>
       <app-voter-list
@@ -148,7 +148,7 @@
         type="button"
         class="article__comments-detail__close-btn_bottom"
         [class.is-login]="auth.isLogin()"
-        (click)='toggleDetail()'
+        (click)='toggleVoteAndCommentDetail()'
         ><i class="fa fa-fw fa-chevron-up"></i>
       </button>
     </div>

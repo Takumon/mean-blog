@@ -3,6 +3,7 @@ import 'rxjs/Rx';
 import marked from 'marked';
 
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { CommentModel } from '../shared/comment.model';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
@@ -70,6 +71,21 @@ describe('ArticleComponent', () => {
             created: '2018-02-11T23:39:37.263Z',
             updated: '2018-02-11T23:39:37.263Z'
           },
+          replies: [{
+            _id: '123456789044',
+            articleId: '12345678912',
+            test: 'サンプルリプライ',
+            user: {
+              _id: '123456789077',
+              userId: 'testAuthorUserId2',
+              isAdmin: false,
+              created: '2018-02-11T23:39:37.263Z',
+              updated: '2018-02-11T23:39:37.263Z'
+            },
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z',
+            commentId: '123456789022'
+          }],
           created: '2018-02-11T23:39:37.263Z',
           updated: '2018-02-11T23:39:37.263Z'
         },
@@ -178,7 +194,13 @@ describe('ArticleComponent', () => {
       if (!comments || comments.length === 0) {
         return 0;
       }
-      return comments.length;
+      let commentCount =  comments.length;
+      for (const c of comments) {
+        if (c.replies) {
+          commentCount += c.replies.length;
+        }
+      }
+      return commentCount;
     }
   }
 
@@ -220,7 +242,7 @@ describe('ArticleComponent', () => {
   let fixture: ComponentFixture<TestCmpWrapperComponent>;
   let de: DebugElement;
 
-  describe('初期表示', () => {
+  describe('認証時 初期表示', () => {
     beforeEach( () => {
       TestBed.configureTestingModule({
         declarations: [
@@ -260,8 +282,46 @@ describe('ArticleComponent', () => {
       fixture.detectChanges();
     });
 
-    it('初期表示される', () => {
+    it('初期表示時', () => {
       expect(true).toBeTruthy();
+      const authorName = de.query(By.css('.article__author-name')).nativeElement.textContent;
+      expect(authorName).toEqual('testAuthorUserId1');
+
+      const date = de.query(By.css('.article__date')).nativeElement.textContent;
+      expect(date).toContain('2018/02/12 08:39');
+
+      const title = de.query(By.css('.article__title')).nativeElement.textContent;
+      expect(title).toContain('サンプルタイトル');
+    });
+
+    it('markdown形式で記事が表示される', () => {
+      const title = de.query(By.css('.markdown-body'));
+      expect(title).not.toBeNull();
+    });
+
+    it('いいねボタンが表示される', () => {
+      const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+      expect(voteBtn).not.toBeNull();
+      expect(voteBtn.nativeElement.textContent).toContain('いいね!');
+    });
+
+    it('コメントボタンが表示される', () => {
+      const commentBtn = de.queryAll(By.css('.article__operation-btn'))[1];
+      expect(commentBtn).not.toBeNull();
+      expect(commentBtn.nativeElement.textContent).toContain('コメントする');
+    });
+
+    it('いいね数が表示される', () => {
+      const countVote = de.query(By.css('.comments__count_vote'));
+      expect(countVote).not.toBeNull();
+      expect(countVote.nativeElement.textContent).toContain('2人');
+    });
+
+
+    it('コメント数がリプライも含めて表示される', () => {
+      const countComment = de.query(By.css('.comments__count'));
+      expect(countComment).not.toBeNull();
+      expect(countComment.nativeElement.textContent).toContain('3件');
     });
   });
 
