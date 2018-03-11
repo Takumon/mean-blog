@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscriber, Subject } from 'rxjs/Rx';
 import 'rxjs/Rx';
 import marked from 'marked';
 
@@ -11,7 +11,7 @@ import { ArticleComponent } from './article.component';
 import { ComponentFixture, TestBed, async, ComponentFixtureAutoDetect, fakeAsync, tick, inject, flush } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { ErrorStateMatcherContainParentGroup, MessageService } from '../../shared/services/message.service';
-import { ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MarkdownParsePipe } from '../shared/markdown-parse.pipe';
@@ -157,12 +157,12 @@ describe('ArticleComponent', () => {
           {{comment.user.userId}}さんのコメント<br>
           {{comment.text}}
         </div>
-        <ng-template *ngIf="comment.replies && comment.replies.length > 0">
+        <div *ngIf="comment.replies && comment.replies.length > 0">
           <div class="reply-mock-for-test" *ngFor="let rep of comment.replies">
             {{rep.user.userId}}さんのリプライ<br>
             {{rep.text}}
           </div>
-        </ng-template>
+        </div>
       <div>
     `
   })
@@ -268,9 +268,31 @@ describe('ArticleComponent', () => {
     );
   }
 
+
+  class MokMatDialog {
+
+    emitter = new Subject<boolean>();
+
+    open() {
+      return {
+        afterClosed: () => this.emitter
+      };
+    }
+
+    cansel() {
+      this.emitter.next(false);
+    }
+    ok() {
+      this.emitter.next(true);
+    }
+  }
+
+
+
   let comp: TestCmpWrapperComponent;
   let fixture: ComponentFixture<TestCmpWrapperComponent>;
   let de: DebugElement;
+  let dialog: MokMatDialog;
 
   describe('認証時', () => {
     beforeEach( () => {
@@ -291,6 +313,7 @@ describe('ArticleComponent', () => {
         providers: [
           MessageService,
           MessageBarService,
+          { provide: MatDialog, useClass: MokMatDialog },
           { provide: AuthenticationService, useClass: MockAuthenticationService },
           { provide: CommentService, useClass: MockCommentService },
           { provide: ArticleService, useClass: MockArticleService },
@@ -310,6 +333,7 @@ describe('ArticleComponent', () => {
 
       de = fixture.debugElement;
       fixture.detectChanges();
+      dialog = TestBed.get(MatDialog);
     });
 
     it('ヘッダーバーにユーザ名が表示される', () => {
@@ -402,6 +426,8 @@ describe('ArticleComponent', () => {
       describe('いいね済みクリック時', () => {
 
         beforeEach(() => {
+          spyOn(dialog, 'open').and.callThrough();
+
           articleServiceSpy = de.injector.get(ArticleService);
 
           const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
@@ -411,26 +437,16 @@ describe('ArticleComponent', () => {
 
 
         it('確認ダイアログが表示される', () => {
-          const confirmMessage = overlayContainerElement.querySelector('app-confirm-dialog .mat-dialog-content');
-          expect(confirmMessage.innerHTML).toContain('いいねを取り消しますか？');
+          expect(dialog.open).toHaveBeenCalled();
         });
 
         describe('いいえクリック時', () => {
           beforeEach((done) => {
-            const cancelBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[0] as HTMLButtonElement;
-            cancelBtn.click();
-
-            fixture.detectChanges();
-
             setTimeout(() => {
+              dialog.cansel();
+              fixture.detectChanges();
               done();
-            }, 1000);
-
-          });
-
-          it('ダイアログが非表示になる', () => {
-            const dialog = overlayContainerElement.querySelector('app-confirm-dialog');
-            expect(dialog).toBeNull();
+            }, 4000);
           });
 
           it('いいね削除処理は呼ばれない', () => {
@@ -440,20 +456,11 @@ describe('ArticleComponent', () => {
 
         describe('はいクリック時', () => {
           beforeEach((done) => {
-            const yesBtn = overlayContainerElement.querySelectorAll('app-confirm-dialog .mat-button')[1] as HTMLButtonElement;
-            yesBtn.click();
-
-            fixture.detectChanges();
-
             setTimeout(() => {
+              dialog.ok();
+              fixture.detectChanges();
               done();
-            }, 1000);
-
-          });
-
-          it('ダイアログが非表示になる', () => {
-            const dialog = overlayContainerElement.querySelector('app-confirm-dialog');
-            expect(dialog).toBeNull();
+            }, 4000);
           });
 
           it('いいね削除処理がよばれる', () => {
@@ -479,9 +486,11 @@ describe('ArticleComponent', () => {
             expect(voteBtn).not.toBeNull();
             expect(voteBtn.nativeElement.textContent).toContain('いいね!');
           });
+
         });
       });
     });
+
 
 
     describe('コメントするをクリック', () => {
@@ -499,6 +508,7 @@ describe('ArticleComponent', () => {
 
     describe('コメント詳細開くボタンをクリック', () => {
       beforeEach(() => {
+
         const openCommentDetailBtn = de.query(By.css('.comments__operation__show-detail-btn'));
         openCommentDetailBtn.triggerEventHandler('click', null);
         fixture.detectChanges();
@@ -558,6 +568,20 @@ describe('ArticleComponent', () => {
 
       describe('コメント詳細閉じるボタン下部クリック', () => {
         beforeEach(() => {
+          const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_bottom'));
+          closeCommentDetailBtn.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('コメント詳細部が表示されない', () => {
+          const commentForm = de.query(By.css('.article__comments-detail'));
+          expect(commentForm).toBeNull();
+        });
+      });
+
+
+      xdescribe('コメント詳細閉じるボタン下部クリック', () => {
+        beforeEach(() => {
           const closeCommentDetailBtn = de.query(By.css('.article__comments-detail__close-btn_down'));
           closeCommentDetailBtn.triggerEventHandler('click', null);
           fixture.detectChanges();
@@ -569,8 +593,6 @@ describe('ArticleComponent', () => {
         });
       });
     });
-
-
   });
 });
 
