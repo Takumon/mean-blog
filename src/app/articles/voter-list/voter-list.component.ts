@@ -12,7 +12,7 @@ export class VoterListComponent {
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
-  @Input() voters: Array<UserModel>;
+  @Input() voters: UserModel[];
 
   constructor() { }
 }

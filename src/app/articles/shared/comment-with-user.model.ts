@@ -20,7 +20,7 @@ export class CommentWithUserModel {
   /** （論理）削除日時 */
   deleted?: string;
   /** コメントに対するリプライモデルの配列 */
-  replies?: Array<ReplyWithUserModel>;
+  replies?: ReplyWithUserModel[];
 
   /** （表示制御用）編集中か */
   isEditable?: boolean;

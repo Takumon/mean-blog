@@ -31,7 +31,7 @@ export class CommentListComponent implements OnInit {
   @Input() replyCommentIndentMargin: Number = 42;
   @Input() replyCommentIndentLimit: Number = 4;
   @Input() _idOfArticle: string;
-  @Input() comments: Array<CommentWithUserModel>;
+  @Input() comments: CommentWithUserModel[];
   @Output() refresh = new EventEmitter();
 
 
@@ -61,7 +61,7 @@ export class CommentListComponent implements OnInit {
     this.commentService
       .getOfArticle(this._idOfArticle, withUser)
       .subscribe(comments => {
-        this.comments = comments as Array<CommentWithUserModel>;
+        this.comments = comments as CommentWithUserModel[];
         this.refresh.emit({comments: comments});
       });
   }

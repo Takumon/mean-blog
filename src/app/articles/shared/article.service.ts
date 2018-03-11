@@ -22,7 +22,7 @@ interface CudResponse {
 /**
  * いいねの登録(Create)、更新(Update)、削除時(delete)のレスポンス
  */
-interface VoteCudResponse {
+export interface VoteCudResponse {
   message: string;
   obj: string[];
 }
