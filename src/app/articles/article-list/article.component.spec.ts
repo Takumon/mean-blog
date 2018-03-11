@@ -26,6 +26,7 @@ import { VoteCudResponse, ArticleService } from '../shared/article.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core/src/metadata/ng_module';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { CommentFormComponent } from '../comment-form/comment-form.component';
 
 describe('ArticleComponent', () => {
 
@@ -104,6 +105,76 @@ describe('ArticleComponent', () => {
   }
 
 
+  // いいねが0件の場合
+  @Component({
+    selector: 'app-test-cmp',
+    template: '<div style="margin:10px"><app-article class="test-wrapper" [item]="item"></app-article></div>',
+  })
+  class NoVoteTestCmpWrapperComponent {
+      item: ArticleWithUserModel = {
+        _id: '12345678912',
+        title: 'サンプルタイトル',
+        body: `## セッションタイトル
+* リスト1
+* リスト2`,
+        isMarkdown: true,
+        author: {
+          _id: '123456789088',
+          userId: 'testAuthorUserId1',
+          isAdmin: false,
+          created: '2018-02-11T23:39:37.263Z',
+          updated: '2018-02-11T23:39:37.263Z'
+        },
+        vote: [],
+        comments: [{
+          _id: '123456789022',
+          articleId: '12345678912',
+          text: 'サンプルコメント',
+          user: {
+            _id: '123456789077',
+            userId: 'testAuthorUserId2',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          },
+          replies: [{
+            _id: '123456789044',
+            articleId: '12345678912',
+            text: 'サンプルリプライ',
+            user: {
+              _id: '123456789078',
+              userId: 'testAuthorUserId3',
+              isAdmin: false,
+              created: '2018-02-11T23:39:37.263Z',
+              updated: '2018-02-11T23:39:37.263Z'
+            },
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z',
+            commentId: '123456789022'
+          }],
+          created: '2018-02-11T23:39:37.263Z',
+          updated: '2018-02-11T23:39:37.263Z'
+        },
+        {
+          _id: '123456789023',
+          articleId: '12345678913',
+          text: 'サンプルコメント2',
+          user: {
+            _id: '123456789079',
+            userId: 'testAuthorUserId3',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          },
+          created: '2018-02-11T23:39:37.263Z',
+          updated: '2018-02-11T23:39:37.263Z'
+        }],
+        created: '2018-02-11T23:30:00.000Z',
+        updated: '2018-02-11T23:40:00.000Z'
+      };
+  }
+
+
   // <app-comment-form
   // [model]="item.newComment"
   // [hasCancelBtn]="true"
@@ -116,6 +187,8 @@ describe('ArticleComponent', () => {
     <div style="border: 1px solid black">
       <div>コメント編集</div>
       <div>{{model.text}}</div>
+      <div id="mock-component-form-component-cancel" (click)="doCancel()">キャンセル</div>
+      <div id="mock-component-form-component-comment" (click)="doComment()">コメント</div>
     </div>
     `
   })
@@ -128,6 +201,14 @@ describe('ArticleComponent', () => {
 
     /** キャンセル時に発行するイベント */
     @Output() cancel = new EventEmitter();
+
+    doCancel() {
+      this.cancel.emit();
+    }
+
+    doComment() {
+      this.complete.emit();
+    }
   }
 
 
@@ -192,6 +273,25 @@ describe('ArticleComponent', () => {
     }
   }
 
+
+  class MockNotLoginAuthenticationService {
+    loginUser: UserModel;
+    isFinishedCheckState = true;
+
+    constructor() {
+      const loginUser = new UserModel();
+      loginUser._id = '123456789055';
+      loginUser.isAdmin = false;
+      loginUser.userId = 'SampleLoginUserId';
+      loginUser.userName = 'SampleLoginUserName';
+      this.loginUser = loginUser;
+    }
+
+    isLogin(): boolean {
+      return false;
+    }
+  }
+
   class MockNoAuthenticationService {
     loginUser = new UserModel();
     isFinishedCheckState = true;
@@ -202,6 +302,56 @@ describe('ArticleComponent', () => {
   }
 
   class MockCommentService {
+
+    getOfArticle = jasmine.createSpy('getHero').and.callFake(
+      (_id, withUser) =>  {
+        const comments  = [{
+          _id: '123456789022',
+          articleId: '12345678912',
+          text: 'サンプルコメント',
+          user: {
+            _id: '123456789077',
+            userId: 'testAuthorUserId2',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          },
+          replies: [{
+            _id: '123456789044',
+            articleId: '12345678912',
+            text: 'サンプルリプライ',
+            user: {
+              _id: '123456789078',
+              userId: 'testAuthorUserId3',
+              isAdmin: false,
+              created: '2018-02-11T23:39:37.263Z',
+              updated: '2018-02-11T23:39:37.263Z'
+            },
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z',
+            commentId: '123456789022'
+          }],
+          created: '2018-02-11T23:39:37.263Z',
+          updated: '2018-02-11T23:39:37.263Z'
+        },
+        {
+          _id: '123456789023',
+          articleId: '12345678913',
+          text: 'サンプルコメント2',
+          user: {
+            _id: '123456789079',
+            userId: 'testAuthorUserId3',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          },
+          created: '2018-02-11T23:39:37.263Z',
+          updated: '2018-02-11T23:39:37.263Z'
+        }];
+
+        return Observable.of(comments);
+      });
+
     count(comments: CommentWithUserModel[]): number {
       if (!comments || comments.length === 0) {
         return 0;
@@ -494,7 +644,9 @@ describe('ArticleComponent', () => {
 
 
     describe('コメントするをクリック', () => {
+      let commentServiceSpy: any;
       beforeEach(() => {
+        commentServiceSpy =  de.injector.get(CommentService);
         const voteBtn = de.queryAll(By.css('.article__operation-btn'))[1];
         voteBtn.triggerEventHandler('click', null);
         fixture.detectChanges();
@@ -503,6 +655,43 @@ describe('ArticleComponent', () => {
       it('コメント入力欄が表示される', () => {
         const commentForm = de.query(By.css('app-comment-form'));
         expect(commentForm).not.toBeNull();
+      });
+
+      describe('コメント入力欄のコメントボタンをクリック', () => {
+        beforeEach(() => {
+          const cancelButton = de.query(By.css('#mock-component-form-component-comment'));
+          cancelButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('コメント入力欄が表示されない', () => {
+          const commentForm = de.query(By.css('app-comment-form'));
+          expect(commentForm).toBeNull();
+        });
+
+        it('コメントが再取得される', () => {
+          expect(commentServiceSpy.getOfArticle.calls.count()).toBe(1);
+          expect(commentServiceSpy.getOfArticle.calls.mostRecent().args[0]).toEqual('12345678912');
+          expect(commentServiceSpy.getOfArticle.calls.mostRecent().args[1]).toEqual(true);
+        });
+      });
+
+
+      describe('コメント入力欄のキャンセルボタンをクリック', () => {
+        beforeEach(() => {
+          const cancelButton = de.query(By.css('#mock-component-form-component-cancel'));
+          cancelButton.triggerEventHandler('click', null);
+          fixture.detectChanges();
+        });
+
+        it('コメント入力欄が表示されない', () => {
+          const commentForm = de.query(By.css('app-comment-form'));
+          expect(commentForm).toBeNull();
+        });
+
+        it('コメントが再取得されない', () => {
+          expect(commentServiceSpy.getOfArticle.calls.count()).toBe(0);
+        });
       });
     });
 
@@ -594,14 +783,113 @@ describe('ArticleComponent', () => {
       });
     });
   });
+
+
+
+  describe('未認証時', () => {
+    beforeEach( () => {
+      TestBed.configureTestingModule({
+        declarations: [
+          TestCmpWrapperComponent,
+          ArticleComponent,
+          MockCommentFormComponent,
+          MockCommentListComponent,
+          MockVoterListComponent,
+          MarkdownParsePipe,
+          ExcludeDeletedCommentPipe,
+          ExcludeDeletedVoterPipe,
+        ],
+        imports: [
+          SharedModule
+        ],
+        providers: [
+          MessageService,
+          MessageBarService,
+          { provide: MatDialog, useClass: MokMatDialog },
+          { provide: AuthenticationService, useClass: MockNotLoginAuthenticationService },
+          { provide: CommentService, useClass: MockCommentService },
+          { provide: ArticleService, useClass: MockArticleService },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          MarkdownParseService,
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+        ]
+      });
+
+      fixture = TestBed.createComponent(TestCmpWrapperComponent);
+      comp = fixture.componentInstance;
+
+      de = fixture.debugElement;
+      fixture.detectChanges();
+      dialog = TestBed.get(MatDialog);
+    });
+
+
+
+    it('いいねボタンが表示されない', () => {
+      const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+      expect(voteBtn).toBeUndefined();
+    });
+
+    it('コメントボタンが表示さない', () => {
+      const commentBtn = de.queryAll(By.css('.article__operation-btn'))[1];
+      expect(commentBtn).toBeUndefined();
+    });
+  });
+
+
+  describe('証済時 記事ねのいいねが0件', () => {
+    beforeEach( () => {
+      TestBed.configureTestingModule({
+        declarations: [
+          NoVoteTestCmpWrapperComponent,
+          ArticleComponent,
+          MockCommentFormComponent,
+          MockCommentListComponent,
+          MockVoterListComponent,
+          MarkdownParsePipe,
+          ExcludeDeletedCommentPipe,
+          ExcludeDeletedVoterPipe,
+        ],
+        imports: [
+          SharedModule
+        ],
+        providers: [
+          MessageService,
+          MessageBarService,
+          { provide: MatDialog, useClass: MokMatDialog },
+          { provide: AuthenticationService, useClass: MockAuthenticationService },
+          { provide: CommentService, useClass: MockCommentService },
+          { provide: ArticleService, useClass: MockArticleService },
+          { provide: APP_BASE_HREF, useValue: '/' },
+          { provide: ComponentFixtureAutoDetect, useValue: true },
+          MarkdownParseService,
+          ErrorStateMatcherContainParentGroup,
+          {
+            provide: ErrorStateMatcher,
+            useClass: CustomErrorStateMatcher
+          },
+        ]
+      });
+
+      fixture = TestBed.createComponent(NoVoteTestCmpWrapperComponent);
+      comp = fixture.componentInstance;
+
+      de = fixture.debugElement;
+      fixture.detectChanges();
+      dialog = TestBed.get(MatDialog);
+    });
+
+    it('いいねボタンが表示される', () => {
+      const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
+      expect(voteBtn).not.toBeNull();
+      expect(voteBtn.nativeElement.textContent).toContain('いいね!');
+    });
+
+  });
+
 });
-
-
-
-  // タイトルエリアクリック
-
-
-  // コメント詳細閉じるボタンクリック
-  //    いいねの表示のしかた
-  //    コメントの表示のしかた
-  //    リプライの表示のしかた
