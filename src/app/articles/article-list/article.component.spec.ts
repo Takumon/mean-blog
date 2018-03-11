@@ -105,7 +105,7 @@ describe('ArticleComponent', () => {
   }
 
 
-  // いいねが0件の場合
+  // いいねがないの場合
   @Component({
     selector: 'app-test-cmp',
     template: '<div style="margin:10px"><app-article class="test-wrapper" [item]="item"></app-article></div>',
@@ -125,7 +125,6 @@ describe('ArticleComponent', () => {
           created: '2018-02-11T23:39:37.263Z',
           updated: '2018-02-11T23:39:37.263Z'
         },
-        vote: [],
         comments: [{
           _id: '123456789022',
           articleId: '12345678912',
