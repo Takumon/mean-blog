@@ -115,7 +115,7 @@ describe('SearchConditionService', () => {
 
       expect(service.loginUser).toBeUndefined();
       expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
-      expect(service.isFinishedCheckState).toBeFalsy();
+      expect(service.isFinishedCheckState).toBeFalsy()
 
       const arg_user = {
         userId: '123456789012',
@@ -130,7 +130,7 @@ describe('SearchConditionService', () => {
 
         expect(service.loginUser).toBeUndefined();
         expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
-        expect(service.isFinishedCheckState).toBeFalsy();
+        expect(service.isFinishedCheckState).toBe(true);
       });
 
 
@@ -222,7 +222,7 @@ describe('SearchConditionService', () => {
 
         expect(service.loginUser).toBeUndefined();
         expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
-        expect(service.isFinishedCheckState).toBeFalsy();
+        expect(service.isFinishedCheckState).toBe(true);
       });
 
 
@@ -302,7 +302,7 @@ describe('SearchConditionService', () => {
         expect(res.message).toEqual('トークン認証に失敗しました。');
         expect(res.error).toEqual('error message');
 
-        expect(service.isFinishedCheckState).toBeFalsy();
+        expect(service.isFinishedCheckState).toBe(true);
       });
 
       const req = httpMock.expectOne((request: HttpRequest<any>) => {
