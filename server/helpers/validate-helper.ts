@@ -123,7 +123,7 @@ class Validation {
   // いいねが存在するか（削除用）
   isExistedVote(_idOfVorter: String, {req}): Promise<boolean> {
     return Article
-    .findOne({ _id: req.params._id,  deleted: { $eq: null}})
+    .findOne({ _id: req.params.articleId,  deleted: { $eq: null}})
     .exec()
     .then(target => {
 
@@ -131,6 +131,7 @@ class Validation {
       if (!target || !target.vote || target.vote.length === 0) {
         return Promise.reject(false);
       }
+
 
       if (target.vote.indexOf(_idOfVorter) !== -1) {
         // チェックOK

@@ -18,9 +18,11 @@ export class AppHttpInterceptor implements HttpInterceptor {
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const req = request.clone({
-      headers: request.headers.set('x-access-token', this.localStorageService.get(LOCALSTORAGE_KEY.TOKEN))
-    });
+    const token = this.localStorageService.get(LOCALSTORAGE_KEY.TOKEN);
+    const req = request.clone(token
+      ? { headers: request.headers.set('x-access-token', token)}
+      : { headers: request.headers }
+    );
     const hasToken = this.localStorageService.has(LOCALSTORAGE_KEY.TOKEN);
     return next.handle(req).catch(res => {
       switch (res.status) {

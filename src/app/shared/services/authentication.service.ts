@@ -103,6 +103,7 @@ export class AuthenticationService {
 
   private setToken(res: LoginSuccessInfo): LoginSuccessInfo {
     if ( res.success !== true ) {
+      this.isFinishedCheckState = true;
       return res;
     }
 

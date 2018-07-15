@@ -55,6 +55,7 @@ router.post('/login', [
     deleteProp(user, 'password');
 
     res.json({
+      success: true,
       message: '認証成功',
       token: token,
       user: user,
@@ -226,20 +227,21 @@ router.get('/check-state', (req, res) => {
       success: false,
       message: 'トークンが存在しません。',
     });
+
+    return;
   }
 
   jwt.verify(token, ENV.SECRET, (err, decoded) => {
     if (err) {
-
-      res.send({
+      return res.send({
         success: false,
         message: 'トークン認証に失敗しました。',
         error: err.message
       });
     }
 
-    if (!decoded._id) {
-      res.send({
+    if (!decoded) {
+      return res.send({
         success: false,
         message: 'トークン認証に失敗しました。',
       });
@@ -253,7 +255,7 @@ router.get('/check-state', (req, res) => {
       .select('-password')
       .exec( (err2, doc) => {
         if (err2) {
-          res.send({
+          return res.send({
             success: false,
             message: 'ログインユーザ情報が取得できませんでした。',
             error: err.message
@@ -261,7 +263,7 @@ router.get('/check-state', (req, res) => {
         }
 
         if (!doc[0]) {
-          res.send({
+          return res.send({
             success: false,
             message: 'ログインユーザ情報が取得できませんでした。',
           });
