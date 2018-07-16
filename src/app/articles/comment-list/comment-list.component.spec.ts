@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
+import 'rxjs';
 
 import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -56,10 +56,10 @@ describe('CommentListComponent', () => {
     isFinishedCheckState = true;
 
     checkState(): Observable<any> {
-      return Observable.of('token');
+      return of('token');
     }
     login() {
-      return Observable.of({key: 'value'});
+      return of({key: 'value'});
     }
     logout() {
       console.log('logout');
@@ -121,7 +121,7 @@ describe('CommentListComponent', () => {
           updated: '2017/11/28 15:40'
         }
       ];
-      return Observable.of(comments);
+      return of(comments);
     }
 
     count() {

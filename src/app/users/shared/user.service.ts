@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { UserModel } from './user.model';
 import { CudSuccessModel } from '../../shared/models/response/cud-success.model';

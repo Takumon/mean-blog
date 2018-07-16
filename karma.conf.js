@@ -3,15 +3,15 @@
 
 module.exports = function (config) {
   config.set({
-    basePath: '',
-    frameworks: ['jasmine', '@angular/cli'],
+    basePath: '.',
+    frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-html-reporter'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular/cli/plugins/karma'),
+      require('@angular-devkit/build-angular/plugins/karma'),
       require('karma-scss-preprocessor'),
       require('karma-junit-reporter'),
     ],
@@ -19,12 +19,10 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      reports: [ 'html', 'lcovonly' ],
+      dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly' ],
       fixWebpackSourcePaths: true
     },
-    angularCli: {
-      environment: 'dev'
-    },
+    
     reporters: ['progress', 'kjhtml', 'html', 'junit'],
     port: 9876,
     colors: true,
@@ -37,7 +35,8 @@ module.exports = function (config) {
     files: [
       { pattern: './src/assets/js/vendor/moment.js', watched: false, included: true },
       { pattern: './src/assets/js/vendor/hammer.min.js', watched: false, included: true },
-      { pattern: './src/test.ts', watched: false },
+      // { pattern: './node_modules/marked/lib/marked.js', watched: false, included: true },
+      
       { pattern: './node_modules/@angular/material/prebuilt-themes/indigo-pink.css', watched: false,  included: false ,served: true},
       { pattern: './src/styles.scss', watched: false,  included: true, served: true },
       "node_modules/font-awesome/css/font-awesome.css",
@@ -50,7 +49,7 @@ module.exports = function (config) {
       }
     ],
     preprocessors: {
-      './src/test.ts': ['@angular/cli'],
+      
       './src/styles.scss': ['scss']
     },
     htmlReporter: {

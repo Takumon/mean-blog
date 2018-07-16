@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
+import 'rxjs';
 
 import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -29,7 +29,7 @@ describe('AppComponent', () => {
     isFinishedCheckState = true;
 
     checkState(): Observable<any> {
-      return Observable.of('token');
+      return of('token');
     }
     logout() {
       console.log('logout');

@@ -41,7 +41,7 @@
 
   <nav class="sub-nav-bar" [class.sub-nav-bar_edit]="editMode" mat-tab-nav-bar class="sub-nav-bar ink-bar-pink">
     <a mat-tab-link
-      class="sub-nav-bar__link"
+      class="sub-nav-bar__link first-link"
       [routerLink]="['/', user.userId, 'articles']"
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
@@ -55,7 +55,7 @@
       [routerLinkActiveOptions]="routerOptions"
       >コメント</a>
     <a mat-tab-link
-      class="sub-nav-bar__link"
+      class="sub-nav-bar__link last-link"
       [routerLink]="['/', user.userId, 'votes']"
       routerLinkActive #rla3="routerLinkActive"
       [active]="rla3.isActive"
@@ -116,7 +116,7 @@
           </div>
 
           <div class="data">
-            <mat-input-container class="data__input">
+            <mat-form-field class="data__input">
               <input
                 matInput
                 type="text"
@@ -125,11 +125,11 @@
                 formControlName="userId"
                 placeholder="ユーザID"
                 >
-            </mat-input-container>
+            </mat-form-field>
           </div>
 
           <div class="data">
-            <mat-input-container class="data__input">
+            <mat-form-field class="data__input">
               <input
                 matInput
                 type="text"
@@ -146,11 +146,11 @@
                     {{msg}}<br>
                   </ng-container>
                 </mat-error>
-            </mat-input-container>
+            </mat-form-field>
           </div>
 
           <div class="data">
-            <mat-input-container class="data__input">
+            <mat-form-field class="data__input">
               <input
                 matInput
                 type="text"
@@ -170,11 +170,11 @@
                     {{msg}}<br>
                   </ng-container>
                 </mat-error>
-            </mat-input-container>
+            </mat-form-field>
           </div>
 
           <div class="data">
-            <mat-input-container class="data__input">
+            <mat-form-field class="data__input">
               <input
                 matInput
                 type="text"
@@ -191,11 +191,11 @@
                     {{msg}}<br>
                   </ng-container>
                 </mat-error>
-            </mat-input-container>
+            </mat-form-field>
           </div>
 
           <div class="data">
-            <mat-input-container class="data__input">
+            <mat-form-field class="data__input">
               <textarea
                 matInput
                 type="text"
@@ -213,7 +213,7 @@
                     {{msg}}<br>
                   </ng-container>
                 </mat-error>
-            </mat-input-container>
+            </mat-form-field>
           </div>
 
         </form>

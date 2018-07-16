@@ -5,7 +5,7 @@
   class="form"
   >
   <div class="form__content">
-    <mat-input-container class="form__input-container">
+    <mat-form-field class="form__input-container">
       <input
         *ngIf="form"
         matInput
@@ -32,10 +32,10 @@
             {{msg}}<br>
           </ng-container>
         </mat-error>
-    </mat-input-container>
+    </mat-form-field>
 
     <ng-container formGroupName="passwordGroup">
-      <mat-input-container class="form__input-container">
+      <mat-form-field class="form__input-container">
         <input
           matInput
           type="password"
@@ -54,9 +54,9 @@
               {{msg}}<br>
             </ng-container>
           </mat-error>
-      </mat-input-container>
+      </mat-form-field>
 
-      <mat-input-container class="form__input-container" >
+      <mat-form-field class="form__input-container" >
         <input
           matInput
           type="password"
@@ -80,7 +80,7 @@
               {{msg}}<br>
             </ng-container>
           </mat-error>
-      </mat-input-container>
+      </mat-form-field>
     </ng-container>
   </div>
 

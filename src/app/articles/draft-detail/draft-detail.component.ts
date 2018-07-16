@@ -5,8 +5,8 @@ import {
   MatDialog,
   MatInputModule,
 } from '@angular/material';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
@@ -45,7 +45,7 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
 
   getDraft(): void {
     this.route.params
-    .takeUntil(this.onDestroy)
+    .pipe(takeUntil(this.onDestroy))
     .subscribe( params => {
       this.draftService.getById(params['_id'])
       .subscribe(draft => {

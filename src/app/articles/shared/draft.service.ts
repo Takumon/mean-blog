@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services/jwt.service';
@@ -97,8 +97,10 @@ export class DraftService {
    */
   canRegisterDraft(_id: string): Observable<boolean> {
     return this.get({ author: _id })
-            .map(drafts => drafts ? drafts.length : 0)
-            // MAX_DRAFT_COUNTちょうどの場合はこれ以上下書きを保存できないのでfalseとみなす
-            .map(count => count < this.Constant.MAX_DRAFT_COUNT);
+            .pipe(
+              map(drafts => drafts ? drafts.length : 0),
+              // MAX_DRAFT_COUNTちょうどの場合はこれ以上下書きを保存できないのでfalseとみなす
+              map(count => count < this.Constant.MAX_DRAFT_COUNT)
+            );
   }
 }

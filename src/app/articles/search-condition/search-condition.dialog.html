@@ -12,7 +12,7 @@
       <div class="data-label">
         <div>お気に入り検索条件名</div>
       </div>
-      <mat-input-container class="data-wrapper">
+      <mat-form-field class="data-wrapper">
         <input
           matInput
           type="text"
@@ -30,7 +30,7 @@
             {{msg}}<br>
           </ng-container>
         </mat-error>
-      </mat-input-container>
+      </mat-form-field>
 
 
 
@@ -143,7 +143,7 @@
           <mat-list class="user-select__list">
             <mat-progress-bar *ngIf="!(checkUserList || unCheckUserList)" mode="indeterminate"></mat-progress-bar>
             <ng-container *ngIf="checkUserList || unCheckUserList">
-              <mat-input-container class="user-select__list__search-condition">
+              <mat-form-field class="user-select__list__search-condition">
                 <i
                   matPrefix
                   class="fa fa-fw fa-search"
@@ -162,7 +162,7 @@
                   matTooltip="絞り込み条件をクリア"
                   class="clear-icon fa fa-fw fa-close"
                   (click)="searchUserId = null"></i>
-              </mat-input-container>
+              </mat-form-field>
               <mat-list-item
                 *ngFor="let checkinfo of (unCheckUserList | userIdSearchFilter: searchUserId)  ; trackBy: trackByUserList"
                 class="user" >

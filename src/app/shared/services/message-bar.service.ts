@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Rx';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
 
 import { MessageBarComponent } from '../components/message-bar.component';
 
@@ -20,11 +17,11 @@ export class MessageBarService {
       this.openSnackBar(
         error.errors.map(e => e.msg),
         { duration: 20000,
-          extraClasses: ['snackbar__validation']}
+          panelClass: ['snackbar__validation']}
       );
     }
 
-    return Observable.of(error);
+    return of(error);
   }
 
   openSnackBar(messages: Array<String> = [], configs: MatSnackBarConfig = { duration: 100000 }) {

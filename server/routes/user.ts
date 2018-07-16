@@ -10,7 +10,6 @@ import { User, UserDocument } from '../models/user.model';
 import { Image, ImageType } from '../models/image.model';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
-import { MappedError } from 'express-validator/shared-typings';
 import { sysError, multiReadSuccess, notFoundError, singleReadSuccess, validationError, cudSuccess } from '../helpers/response-util';
 
 const MODEL_NAME = 'ユーザ';

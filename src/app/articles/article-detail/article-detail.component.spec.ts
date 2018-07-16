@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
+import 'rxjs';
 import marked from 'marked';
 
 
@@ -62,7 +62,7 @@ describe('ArticleDetailComponent', () => {
     isFinishedCheckState = true;
 
     checkState(): Observable<any> {
-      return Observable.of('token');
+      return of('token');
     }
     logout() {
       console.log('logout');
@@ -84,7 +84,7 @@ describe('ArticleDetailComponent', () => {
   }
 
   class MockActivatedRoute {
-    params: Observable<Object> = Observable.of({
+    params: Observable<Object> = of({
       _id: '123456789099',
       userId: 'testUserId',
     });
@@ -107,7 +107,7 @@ describe('ArticleDetailComponent', () => {
           isAdmin: false
         },
       };
-      return Observable.of(model);
+      return of(model);
     }
   }
 
