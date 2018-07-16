@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
+import 'rxjs';
 
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -38,7 +38,7 @@ describe('ArticleDetailComponent', () => {
     isFinishedCheckState = true;
 
     checkState(): Observable<any> {
-      return Observable.of('token');
+      return of('token');
     }
     logout() {
       console.log('logout');
@@ -76,7 +76,7 @@ describe('ArticleDetailComponent', () => {
           isAdmin: false
         },
       };
-      return Observable.of(model);
+      return of(model);
     }
   }
 
@@ -101,7 +101,7 @@ describe('ArticleDetailComponent', () => {
           isAdmin: false
         },
       };
-      return Observable.of(model);
+      return of(model);
     }
   }
 
@@ -112,11 +112,11 @@ describe('ArticleDetailComponent', () => {
   }
 
   class MockActivatedRoute {
-    queryParams: Observable<Object> = Observable.of({
+    queryParams: Observable<Object> = of({
       resume: 'false',
     });
 
-    params: Observable<Object> = Observable.of({
+    params: Observable<Object> = of({
       _id: '123456789099',
     });
   }

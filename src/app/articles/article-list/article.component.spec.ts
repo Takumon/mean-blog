@@ -1,5 +1,5 @@
-import { Observable, Subscriber, Subject } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { of, Subscriber, Subject } from 'rxjs';
+import 'rxjs';
 import marked from 'marked';
 
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
@@ -348,7 +348,7 @@ describe('ArticleComponent', () => {
           updated: '2018-02-11T23:39:37.263Z'
         }];
 
-        return Observable.of(comments);
+        return of(comments);
       });
 
     count(comments: CommentWithUserModel[]): number {
@@ -390,7 +390,7 @@ describe('ArticleComponent', () => {
           });
         }
 
-        return Observable.of(voters);
+        return of(voters);
       }
     );
 
@@ -401,7 +401,7 @@ describe('ArticleComponent', () => {
           message: '記事にいいねしました。',
           obj: ['1234580000'],
         };
-        return Observable.of(article);
+        return of(article);
       }
     );
 
@@ -412,7 +412,7 @@ describe('ArticleComponent', () => {
           message: 'いいねを取り消しました。',
           obj: ['1234580000'],
         };
-        return Observable.of(article);
+        return of(article);
       }
     );
   }

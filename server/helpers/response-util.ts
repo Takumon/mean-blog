@@ -1,4 +1,3 @@
-import { MappedError } from 'express-validator/shared-typings';
 
 /**
  * 500エラー時のレスポンスを設定
@@ -25,7 +24,7 @@ function forbiddenError(res, errorResponse: { title: string; error?: string; } )
 /**
  * 入力チェックエラー時のレスポンスを設定
  */
-function validationError(res, errors: MappedError[] ): void {
+function validationError(res, errors ): void {
   res.status(400).json({ errors });
 }
 

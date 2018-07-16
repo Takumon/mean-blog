@@ -1,6 +1,4 @@
 import { MatPaginatorIntl } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 
 
 export class PaginatorService extends MatPaginatorIntl {

@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable, of, throwError } from 'rxjs';
+import 'rxjs';
 
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,7 +36,7 @@ describe('ReplyFormComponent', () => {
     isFinishedCheckState = true;
 
     checkState(): Observable<any> {
-      return Observable.of('token');
+      return of('token');
     }
     logout() {
       console.log('logout');
@@ -151,8 +151,8 @@ describe('ReplyFormComponent', () => {
       beforeEach(() => {
         spyOfUpsert = spyOn(comp, 'upsert').and.callThrough();
         replyService = de.injector.get(ReplyService);
-        spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
-        spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+        spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(of(new ReplyModel()));
+        spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(of(new ReplyModel()));
         // 登録ボタン押下前
         expect(comp.model._id).toEqual(undefined);
         expect(comp.model.articleId).toEqual(undefined);
@@ -239,8 +239,8 @@ describe('ReplyFormComponent', () => {
 
         describe('登録に成功する場合', () => {
           beforeEach(() => {
-            spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
-            spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+            spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(of(new ReplyModel()));
+            spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(of(new ReplyModel()));
             const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
             $upsertBtn.triggerEventHandler('click', null);
           });
@@ -297,7 +297,7 @@ describe('ReplyFormComponent', () => {
 
           describe('リプライコメントの入力チェックエラー2件の場合', () => {
             beforeEach(() => {
-              spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.throw({
+              spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(throwError({
                 errors: [
                   {
                     param: 'text',
@@ -309,7 +309,7 @@ describe('ReplyFormComponent', () => {
                   }
                 ]
               }));
-              spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+              spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(of(new ReplyModel()));
               const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
               $upsertBtn.triggerEventHandler('click', null);
             });
@@ -346,7 +346,7 @@ describe('ReplyFormComponent', () => {
             beforeEach(() => {
               messageBarService = de.injector.get(MessageBarService);
               spyOfshowValidationErrorOfMessageBarService = spyOn(messageBarService, 'showValidationError').and.callThrough();
-              spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.throw({
+              spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(throwError({
                 errors: [
                   {
                     param: 'common',
@@ -358,7 +358,7 @@ describe('ReplyFormComponent', () => {
                   }
                 ]
               }));
-              spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+              spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(of(new ReplyModel()));
               const $upsertBtn: DebugElement  = fixture.debugElement.queryAll(By.css('.comment-form__operation button'))[0];
               $upsertBtn.triggerEventHandler('click', null);
             });
@@ -526,8 +526,8 @@ describe('ReplyFormComponent', () => {
 
         spyOfUpsert = spyOn(comp, 'upsert').and.callThrough();
         replyService = de.injector.get(ReplyService);
-        spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(Observable.of(new ReplyModel()));
-        spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(Observable.of(new ReplyModel()));
+        spyOfRegisterOfReplyService = spyOn(replyService, 'register').and.returnValue(of(new ReplyModel()));
+        spyOfUpdateOfReplyService = spyOn(replyService, 'update').and.returnValue(of(new ReplyModel()));
         snackbar = de.injector.get(MatSnackBar);
         spyOfOpenOfSnackbar = spyOn(snackbar, 'open');
 

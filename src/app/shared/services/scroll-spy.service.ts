@@ -1,12 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/auditTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/takeUntil';
+import { Observable, fromEvent, Subject, ReplaySubject, pipe } from 'rxjs';
+import { auditTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import { ScrollService } from './scroll.service';
 
@@ -124,9 +119,9 @@ export class ScrollSpiedElementGroup {
 export class ScrollSpyService {
   private spiedElementGroups: ScrollSpiedElementGroup[] = [];
   private onStopListening = new Subject();
-  private resizeEvents = Observable.fromEvent(window, 'resize').auditTime(300).takeUntil(this.onStopListening);
+  private resizeEvents = fromEvent(window, 'resize').pipe(auditTime(300), takeUntil(this.onStopListening));
   // 同期性を重視してauditTimeは設定しない
-  private scrollEvents = Observable.fromEvent(window, 'scroll').takeUntil(this.onStopListening);
+  private scrollEvents = fromEvent(window, 'scroll').pipe(takeUntil(this.onStopListening));
   private lastContentHeight: number;
   private lastMaxScrollTop: number;
 
@@ -162,7 +157,7 @@ export class ScrollSpyService {
     this.spiedElementGroups.push(spiedGroup);
 
     return {
-      active: spiedGroup.activeScrollItem.asObservable().distinctUntilChanged(),
+      active: spiedGroup.activeScrollItem.asObservable().pipe(distinctUntilChanged()),
       unspy: () => this.unspy(spiedGroup)
     };
   }

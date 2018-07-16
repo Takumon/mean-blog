@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 import { ImageModel } from '../../shared/models/image.model';
 
@@ -34,7 +34,7 @@ export class ImageService {
     return this.http.request('post', URL, { body });
   }
 
-  delete(_id: string): Observable<any> {
+  delete(_id: string): Observable<Object> {
     const URL = `${this.baseUrl}/${_id}`;
 
     return this.http.delete(URL);

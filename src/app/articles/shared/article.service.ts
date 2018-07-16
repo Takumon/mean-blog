@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import 'rxjs';
 
 import { Constant } from '../../shared/constant';
 

@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LocalStorageService } from './services/local-storage.service';
 import { AuthenticationService } from './services/authentication.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
 
 
 @Injectable()
@@ -20,12 +22,14 @@ export class AdminAuthGuard implements CanActivate {
 
     // 未認証時は認証チェックして判断する
     return this.auth.checkState()
-      .map(res => this.authorizedRouting(state))
-      .catch(err => {
-        // 未妊省の状態なのでログイン画面に遷移させる
-        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
-        return Observable.of(false);
-      });
+      .pipe(
+        map(res => this.authorizedRouting(state)),
+        catchError(err => {
+          // 未妊省の状態なのでログイン画面に遷移させる
+          this.router.navigate(['/login'], { queryParams: { returnUrl: state.url }});
+          return of(false);
+        })
+      );
   }
 
   authorizedRouting(state: RouterStateSnapshot): boolean {

@@ -11,7 +11,7 @@
         {{msg}}<br>
       </ng-container>
     </div>
-    <mat-input-container class="form__input-container">
+    <mat-form-field class="form__input-container">
       <input
         *ngIf="form"
         matInput
@@ -29,9 +29,9 @@
             {{msg}}<br>
           </ng-container>
         </mat-error>
-    </mat-input-container>
+    </mat-form-field>
 
-    <mat-input-container class="form__input-container">
+    <mat-form-field class="form__input-container">
       <input
         matInput
         type="password"
@@ -47,7 +47,7 @@
             {{msg}}<br>
           </ng-container>
         </mat-error>
-    </mat-input-container>
+    </mat-form-field>
   </div>
 
   <div class="form__operation">

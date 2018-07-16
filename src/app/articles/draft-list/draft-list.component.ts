@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
@@ -41,7 +41,7 @@ export class DraftListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.draftSharedService.changeEmitted$
-    .takeUntil(this.onDestroy)
+    .pipe(takeUntil(this.onDestroy))
     .subscribe(text => {
       const isRefresh = true;
       this.getDrafts(isRefresh);

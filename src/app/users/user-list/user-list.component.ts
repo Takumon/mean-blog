@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Constant } from '../../shared/constant';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 
@@ -161,7 +160,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   private getUser(): void {
     this.userService.get()
-    .takeUntil(this.onDestroy)
+    .pipe(takeUntil(this.onDestroy))
     .subscribe(users => {
       this.users = users;
       this.showPrograssBar = false;

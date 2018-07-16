@@ -8,9 +8,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 import * as moment from 'moment';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
@@ -86,7 +85,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   /** 検索結果件数 */
   public count: number;
 
-  private onDestroy = new Subject();
+  private destroyed$ = new Subject();
   private mode;
 
   constructor(
@@ -102,7 +101,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.data
-    .takeUntil(this.onDestroy)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data: any) => {
       // モードを保持
       this.mode = data['mode'];
@@ -120,7 +119,8 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.onDestroy.next();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 
   /**
@@ -283,13 +283,15 @@ export class ArticleListComponent implements OnInit, OnDestroy {
 
       case ArticleSearchMode.USER:
         this.route.parent.params
-        .takeUntil(this.onDestroy)
+        .pipe(takeUntil(this.destroyed$))
         .subscribe( params => cb({author: { userId: params['_userId'] }}));
         break;
 
       case ArticleSearchMode.VOTER:
         this.route.parent.params
-        .takeUntil(this.onDestroy)
+        .pipe(
+          takeUntil(this.destroyed$)
+        )
         .subscribe( params => {
           this.userService
           .getById(params['_userId'])

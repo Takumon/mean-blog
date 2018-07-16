@@ -13,10 +13,8 @@ import {
   MatSnackBar,
   MatDialog,
 } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/Rx';
+import { Observable, Subject, of } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
@@ -40,7 +38,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
   public article: ArticleWithUserModel;
   public text: string;
-  public showToc: Observable<Boolean> = Observable.of(false);
+  public showToc: Observable<Boolean> = of(false);
   public toc: string;
   public baseUrl: string;
 
@@ -73,13 +71,16 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   // ハッシュタグで指定したタグまでスクロールする
   ngAfterViewInit(): void {
     this.showToc = this.markdownTexts.changes
-      .takeUntil(this.onDestroy)
-      .map((change: any) => !!change);
+      .pipe(
+        takeUntil(this.onDestroy),
+        map((change: any) => !!change)
+      );
   }
 
 
   ngOnDestroy(): void {
     this.onDestroy.next();
+    this.onDestroy.complete();
   }
 
 

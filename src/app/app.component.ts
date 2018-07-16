@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 import { Constant } from './shared/constant';
 import { AuthenticationService } from './shared/services/authentication.service';

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
@@ -38,7 +38,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.parent.params
-    .takeUntil(this.onDestroy)
+    .pipe(takeUntil(this.onDestroy))
     .subscribe( params => {
       const userId = params['_userId'];
       this.getUser(userId);

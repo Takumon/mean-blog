@@ -11,7 +11,6 @@ import * as ENV from '../environment-config';
 import { PasswordManager } from '../helpers/password-manager';
 import { validateHelper as v } from '../helpers/validate-helper';
 import { sysError, validationError, cudSuccess, forbiddenError } from '../helpers/response-util';
-import { MappedError } from 'express-validator/shared-typings';
 
 const router: Router = Router();
 

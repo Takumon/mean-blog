@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule　} from '@angular/forms';
 
 import {
   ErrorStateMatcher,
-  MAT_PLACEHOLDER_GLOBAL_OPTIONS,
+  MAT_LABEL_GLOBAL_OPTIONS,
 
   MatToolbarModule,
   MatProgressBarModule,
@@ -83,7 +83,7 @@ import { Error500Component } from './components/error-500.component';
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher},
-    {provide: MAT_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'auto'}},
+    {provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'auto'}},
   ],
   entryComponents: [
     ConfirmDialogComponent,

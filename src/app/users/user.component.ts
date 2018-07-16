@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   ReactiveFormsModule,
   FormsModule,
@@ -60,7 +60,7 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeNamesService.name.next('');
     this.route.params
-    .takeUntil(this.onDestroy)
+    .pipe(takeUntil(this.onDestroy))
     .subscribe( params => {
       this.param_userId = params['_userId'];
       this.getUser(this.param_userId);

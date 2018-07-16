@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/Rx';
+import { of } from 'rxjs';
+import 'rxjs';
 
 import { ActivatedRoute, Data } from '@angular/router';
 
@@ -99,7 +99,7 @@ describe('ArticleListComponent', () => {
           count: 0,
           articles: createModels(0)
         };
-        return Observable.of(articles);
+        return of(articles);
       }
     );
   }
@@ -111,7 +111,7 @@ describe('ArticleListComponent', () => {
           count: 201,
           articles: createModels(20)
         };
-        return Observable.of(articles);
+        return of(articles);
       }
     );
   }
@@ -139,7 +139,7 @@ describe('ArticleListComponent', () => {
   class MockUserService {
     getById = jasmine.createSpy('getById').and.callFake(
       (userId) => {
-        return Observable.of({_id: '1234580000'});
+        return of({_id: '1234580000'});
       }
     );
   }
@@ -182,7 +182,7 @@ describe('ArticleListComponent', () => {
           {
             provide: ActivatedRoute,
             useValue: {
-              data: Observable.of({mode: 100}) // ModeがALL
+              data: of({mode: 100}) // ModeがALL
             }
           },
           ScrollService,
@@ -237,7 +237,7 @@ describe('ArticleListComponent', () => {
           {
             provide: ActivatedRoute,
             useValue: {
-              data: Observable.of({mode: 100}) // ModeがALL
+              data: of({mode: 100}) // ModeがALL
             }
           },
           ScrollService,
@@ -910,11 +910,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 300}) // ModeがUSER
+              data: of({mode: 300}) // ModeがUSER
             }
           },
           ScrollService,
@@ -975,11 +975,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 300}) // ModeがUSER
+              data: of({mode: 300}) // ModeがUSER
             }
           },
           ScrollService,
@@ -1040,11 +1040,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 400}) // ModeがVOTER
+              data: of({mode: 400}) // ModeがVOTER
             }
           },
           ScrollService,
@@ -1109,11 +1109,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 400}) // ModeがVOTER
+              data: of({mode: 400}) // ModeがVOTER
             }
           },
           ScrollService,
@@ -1175,11 +1175,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 200}) // ModeがFAVORITE
+              data: of({mode: 200}) // ModeがFAVORITE
             }
           },
           ScrollService,
@@ -1245,11 +1245,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 200}) // ModeがFAVORITE
+              data: of({mode: 200}) // ModeがFAVORITE
             }
           },
           ScrollService,
@@ -1317,11 +1317,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 200}) // ModeがFAVORITE
+              data: of({mode: 200}) // ModeがFAVORITE
             }
           },
           ScrollService,
@@ -1391,11 +1391,11 @@ describe('ArticleListComponent', () => {
             provide: ActivatedRoute,
             useValue: {
               parent: {
-                params: Observable.of({
+                params: of({
                   _userId: 'testUser1',
                 })
               },
-              data: Observable.of({mode: 200}) // ModeがFAVORITE
+              data: of({mode: 200}) // ModeがFAVORITE
             }
           },
           ScrollService,

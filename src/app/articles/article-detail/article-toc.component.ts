@@ -5,8 +5,8 @@ import {
   Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject, ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import { TocService } from '../../shared/services/toc.service';
@@ -57,13 +57,13 @@ export class ArticleTocComponent implements OnInit, OnDestroy {
       // スクロールイベントを開始する
       let isFirst = true;
       this.route.fragment
-      .takeUntil(this.onDestroy)
+      .pipe(takeUntil(this.onDestroy))
       .subscribe((fragment: string) => {
         this.scrollToAnchor(fragment);
         if (isFirst) {
           isFirst = false;
           this.tocService.activeItemIndex
-          .takeUntil(this.onDestroy)
+          .pipe(takeUntil(this.onDestroy))
           .subscribe(index => {
             this.activeIndex = index;
           });
@@ -77,13 +77,13 @@ export class ArticleTocComponent implements OnInit, OnDestroy {
       // 明示的に初期化する
       this.scrollService.scrollToTop();
       this.tocService.activeItemIndex
-      .takeUntil(this.onDestroy)
+      .pipe(takeUntil(this.onDestroy))
       .subscribe(index => {
         this.activeIndex = index;
       });
 
       this.route.fragment
-      .takeUntil(this.onDestroy)
+      .pipe(takeUntil(this.onDestroy))
       .subscribe((fragment: string) => {
         this.scrollToAnchor(fragment);
       });

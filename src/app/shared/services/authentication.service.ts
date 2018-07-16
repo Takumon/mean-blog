@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError } from 'rxjs';
 import { UserModel } from '../../users/shared/user.model';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { map, catchError } from 'rxjs/operators';
 
 import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
 import { CudSuccessModel } from '../models/response/cud-success.model';
@@ -46,7 +44,9 @@ export class AuthenticationService {
 
     return this.http
       .post<LoginSuccessInfo>(URL, user)
-      .map((res: LoginSuccessInfo) => this.setToken(res) );
+      .pipe(
+        map((res: LoginSuccessInfo) => this.setToken(res))
+      );
   }
 
 
@@ -59,7 +59,7 @@ export class AuthenticationService {
 
     return this.http
       .post<Object>(URL, user)
-      .map((res: LoginSuccessInfo) => this.setToken(res) );
+      .pipe(map((res: LoginSuccessInfo) => this.setToken(res) ));
   }
 
   changePassword(passwordInfo: {
@@ -74,11 +74,13 @@ export class AuthenticationService {
 
     return this.http
       .put<CudSuccessModel<UserModel>>(URL, passwordInfo)
-      .map(res => {
-        // tokenはパスワードに依存しないのでユーザ情報だけを更新する
-        this.loginUser = res.obj;
-        return res;
-      });
+      .pipe(
+        map(res => {
+          // tokenはパスワードに依存しないのでユーザ情報だけを更新する
+          this.loginUser = res.obj;
+          return res;
+        })
+      );
   }
 
   checkState(): Observable<CheckStateInfo> {
@@ -86,11 +88,13 @@ export class AuthenticationService {
 
     return this.http
       .get<CheckStateInfo>(URL)
-      .map(res => this.setToken(res))
-      .catch(res => {
-        this.isFinishedCheckState = true;
-        return Observable.throw(res);
-      });
+      .pipe(
+        map(res => this.setToken(res)),
+        catchError(res => {
+          this.isFinishedCheckState = true;
+          return throwError(res);
+        })
+      );
   }
 
 
