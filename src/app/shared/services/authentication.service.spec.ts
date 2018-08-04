@@ -273,7 +273,7 @@ describe('SearchConditionService', () => {
 
 
     const req = httpMock.expectOne((request: HttpRequest<any>) => {
-      return request.url === '/api/authenticate/changePassword';
+      return request.url === '/api/authenticate/changepassword';
     });
 
     expect(req.request.method).toEqual('PUT');
