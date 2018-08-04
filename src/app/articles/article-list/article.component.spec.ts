@@ -2,6 +2,10 @@ import { of, Subscriber, Subject } from 'rxjs';
 import 'rxjs';
 import marked from 'marked';
 
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CommentModel } from '../shared/comment.model';
@@ -15,7 +19,6 @@ import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
-import { MarkdownParsePipe } from '../../shared/pipes/markdown-parse.pipe';
 import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from '../shared/exclude-deleted-voter.pipe';
 import { APP_BASE_HREF } from '@angular/common';
@@ -449,11 +452,12 @@ describe('ArticleComponent', () => {
           MockCommentFormComponent,
           MockCommentListComponent,
           MockVoterListComponent,
-          MarkdownParsePipe,
           ExcludeDeletedCommentPipe,
           ExcludeDeletedVoterPipe,
         ],
         imports: [
+          BrowserAnimationsModule,
+          RouterTestingModule,
           SharedModule
         ],
         providers: [
@@ -791,11 +795,12 @@ describe('ArticleComponent', () => {
           MockCommentFormComponent,
           MockCommentListComponent,
           MockVoterListComponent,
-          MarkdownParsePipe,
           ExcludeDeletedCommentPipe,
           ExcludeDeletedVoterPipe,
         ],
         imports: [
+          BrowserAnimationsModule,
+          RouterTestingModule,
           SharedModule
         ],
         providers: [
@@ -847,11 +852,12 @@ describe('ArticleComponent', () => {
           MockCommentFormComponent,
           MockCommentListComponent,
           MockVoterListComponent,
-          MarkdownParsePipe,
           ExcludeDeletedCommentPipe,
           ExcludeDeletedVoterPipe,
         ],
         imports: [
+          BrowserAnimationsModule,
+          RouterTestingModule,
           SharedModule
         ],
         providers: [
