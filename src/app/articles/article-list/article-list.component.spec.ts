@@ -2,6 +2,7 @@ import { of } from 'rxjs';
 import 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -157,6 +158,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -213,6 +215,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -884,6 +887,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -949,6 +953,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1014,6 +1019,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1083,6 +1089,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1147,6 +1154,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1217,6 +1225,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1289,6 +1298,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1363,6 +1373,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
