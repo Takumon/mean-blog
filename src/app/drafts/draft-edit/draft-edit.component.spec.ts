@@ -18,7 +18,6 @@ import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 
-import { MarkdownParsePipe } from '../../shared/pipes/markdown-parse.pipe';
 import { DraftEditComponent } from './draft-edit.component';
 import { ArticleService } from '../../articles/shared/article.service';
 import { ArticleWithUserModel } from '../../articles/shared/article-with-user.model';
@@ -128,7 +127,6 @@ describe('DraftDetailComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         DraftEditComponent,
-        MarkdownParsePipe,
       ],
       imports: [
         RouterTestingModule,
