@@ -2,6 +2,7 @@ import { Observable, of } from 'rxjs';
 import 'rxjs';
 
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
@@ -219,6 +220,7 @@ describe('CommentListComponent', () => {
         CommentListComponent,
       ],
       imports: [
+        RouterTestingModule,
         SharedModule,
       ],
       providers: [

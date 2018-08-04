@@ -3,6 +3,7 @@ import 'rxjs';
 import marked from 'marked';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement, Component, Input } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
@@ -10,11 +11,8 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
-import { MarkdownParsePipe } from '../../shared/pipes/markdown-parse.pipe';
-import { SafeHtmlPipe } from '../../shared/pipes/safe-html.pipe';
 import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
 
-import { OrderByPipe } from '../../shared/pipes/orderby.pipe';
 import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from '../shared/exclude-deleted-voter.pipe';
 
@@ -122,13 +120,11 @@ describe('ArticleDetailComponent', () => {
         MockCommentListComponent,
         MockArticleTocComponent,
 
-        MarkdownParsePipe,
-        OrderByPipe,
         ExcludeDeletedCommentPipe,
         ExcludeDeletedVoterPipe,
-        SafeHtmlPipe,
       ],
       imports: [
+        RouterTestingModule,
         SharedModule,
       ],
       providers: [

@@ -2,6 +2,7 @@ import { Observable, of } from 'rxjs';
 import 'rxjs';
 
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement, Component, Input } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
@@ -22,6 +23,7 @@ import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
 import { ReplyModel } from '../shared/reply.model';
+import { BrowserAnimationsModule } from '../../../../node_modules/@angular/platform-browser/animations';
 
 describe('CommentListComponent', () => {
 
@@ -139,6 +141,8 @@ describe('CommentListComponent', () => {
         ExcludeDeletedCommentPipe,
       ],
       imports: [
+        BrowserAnimationsModule,
+        RouterTestingModule,
         SharedModule,
       ],
       providers: [
