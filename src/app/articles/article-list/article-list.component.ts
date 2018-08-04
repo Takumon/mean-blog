@@ -90,6 +90,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     public paginatorService: MatPaginatorIntl,
     public auth: AuthenticationService,
     private userService: UserService,
+    private scrollService: ScrollService
   ) {
   }
 
