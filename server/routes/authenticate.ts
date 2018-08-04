@@ -171,7 +171,7 @@ function isCollectPassword(password, {req}) {
 }
 
 
-router.put('/changePassword', [
+router.put('/changepassword', [
   body('_id')
     .not().isEmpty().withMessage(v.message(v.MESSAGE_KEY.required, ['ユーザID']))
     .custom(v.validation.isExistedUser).withMessage(v.message(v.MESSAGE_KEY.not_existed, ['ユーザID'])),

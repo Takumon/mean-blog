@@ -6,20 +6,23 @@
   </mat-toolbar>
 
 
+  <ng-container *ngIf="passwordChageMode">
+    <app-password-form
+      (complete)='goNextPage("パスワードを変更しました。")'
+      ></app-password-form>
+  </ng-container>
 
-  <app-password-form
-    *ngIf="passwordChageMode"
-    (complete)='goNextPage("パスワードを変更しました。")'
-    ></app-password-form>
+  <ng-container *ngIf="!passwordChageMode && isLoginMode">
+    <app-login-form
+      (changeLoginMode)="setLoginMode(false)"
+      (complete)="goNextPage()"
+      ></app-login-form>
+  </ng-container>
 
-  <app-login-form
-    *ngIf="!passwordChageMode && isLoginMode"
-    (changeLoginMode)="setLoginMode(false)"
-    (complete)="goNextPage()"
-    ></app-login-form>
-  <app-register-form
-    *ngIf="!passwordChageMode && !isLoginMode"
-    (changeLoginMode)="setLoginMode(true)"
-    (complete)="goNextPage()"
-    ></app-register-form>
+  <ng-container *ngIf="!passwordChageMode && !isLoginMode">
+    <app-register-form
+      (changeLoginMode)="setLoginMode(true)"
+      (complete)="goNextPage('Material Blogへようこそ！')"
+      ></app-register-form>
+  </ng-container>
 </mat-card>

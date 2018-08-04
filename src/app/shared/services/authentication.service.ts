@@ -68,7 +68,7 @@ export class AuthenticationService {
     newConfirmPassword: string
   }): Observable<CudSuccessModel<UserModel>> {
 
-    const URL = `${this.base_url}/changePassword`;
+    const URL = `${this.base_url}/changepassword`;
 
     passwordInfo['_id'] = this.loginUser._id;
 

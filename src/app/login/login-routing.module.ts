@@ -6,11 +6,11 @@ import { LoginComponent } from './login.component';
 
 const routes: Routes = [
   {
-    path: 'login',
+    path: '',
     component: LoginComponent
   },
   {
-    path: 'passwordChange',
+    path: 'loginoptions/passwordchange',
     component: LoginComponent,
     canActivate: [AuthGuard],
   },

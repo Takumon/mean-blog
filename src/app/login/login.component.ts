@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   ) {
     const url: String = this.router.url;
     // パスワード変更の場合はログインしたまま表示する
-    if (url !== '/passwordChange') {
+    if (url !== '/login/loginoptions/passwordchange') {
       this.authenticationService.logout();
     }
   }
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
     const url: String = this.router.url;
 
     // パスワード変更
-    if (url === '/passwordChange') {
+    if (url === '/login/loginoptions/passwordchange') {
       this.passwordChageMode = true;
       this.returnUrl = '/';
       return;
