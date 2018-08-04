@@ -8,6 +8,12 @@ import { DraftEditComponent } from './draft-edit/draft-edit.component';
 
 const routes: Routes = [
   {
+    path: 'new',
+    component: DraftEditComponent,
+    canActivate: [AuthGuard]
+  },
+
+  {
     path: '',
     component: DraftListComponent,
     canActivate: [AuthGuard],
@@ -18,11 +24,6 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       }
     ]
-  },
-  {
-    path: 'new',
-    component: DraftEditComponent,
-    canActivate: [AuthGuard]
   },
   {
     path: ':_id/edit',
