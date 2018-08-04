@@ -1,8 +1,8 @@
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { UserModel } from '../../users/shared/user.model';
+import { UserModel } from './user.model';
 import { UserService } from './user.service';
 import { CudSuccessModel } from '../../shared/models/response/cud-success.model';
 
@@ -166,7 +166,7 @@ describe('UserService', () => {
     };
 
 
-    const arg_id = '123456789011';
+    // const arg_id = '123456789011';
 
     const arg_model = new UserModel();
     arg_model.userId = '123456789044',

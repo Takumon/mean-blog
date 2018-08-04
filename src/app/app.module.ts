@@ -6,7 +6,6 @@ import {
 import { Router } from '@angular/router';
 import 'hammerjs';
 
-import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,7 +25,17 @@ import { TocService } from './shared/services/toc.service';
 import { AuthGuard } from './shared/auth.guard';
 import { AdminAuthGuard } from './shared/admin-auth.guard';
 
+
+import { MarkdownParseService } from './shared/services/markdown-parse.service';
+import { MessageService } from './shared/services/message.service';
+import { MessageBarService } from './shared/services/message-bar.service';
+import { ImageService } from './shared/services/image.service';
+
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
+import { SharedModule } from './shared/shared.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -34,13 +43,13 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
   ],
   imports: [
     HttpClientModule,
-
-    SharedModule,
-
     AppRoutingModule,
     LoginModule,
     ArticlesModule,
     UsersModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule,
   ],
   providers: [
     ScrollSpyService,
@@ -53,6 +62,13 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
     AuthGuard,
     AdminAuthGuard,
     ErrorStateMatcherContainParentGroup,
+
+    MessageService,
+    MessageBarService,
+    AuthenticationService,
+    RouteNamesService,
+    ImageService,
+    MarkdownParseService,
     {
       provide: ErrorStateMatcher,
       useClass: CustomErrorStateMatcher

@@ -1,22 +1,19 @@
 import { Observable, of } from 'rxjs';
 import 'rxjs';
 
-import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
+import { UserModel } from '../shared/user.model';
 
 import { CommentListComponent } from './comment-list.component';
-import { ArticleWithUserModel } from '../../articles/shared/article-with-user.model';
 import { CommentService } from '../../articles/shared/comment.service';
 import { CommentModel } from '../../articles/shared/comment.model';
 import { CommentWithUserModel } from '../../articles/shared/comment-with-user.model';
@@ -223,6 +220,7 @@ describe('CommentListComponent', () => {
         CommentListComponent,
       ],
       imports: [
+        RouterTestingModule,
         SharedModule,
       ],
       providers: [

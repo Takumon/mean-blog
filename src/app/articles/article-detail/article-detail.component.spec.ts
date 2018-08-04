@@ -2,40 +2,31 @@ import { Observable, of } from 'rxjs';
 import 'rxjs';
 import marked from 'marked';
 
-
-
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
+import { DebugElement, Component, Input } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { By } from '@angular/platform-browser';
-import { MatSnackBar, MatDialog, ErrorStateMatcher } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
+import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
 
-import { MarkdownParsePipe } from '../shared/markdown-parse.pipe';
-import { OrderByPipe } from '../shared/orderby.pipe';
 import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from '../shared/exclude-deleted-voter.pipe';
-import { SafeHtmlPipe } from '../shared/safe-html.pipe';
 
 
-import { Constant } from '../../shared/constant';
 import { MessageBarService } from '../../shared/services/message-bar.service';
-import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 
 
 import { ArticleDetailComponent } from './article-detail.component';
-import { MarkdownParseService } from '../shared/markdown-parse.service';
 import { ArticleService } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { ArticleModel } from '../shared/article.model';
 import { RouteNamesService } from '../../shared/services/route-names.service';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
 describe('ArticleDetailComponent', () => {
 
@@ -129,13 +120,11 @@ describe('ArticleDetailComponent', () => {
         MockCommentListComponent,
         MockArticleTocComponent,
 
-        MarkdownParsePipe,
-        OrderByPipe,
         ExcludeDeletedCommentPipe,
         ExcludeDeletedVoterPipe,
-        SafeHtmlPipe,
       ],
       imports: [
+        RouterTestingModule,
         SharedModule,
       ],
       providers: [

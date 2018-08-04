@@ -1,5 +1,5 @@
 import { UserModel } from '../../users/shared/user.model';
-import { ReplyWithUserModel } from '../shared/reply-with-user.model';
+import { ReplyWithUserModel } from './reply-with-user.model';
 
 /**
  * コメント(コメントしたユーザ情報、リプライ情報を含む)のモデル

@@ -1,20 +1,13 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import {
-  ReactiveFormsModule,
-  FormsModule,
   FormGroup,
-  FormGroupDirective,
   FormControl,
-  NgForm,
   Validators,
   FormBuilder,
 } from '@angular/forms';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
-
-import { UserModel } from '../../users/shared/user.model';
-
 
 @Component({
   selector: 'app-password-form',

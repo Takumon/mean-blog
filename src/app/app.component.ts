@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { Constant } from './shared/constant';
 import { AuthenticationService } from './shared/services/authentication.service';
 import { RouteNamesService } from './shared/services/route-names.service';
-import { UserModel } from './users/shared/user.model';
-import { NavLinkModel } from './shared/models/nav-link.model';
 import { ScrollService } from './shared/services/scroll.service';
 
 

@@ -1,23 +1,21 @@
 import { of } from 'rxjs';
 import 'rxjs';
 
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ComponentFixture, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { By } from '@angular/platform-browser';
-import { MatSnackBar, ErrorStateMatcher, MatPaginatorIntl } from '@angular/material';
+import { ErrorStateMatcher, MatPaginatorIntl } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 
 import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
-import { Constant } from '../../shared/constant';
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 
@@ -29,7 +27,6 @@ import { PaginatorService } from '../../shared/services/paginator.service';
 import { UserService } from '../../users/shared/user.service';
 import { ArticleModel } from '../shared/article.model';
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
-import { SearchCondition } from '../../../../server/models/search-condition.model';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { SearchConditionService } from '../shared/search-condition.service';
 
@@ -161,6 +158,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -217,6 +215,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -888,6 +887,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -953,6 +953,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1018,6 +1019,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1087,6 +1089,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1151,6 +1154,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1221,6 +1225,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1293,6 +1298,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],
@@ -1367,6 +1373,7 @@ describe('ArticleListComponent', () => {
           MockSearchConditionComponent,
         ],
         imports: [
+          BrowserAnimationsModule,
           RouterTestingModule,
           SharedModule,
         ],

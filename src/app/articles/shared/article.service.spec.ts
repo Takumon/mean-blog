@@ -1,10 +1,9 @@
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ArticleService } from './article.service';
 import { ArticleModel } from './article.model';
-import { ArticleComponent } from '../article-list/article.component';
 import { UserModel } from '../../users/shared/user.model';
 
 

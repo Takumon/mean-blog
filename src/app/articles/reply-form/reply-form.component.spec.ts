@@ -4,6 +4,7 @@ import 'rxjs';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { By } from '@angular/platform-browser';
@@ -21,8 +22,6 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { ReplyService } from '../shared/reply.service';
 import { ReplyModel } from '../shared/reply.model';
 import { UserModel } from '../../users/shared/user.model';
-import { ReplyWithUserModel } from '../shared/reply-with-user.model';
-import { ReplyWithArticleModel } from '../shared/reply-with-article.model';
 
 import { ReplyFormComponent } from './reply-form.component';
 
@@ -72,6 +71,7 @@ describe('ReplyFormComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ReplyFormComponent ],
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         SharedModule,
       ],

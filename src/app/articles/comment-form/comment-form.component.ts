@@ -8,10 +8,7 @@ import {
   AfterViewChecked
 } from '@angular/core';
 import {
-  ReactiveFormsModule,
-  FormsModule,
   FormGroup,
-  FormGroupDirective,
   FormControl,
   NgForm,
   Validators,

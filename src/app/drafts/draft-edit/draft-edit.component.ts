@@ -5,10 +5,7 @@ import {
   ViewChild,
   HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import {
-  ReactiveFormsModule,
-  FormsModule,
   FormGroup,
   FormGroupDirective,
   FormControl,
@@ -29,22 +26,24 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { RouteNamesService } from '../../shared/services/route-names.service';
 import { MessageService } from '../../shared/services/message.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { ArticleModel } from '../shared/article.model';
-import { ArticleService } from '../shared/article.service';
+
+import { ArticleWithUserModel } from '../../articles/shared/article-with-user.model';
+import { ArticleModel } from '../../articles/shared/article.model';
+import { ArticleService } from '../../articles/shared/article.service';
+
 import { DraftModel } from '../shared/draft.model';
 import { DraftService } from '../shared/draft.service';
-import { EditMode } from './edit-mode.enum';
+import { EditMode } from './draft-edit-mode.enum';
 
 const IS_RESUME = 'resume';
 
 // TODO 処理に分岐が多すぎるのでリファクタしたい
 @Component({
-  selector: 'app-article-edit',
-  templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss'],
+  selector: 'app-draft-edit',
+  templateUrl: './draft-edit.component.html',
+  styleUrls: ['./draft-edit.component.scss'],
 })
-export class ArticleEditComponent implements OnInit {
+export class DraftEditComponent implements OnInit {
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
@@ -84,7 +83,6 @@ export class ArticleEditComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location,
     private fb: FormBuilder,
     public dialog: MatDialog,
 
@@ -141,7 +139,6 @@ export class ArticleEditComponent implements OnInit {
       this.action = '更新';
       this.routeNamesService.name.next(`下書きを${this.action}する`);
 
-      const withUser = true;
       this.draftService
       .getById(_id)
       .subscribe(draft => {

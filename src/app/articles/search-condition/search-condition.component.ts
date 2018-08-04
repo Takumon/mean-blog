@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import {
   MatSnackBar,
   MatDialog,
-  MatInputModule,
 } from '@angular/material';
 import * as moment from 'moment';
 
@@ -11,8 +10,6 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { LocalStorageService, LOCALSTORAGE_KEY } from '../../shared/services/local-storage.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-pattern.enum';
-
-import { UserModel } from '../../users/shared/user.model';
 
 import { SearchConditionService } from '../shared/search-condition.service';
 import { SearchConditionModel } from '../shared/search-condition.model';

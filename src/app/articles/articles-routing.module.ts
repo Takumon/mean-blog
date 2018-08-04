@@ -2,11 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ArticleListComponent, ArticleSearchMode } from './article-list/article-list.component';
-import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { ArticleDetailComponent } from './article-detail/article-detail.component';
-import { DraftListComponent } from './draft-list/draft-list.component';
-import { DraftDetailComponent } from './draft-detail/draft-detail.component';
-import { AuthGuard } from '../shared/auth.guard';
 
 const routes: Routes = [
   {
@@ -21,36 +17,13 @@ const routes: Routes = [
     data: {mode: ArticleSearchMode.ALL},
   },
   {
-    path: 'drafts/new',
-    component: ArticleEditComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'drafts',
-    component: DraftListComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: ':_id',
-        component: DraftDetailComponent,
-        canActivate: [AuthGuard]
-      }
-    ]
-  },
-  {
-    path: 'drafts/:_id/edit',
-    component: ArticleEditComponent,
-    canActivate: [AuthGuard]
-  },
-
-  {
     path: ':userId/articles/:_id',
     component: ArticleDetailComponent,
   },
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes, {enableTracing: true}) ],
+  imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ]
 })
 export class ArticlesRoutingModule {}

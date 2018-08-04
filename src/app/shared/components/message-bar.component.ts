@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   Inject,
   ViewEncapsulation
 } from '@angular/core';

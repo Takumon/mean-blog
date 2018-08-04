@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpParams} from '@angular/common/http';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import 'rxjs';
-
-import { Constant } from '../../shared/constant';
 
 import { ArticleModel } from './article.model';
 import { ArticleWithUserModel } from './article-with-user.model';
@@ -60,7 +58,6 @@ interface HttpOption {
 
 @Injectable()
 export class ArticleService {
-  private Constant = Constant;
   private baseUrl = '/api/articles';
 
   constructor(

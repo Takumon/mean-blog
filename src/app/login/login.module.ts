@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 
-import { SharedModule } from '../shared/shared.module';
-
 import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login.component';
 import { LoginFormComponent } from './loginForm/login-form.component';
 import { RegisterFormComponent } from './registerForm/register-form.component';
 import { PasswordFormComponent } from './passwordForm/password-form.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -19,7 +18,6 @@ import { PasswordFormComponent } from './passwordForm/password-form.component';
   ],
   imports: [
     LoginRoutingModule,
-
     SharedModule,
   ],
 })

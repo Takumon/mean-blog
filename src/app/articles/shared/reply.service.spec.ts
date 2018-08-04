@@ -1,4 +1,4 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
@@ -8,8 +8,6 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
 
 import { ReplyService } from './reply.service';
 import { ReplyModel } from './reply.model';
-import { ReplyWithUserModel } from './reply-with-user.model';
-import { ReplyWithArticleModel } from './reply-with-article.model';
 
 
 

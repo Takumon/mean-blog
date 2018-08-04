@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
@@ -51,8 +51,6 @@ describe('DraftService', () => {
     ];
 
     const arg_condition = {};
-    const arg_withUser = true;
-    const arg_withArtilce = true;
 
     service.get(arg_condition).subscribe((res: Array<DraftModel>) => {
       expect(res.length).toEqual(1);

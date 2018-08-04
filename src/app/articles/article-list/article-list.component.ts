@@ -2,7 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  ViewChild,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,12 +13,9 @@ import { takeUntil } from 'rxjs/operators';
 import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { LocalStorageService, LOCALSTORAGE_KEY } from '../../shared/services/local-storage.service';
 import { UserService } from '../../users/shared/user.service';
-import { UserModel } from '../../users/shared/user.model';
 import { ArticleService, Condition } from '../shared/article.service';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { SearchConditionComponent } from '../search-condition/search-condition.component';
 import { Constant } from '../../shared/constant';
 
 export enum ArticleSearchMode {
@@ -89,13 +85,12 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   private mode;
 
   constructor(
-    private scrollService: ScrollService,
-    private router: Router,
     private route: ActivatedRoute,
     private articleService: ArticleService,
     public paginatorService: MatPaginatorIntl,
     public auth: AuthenticationService,
     private userService: UserService,
+    private scrollService: ScrollService
   ) {
   }
 

@@ -1,15 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
-import { AuthenticationService } from '../../shared/services/authentication.service';
 
 import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
 import { CommentService } from '../../articles/shared/comment.service';
 import { ReplyService } from '../../articles/shared/reply.service';
-import { UserModel } from '../../users/shared/user.model';
+import { UserModel } from '../shared/user.model';
 import { UserService } from '../shared/user.service';
 import { ReplyWithArticleModel } from '../../articles/shared/reply-with-article.model';
 
@@ -27,9 +26,7 @@ export class CommentListComponent implements OnInit, OnDestroy {
   private onDestroy = new Subject();
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-    private auth: AuthenticationService,
     private commentService: CommentService,
     private replyService: ReplyService,
     private userService: UserService,

@@ -3,6 +3,7 @@ import 'rxjs';
 
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
@@ -21,8 +22,6 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { CommentService } from '../shared/comment.service';
 import { CommentModel } from '../shared/comment.model';
 import { UserModel } from '../../users/shared/user.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
-import { CommentWithArticleModel } from '../shared/comment-with-article.model';
 
 import { CommentFormComponent } from './comment-form.component';
 
@@ -72,6 +71,7 @@ describe('CommentFormComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ CommentFormComponent ],
       imports: [
+        BrowserAnimationsModule,
         RouterTestingModule,
         SharedModule,
       ],

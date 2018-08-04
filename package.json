@@ -17,7 +17,7 @@
   "scripts": {
     "ng": "ng",
     "start": "npm-run-all -s build:server -p start:*",
-    "start:client": "ng serve --delete-output-path=false --aot=false --progress=false --proxy-config proxy.conf.json",
+    "start:client": "ng serve --aot=false --progress=false --proxy-config proxy.conf.json",
     "start:server": "run-p watch:server boot:server",
     "watch:server": "tsc -w -p ./server/tsconfig.server.json",
     "watch:server_test": "tsc -w -p ./server_test/tsconfig.server_test.json",

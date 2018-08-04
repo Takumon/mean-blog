@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule　} from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import {
   ErrorStateMatcher,
@@ -27,6 +26,7 @@ import {
   MatRippleModule,
   MatSelectModule,
   MatPaginatorModule,
+  DateAdapter,
 } from '@angular/material';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -40,6 +40,15 @@ import { CustomErrorStateMatcher } from './custom-error-state-matcher';
 import { Error403Component } from './components/error-403.component';
 import { Error404Component } from './components/error-404.component';
 import { Error500Component } from './components/error-500.component';
+import { OrderByPipe } from './pipes/orderby.pipe';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { MarkdownParsePipe } from './pipes/markdown-parse.pipe';
+import { CheckedListPipe } from './pipes/checked-list.pipe';
+import { NotCheckedListPipe } from './pipes/not-checked-list.pipe';
+import { KeysPipe } from './pipes/keys.pipe';
+
+import { AppDateAdapter } from './app-date-adapter';
+
 
 @NgModule({
   declarations: [
@@ -50,13 +59,18 @@ import { Error500Component } from './components/error-500.component';
     Error403Component,
     Error404Component,
     Error500Component,
+    OrderByPipe,
+    SafeHtmlPipe,
+    MarkdownParsePipe,
+    KeysPipe,
+    CheckedListPipe,
+    NotCheckedListPipe,
+
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
+    CommonModule,
     LazyLoadImageModule,
     ReactiveFormsModule,
-    FormsModule,
 
     SharedRoutingModule,
 
@@ -82,21 +96,27 @@ import { Error500Component } from './components/error-500.component';
     MatPaginatorModule,
   ],
   providers: [
-    {provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher},
-    {provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'auto'}},
+    { provide: DateAdapter, useClass: AppDateAdapter },
+    { provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher },
+    { provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'auto'} },
   ],
   entryComponents: [
     ConfirmDialogComponent,
     MessageBarComponent,
   ],
   exports: [
-    BrowserModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
+    CommonModule,
 
     SharedRoutingModule,
 
+    OrderByPipe,
+    SafeHtmlPipe,
+    MarkdownParsePipe,
+    KeysPipe,
+    CheckedListPipe,
+    NotCheckedListPipe,
 
     AutofocusDirective,
     DragAndDropDirective,

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { LocalStorageService, LOCALSTORAGE_KEY } from '../../shared/services/local-storage.service';
+import { MessageBarService } from './message-bar.service';
+import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
 
 @Injectable()
 export class AppHttpInterceptor implements HttpInterceptor {
