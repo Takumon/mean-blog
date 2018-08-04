@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 
 import { SearchConditionModel } from './search-condition.model';
 
@@ -27,8 +25,6 @@ interface Condition {
  */
 @Injectable()
 export class SearchConditionService {
-  /** 定数：日付検索のパターン */
-  private dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
 
   /** 本サービスのベースURL */
   private baseUrl = '/api/searchconditions';

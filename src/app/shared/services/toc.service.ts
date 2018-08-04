@@ -20,13 +20,11 @@ export class TocService {
 
   constructor(
       @Inject(DOCUMENT) private document: any,
-      private domSanitizer: DomSanitizer,
       private scrollSpyService: ScrollSpyService) { }
 
   genToc(headings: HTMLHeadingElement[], docId = '') {
     this.resetScrollSpyInfo();
 
-    const idMap = new Map<string, number>();
     const tocList = headings.map(heading => ({
       level: heading.tagName.toLowerCase(),
       title: heading.textContent.trim(),

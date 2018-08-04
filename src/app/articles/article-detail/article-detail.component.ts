@@ -19,11 +19,11 @@ import { takeUntil, map } from 'rxjs/operators';
 import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
+import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { UserModel } from '../../users/shared/user.model';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { MarkdownParseService } from '../shared/markdown-parse.service';
 import { ArticleService } from '../shared/article.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
 

@@ -12,3 +12,4 @@ export enum ImageType {
   PROFILE_BACKGROUND = 200,
   OF_ARTICLE = 300,
 }
+

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Headers, RequestOptions } from '@angular/http';
 import { HttpHeaders,  } from '@angular/common/http';
 
 import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';

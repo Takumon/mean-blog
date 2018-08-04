@@ -5,13 +5,13 @@ import {
   Input,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, ReplaySubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import { TocService } from '../../shared/services/toc.service';
+import { MARKDOWN_HEADER_CLASS } from '../../shared/services/markdown-parse.service';
 import { ScrollService } from '../../shared/services/scroll.service';
-import { MARKDOWN_HEADER_CLASS } from '../shared/markdown-parse.service';
 
 @Component({
   selector: 'app-article-toc',

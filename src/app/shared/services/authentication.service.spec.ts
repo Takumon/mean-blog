@@ -1,5 +1,5 @@
-import { TestBed, async, inject } from '@angular/core/testing';
-import { HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { AuthenticationService, LoginSuccessInfo, CheckStateInfo } from './authentication.service';
@@ -105,7 +105,6 @@ describe('SearchConditionService', () => {
 
 
     it('認証失敗時', () => {
-      const mockLoginUser = new UserModel();
       const mockResponse: LoginSuccessInfo = {
         success: false,
         message: '認証失敗',
@@ -115,7 +114,7 @@ describe('SearchConditionService', () => {
 
       expect(service.loginUser).toBeUndefined();
       expect(localStorage.getItem(LOCALSTORAGE_KEY.TOKEN.toString())).toBeNull();
-      expect(service.isFinishedCheckState).toBeFalsy()
+      expect(service.isFinishedCheckState).toBeFalsy();
 
       const arg_user = {
         userId: '123456789012',
@@ -196,7 +195,6 @@ describe('SearchConditionService', () => {
 
 
     it('認証失敗時', () => {
-      const mockLoginUser = new UserModel();
       const mockResponse: LoginSuccessInfo = {
         success: false,
         message: 'ユーザ情報を登録に失敗しました。',

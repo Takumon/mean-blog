@@ -4,12 +4,8 @@ import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
-  ReactiveFormsModule,
-  FormsModule,
   FormGroup,
-  FormGroupDirective,
   FormControl,
-  NgForm,
   Validators,
   FormBuilder,
 } from '@angular/forms';

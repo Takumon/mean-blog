@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material';
 
 
-import { SharedModule } from '../shared/shared.module';
 import { PaginatorService } from '../shared/services/paginator.service';
 
 import { UsersRoutingModule } from './users-routing.module';
@@ -10,6 +9,7 @@ import { UserComponent } from './user.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserService } from './shared/user.service';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -20,7 +20,6 @@ import { UserService } from './shared/user.service';
   ],
   imports: [
     UsersRoutingModule,
-
     SharedModule,
   ],
   providers: [

@@ -21,8 +21,6 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { CommentService } from '../shared/comment.service';
 import { CommentModel } from '../shared/comment.model';
 import { UserModel } from '../../users/shared/user.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
-import { CommentWithArticleModel } from '../shared/comment-with-article.model';
 
 import { CommentFormComponent } from './comment-form.component';
 

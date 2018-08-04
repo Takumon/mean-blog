@@ -1,5 +1,5 @@
 import { Angular4Express4Typescritp2Page } from './app.po';
-import { browser, element, by } from 'protractor';
+import { element, by } from 'protractor';
 
 
 describe('E2Eテスト', () => {

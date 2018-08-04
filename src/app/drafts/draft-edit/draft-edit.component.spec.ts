@@ -1,37 +1,35 @@
 import { Observable, of } from 'rxjs';
 import 'rxjs';
 
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { By } from '@angular/platform-browser';
-import { MatSnackBar, ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
 
 import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
-import { Constant } from '../../shared/constant';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 
-import { MarkdownParsePipe } from '../shared/markdown-parse.pipe';
-import { ArticleEditComponent } from './article-edit.component';
-import { ArticleService } from '../shared/article.service';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { ArticleModel } from '../shared/article.model';
+import { MarkdownParsePipe } from '../../shared/pipes/markdown-parse.pipe';
+import { DraftEditComponent } from './draft-edit.component';
+import { ArticleService } from '../../articles/shared/article.service';
+import { ArticleWithUserModel } from '../../articles/shared/article-with-user.model';
+import { ArticleModel } from '../../articles/shared/article.model';
 import { DraftService } from '../shared/draft.service';
-import { MarkdownParseService } from '../shared/markdown-parse.service';
+import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
 import { ImageService } from '../../shared/services/image.service';
 import { RouteNamesService } from '../../shared/services/route-names.service';
 
 
-describe('ArticleDetailComponent', () => {
+describe('DraftDetailComponent', () => {
 
   class MockAuthenticationService {
     loginUser = new UserModel();
@@ -121,15 +119,15 @@ describe('ArticleDetailComponent', () => {
     });
   }
 
-  let comp: ArticleEditComponent;
-  let fixture: ComponentFixture<ArticleEditComponent>;
+  let comp: DraftEditComponent;
+  let fixture: ComponentFixture<DraftEditComponent>;
   let de: DebugElement;
 
   beforeEach(async() => {
 
     TestBed.configureTestingModule({
       declarations: [
-        ArticleEditComponent,
+        DraftEditComponent,
         MarkdownParsePipe,
       ],
       imports: [
@@ -157,7 +155,7 @@ describe('ArticleDetailComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArticleEditComponent);
+    fixture = TestBed.createComponent(DraftEditComponent);
     comp = fixture.componentInstance;
     de = fixture.debugElement;
     fixture.detectChanges();

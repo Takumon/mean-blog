@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { PipeTransform } from '@angular/core';
 
 // @Pipe({ name: 'fromNow'})
 export class FromNowPipe implements PipeTransform {

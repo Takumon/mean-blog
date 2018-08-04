@@ -1,19 +1,17 @@
 import { Observable, of } from 'rxjs';
 import 'rxjs';
 
-import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { By } from '@angular/platform-browser';
-import { MatSnackBar, ErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material';
 
 import { SharedModule } from './shared/shared.module';
 
 import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
-import { Constant } from './shared/constant';
 
 import { AppComponent } from './app.component';
 import { ScrollService } from './shared/services/scroll.service';

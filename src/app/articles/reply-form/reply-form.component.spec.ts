@@ -21,8 +21,6 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { ReplyService } from '../shared/reply.service';
 import { ReplyModel } from '../shared/reply.model';
 import { UserModel } from '../../users/shared/user.model';
-import { ReplyWithUserModel } from '../shared/reply-with-user.model';
-import { ReplyWithArticleModel } from '../shared/reply-with-article.model';
 
 import { ReplyFormComponent } from './reply-form.component';
 

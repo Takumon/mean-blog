@@ -1,6 +1,5 @@
 import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
-import { HttpRequest } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { DraftSharedService } from './draft-shared.service';
 

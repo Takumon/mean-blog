@@ -8,12 +8,9 @@ import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
-import { UserModel } from '../../users/shared/user.model';
 
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
-import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
 import { ReplyModel } from '../shared/reply.model';
@@ -38,7 +35,6 @@ export class CommentListComponent implements OnInit {
   constructor(
     public snackBar: MatSnackBar,
     public auth: AuthenticationService,
-    private articleService: ArticleService,
     public commentService: CommentService,
     private replyService: ReplyService,
     public dialog: MatDialog,

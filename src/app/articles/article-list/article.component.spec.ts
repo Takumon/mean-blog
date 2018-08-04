@@ -8,25 +8,22 @@ import { CommentModel } from '../shared/comment.model';
 import { UserModel } from '../../users/shared/user.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleComponent } from './article.component';
-import { ComponentFixture, TestBed, async, ComponentFixtureAutoDetect, fakeAsync, tick, inject, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, inject } from '@angular/core/testing';
 import { SharedModule } from '../../shared/shared.module';
 import { ErrorStateMatcherContainParentGroup, MessageService } from '../../shared/services/message.service';
 import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { MarkdownParsePipe } from '../shared/markdown-parse.pipe';
-import { MarkdownParseService } from '../shared/markdown-parse.service';
+import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
+import { MarkdownParsePipe } from '../../shared/pipes/markdown-parse.pipe';
 import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
 import { ExcludeDeletedVoterPipe } from '../shared/exclude-deleted-voter.pipe';
 import { APP_BASE_HREF } from '@angular/common';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { CommentService } from '../shared/comment.service';
-import { ArticleModel } from '../shared/article.model';
 import { VoteCudResponse, ArticleService } from '../shared/article.service';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core/src/metadata/ng_module';
 import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { CommentFormComponent } from '../comment-form/comment-form.component';
 
 describe('ArticleComponent', () => {
 

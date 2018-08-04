@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ImageModel } from '../../shared/models/image.model';
+import { ImageModel } from '../models/image.model';
 
 // 画像は更新なし
 @Injectable()

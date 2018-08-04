@@ -1,12 +1,10 @@
 import { Observable, of } from 'rxjs';
 import 'rxjs';
 
-import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 
-import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
+import { DebugElement, Component, Input } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { By } from '@angular/platform-browser';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
@@ -14,19 +12,16 @@ import { SharedModule } from '../../shared/shared.module';
 import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
 
 
-import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { UserModel } from '../../users/shared/user.model';
 
 import { CommentListComponent } from './comment-list.component';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { CommentModel } from '../shared/comment.model';
 import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
 import { ReplyModel } from '../shared/reply.model';
-import { ReplyWithUserModel } from '../shared/reply-with-user.model';
 
 describe('CommentListComponent', () => {
 

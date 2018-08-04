@@ -1,22 +1,14 @@
 import { Component, Inject, OnInit} from '@angular/core';
 import {
-  ReactiveFormsModule,
-  FormsModule,
   FormGroup,
-  FormGroupDirective,
   FormControl,
   FormArray,
-  NgForm,
   Validators,
   FormBuilder,
-  ValidatorFn,
 } from '@angular/forms';
 import {
-  MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
-  MatDatepickerModule,
-  MatNativeDateModule,
   DateAdapter,
   NativeDateAdapter,
 } from '@angular/material';
@@ -25,15 +17,12 @@ import * as moment from 'moment';
 import { Constant } from '../../shared/constant';
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
 import { MessageService, ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 
-import { UserModel } from '../../users/shared/user.model';
 import { UserService } from '../../users/shared/user.service';
 
-import { SearchConditionModel } from '../shared/search-condition.model';
 import { SearchConditionService } from '../shared/search-condition.service';
 
 export interface UserListFactor {
@@ -56,7 +45,6 @@ export class SearchConditionDialogComponent implements OnInit {
   public searchUserId: string;
   // formグループ化したい
   public form: FormGroup;
-  private searchConditionId: string;
   public checkUserList: Array<UserListFactor>;
   public unCheckUserList: Array<UserListFactor>;
   public dateRangePatterns: typeof DATE_RANGE_PATTERN = DATE_RANGE_PATTERN;
@@ -71,7 +59,8 @@ export class SearchConditionDialogComponent implements OnInit {
     public errorStateMatcherContainParentGroup: ErrorStateMatcherContainParentGroup,
     private userService: UserService,
     private searchConditionService: SearchConditionService,
-    private dateAdapter: DateAdapter<NativeDateAdapter>) {
+    private dateAdapter: DateAdapter<NativeDateAdapter>
+  ) {
       dateAdapter.setLocale('ja');
   }
 

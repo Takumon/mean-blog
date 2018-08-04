@@ -1,5 +1,5 @@
-import { TestBed, async, inject } from '@angular/core/testing';
-import { HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ImageService } from './image.service';

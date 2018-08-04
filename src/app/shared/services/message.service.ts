@@ -4,7 +4,6 @@ import {
   FormGroupDirective,
   FormControl,
   NgForm,
-  ValidatorFn,
   ValidationErrors,
   AbstractControl,
 } from '@angular/forms';
@@ -12,7 +11,6 @@ import {
  ErrorStateMatcher
 } from '@angular/material';
 
-import { MessageBarService } from './message-bar.service';
 
 @Injectable()
 export class MessageService {

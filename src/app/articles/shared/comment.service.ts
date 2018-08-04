@@ -3,7 +3,6 @@ import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import 'rxjs';
 
-import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services/jwt.service';
 
 import { CommentModel } from './comment.model';
@@ -24,8 +23,6 @@ interface HttpOption {
  */
 @Injectable()
 export class CommentService {
-  /** 定数クラス */
-  private Constant = Constant;
 
   /** 本サービスのベースURL */
   private baseUrl = '/api/comments';

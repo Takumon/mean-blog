@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 
 import { RouteNamesService } from '../../shared/services/route-names.service';
-import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
 import { UserService } from '../shared/user.service';
 import { UserModel } from '../shared/user.model';
@@ -142,7 +141,6 @@ export class UserListComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private scrollService: ScrollService,
     private routeNamesService: RouteNamesService,
     private userService: UserService,
     public paginatorService: MatPaginatorIntl,

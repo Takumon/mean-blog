@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 
 import { PaginatorService } from './paginator.service';
 
