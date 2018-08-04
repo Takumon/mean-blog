@@ -25,7 +25,7 @@
     "boot:server": "NODE_CONFIG_DIR=./dist/server/config NODE_ENV=dev nodemon ./dist/server/bin/www.js",
     "boot:server_test": "nodemon ./dist/server_test/test.server.js",
     "build": "run-s build:server build:client",
-    "build:client": "ng build --prod --output-path=./dist/server/public",
+    "build:client": "ng build --prod --stats-json --output-path=./dist/server/public",
     "build:server": "run-s servercompile:ts servercompile:resources",
     "servercompile:ts": "tsc -p ./server/tsconfig.server.json",
     "servercompile:resources": "cpx \"./server/config/*\" ./dist/server/config -u",
@@ -40,7 +40,8 @@
     "protractor": "protractor protractor.conf.js",
     "lint": "ng lint",
     "heroku-prebuild": "echo This runs before Heroku installs your dependencies.",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "analyze": "webpack-bundle-analyzer dist/server/public/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -105,6 +106,7 @@
     "supertest": "^3.1.0",
     "ts-node": "^7.0.0",
     "tslint": "^5.10.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "webpack-bundle-analyzer": "^2.13.1"
   }
 }
