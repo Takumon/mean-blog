@@ -51,7 +51,7 @@
           >
             <img
               matTooltip="{{voter.userId}}"
-              [routerLink]="['/', voter.userId, 'articles']"
+              [routerLink]="['/users', voter.userId, 'articles']"
               class="info-summary__voter-icon"
               lazyLoad="/api/images/avator/{{ voter._id}}"
               [offset]="this.Constant.LAZY_LOAD_OFFSET"
@@ -63,13 +63,13 @@
   <div class="article__metadata">
     <img
       class="article__author-icon"
-      [routerLink]="['/', article.author.userId, 'articles']"
+      [routerLink]="['/users', article.author.userId, 'articles']"
       lazyLoad="/api/images/avator/{{article.author._id}}"
       [offset]="this.Constant.LAZY_LOAD_OFFSET"
       >
     <div
       class="article__author"
-      [routerLink]="['/', article.author.userId, 'articles']">{{article.author.userId}}</div>
+      [routerLink]="['/users', article.author.userId, 'articles']">{{article.author.userId}}</div>
     <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
     <div class="article__operation">
       <ng-container *ngIf="isMine(article)">

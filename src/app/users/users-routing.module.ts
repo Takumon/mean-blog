@@ -15,7 +15,7 @@ const routes: Routes = [
     canActivate: [AdminAuthGuard]
   },
   {
-    path: ':_userId',
+    path: 'users/:_userId',
     component: UserComponent,
     children: [
       {

@@ -14,14 +14,14 @@
         <div class="comment__article">
           <img
             class="comment__article__author-icon"
-            [routerLink]="['/', comment.articleId.author.userId, 'articles']"
+            [routerLink]="['/users', comment.articleId.author.userId, 'articles']"
             lazyLoad="/api/images/avator/{{ comment.articleId.author._id}}"
             [offset]="this.Constant.LAZY_LOAD_OFFSET"
             >
           <div class="comment__article__author-wrapper">
             <span
               class="comment__article__author"
-              [routerLink]="['/', comment.articleId.author.userId, 'articles']"
+              [routerLink]="['/users', comment.articleId.author.userId, 'articles']"
               >{{comment.articleId.author.userId}}</span>
             <span>の投稿</span>
           </div>

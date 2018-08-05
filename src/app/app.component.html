@@ -74,7 +74,7 @@
         <button
           *ngIf="!auth.isAdmin()"
           mat-menu-item
-          [routerLink]="[auth.loginUser.userId, 'articles']"
+          [routerLink]="['/users', auth.loginUser.userId, 'articles']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-list"></i><span> 投稿一覧</span>
         </button>
@@ -90,7 +90,7 @@
         <button
           *ngIf="auth.isAdmin()"
           mat-menu-item
-          [routerLink]="['users']"
+          [routerLink]="['/users']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-user-circle-o"></i><span> ユーザ一覧</span>
         </button>
