@@ -21,10 +21,6 @@ import {
   ErrorStateMatcherContainParentGroup
 } from '../../shared/services';
 import {
-  ExcludeDeletedVoterPipe,
-  ExcludeDeletedCommentPipe,
-} from '../../shared/pipes';
-import {
   ArticleWithUserModel,
   CommentModel,
   CommentWithUserModel,
@@ -459,8 +455,6 @@ describe('ArticleComponent', () => {
           MockCommentFormComponent,
           MockCommentListComponent,
           MockVoterListComponent,
-          ExcludeDeletedCommentPipe,
-          ExcludeDeletedVoterPipe,
         ],
         imports: [
           BrowserAnimationsModule,
@@ -802,8 +796,6 @@ describe('ArticleComponent', () => {
           MockCommentFormComponent,
           MockCommentListComponent,
           MockVoterListComponent,
-          ExcludeDeletedCommentPipe,
-          ExcludeDeletedVoterPipe,
         ],
         imports: [
           BrowserAnimationsModule,
@@ -859,8 +851,6 @@ describe('ArticleComponent', () => {
           MockCommentFormComponent,
           MockCommentListComponent,
           MockVoterListComponent,
-          ExcludeDeletedCommentPipe,
-          ExcludeDeletedVoterPipe,
         ],
         imports: [
           BrowserAnimationsModule,

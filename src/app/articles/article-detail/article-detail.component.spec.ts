@@ -18,10 +18,6 @@ import {
   RouteNamesService,
 } from '../../shared/services';
 import {
-  ExcludeDeletedCommentPipe,
-  ExcludeDeletedVoterPipe,
-} from '../../shared/pipes';
-import {
   UserModel,
   ArticleWithUserModel,
   ArticleModel,
@@ -122,9 +118,6 @@ describe('ArticleDetailComponent', () => {
         ArticleDetailComponent,
         MockCommentListComponent,
         MockArticleTocComponent,
-
-        ExcludeDeletedCommentPipe,
-        ExcludeDeletedVoterPipe,
       ],
       imports: [
         RouterTestingModule,

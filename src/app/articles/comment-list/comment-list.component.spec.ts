@@ -11,9 +11,6 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 import {
-  ExcludeDeletedCommentPipe
-} from '../../shared/pipes';
-import {
   AuthenticationService
 } from '../../shared/services';
 import {
@@ -143,7 +140,6 @@ describe('CommentListComponent', () => {
 
         MockReplyFormComponent,
         MockCommentFormComponent,
-        ExcludeDeletedCommentPipe,
       ],
       imports: [
         BrowserAnimationsModule,
