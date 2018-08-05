@@ -2,14 +2,14 @@
   <button
     mat-button
     class="toolbar__app-logo"
-    [routerLink]="auth.loginUser ? '': 'articles'"
+    [routerLink]="auth.loginUser ? '': '/dashbord/articles'"
     routerLinkActive="active">{{Constant.APP_TITLE}}</button>
 
   <nav *ngIf="isActiveNavbar" mat-tab-nav-bar class="toolbar__tab navbar ink-bar-white">
     <a mat-tab-link
       *ngIf="auth.loginUser"
       class="navbar__link"
-      routerLink=""
+      routerLink="/dashbord"
       routerLinkActive #rla1="routerLinkActive"
       [active]="rla1.isActive"
       [routerLinkActiveOptions]="{exact: true}"
@@ -18,7 +18,7 @@
     </a>
     <a mat-tab-link
       class="navbar__link"
-      routerLink="articles"
+      routerLink="/dashbord/articles"
       routerLinkActive #rla2="routerLinkActive"
       [active]="rla2.isActive"
       [routerLinkActiveOptions]="{exact: true}"
@@ -74,7 +74,7 @@
         <button
           *ngIf="!auth.isAdmin()"
           mat-menu-item
-          [routerLink]="[auth.loginUser.userId, 'articles']"
+          [routerLink]="['/users', auth.loginUser.userId, 'articles']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-list"></i><span> 投稿一覧</span>
         </button>
@@ -90,7 +90,7 @@
         <button
           *ngIf="auth.isAdmin()"
           mat-menu-item
-          [routerLink]="['users']"
+          [routerLink]="['/users']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-user-circle-o"></i><span> ユーザ一覧</span>
         </button>

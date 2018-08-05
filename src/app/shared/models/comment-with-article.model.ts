@@ -1,4 +1,4 @@
-import { UserModel } from '../../users/shared/user.model';
+import { UserModel } from './user.model';
 import { ArticleWithUserModel } from './article-with-user.model';
 
 /**

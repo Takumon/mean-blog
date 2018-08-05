@@ -9,20 +9,24 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
+import {
+  AuthenticationService,
+  UserService,
+} from '../../shared/services';
+import {
+  UserModel,
+  CommentModel,
+  CommentWithUserModel,
+  CommentWithArticleModel,
+  ReplyModel,
+  ReplyWithUserModel,
+  ReplyWithArticleModel,
+} from '../../shared/models';
 
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../shared/user.model';
 
-import { CommentListComponent } from './comment-list.component';
 import { CommentService } from '../../articles/shared/comment.service';
-import { CommentModel } from '../../articles/shared/comment.model';
-import { CommentWithUserModel } from '../../articles/shared/comment-with-user.model';
-import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
 import { ReplyService } from '../../articles/shared/reply.service';
-import { ReplyModel } from '../../articles/shared/reply.model';
-import { ReplyWithUserModel } from '../../articles/shared/reply-with-user.model';
-import { ReplyWithArticleModel } from '../../articles/shared/reply-with-article.model';
-import { UserService } from '../shared/user.service';
+import { CommentListComponent } from './comment-list.component';
 
 
 describe('CommentListComponent', () => {

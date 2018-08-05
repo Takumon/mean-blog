@@ -10,13 +10,16 @@ import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ScrollService } from '../../shared/services/scroll.service';
-import { PaginatorService } from '../../shared/services/paginator.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserService } from '../../users/shared/user.service';
-import { ArticleService, Condition } from '../shared/article.service';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { Constant } from '../../shared/constant';
+import {
+  PaginatorService,
+  AuthenticationService,
+  UserService,
+} from '../../shared/services';
+import { ArticleWithUserModel } from '../../shared/models';
+
+import { ArticleService, Condition } from '../shared/article.service';
+import { ScrollService } from '../shared/scroll.service';
 
 export enum ArticleSearchMode {
   ALL = 100,

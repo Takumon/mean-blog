@@ -2,8 +2,10 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { JwtService } from '../../shared/services/jwt.service';
-import { LocalStorageService } from '../../shared/services/local-storage.service';
+import {
+  JwtService,
+  LocalStorageService,
+} from '../../shared/services';
 
 
 import { DraftService } from './draft.service';

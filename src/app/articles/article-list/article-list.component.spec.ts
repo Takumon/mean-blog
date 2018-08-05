@@ -13,22 +13,26 @@ import { By } from '@angular/platform-browser';
 import { ErrorStateMatcher, MatPaginatorIntl } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
-
-import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
+import {
+  AuthenticationService,
+  ErrorStateMatcherContainParentGroup,
+  PaginatorService,
+  UserService,
+  LocalStorageService,
+} from '../../shared/services';
+import {
+  UserModel,
+  ArticleModel,
+  ArticleWithUserModel,
+} from '../../shared/models';
 
 import { ArticleListComponent } from './article-list.component';
 import { ArticleService } from '../shared/article.service';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { ScrollService } from '../../shared/services/scroll.service';
-import { PaginatorService } from '../../shared/services/paginator.service';
-import { UserService } from '../../users/shared/user.service';
-import { ArticleModel } from '../shared/article.model';
+
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
-import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { SearchConditionService } from '../shared/search-condition.service';
+import { ScrollService } from '../shared/scroll.service';
 
 describe('ArticleListComponent', () => {
 

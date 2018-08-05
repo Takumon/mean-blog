@@ -5,10 +5,14 @@ import { takeUntil } from 'rxjs/operators';
 
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 
-import { RouteNamesService } from '../../shared/services/route-names.service';
-import { PaginatorService } from '../../shared/services/paginator.service';
-import { UserService } from '../shared/user.service';
-import { UserModel } from '../shared/user.model';
+
+import {
+  UserService,
+  RouteNamesService,
+  PaginatorService,
+} from '../../shared/services';
+import { UserModel } from '../../shared/models/user.model';
+
 
 
 enum Direction {

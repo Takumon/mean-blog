@@ -7,12 +7,17 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'dashbord',
+    pathMatch: 'full'
+  },
+  {
+    path: 'dashbord',
     component: ArticleListComponent,
     pathMatch: 'full',
     data: {mode: ArticleSearchMode.FAVORITE},
   },
   {
-    path: 'articles',
+    path: 'dashbord/articles',
     component: ArticleListComponent,
     data: {mode: ArticleSearchMode.ALL},
   },

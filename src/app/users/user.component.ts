@@ -10,14 +10,17 @@ import {
   FormBuilder,
 } from '@angular/forms';
 
-import { Constant } from '../shared/constant';
-import { AuthenticationService } from '../shared/services/authentication.service';
-import { RouteNamesService } from '../shared/services/route-names.service';
-import { MessageService } from '../shared/services/message.service';
-import { MessageBarService } from '../shared/services/message-bar.service';
 
-import { UserModel } from './shared/user.model';
-import { UserService } from './shared/user.service';
+import { Constant } from '../shared/constant';
+import {
+  AuthenticationService,
+  RouteNamesService,
+  MessageService,
+  MessageBarService,
+  UserService,
+} from '../shared/services';
+import { UserModel } from '../shared/models';
+
 
 @Component({
   selector: 'app-user',

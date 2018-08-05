@@ -6,8 +6,11 @@ import {
   FormBuilder,
 } from '@angular/forms';
 
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { MessageService } from '../../shared/services/message.service';
+
+import {
+  AuthenticationService,
+  MessageService,
+} from '../../shared/services';
 
 
 @Component({

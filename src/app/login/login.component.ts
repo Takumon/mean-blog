@@ -4,8 +4,11 @@ import { MatSnackBar } from '@angular/material';
 
 
 import { Constant } from '../shared/constant';
-import { RouteNamesService } from '../shared/services/route-names.service';
-import { AuthenticationService } from '../shared/services/authentication.service';
+import {
+  AuthenticationService,
+  RouteNamesService,
+} from '../shared/services';
+
 
 @Component({
   selector: 'app-login',
@@ -40,14 +43,14 @@ export class LoginComponent implements OnInit {
     // パスワード変更
     if (url === '/login/loginoptions/passwordchange') {
       this.passwordChageMode = true;
-      this.returnUrl = '/';
+      this.returnUrl = '/dashbord';
       return;
     }
 
     this.passwordChageMode = false;
 
     // 表示しようとしていたURLを保持しておく
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashbord';
     const isLoginMode = !('register' in this.route.snapshot.queryParams);
     this.setLoginMode(isLoginMode);
   }

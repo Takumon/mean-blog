@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { CommentWithUserModel } from './comment-with-user.model';
+import { CommentWithUserModel } from '../models/comment-with-user.model';
 
 @Pipe({ name: 'excludeDeletedComment'})
 export class ExcludeDeletedCommentPipe implements PipeTransform {

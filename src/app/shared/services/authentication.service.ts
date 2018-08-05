@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { UserModel } from '../../users/shared/user.model';
 import { map, catchError } from 'rxjs/operators';
 
+import {
+  UserModel,
+  CudSuccessModel
+} from '../models';
 import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
-import { CudSuccessModel } from '../models/response/cud-success.model';
 
 export interface LoginSuccessInfo {
   success: boolean;

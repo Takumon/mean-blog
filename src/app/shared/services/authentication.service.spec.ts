@@ -4,8 +4,10 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { AuthenticationService, LoginSuccessInfo, CheckStateInfo } from './authentication.service';
 import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';
-import { UserModel } from '../../users/shared/user.model';
-import { CudSuccessModel } from '../models/response/cud-success.model';
+import {
+  UserModel,
+  CudSuccessModel,
+} from '../models';
 
 
 describe('SearchConditionService', () => {

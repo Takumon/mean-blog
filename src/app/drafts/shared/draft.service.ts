@@ -3,8 +3,10 @@ import { HttpClient, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+
 import { Constant } from '../../shared/constant';
-import { JwtService } from '../../shared/services/jwt.service';
+import { JwtService } from '../../shared/services';
+
 
 import { DraftModel } from './draft.model';
 

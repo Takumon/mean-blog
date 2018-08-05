@@ -16,12 +16,14 @@ import * as moment from 'moment';
 
 import { Constant } from '../../shared/constant';
 import { DATE_RANGE_PATTERN } from '../../shared/enum/date-range-pattern.enum';
-import { AuthenticationService } from '../../shared/services/authentication.service';
+import {
+  AuthenticationService,
+  MessageService, ErrorStateMatcherContainParentGroup,
+  MessageBarService,
+  UserService,
 
-import { MessageService, ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
-import { MessageBarService } from '../../shared/services/message-bar.service';
+} from '../../shared/services';
 
-import { UserService } from '../../users/shared/user.service';
 
 import { SearchConditionService } from '../shared/search-condition.service';
 

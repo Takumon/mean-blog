@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { Constant } from './shared/constant';
-import { AuthenticationService } from './shared/services/authentication.service';
-import { RouteNamesService } from './shared/services/route-names.service';
-import { ScrollService } from './shared/services/scroll.service';
+import {
+  RouteNamesService,
+  AuthenticationService,
+} from './shared/services';
+
+import { ScrollService } from './articles/shared/scroll.service';
 
 
 @Component({
@@ -37,7 +40,7 @@ export class AppComponent implements OnInit {
 
       this.refreshActiveNavbar();
       // 記事詳細はハッシュタグでスクロール制御するので除外
-      if (!this.router.url.includes('/articles/')) {
+      if (!this.router.url.startsWith('/articles/')) {
         this.scrollService.scrollToTop();
       }
     });
@@ -84,7 +87,7 @@ export class AppComponent implements OnInit {
     const url: String = this.router.url;
 
     // 完全一致
-    if (url === '/' || url === '/articles') {
+    if (url === '/dashbord' || url === '/dashbord/articles') {
       this.isActiveNavbar = true;
     } else {
       this.isActiveNavbar = false;

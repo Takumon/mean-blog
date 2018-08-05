@@ -1,5 +1,5 @@
 import { CommentModel } from './comment.model';
-import { ImageModel } from '../../shared/models/image.model';
+import { ImageModel } from './image.model';
 
 /**
  * 記事のモデル

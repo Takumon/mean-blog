@@ -9,16 +9,16 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ErrorStateMatcher } from '@angular/material';
 
 import { SharedModule } from './shared/shared.module';
-
-import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
+import {
+  RouteNamesService,
+  AuthenticationService,
+  ErrorStateMatcherContainParentGroup,
+} from './shared/services';
+import { UserModel } from './shared/models';
 
+import { ScrollService } from './articles/shared/scroll.service';
 import { AppComponent } from './app.component';
-import { ScrollService } from './shared/services/scroll.service';
-import { RouteNamesService } from './shared/services/route-names.service';
-import { AuthenticationService } from './shared/services/authentication.service';
-import { UserModel } from './users/shared/user.model';
-
 
 describe('AppComponent', () => {
 

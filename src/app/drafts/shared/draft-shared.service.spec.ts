@@ -1,4 +1,4 @@
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { DraftSharedService } from './draft-shared.service';

@@ -17,11 +17,13 @@ import {
 import { MatSnackBar } from '@angular/material';
 
 import { Constant } from '../../shared/constant';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { MessageService } from '../../shared/services/message.service';
-import { MessageBarService } from '../../shared/services/message-bar.service';
+import {
+  AuthenticationService,
+  MessageService,
+  MessageBarService,
+} from '../../shared/services';
+import { CommentModel } from '../../shared/models';
 
-import { CommentModel } from '../shared/comment.model';
 import { CommentService } from '../shared/comment.service';
 
 /**

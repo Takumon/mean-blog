@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import 'rxjs';
 
@@ -9,21 +10,22 @@ import { APP_BASE_HREF } from '@angular/common';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
+import {
+  AuthenticationService
+} from '../../shared/services';
+import {
+  UserModel,
+  CommentModel,
+  CommentWithUserModel,
+  ReplyModel,
+} from '../../shared/models';
 
-import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
 
-
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
-
-import { CommentListComponent } from './comment-list.component';
-import { CommentModel } from '../shared/comment.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
-import { ReplyModel } from '../shared/reply.model';
-import { BrowserAnimationsModule } from '../../../../node_modules/@angular/platform-browser/animations';
+
+import { CommentListComponent } from './comment-list.component';
 
 describe('CommentListComponent', () => {
 
@@ -138,7 +140,6 @@ describe('CommentListComponent', () => {
 
         MockReplyFormComponent,
         MockCommentFormComponent,
-        ExcludeDeletedCommentPipe,
       ],
       imports: [
         BrowserAnimationsModule,

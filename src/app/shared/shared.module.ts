@@ -33,15 +33,21 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
-import { ConfirmDialogComponent } from './components/confirm.dialog';
-import { MessageBarComponent } from './components/message-bar.component';
+import {
+  ConfirmDialogComponent,
+  MessageBarComponent,
+} from './components';
+import {
+  CheckedListPipe,
+  NotCheckedListPipe,
+  KeysPipe,
+  MarkdownParsePipe,
+  SafeHtmlPipe,
+  OrderByPipe,
+  ExcludeDeletedCommentPipe,
+  ExcludeDeletedVoterPipe
+} from './pipes';
 import { CustomErrorStateMatcher } from './custom-error-state-matcher';
-import { OrderByPipe } from './pipes/orderby.pipe';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
-import { MarkdownParsePipe } from './pipes/markdown-parse.pipe';
-import { CheckedListPipe } from './pipes/checked-list.pipe';
-import { NotCheckedListPipe } from './pipes/not-checked-list.pipe';
-import { KeysPipe } from './pipes/keys.pipe';
 
 import { AppDateAdapter } from './app-date-adapter';
 
@@ -58,7 +64,8 @@ import { AppDateAdapter } from './app-date-adapter';
     KeysPipe,
     CheckedListPipe,
     NotCheckedListPipe,
-
+    ExcludeDeletedCommentPipe,
+    ExcludeDeletedVoterPipe,
   ],
   imports: [
     CommonModule,
@@ -106,6 +113,8 @@ import { AppDateAdapter } from './app-date-adapter';
     KeysPipe,
     CheckedListPipe,
     NotCheckedListPipe,
+    ExcludeDeletedCommentPipe,
+    ExcludeDeletedVoterPipe,
 
     AutofocusDirective,
     DragAndDropDirective,
