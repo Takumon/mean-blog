@@ -11,7 +11,6 @@ import { DraftDetailComponent } from './draft-detail/draft-detail.component';
 import { DraftEditComponent } from './draft-edit/draft-edit.component';
 import { DraftsRoutingModule } from './drafts-routing.module';
 import { SharedModule } from '../shared/shared.module';
-import { CommonModule } from '@angular/common';
 
 
 

@@ -30,16 +30,12 @@ import {
 } from '@angular/material';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
-import { SharedRoutingModule } from './shared-routing.module';
 
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DragAndDropDirective } from './directives/drag-and-drop.directive';
 import { ConfirmDialogComponent } from './components/confirm.dialog';
 import { MessageBarComponent } from './components/message-bar.component';
 import { CustomErrorStateMatcher } from './custom-error-state-matcher';
-import { Error403Component } from './components/error-403.component';
-import { Error404Component } from './components/error-404.component';
-import { Error500Component } from './components/error-500.component';
 import { OrderByPipe } from './pipes/orderby.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { MarkdownParsePipe } from './pipes/markdown-parse.pipe';
@@ -56,9 +52,6 @@ import { AppDateAdapter } from './app-date-adapter';
     DragAndDropDirective,
     ConfirmDialogComponent,
     MessageBarComponent,
-    Error403Component,
-    Error404Component,
-    Error500Component,
     OrderByPipe,
     SafeHtmlPipe,
     MarkdownParsePipe,
@@ -71,8 +64,6 @@ import { AppDateAdapter } from './app-date-adapter';
     CommonModule,
     LazyLoadImageModule,
     ReactiveFormsModule,
-
-    SharedRoutingModule,
 
     MatToolbarModule,
     MatProgressBarModule,
@@ -108,8 +99,6 @@ import { AppDateAdapter } from './app-date-adapter';
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-
-    SharedRoutingModule,
 
     OrderByPipe,
     SafeHtmlPipe,
