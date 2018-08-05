@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { ConfirmDialogComponent } from '../../shared/components';
 
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';

@@ -6,7 +6,7 @@ import {
 
 import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { ConfirmDialogComponent } from '../../shared/components';
 
 import {
   CommentModel,

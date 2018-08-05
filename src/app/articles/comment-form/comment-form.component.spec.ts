@@ -20,8 +20,10 @@ import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 
 import { CommentService } from '../shared/comment.service';
-import { CommentModel } from '../shared/comment.model';
-import { UserModel } from '../../users/shared/user.model';
+import {
+  UserModel,
+  CommentModel,
+} from '../../shared/models';
 
 import { CommentFormComponent } from './comment-form.component';
 

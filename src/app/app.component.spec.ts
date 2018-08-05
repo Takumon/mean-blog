@@ -17,7 +17,7 @@ import { AppComponent } from './app.component';
 import { ScrollService } from './shared/services/scroll.service';
 import { RouteNamesService } from './shared/services/route-names.service';
 import { AuthenticationService } from './shared/services/authentication.service';
-import { UserModel } from './users/shared/user.model';
+import { UserModel } from './shared/models';
 
 
 describe('AppComponent', () => {

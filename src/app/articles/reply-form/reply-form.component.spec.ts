@@ -20,8 +20,10 @@ import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 
 import { ReplyService } from '../shared/reply.service';
-import { ReplyModel } from '../shared/reply.model';
-import { UserModel } from '../../users/shared/user.model';
+import {
+  UserModel,
+  ReplyModel,
+} from '../../shared/models';
 
 import { ReplyFormComponent } from './reply-form.component';
 

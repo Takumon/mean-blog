@@ -13,7 +13,7 @@ import {
 } from '@angular/material';
 
 import { Constant } from '../../shared/constant';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { ConfirmDialogComponent } from '../../shared/components';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';

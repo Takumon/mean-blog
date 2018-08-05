@@ -2,31 +2,38 @@ import { of, Subscriber, Subject } from 'rxjs';
 import 'rxjs';
 import marked from 'marked';
 
+import { APP_BASE_HREF } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-
 import { DebugElement, Component, Input, Output, EventEmitter } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { CommentModel } from '../shared/comment.model';
-import { UserModel } from '../../users/shared/user.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
-import { ArticleComponent } from './article.component';
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, inject } from '@angular/core/testing';
-import { SharedModule } from '../../shared/shared.module';
-import { ErrorStateMatcherContainParentGroup, MessageService } from '../../shared/services/message.service';
 import { ErrorStateMatcher, MatDialog } from '@angular/material';
+import { OverlayContainer } from '@angular/cdk/overlay';
+
+import { SharedModule } from '../../shared/shared.module';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
+import {
+  ErrorStateMatcherContainParentGroup,
+  MessageService
+} from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
-import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
-import { ExcludeDeletedVoterPipe } from '../shared/exclude-deleted-voter.pipe';
-import { APP_BASE_HREF } from '@angular/common';
 import { MessageBarService } from '../../shared/services/message-bar.service';
-import { CommentService } from '../shared/comment.service';
+import {
+  ExcludeDeletedVoterPipe,
+  ExcludeDeletedCommentPipe,
+} from '../../shared/pipes';
+import {
+  ArticleWithUserModel,
+  CommentModel,
+  CommentWithUserModel,
+  UserModel,
+} from '../../shared/models';
+
+import { ArticleComponent } from './article.component';
 import { VoteCudResponse, ArticleService } from '../shared/article.service';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { CommentService } from '../shared/comment.service';
 
 describe('ArticleComponent', () => {
 

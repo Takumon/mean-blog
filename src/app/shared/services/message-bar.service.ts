@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { Observable, of } from 'rxjs';
 
-import { MessageBarComponent } from '../components/message-bar.component';
+import { MessageBarComponent } from '../components';
 
 @Injectable()
 export class MessageBarService {

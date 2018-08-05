@@ -10,7 +10,10 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { ExcludeDeletedCommentPipe } from '../../shared/pipes/exclude-deleted-comment.pipe';
+import {
+  ExcludeDeletedCommentPipe
+} from '../../shared/pipes';
+
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import {
   UserModel,

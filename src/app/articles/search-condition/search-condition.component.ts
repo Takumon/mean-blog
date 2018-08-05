@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { LocalStorageService, LOCALSTORAGE_KEY } from '../../shared/services/local-storage.service';
-import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
+import { ConfirmDialogComponent } from '../../shared/components';
 import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-pattern.enum';
 
 import { SearchConditionService } from '../shared/search-condition.service';
