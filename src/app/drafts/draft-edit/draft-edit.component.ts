@@ -27,8 +27,10 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 import { MessageService } from '../../shared/services/message.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
-import { ArticleWithUserModel } from '../../articles/shared/article-with-user.model';
-import { ArticleModel } from '../../articles/shared/article.model';
+import {
+  ArticleModel,
+  ArticleWithUserModel,
+} from '../../shared/models';
 import { ArticleService } from '../../articles/shared/article.service';
 
 import { DraftModel } from '../shared/draft.model';

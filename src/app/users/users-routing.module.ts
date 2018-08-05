@@ -10,12 +10,12 @@ import { AdminAuthGuard } from '../shared/admin-auth.guard';
 
 const routes: Routes = [
   {
-    path: 'users',
+    path: '',
     component: UserListComponent,
     canActivate: [AdminAuthGuard]
   },
   {
-    path: 'users/:_userId',
+    path: ':_userId',
     component: UserComponent,
     children: [
       {

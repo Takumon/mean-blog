@@ -8,7 +8,6 @@ import { UsersRoutingModule } from './users-routing.module';
 import { UserComponent } from './user.component';
 import { CommentListComponent } from './comment-list/comment-list.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { UserService } from './shared/user.service';
 import { SharedModule } from '../shared/shared.module';
 
 
@@ -23,7 +22,6 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule,
   ],
   providers: [
-    UserService,
     { provide: MatPaginatorIntl, useClass: PaginatorService},
   ],
 })

@@ -1,5 +1,5 @@
-import { UserModel } from '../../users/shared/user.model';
-import { ImageModel } from '../../shared/models/image.model';
+import { UserModel } from '../models/user.model';
+import { ImageModel } from '../models/image.model';
 
 import { CommentWithUserModel } from './comment-with-user.model';
 import { CommentModel } from './comment.model';

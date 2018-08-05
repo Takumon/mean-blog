@@ -21,8 +21,8 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 
-import { CommentModel } from '../shared/comment.model';
 import { CommentService } from '../shared/comment.service';
+import { CommentModel } from '../../shared/models';
 
 /**
  * コメント入力フォーム

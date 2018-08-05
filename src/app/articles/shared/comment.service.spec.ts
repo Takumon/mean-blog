@@ -1,16 +1,16 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { JwtService } from '../../shared/services/jwt.service';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 
+import {
+  CommentModel,
+  CommentWithUserModel,
+} from '../../shared/models';
 
 import { CommentService } from './comment.service';
-import { CommentModel } from './comment.model';
-import { CommentWithUserModel } from './comment-with-user.model';
-import { CommentWithArticleModel } from './comment-with-article.model';
-
 
 
 describe('CommentService', () => {

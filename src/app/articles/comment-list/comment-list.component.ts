@@ -8,13 +8,14 @@ import { Constant } from '../../shared/constant';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 
-
-import { CommentModel } from '../shared/comment.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
+import {
+  CommentModel,
+  CommentWithUserModel,
+  ReplyModel,
+  ReplyWithUserModel
+} from '../../shared/models';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
-import { ReplyModel } from '../shared/reply.model';
-import { ReplyWithUserModel } from '../shared/reply-with-user.model';
 
 @Component({
   selector: 'app-comment-list',

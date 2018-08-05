@@ -2,9 +2,9 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { UserModel } from './user.model';
+import { UserModel } from '../models/user.model';
 import { UserService } from './user.service';
-import { CudSuccessModel } from '../../shared/models/response/cud-success.model';
+import { CudSuccessModel } from '../models/response/cud-success.model';
 
 
 describe('UserService', () => {

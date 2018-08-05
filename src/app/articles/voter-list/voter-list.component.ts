@@ -1,7 +1,7 @@
 import { Component, Input} from '@angular/core';
 
 import { Constant } from '../../shared/constant';
-import { UserModel } from '../../users/shared/user.model';
+import { UserModel } from '../../shared/models';
 
 @Component({
   selector: 'app-voter-list',

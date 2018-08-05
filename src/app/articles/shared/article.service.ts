@@ -3,10 +3,8 @@ import { HttpClient, HttpParams} from '@angular/common/http';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import 'rxjs';
+import { ArticleModel, ArticleWithUserModel, UserModel } from '../../shared/models';
 
-import { ArticleModel } from './article.model';
-import { ArticleWithUserModel } from './article-with-user.model';
-import { UserModel } from '../../users/shared/user.model';
 
 
 /**

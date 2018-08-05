@@ -13,10 +13,10 @@ import { takeUntil } from 'rxjs/operators';
 import { ScrollService } from '../../shared/services/scroll.service';
 import { PaginatorService } from '../../shared/services/paginator.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserService } from '../../users/shared/user.service';
+import { UserService } from '../../shared/services/user.service';
 import { ArticleService, Condition } from '../shared/article.service';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
 import { Constant } from '../../shared/constant';
+import { ArticleWithUserModel } from '../../shared/models';
 
 export enum ArticleSearchMode {
   ALL = 100,

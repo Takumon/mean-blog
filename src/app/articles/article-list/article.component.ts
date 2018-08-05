@@ -17,13 +17,10 @@ import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
+import { ArticleWithUserModel, CommentModel, CommentWithUserModel, UserModel } from '../../shared/models';
 
-import { UserModel } from '../../users/shared/user.model';
 import { ArticleService, VoteCudResponse } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
-import { CommentModel } from '../shared/comment.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
 
 @Component({
   selector: 'app-article',

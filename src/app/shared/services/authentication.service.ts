@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { UserModel } from '../../users/shared/user.model';
+import { UserModel } from '../../shared/models/user.model';
 import { map, catchError } from 'rxjs/operators';
 
 import { LocalStorageService, LOCALSTORAGE_KEY } from './local-storage.service';

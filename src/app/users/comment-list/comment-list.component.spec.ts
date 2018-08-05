@@ -11,18 +11,20 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../shared/user.model';
+import {
+  UserModel,
+  CommentModel,
+  CommentWithUserModel,
+  CommentWithArticleModel,
+  ReplyModel,
+  ReplyWithUserModel,
+  ReplyWithArticleModel,
+} from '../../shared/models';
 
 import { CommentListComponent } from './comment-list.component';
 import { CommentService } from '../../articles/shared/comment.service';
-import { CommentModel } from '../../articles/shared/comment.model';
-import { CommentWithUserModel } from '../../articles/shared/comment-with-user.model';
-import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
+import { UserService } from '../../shared/services/user.service';
 import { ReplyService } from '../../articles/shared/reply.service';
-import { ReplyModel } from '../../articles/shared/reply.model';
-import { ReplyWithUserModel } from '../../articles/shared/reply-with-user.model';
-import { ReplyWithArticleModel } from '../../articles/shared/reply-with-article.model';
-import { UserService } from '../shared/user.service';
 
 
 describe('CommentListComponent', () => {

@@ -22,8 +22,7 @@ import { RouteNamesService } from '../../shared/services/route-names.service';
 import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
 import { ConfirmDialogComponent } from '../../shared/components/confirm.dialog';
 import { MessageBarService } from '../../shared/services/message-bar.service';
-import { UserModel } from '../../users/shared/user.model';
-import { ArticleWithUserModel } from '../shared/article-with-user.model';
+import { ArticleWithUserModel, UserModel } from '../../shared/models';
 import { ArticleService } from '../shared/article.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
 

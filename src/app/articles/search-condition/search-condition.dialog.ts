@@ -20,9 +20,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 
 import { MessageService, ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
-
-import { UserService } from '../../users/shared/user.service';
-
+import { UserService } from '../../shared/services/user.service';
 import { SearchConditionService } from '../shared/search-condition.service';
 
 export interface UserListFactor {

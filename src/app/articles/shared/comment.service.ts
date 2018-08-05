@@ -5,9 +5,11 @@ import 'rxjs';
 
 import { JwtService } from '../../shared/services/jwt.service';
 
-import { CommentModel } from './comment.model';
-import { CommentWithUserModel } from './comment-with-user.model';
-import { CommentWithArticleModel } from './comment-with-article.model';
+import {
+  CommentModel,
+  CommentWithUserModel,
+  CommentWithArticleModel,
+} from '../../shared/models';
 
 /**
  * Http通信用オプション

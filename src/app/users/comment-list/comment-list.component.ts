@@ -4,13 +4,16 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
+import { UserService } from '../../shared/services/user.service';
 
-import { CommentWithArticleModel } from '../../articles/shared/comment-with-article.model';
+import {
+  UserModel,
+  CommentWithArticleModel,
+  ReplyWithArticleModel,
+} from '../../shared/models';
+
 import { CommentService } from '../../articles/shared/comment.service';
 import { ReplyService } from '../../articles/shared/reply.service';
-import { UserModel } from '../shared/user.model';
-import { UserService } from '../shared/user.service';
-import { ReplyWithArticleModel } from '../../articles/shared/reply-with-article.model';
 
 
 @Component({

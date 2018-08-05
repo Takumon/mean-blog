@@ -5,9 +5,9 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { JwtService } from '../../shared/services/jwt.service';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 
+import { ReplyModel } from '../../shared/models';
 
 import { ReplyService } from './reply.service';
-import { ReplyModel } from './reply.model';
 
 
 

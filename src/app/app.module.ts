@@ -9,7 +9,6 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { UsersModule } from './users/users.module';
 import { ArticlesModule } from './articles/articles.module';
 
 import { AppHttpInterceptor } from './shared/services/http.interceptor';
@@ -34,6 +33,7 @@ import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
 import { SharedModule } from './shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UserService } from './shared/services/user.service';
 
 
 @NgModule({
@@ -44,7 +44,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     HttpClientModule,
     AppRoutingModule,
     ArticlesModule,
-    UsersModule,
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
@@ -67,6 +66,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RouteNamesService,
     ImageService,
     MarkdownParseService,
+    UserService,
     {
       provide: ErrorStateMatcher,
       useClass: CustomErrorStateMatcher

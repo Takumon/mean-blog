@@ -44,6 +44,8 @@ import { NotCheckedListPipe } from './pipes/not-checked-list.pipe';
 import { KeysPipe } from './pipes/keys.pipe';
 
 import { AppDateAdapter } from './app-date-adapter';
+import { ExcludeDeletedCommentPipe } from './pipes/exclude-deleted-comment.pipe';
+import { ExcludeDeletedVoterPipe } from './pipes/exclude-deleted-voter.pipe';
 
 
 @NgModule({
@@ -58,7 +60,8 @@ import { AppDateAdapter } from './app-date-adapter';
     KeysPipe,
     CheckedListPipe,
     NotCheckedListPipe,
-
+    ExcludeDeletedCommentPipe,
+    ExcludeDeletedVoterPipe,
   ],
   imports: [
     CommonModule,
@@ -106,6 +109,8 @@ import { AppDateAdapter } from './app-date-adapter';
     KeysPipe,
     CheckedListPipe,
     NotCheckedListPipe,
+    ExcludeDeletedCommentPipe,
+    ExcludeDeletedVoterPipe,
 
     AutofocusDirective,
     DragAndDropDirective,

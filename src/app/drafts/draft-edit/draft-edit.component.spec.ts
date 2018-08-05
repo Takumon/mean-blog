@@ -16,12 +16,14 @@ import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher
 import { MessageBarService } from '../../shared/services/message-bar.service';
 import { MessageService } from '../../shared/services/message.service';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
+import {
+  UserModel,
+  ArticleWithUserModel,
+  ArticleModel,
+} from '../../shared/models';
 
 import { DraftEditComponent } from './draft-edit.component';
 import { ArticleService } from '../../articles/shared/article.service';
-import { ArticleWithUserModel } from '../../articles/shared/article-with-user.model';
-import { ArticleModel } from '../../articles/shared/article.model';
 import { DraftService } from '../shared/draft.service';
 import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
 import { ImageService } from '../../shared/services/image.service';

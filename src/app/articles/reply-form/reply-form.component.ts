@@ -21,7 +21,7 @@ import { AuthenticationService } from '../../shared/services/authentication.serv
 import { MessageService } from '../../shared/services/message.service';
 import { MessageBarService } from '../../shared/services/message-bar.service';
 
-import { ReplyModel } from '../shared/reply.model';
+import { ReplyModel } from '../../shared/models';
 import { ReplyService } from '../shared/reply.service';
 
 /**

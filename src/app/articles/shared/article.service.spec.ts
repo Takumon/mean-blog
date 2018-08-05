@@ -3,8 +3,7 @@ import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ArticleService } from './article.service';
-import { ArticleModel } from './article.model';
-import { UserModel } from '../../users/shared/user.model';
+import { ArticleModel, UserModel } from '../../shared/models';
 
 
 describe('ArticleService', () => {
