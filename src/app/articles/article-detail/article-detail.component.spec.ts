@@ -11,10 +11,12 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
-import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-
+import {
+  MarkdownParseService,
+  MessageBarService,
+  AuthenticationService,
+  RouteNamesService,
+} from '../../shared/services';
 import {
   ExcludeDeletedCommentPipe,
   ExcludeDeletedVoterPipe,
@@ -25,9 +27,9 @@ import {
   ArticleModel,
 } from '../../shared/models';
 
+
 import { ArticleDetailComponent } from './article-detail.component';
 import { ArticleService } from '../shared/article.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
 
 describe('ArticleDetailComponent', () => {
 

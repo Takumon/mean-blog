@@ -1,38 +1,36 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {
-  ErrorStateMatcher,
-} from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ErrorStateMatcher, } from '@angular/material';
 import { Router } from '@angular/router';
 import 'hammerjs';
 
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ArticlesModule } from './articles/articles.module';
 
-import { AppHttpInterceptor } from './shared/services/http.interceptor';
-import { RouteNamesService } from './shared/services/route-names.service';
-import { JwtService } from './shared/services/jwt.service';
-import { AuthenticationService } from './shared/services/authentication.service';
-import { LocalStorageService } from './shared/services/local-storage.service';
-import { ScrollSpyService } from './shared/services/scroll-spy.service';
-import { ScrollService } from './shared/services/scroll.service';
-import { ErrorStateMatcherContainParentGroup } from './shared/services/message.service';
-import { TocService } from './shared/services/toc.service';
 import { AuthGuard } from './shared/auth.guard';
 import { AdminAuthGuard } from './shared/admin-auth.guard';
-
-
-import { MarkdownParseService } from './shared/services/markdown-parse.service';
-import { MessageService } from './shared/services/message.service';
-import { MessageBarService } from './shared/services/message-bar.service';
-import { ImageService } from './shared/services/image.service';
-
-import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
 import { SharedModule } from './shared/shared.module';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
+import {
+  AuthenticationService,
+  ErrorStateMatcherContainParentGroup,
+  JwtService,
+  RouteNamesService,
+  AppHttpInterceptor,
+  LocalStorageService,
+  MarkdownParseService,
+  MessageService,
+  MessageBarService,
+  ImageService,
+} from './shared/services';
+
+import { ArticlesModule } from './articles/articles.module';
+import { ScrollSpyService } from './articles/shared/scroll-spy.service';
+import { ScrollService } from './articles/shared/scroll.service';
+import { TocService } from './articles/shared/toc.service';
+
 import { UserService } from './shared/services/user.service';
 import { UsersModule } from './users/users.module';
 

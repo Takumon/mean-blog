@@ -20,12 +20,14 @@ import {
 } from '@angular/material';
 
 import { Constant } from '../../shared/constant';
-import { ImageService } from '../../shared/services/image.service';
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
-import { MessageService } from '../../shared/services/message.service';
 import { ConfirmDialogComponent } from '../../shared/components';
+import {
+  AuthenticationService,
+  RouteNamesService,
+  MessageService,
+  MessageBarService,
+  ImageService,
+} from '../../shared/services';
 
 import {
   ArticleModel,

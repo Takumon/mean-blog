@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { MarkdownParseService } from '../services/markdown-parse.service';
+import { MarkdownParseService } from '../services';
 
 @Pipe({ name: 'toMarkdown' })
 export class MarkdownParsePipe implements PipeTransform {

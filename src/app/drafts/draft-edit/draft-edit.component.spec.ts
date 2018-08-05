@@ -10,24 +10,26 @@ import { ErrorStateMatcher } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
-
-import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { MessageService } from '../../shared/services/message.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
+import {
+  AuthenticationService,
+  MessageService,
+  MessageBarService,
+  ErrorStateMatcherContainParentGroup,
+  ImageService,
+  MarkdownParseService,
+  RouteNamesService,
+} from '../../shared/services';
 import {
   UserModel,
   ArticleWithUserModel,
   ArticleModel,
 } from '../../shared/models';
 
-import { DraftEditComponent } from './draft-edit.component';
+
 import { ArticleService } from '../../articles/shared/article.service';
 import { DraftService } from '../shared/draft.service';
-import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
-import { ImageService } from '../../shared/services/image.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
+import { DraftEditComponent } from './draft-edit.component';
 
 
 describe('DraftDetailComponent', () => {

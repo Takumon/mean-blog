@@ -3,8 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
+import {
+  AuthenticationService,
+  RouteNamesService,
+} from '../../shared/services';
 
 import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';

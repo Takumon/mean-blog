@@ -5,7 +5,7 @@ import {
 } from '@angular/material';
 
 import { Constant } from '../../shared/constant';
-import { AuthenticationService } from '../../shared/services/authentication.service';
+import { AuthenticationService } from '../../shared/services';
 import { ConfirmDialogComponent } from '../../shared/components';
 
 import {

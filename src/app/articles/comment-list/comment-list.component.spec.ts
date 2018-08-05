@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, of } from 'rxjs';
 import 'rxjs';
 
@@ -9,12 +10,12 @@ import { APP_BASE_HREF } from '@angular/common';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
-
 import {
   ExcludeDeletedCommentPipe
 } from '../../shared/pipes';
-
-import { AuthenticationService } from '../../shared/services/authentication.service';
+import {
+  AuthenticationService
+} from '../../shared/services';
 import {
   UserModel,
   CommentModel,
@@ -22,11 +23,12 @@ import {
   ReplyModel,
 } from '../../shared/models';
 
-import { CommentListComponent } from './comment-list.component';
+
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { CommentListComponent } from './comment-list.component';
 
 describe('CommentListComponent', () => {
 

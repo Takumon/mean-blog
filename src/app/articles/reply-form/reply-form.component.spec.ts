@@ -11,20 +11,21 @@ import { By } from '@angular/platform-browser';
 import { MatSnackBar, ErrorStateMatcher } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
-
-import { ErrorStateMatcherContainParentGroup } from '../../shared/services/message.service';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import { Constant } from '../../shared/constant';
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { MessageService } from '../../shared/services/message.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-
-import { ReplyService } from '../shared/reply.service';
+import {
+  ErrorStateMatcherContainParentGroup,
+  AuthenticationService,
+  MessageService,
+  MessageBarService,
+} from '../../shared/services';
 import {
   UserModel,
   ReplyModel,
 } from '../../shared/models';
 
+
+import { ReplyService } from '../shared/reply.service';
 import { ReplyFormComponent } from './reply-form.component';
 
 

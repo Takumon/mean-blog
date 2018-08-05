@@ -14,12 +14,12 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { SharedModule } from '../../shared/shared.module';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import {
-  ErrorStateMatcherContainParentGroup,
-  MessageService
-} from '../../shared/services/message.service';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
-import { MessageBarService } from '../../shared/services/message-bar.service';
+  AuthenticationService,
+  MarkdownParseService,
+  MessageBarService,
+  MessageService,
+  ErrorStateMatcherContainParentGroup
+} from '../../shared/services';
 import {
   ExcludeDeletedVoterPipe,
   ExcludeDeletedCommentPipe,

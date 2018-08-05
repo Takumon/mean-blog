@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import 'rxjs';
 
 import { Constant } from '../../shared/constant';
-import { JwtService } from '../../shared/services/jwt.service';
-
+import { JwtService } from '../../shared/services';
 import {
   ReplyModel,
   ReplyWithUserModel,
   ReplyWithArticleModel,
 } from '../../shared/models';
+
 
 /**
  * Http通信用オプション

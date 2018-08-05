@@ -17,12 +17,18 @@ import { Observable, Subject, of } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { RouteNamesService } from '../../shared/services/route-names.service';
-import { MarkdownParseService } from '../../shared/services/markdown-parse.service';
+import {
+  AuthenticationService,
+  RouteNamesService,
+  MarkdownParseService,
+  MessageBarService,
+} from '../../shared/services';
 import { ConfirmDialogComponent } from '../../shared/components';
-import { MessageBarService } from '../../shared/services/message-bar.service';
-import { ArticleWithUserModel, UserModel } from '../../shared/models';
+import {
+  ArticleWithUserModel,
+  UserModel,
+} from '../../shared/models';
+
 import { ArticleService } from '../shared/article.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
 

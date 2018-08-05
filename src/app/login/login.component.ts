@@ -4,8 +4,11 @@ import { MatSnackBar } from '@angular/material';
 
 
 import { Constant } from '../shared/constant';
-import { RouteNamesService } from '../shared/services/route-names.service';
-import { AuthenticationService } from '../shared/services/authentication.service';
+import {
+  AuthenticationService,
+  RouteNamesService,
+} from '../shared/services';
+
 
 @Component({
   selector: 'app-login',

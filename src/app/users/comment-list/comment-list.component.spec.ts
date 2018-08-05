@@ -9,8 +9,10 @@ import { APP_BASE_HREF } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { SharedModule } from '../../shared/shared.module';
-
-import { AuthenticationService } from '../../shared/services/authentication.service';
+import {
+  AuthenticationService,
+  UserService,
+} from '../../shared/services';
 import {
   UserModel,
   CommentModel,
@@ -21,10 +23,10 @@ import {
   ReplyWithArticleModel,
 } from '../../shared/models';
 
-import { CommentListComponent } from './comment-list.component';
+
 import { CommentService } from '../../articles/shared/comment.service';
-import { UserService } from '../../shared/services/user.service';
 import { ReplyService } from '../../articles/shared/reply.service';
+import { CommentListComponent } from './comment-list.component';
 
 
 describe('CommentListComponent', () => {

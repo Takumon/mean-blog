@@ -2,13 +2,15 @@ import { TestBed } from '@angular/core/testing';
 import { HttpRequest } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { JwtService } from '../../shared/services/jwt.service';
-import { LocalStorageService } from '../../shared/services/local-storage.service';
-
+import {
+  JwtService,
+  LocalStorageService,
+} from '../../shared/services';
 import {
   CommentModel,
   CommentWithUserModel,
 } from '../../shared/models';
+
 
 import { CommentService } from './comment.service';
 

@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { Constant } from './shared/constant';
-import { AuthenticationService } from './shared/services/authentication.service';
-import { RouteNamesService } from './shared/services/route-names.service';
-import { ScrollService } from './shared/services/scroll.service';
+import {
+  RouteNamesService,
+  AuthenticationService,
+} from './shared/services';
+
+import { ScrollService } from './articles/shared/scroll.service';
 
 
 @Component({

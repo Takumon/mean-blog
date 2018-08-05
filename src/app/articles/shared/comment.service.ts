@@ -3,13 +3,14 @@ import { HttpClient , HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import 'rxjs';
 
-import { JwtService } from '../../shared/services/jwt.service';
 
+import { JwtService } from '../../shared/services';
 import {
   CommentModel,
   CommentWithUserModel,
   CommentWithArticleModel,
 } from '../../shared/models';
+
 
 /**
  * Http通信用オプション

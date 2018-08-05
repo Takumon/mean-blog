@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material';
 
 
-import { PaginatorService } from '../shared/services/paginator.service';
+import { PaginatorService } from '../shared/services';
 
-import { UsersRoutingModule } from './users-routing.module';
-import { UserComponent } from './user.component';
-import { CommentListComponent } from './comment-list/comment-list.component';
-import { UserListComponent } from './user-list/user-list.component';
+
 import { SharedModule } from '../shared/shared.module';
+import { UsersRoutingModule } from './users-routing.module';
+import { CommentListComponent } from './comment-list/comment-list.component';
+import { UserComponent } from './user.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 
 @NgModule({

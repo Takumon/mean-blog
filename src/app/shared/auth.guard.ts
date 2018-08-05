@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { LocalStorageService, LOCALSTORAGE_KEY } from './services/local-storage.service';
+
+
+import { LocalStorageService, LOCALSTORAGE_KEY } from './services';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

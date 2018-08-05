@@ -1,8 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material';
 
-import { PaginatorService } from '../shared/services/paginator.service';
-
+import { PaginatorService } from '../shared/services';
 
 import { ArticleService } from './shared/article.service';
 import { CommentService } from './shared/comment.service';
