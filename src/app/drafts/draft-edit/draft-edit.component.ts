@@ -35,9 +35,14 @@ import {
 } from '../../shared/models';
 import { ArticleService } from '../../articles/shared/article.service';
 
-import { DraftModel } from '../shared/draft.model';
-import { DraftService } from '../shared/draft.service';
+import {
+  DraftModel,
+  DraftService,
+} from '../shared';
+
+
 import { EditMode } from './draft-edit-mode.enum';
+
 
 const IS_RESUME = 'resume';
 

@@ -12,6 +12,11 @@ import { DraftService } from '../shared/draft.service';
 import { DraftModel } from '../shared/draft.model';
 import { DraftSharedService } from '../shared/draft-shared.service';
 
+
+
+/**
+ * 下書きを投稿済みと未投稿に分類した結果
+ */
 interface GroupedDrafts {
   notPosted: Array<DraftModel>;
   posted: Array<DraftModel>;
@@ -40,12 +45,13 @@ export class DraftListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // どこかから（子コンポーネントから）発火される、リフレッシュイベントを購読する
+    // イベント発生時にドラフトをサーバから再取得し画面をリフレッシュする
     this.draftSharedService.changeEmitted$
-    .pipe(takeUntil(this.onDestroy))
-    .subscribe(text => {
-      const isRefresh = true;
-      this.getDrafts(isRefresh);
-    });
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => this.getDrafts(true));
+
+    // 画面初期表示時にドラフトをサーバから取得する
     this.getDrafts();
   }
 
@@ -54,34 +60,48 @@ export class DraftListComponent implements OnInit, OnDestroy {
   }
 
 
-  // TODO 0件時の処理
+  /**
+   * ドラフトをサーバ側から取得し画面のプロパティに設定する.
+   *
+   * @param isRefresh ドラフト画面初期表示時（ドラフトリストの一番上部ものの詳細を表示した状態）にリフレッシュするかどうか
+   */
   getDrafts(isRefresh: boolean = false): void {
     const condition = { userId: this.auth.loginUser._id };
     this.draftService.get(condition)
-    .subscribe(drafts => {
-      const count = drafts ? drafts.length : 0;
-      this.routeNamesService.name.next(`下書き一覧 ( ${count} / 10件 )`);
+      .subscribe(drafts => {
+        this.routeNamesService.name.next(`下書き一覧 ( ${drafts ? drafts.length : 0} / 10件 )`);
 
-      if (!drafts || drafts.length === 0) {
-        this.notFound = true;
-        this.groupedDrafts = null;
-        this.router.navigate(['drafts']);
-        return;
-      }
+        if (!drafts || drafts.length === 0) {
+          this.notFound = true;
+          this.groupedDrafts = null;
+          this.router.navigate(['drafts']);
+          return;
+        }
 
-      this.groupedDrafts = this.grouping(drafts);
-      if (!this.route.firstChild || isRefresh) {
-        // 決め打ちで一番最初の下書きを選択する
-        const _id = this.groupedDrafts.notPosted.length > 0
-          ? this.groupedDrafts.notPosted[0]._id
-          : this.groupedDrafts.posted[0]._id;
-        this.router.navigate(['drafts', _id]);
-      }
-    });
+        this.groupedDrafts = this.grouping(drafts);
+
+        // ドラフト一覧は画面左側に表示し、ドラフト詳細をメイン領域に表示する
+        // ただこの時、ドラフト一覧にアクセスした場合、どのドラフトの詳細を表示するかが決まっていない (この時子コンポーネントのルータが存在しないので、それを見て判断している)
+        // そのため決め打ちで一番最初の下書きを選択する
+        // また意図的に状態をリフレッシュしたい時は、ドラフト詳細が表示された状態でも、同様のリフレッシュ処理を行う
+        if (!this.route.firstChild || isRefresh) {
+          const _id = this.groupedDrafts.notPosted.length > 0
+            ? this.groupedDrafts.notPosted[0]._id
+            : this.groupedDrafts.posted[0]._id;
+
+          this.router.navigate(['drafts', _id]);
+        }
+      });
   }
 
+  /**
+   * 指定した下書きを投稿済と未投稿に分類する
+   *
+   * @param drafts 下書きのリスト
+   * @returns 投稿済と未投稿に分類した結果
+   */
   grouping(drafts: Array<DraftModel>): GroupedDrafts {
-    const result = {
+    const result: GroupedDrafts = {
       notPosted: [],
       posted: []
     };
@@ -90,13 +110,11 @@ export class DraftListComponent implements OnInit, OnDestroy {
       return result;
     }
 
-    drafts.forEach(d => {
-      if (d.articleId) {
-        result.posted.push(d);
-      } else {
-        result.notPosted.push(d);
-      }
-    });
+    drafts.forEach(d =>
+      d.articleId
+        ? result.posted.push(d)
+        : result.notPosted.push(d)
+    );
 
     return result;
   }

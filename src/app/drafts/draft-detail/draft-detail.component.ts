@@ -10,9 +10,12 @@ import { takeUntil } from 'rxjs/operators';
 import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components';
 
-import { DraftService } from '../shared/draft.service';
-import { DraftModel } from '../shared/draft.model';
-import { DraftSharedService } from '../shared/draft-shared.service';
+import {
+  DraftService,
+  DraftModel,
+  DraftSharedService,
+} from '../shared';
+
 
 @Component({
   selector: 'app-draft-detail',
@@ -34,23 +37,21 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getDraft();
+    // URLで指定したIDのドラフトを取得する
+    this.route.params
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(params =>
+        this.draftService.getById(params['_id'])
+          .subscribe(draft =>
+            this.draft = draft as DraftModel
+          )
+      );
   }
 
   ngOnDestroy() {
     this.onDestroy.next();
   }
 
-  getDraft(): void {
-    this.route.params
-    .pipe(takeUntil(this.onDestroy))
-    .subscribe( params => {
-      this.draftService.getById(params['_id'])
-      .subscribe(draft => {
-        this.draft = draft as DraftModel;
-      });
-    });
-  }
 
   deleteDraft(draft: DraftModel): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -66,12 +67,12 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
       }
 
       this.draftService
-      .delete(draft._id)
-      .subscribe(res => {
-        this.draft = null;
-        this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        this.draftSharedService.emitChange('Deleted draft');
-      });
+        .delete(draft._id)
+        .subscribe(res => {
+          this.draft = null;
+          this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
+          this.draftSharedService.emitChange('Deleted draft');
+        });
     });
   }
 
