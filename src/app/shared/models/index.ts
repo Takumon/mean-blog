@@ -9,5 +9,5 @@ export * from './reply.model';
 export * from './reply-with-user.model';
 export * from './reply-with-article.model';
 export * from './user.model';
-
+export * from './cud-success.model';
 

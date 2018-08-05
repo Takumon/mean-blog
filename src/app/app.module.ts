@@ -34,6 +34,7 @@ import { SharedModule } from './shared/shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserService } from './shared/services/user.service';
+import { UsersModule } from './users/users.module';
 
 
 @NgModule({
@@ -47,7 +48,9 @@ import { UserService } from './shared/services/user.service';
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
+    UsersModule,
   ],
+
   providers: [
     ScrollSpyService,
     ScrollService,

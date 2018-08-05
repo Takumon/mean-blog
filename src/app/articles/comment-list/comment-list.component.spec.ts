@@ -10,20 +10,20 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 
-import { ExcludeDeletedCommentPipe } from '../shared/exclude-deleted-comment.pipe';
-
-
+import { ExcludeDeletedCommentPipe } from '../../shared/pipes/exclude-deleted-comment.pipe';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { UserModel } from '../../users/shared/user.model';
+import {
+  UserModel,
+  CommentModel,
+  CommentWithUserModel,
+  ReplyModel,
+} from '../../shared/models';
 
 import { CommentListComponent } from './comment-list.component';
-import { CommentModel } from '../shared/comment.model';
-import { CommentWithUserModel } from '../shared/comment-with-user.model';
 import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
-import { ReplyModel } from '../shared/reply.model';
-import { BrowserAnimationsModule } from '../../../../node_modules/@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CommentListComponent', () => {
 

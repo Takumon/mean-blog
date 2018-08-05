@@ -1,4 +1,4 @@
-import { UserModel } from '../models/user.model';
+import { UserModel } from './user.model';
 
 /**
  * リプライ(リプライしたユーザ情報を含む)のモデル

@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
 
       this.refreshActiveNavbar();
       // 記事詳細はハッシュタグでスクロール制御するので除外
-      if (!this.router.url.includes('/articles/')) {
+      if (!this.router.url.startsWith('/articles/')) {
         this.scrollService.scrollToTop();
       }
     });
@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
     const url: String = this.router.url;
 
     // 完全一致
-    if (url === '/' || url === '/articles') {
+    if (url === '/dashbord' || url === '/dashbord/articles') {
       this.isActiveNavbar = true;
     } else {
       this.isActiveNavbar = false;

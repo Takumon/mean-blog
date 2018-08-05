@@ -4,7 +4,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 
 import { UserModel } from '../models/user.model';
 import { UserService } from './user.service';
-import { CudSuccessModel } from '../models/response/cud-success.model';
+import { CudSuccessModel } from '../models/cud-success.model';
 
 
 describe('UserService', () => {

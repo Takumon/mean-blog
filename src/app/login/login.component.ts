@@ -40,14 +40,14 @@ export class LoginComponent implements OnInit {
     // パスワード変更
     if (url === '/login/loginoptions/passwordchange') {
       this.passwordChageMode = true;
-      this.returnUrl = '/';
+      this.returnUrl = '/dashbord';
       return;
     }
 
     this.passwordChageMode = false;
 
     // 表示しようとしていたURLを保持しておく
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashbord';
     const isLoginMode = !('register' in this.route.snapshot.queryParams);
     this.setLoginMode(isLoginMode);
   }

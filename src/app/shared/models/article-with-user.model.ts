@@ -1,5 +1,5 @@
-import { UserModel } from '../models/user.model';
-import { ImageModel } from '../models/image.model';
+import { UserModel } from './user.model';
+import { ImageModel } from './image.model';
 
 import { CommentWithUserModel } from './comment-with-user.model';
 import { CommentModel } from './comment.model';
