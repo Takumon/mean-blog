@@ -9,7 +9,7 @@ import {
 } from '../../shared/services';
 
 import { DraftService } from '../shared/draft.service';
-import { DraftModel } from '../shared/draft.model';
+import { DraftModel } from '../state/draft.model';
 import { DraftSharedService } from '../shared/draft-shared.service';
 
 

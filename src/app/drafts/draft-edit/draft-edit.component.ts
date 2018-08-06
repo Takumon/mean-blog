@@ -36,9 +36,9 @@ import {
 import { ArticleService } from '../../articles/shared/article.service';
 
 import {
-  DraftModel,
   DraftService,
 } from '../shared';
+import { DraftModel } from '../state/draft.model';
 
 
 import { EditMode } from './draft-edit-mode.enum';

@@ -12,9 +12,10 @@ import { ConfirmDialogComponent } from '../../shared/components';
 
 import {
   DraftService,
-  DraftModel,
   DraftSharedService,
 } from '../shared';
+import { DraftModel } from '../state/draft.model';
+
 
 
 @Component({

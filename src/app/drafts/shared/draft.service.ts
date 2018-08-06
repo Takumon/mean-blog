@@ -8,7 +8,7 @@ import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services';
 
 
-import { DraftModel } from './draft.model';
+import { DraftModel } from '../state/draft.model';
 
 /**
  * 下書き記事情報のサービスクラス
@@ -33,7 +33,7 @@ export class DraftService {
    * @param condition 検索条件
    * @return 指定した検索条件に一致するモデルのリスト
    */
-  get(condition): Observable<Array<DraftModel>> {
+  get(condition: {userId?: string, articleId?: string, author?: string}): Observable<Array<DraftModel>> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
     const params = new HttpParams()

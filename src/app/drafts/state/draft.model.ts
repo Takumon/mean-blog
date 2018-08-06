@@ -1,4 +1,4 @@
-import { ImageModel } from '../../shared/models/image.model';
+import { ImageModel } from '../../shared/models';
 
 /**
  * 下書き記事のモデル
