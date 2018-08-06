@@ -5,6 +5,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorStateMatcher, } from '@angular/material';
 import { Router } from '@angular/router';
 import 'hammerjs';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,6 +29,8 @@ import {
   ImageService,
 } from './shared/services';
 
+import { reducers, metaReducers } from './state';
+
 import { ArticlesModule } from './articles/articles.module';
 import { ScrollSpyService } from './articles/shared/scroll-spy.service';
 import { ScrollService } from './articles/shared/scroll.service';
@@ -33,6 +38,8 @@ import { TocService } from './articles/shared/toc.service';
 
 import { UserService } from './shared/services/user.service';
 import { UsersModule } from './users/users.module';
+
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -47,6 +54,9 @@ import { UsersModule } from './users/users.module';
     BrowserAnimationsModule,
     SharedModule,
     UsersModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot([]),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
 
   providers: [
