@@ -41,7 +41,7 @@ export enum DraftActionTypes {
 export class LoadDrafts implements Action {
   readonly type = DraftActionTypes.LoadDrafts;
 
-  constructor(public payload: { condition: {articleId: string} }) {}
+  constructor(public payload: { condition: {userId: string} }) {}
 }
 
 

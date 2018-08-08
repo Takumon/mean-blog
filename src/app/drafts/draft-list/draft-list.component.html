@@ -1,8 +1,9 @@
 <div class="wrapper">
-<div class="prograss-bar" *ngIf="!notFound && !groupedDrafts" >
+<div class="prograss-bar" *ngIf="(loading$ | async)" >
   <mat-spinner></mat-spinner>
 </div>
-<div class="message-wrapper" *ngIf="notFound">
+
+<div class="message-wrapper" *ngIf="(groupedDrafts$ | async)?.isEmpty()">
   <div class="message">
     <div class="massage__icon">
       <i class="fa fa-fw fa-2x fa-exclamation-triangle"></i>
@@ -11,15 +12,15 @@
   </div>
 </div>
 
-<ng-container *ngIf="groupedDrafts">
+<ng-container *ngIf="!(loading$ | async)">
 <div class="draft-list" >
 
-  <div class="draft-list__title">未投稿 ({{groupedDrafts.notPosted.length}}件)</div>
-  <ng-container *ngIf="groupedDrafts.notPosted.length > 0">
+  <div class="draft-list__title">未投稿 ({{(groupedDrafts$ | async)?.notPosted.length}}件)</div>
+  <ng-container *ngIf="(groupedDrafts$ | async)?.notPosted.length > 0">
     <div
       mat-ripple
       class="draft-list__item"
-      *ngFor="let item of groupedDrafts.notPosted | orderby: ['-created']"
+      *ngFor="let item of (groupedDrafts$ | async).notPosted | orderby: ['-created']"
       [routerLink]="['/', 'drafts', item._id ]"
       routerLinkActive="active"
       >
@@ -28,12 +29,12 @@
     </div>
   </ng-container>
 
-  <div class="draft-list__title">投稿済み ({{groupedDrafts.posted.length}}件)</div>
-  <ng-container *ngIf="groupedDrafts.posted.length > 0">
+  <div class="draft-list__title">投稿済み ({{(groupedDrafts$ | async)?.posted.length}}件)</div>
+  <ng-container *ngIf="(groupedDrafts$ | async)?.posted.length > 0">
     <div
       mat-ripple
       class="draft-list__item"
-      *ngFor="let item of groupedDrafts.posted | orderby: ['-created']"
+      *ngFor="let item of (groupedDrafts$ | async).posted | orderby: ['-created']"
       [routerLink]="['/', 'drafts', item._id ]"
       routerLinkActive="active"
       >
