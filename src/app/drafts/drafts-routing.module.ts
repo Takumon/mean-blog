@@ -12,18 +12,15 @@ const routes: Routes = [
     component: DraftEditComponent,
     canActivate: [AuthGuard]
   },
-
   {
     path: '',
     component: DraftListComponent,
     canActivate: [AuthGuard],
-    children: [
-      {
-        path: ':_id',
-        component: DraftDetailComponent,
-        canActivate: [AuthGuard]
-      }
-    ]
+  },
+  {
+    path: ':_id',
+    component: DraftListComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':_id/edit',

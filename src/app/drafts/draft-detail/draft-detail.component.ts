@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   MatSnackBar,
@@ -25,7 +25,7 @@ import { DraftModel } from '../state/draft.model';
 })
 export class DraftDetailComponent implements OnInit, OnDestroy {
   private Constant = Constant;
-  draft: DraftModel;
+  @Input()  draft: DraftModel;
   private onDestroy = new Subject();
 
   constructor(
@@ -38,15 +38,6 @@ export class DraftDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // URLで指定したIDのドラフトを取得する
-    this.route.params
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe(params =>
-        this.draftService.getById(params['_id'])
-          .subscribe(draft =>
-            this.draft = draft as DraftModel
-          )
-      );
   }
 
   ngOnDestroy() {
