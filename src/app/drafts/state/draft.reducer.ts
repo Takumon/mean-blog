@@ -3,7 +3,6 @@ import { DraftModel } from './draft.model';
 import { DraftActions, DraftActionTypes } from './draft.actions';
 
 export interface State extends EntityState<DraftModel> {
-  // additional entities state properties
   loading: boolean;
 }
 
@@ -12,7 +11,6 @@ export const adapter: EntityAdapter<DraftModel> = createEntityAdapter<DraftModel
 });
 
 export const initialState: State = adapter.getInitialState({
-  // additional entity state properties
   loading: false,
 });
 
