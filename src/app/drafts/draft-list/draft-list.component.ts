@@ -88,11 +88,20 @@ export class DraftListComponent implements OnInit {
 
         // URLで指定したIDのドラフトを取得する
         // 未指定の場合は最初のドラストを指定する
-        this.route.params.subscribe(params =>
-          params['_id']
-            ? this.selectedDraft = groupedDrafts.findById(params['_id'])
-            : this.router.navigate(['drafts', groupedDrafts.getFirst()._id])
-        );
+        this.route.params.subscribe(params => {
+          if (params['_id']) {
+
+            const draft = groupedDrafts.findById(params['_id']);
+
+            if (draft) {
+              this.selectedDraft = draft;
+              return;
+            }
+          }
+
+          // id未指定または、指定した下書きが見つからない場合
+          this.router.navigate(['drafts', groupedDrafts.getFirst()._id])
+        });
 
       })
     );
