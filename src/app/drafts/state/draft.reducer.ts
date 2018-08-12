@@ -70,7 +70,7 @@ export function reducer(
     }
 
     case DraftActionTypes.DeleteDraftSuccess: {
-      return adapter.addOne(action.payload.draft,  {...state, loading: false});
+      return adapter.removeOne(action.payload.draft._id,  {...state, loading: false});
     }
 
     case DraftActionTypes.DeleteDraftFail: {
