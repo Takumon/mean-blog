@@ -1,11 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
-  MatSnackBar,
   MatDialog,
 } from '@angular/material';
 
-import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components';
 
 import * as fromDraft from '../state';
@@ -20,12 +18,10 @@ import { DeleteDraft } from '../state/draft.actions';
   styleUrls: ['./draft-detail.component.scss'],
 })
 export class DraftDetailComponent {
-  private Constant = Constant;
   @Input()  draft: DraftModel;
 
   constructor(
     private store: Store<fromDraft.State>,
-    public snackBar: MatSnackBar,
     public dialog: MatDialog,
   ) {
   }

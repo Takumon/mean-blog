@@ -87,7 +87,9 @@ export class DraftService {
   delete(_id: string): Observable<DraftModel>  {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.delete<DraftModel>(URL, this.jwtService.getRequestOptions());
+    return this.http
+        .delete<{message: string, obj: DraftModel}>(URL, this.jwtService.getRequestOptions())
+        .pipe(map(res => res.obj));
   }
 
 

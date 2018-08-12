@@ -82,6 +82,11 @@ export function reducer(
       return adapter.removeAll(state);
     }
 
+     // TODO アプリ全体のStoreに移行
+    case DraftActionTypes.ShowSnackbar: {
+      return state;
+    }
+
     default: {
       return state;
     }

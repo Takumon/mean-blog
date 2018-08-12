@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 
-import { DraftActionTypes, LoadDrafts, LoadDraftsSuccess, LoadDraftsFail, DeleteDraft, DeleteDraftSuccess, DeleteDraftFail,  } from './draft.actions';
+import { DraftActionTypes, LoadDrafts, LoadDraftsSuccess, LoadDraftsFail, DeleteDraft, DeleteDraftSuccess, DeleteDraftFail, ShowSnackbar,  } from './draft.actions';
 import { DraftService } from '../shared';
+import { Constant } from '../../shared/constant';
 
 
 @Injectable()
 export class DraftEffects {
+  private Constant = Constant;
 
   constructor(
     private actions$: Actions,
     private draftsService: DraftService,
+    public snackbar: MatSnackBar,
   ) {}
 
 
@@ -48,5 +52,36 @@ export class DraftEffects {
         )
     )
   );
+
+  /**
+   * delete draft success
+   */
+  @Effect()
+  deleteTodoSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<DeleteDraftSuccess>(DraftActionTypes.DeleteDraftSuccess),
+    switchMap(action => of(new ShowSnackbar({
+      message: `下書き「${action.payload.draft.title}」を削除しました。`,
+      action: null,
+      config: this.Constant.SNACK_BAR_DEFAULT_OPTION
+    })))
+  );
+
+  // TODO アプリ全体のStoreに移行
+  @Effect()
+  shwoSnackbar$: Observable<Action> = this.actions$.pipe(
+    ofType<ShowSnackbar>(DraftActionTypes.ShowSnackbar),
+    switchMap(a => {
+
+      const {
+        message,
+        action,
+        config
+      } = a.payload;
+
+      this.snackbar.open(message, action, config);
+      return of({type: 'NO_ACTION'});
+    })
+  );
+
 
 }

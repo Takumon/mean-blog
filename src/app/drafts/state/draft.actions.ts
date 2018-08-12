@@ -35,6 +35,9 @@ export enum DraftActionTypes {
   DeleteDraftFail = '[Draft] Delete Draft Fail',
   DeleteDraftsFail = '[Draft] Delete Drafts Fail',
   ClearDraftsFail = '[Draft] Clear Drafts Fail',
+
+  // TODO 共通のStateに移行
+  ShowSnackbar = '[Draft] Show Snackbar',
 }
 
 
@@ -122,6 +125,17 @@ export class ClearDrafts implements Action {
   readonly type = DraftActionTypes.ClearDrafts;
 }
 
+// TODO 共通のStoreに移行
+export class ShowSnackbar implements Action {
+  readonly type = DraftActionTypes.ShowSnackbar;
+
+  constructor(public payload: {
+    message: string,
+    action: string,
+    config?: Object
+  }) {}
+}
+
 export type DraftActions =
   // 複数件取得
   LoadDrafts
@@ -138,4 +152,6 @@ export type DraftActions =
  | DeleteDraftSuccess
  | DeleteDraftFail
  | DeleteDrafts
- | ClearDrafts;
+ | ClearDrafts
+ // TODO 全体のStoreに移行
+  | ShowSnackbar;
