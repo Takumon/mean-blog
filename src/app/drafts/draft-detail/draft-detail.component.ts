@@ -26,8 +26,6 @@ export class DraftDetailComponent {
   ) {
   }
 
-
-
   deleteDraft(draft: DraftModel): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -42,14 +40,6 @@ export class DraftDetailComponent {
       }
 
       this.store.dispatch(new DeleteDraft({id: draft._id}));
-
-      // this.draftService
-      //   .delete(draft._id)
-      //   .subscribe(res => {
-      //     this.draft = null;
-      //     this.snackBar.open(`下書き「${draft.title}」を削除しました。`, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      //     this.draftSharedService.emitChange('Deleted draft');
-      //   });
     });
   }
 
