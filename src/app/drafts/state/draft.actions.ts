@@ -100,6 +100,18 @@ export class DeleteDraft implements Action {
   constructor(public payload: { id: string }) {}
 }
 
+export class DeleteDraftSuccess implements Action {
+  readonly type = DraftActionTypes.DeleteDraftSuccess;
+
+  constructor(public payload: { draft: DraftModel }) {}
+}
+
+export class DeleteDraftFail implements Action {
+  readonly type = DraftActionTypes.DeleteDraftFail;
+
+  constructor(public payload?: { error: any }) {}
+}
+
 export class DeleteDrafts implements Action {
   readonly type = DraftActionTypes.DeleteDrafts;
 
@@ -111,7 +123,8 @@ export class ClearDrafts implements Action {
 }
 
 export type DraftActions =
- LoadDrafts
+  // 複数件取得
+  LoadDrafts
  | LoadDraftsSuccess
  | LoadDraftsFail
  | AddDraft
@@ -120,6 +133,9 @@ export type DraftActions =
  | UpsertDrafts
  | UpdateDraft
  | UpdateDrafts
+ // 一件削除
  | DeleteDraft
+ | DeleteDraftSuccess
+ | DeleteDraftFail
  | DeleteDrafts
  | ClearDrafts;

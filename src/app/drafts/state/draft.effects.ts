@@ -4,7 +4,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 
-import { DraftActionTypes, LoadDrafts, LoadDraftsSuccess, LoadDraftsFail } from './draft.actions';
+import { DraftActionTypes, LoadDrafts, LoadDraftsSuccess, LoadDraftsFail, DeleteDraft, DeleteDraftSuccess, DeleteDraftFail,  } from './draft.actions';
 import { DraftService } from '../shared';
 
 
@@ -32,4 +32,21 @@ export class DraftEffects {
         )
     )
   );
+
+  /**
+   * delete draft
+   */
+  @Effect()
+  deleteTodo$: Observable<Action> = this.actions$.pipe(
+    ofType<DeleteDraft>(DraftActionTypes.DeleteDraft),
+    switchMap(action =>
+      this.draftsService
+        .delete(action.payload.id)
+        .pipe(
+          map(data => new DeleteDraftSuccess({ draft: data })),
+          catchError(error => of(new DeleteDraftFail({ error })))
+        )
+    )
+  );
+
 }

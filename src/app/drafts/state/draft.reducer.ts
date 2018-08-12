@@ -51,6 +51,7 @@ export function reducer(
       return adapter.removeMany(action.payload.ids, state);
     }
 
+    // 複数件取得
     case DraftActionTypes.LoadDrafts: {
       return Object.assign({}, {...state, loading: true} );
     }
@@ -62,6 +63,20 @@ export function reducer(
     case DraftActionTypes.LoadDraftsFail: {
       return Object.assign({}, {...state, loading: false} );
     }
+
+    // 一件削除
+    case DraftActionTypes.DeleteDraft: {
+      return Object.assign({}, {...state, loading: true} );
+    }
+
+    case DraftActionTypes.DeleteDraftSuccess: {
+      return adapter.addOne(action.payload.draft,  {...state, loading: false});
+    }
+
+    case DraftActionTypes.DeleteDraftFail: {
+      return Object.assign({}, {...state, loading: false} );
+    }
+
 
     case DraftActionTypes.ClearDrafts: {
       return adapter.removeAll(state);
