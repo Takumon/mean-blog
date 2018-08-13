@@ -1,11 +1,24 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, share } from 'rxjs/operators';
 
-import { DraftActionTypes, LoadDrafts, LoadDraftsSuccess, LoadDraftsFail, DeleteDraft, DeleteDraftSuccess, DeleteDraftFail, ShowSnackbar,  } from './draft.actions';
+import {
+  DraftActionTypes,
+  LoadDrafts,
+  LoadDraftsSuccess,
+  LoadDraftsFail,
+  DeleteDraft,
+  DeleteDraftSuccess,
+  DeleteDraftFail,
+  ShowSnackbar,
+  AddDraft,
+  AddDraftSuccess,
+  AddDraftFail,
+} from './draft.actions';
 import { DraftService } from '../shared';
 import { Constant } from '../../shared/constant';
 
@@ -15,6 +28,7 @@ export class DraftEffects {
   private Constant = Constant;
 
   constructor(
+    private router: Router,
     private actions$: Actions,
     private draftsService: DraftService,
     public snackbar: MatSnackBar,
@@ -35,6 +49,40 @@ export class DraftEffects {
           catchError(error => of(new LoadDraftsFail({ error })))
         )
     )
+  );
+
+
+  /**
+   * Add drafts
+   */
+  @Effect()
+  addTodo$: Observable<Action> = this.actions$.pipe(
+    ofType<AddDraft>(DraftActionTypes.AddDraft),
+    switchMap(action =>
+      this.draftsService
+        .register(action.payload.draft)
+        .pipe(
+          map(data => new AddDraftSuccess({ draft: data })),
+          catchError(error => of(new AddDraftFail({ error })))
+        )
+    )
+  );
+
+  /**
+   * Add draft success
+   */
+  @Effect()
+  addDraftSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<AddDraftSuccess>(DraftActionTypes.AddDraftSuccess),
+    switchMap(action => {
+      this.router.navigate(['drafts', action.payload.draft._id]);
+
+      return of(new ShowSnackbar({
+        message: `下書き「${action.payload.draft.title}」を保存しました。`,
+        action: null,
+        config: this.Constant.SNACK_BAR_DEFAULT_OPTION
+      }));
+    })
   );
 
   /**
@@ -67,10 +115,10 @@ export class DraftEffects {
   );
 
   // TODO アプリ全体のStoreに移行
-  @Effect()
-  shwoSnackbar$: Observable<Action> = this.actions$.pipe(
+  @Effect({dispatch: false})
+  shwoSnackbar = this.actions$.pipe(
     ofType<ShowSnackbar>(DraftActionTypes.ShowSnackbar),
-    switchMap(a => {
+    tap(a => {
 
       const {
         message,
@@ -79,7 +127,6 @@ export class DraftEffects {
       } = a.payload;
 
       this.snackbar.open(message, action, config);
-      return of({type: 'NO_ACTION'});
     })
   );
 

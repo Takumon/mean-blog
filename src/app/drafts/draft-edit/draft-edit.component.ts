@@ -40,8 +40,19 @@ import {
 } from '../shared';
 import { DraftModel } from '../state/draft.model';
 
+import { Store } from '@ngrx/store';
+import * as fromDraft from '../state';
+
 
 import { EditMode } from './draft-edit-mode.enum';
+import { Actions, ofType } from '@ngrx/effects';
+import { Subject } from 'rxjs';
+import { tap, takeUntil } from 'rxjs/operators';
+import {
+  DraftActionTypes,
+  AddDraftFail,
+  AddDraft,
+} from '../state/draft.actions';
 
 
 const IS_RESUME = 'resume';
@@ -83,6 +94,7 @@ export class DraftEditComponent implements OnInit {
   markdonwEditMode: String = EditMode[EditMode.harfPreviewing];
   form: FormGroup;
 
+  private onDestroy = new Subject();
 
   @ViewChild('syncScrollTarget')
   scrollTarget: ElementRef;
@@ -91,9 +103,11 @@ export class DraftEditComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
+    private actions$: Actions,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     public dialog: MatDialog,
+    private store: Store<fromDraft.State>,
 
     private messageBarService: MessageBarService,
     private imageService: ImageService,
@@ -103,6 +117,14 @@ export class DraftEditComponent implements OnInit {
     private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     ) {
+      // エラーメッセージ表示処理を登録
+      actions$.pipe(
+        takeUntil(this.onDestroy),
+        ofType<AddDraftFail>(DraftActionTypes.AddDraftFail),
+        tap(action => this.onValidationError(action.payload.error))
+      ).subscribe();
+
+
     }
 
   ngOnInit(): void {
@@ -119,6 +141,11 @@ export class DraftEditComponent implements OnInit {
 
     });
   }
+
+  ngOnDestroy() {
+    this.onDestroy.next();
+  }
+
 
   createForm() {
     this.form = this.fb.group({
@@ -388,12 +415,7 @@ export class DraftEditComponent implements OnInit {
         draft.articleId = this.previousArticle._id;
       }
 
-      this.draftService
-        .register(draft)
-        .subscribe((res: any) => {
-          this.snackBar.open('下書きを保存しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-          this.goToDraft(res.obj._id);
-        }, this.onValidationError.bind(this));
+      this.store.dispatch(new AddDraft({ draft }));
     }
   }
 

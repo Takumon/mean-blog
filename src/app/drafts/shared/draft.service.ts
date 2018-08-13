@@ -10,6 +10,12 @@ import { JwtService } from '../../shared/services';
 
 import { DraftModel } from '../state/draft.model';
 
+
+interface Res {
+  message: string;
+  obj: DraftModel;
+}
+
 /**
  * 下書き記事情報のサービスクラス
  */
@@ -63,7 +69,8 @@ export class DraftService {
   register(model: DraftModel): Observable<DraftModel> {
     const URL = this.baseUrl;
 
-    return this.http.post<DraftModel>(URL, model, this.jwtService.getRequestOptions());
+    return this.http.post<Res>(URL, model, this.jwtService.getRequestOptions())
+                    .pipe(map(res => res.obj));
   }
 
   /**
@@ -88,7 +95,7 @@ export class DraftService {
     const URL = `${this.baseUrl}/${_id}`;
 
     return this.http
-        .delete<{message: string, obj: DraftModel}>(URL, this.jwtService.getRequestOptions())
+        .delete<Res>(URL, this.jwtService.getRequestOptions())
         .pipe(map(res => res.obj));
   }
 

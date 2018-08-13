@@ -67,6 +67,19 @@ export class AddDraft implements Action {
   constructor(public payload: { draft: DraftModel }) {}
 }
 
+export class AddDraftSuccess implements Action {
+  readonly type = DraftActionTypes.AddDraftSuccess;
+
+  constructor(public payload: { draft: DraftModel }) {}
+}
+
+export class AddDraftFail implements Action {
+  readonly type = DraftActionTypes.AddDraftFail;
+
+  constructor(public payload?: { error: any }) {}
+}
+
+
 export class UpsertDraft implements Action {
   readonly type = DraftActionTypes.UpsertDraft;
 
@@ -139,19 +152,22 @@ export class ShowSnackbar implements Action {
 export type DraftActions =
   // 複数件取得
   LoadDrafts
- | LoadDraftsSuccess
- | LoadDraftsFail
- | AddDraft
- | UpsertDraft
- | AddDrafts
- | UpsertDrafts
- | UpdateDraft
- | UpdateDrafts
- // 一件削除
- | DeleteDraft
- | DeleteDraftSuccess
- | DeleteDraftFail
- | DeleteDrafts
- | ClearDrafts
+  | LoadDraftsSuccess
+  | LoadDraftsFail
+  // 一件追加
+  | AddDraft
+  | AddDraftSuccess
+  | AddDraftFail
+  | UpsertDraft
+  | AddDrafts
+  | UpsertDrafts
+  | UpdateDraft
+  | UpdateDrafts
+  // 一件削除
+  | DeleteDraft
+  | DeleteDraftSuccess
+  | DeleteDraftFail
+  | DeleteDrafts
+  | ClearDrafts
  // TODO 全体のStoreに移行
   | ShowSnackbar;
