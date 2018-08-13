@@ -3,7 +3,8 @@ import {
   OnInit,
   ElementRef,
   ViewChild,
-  HostListener } from '@angular/core';
+  HostListener,
+  OnDestroy} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   FormGroup,
@@ -63,7 +64,7 @@ const IS_RESUME = 'resume';
   templateUrl: './draft-edit.component.html',
   styleUrls: ['./draft-edit.component.scss'],
 })
-export class DraftEditComponent implements OnInit {
+export class DraftEditComponent implements OnInit, OnDestroy {
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
