@@ -53,6 +53,8 @@ import {
   DraftActionTypes,
   AddDraftFail,
   AddDraft,
+  UpdateDraft,
+  UpdateDraftFail,
 } from '../state/draft.actions';
 
 
@@ -125,6 +127,11 @@ export class DraftEditComponent implements OnInit, OnDestroy {
         tap(action => this.onValidationError(action.payload.error))
       ).subscribe();
 
+      actions$.pipe(
+        takeUntil(this.onDestroy),
+        ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
+        tap(action => this.onValidationError(action.payload.error))
+      ).subscribe();
 
     }
 
@@ -391,18 +398,18 @@ export class DraftEditComponent implements OnInit, OnDestroy {
   upsertDraft(form: FormGroup): void {
     // もともと下書きだった場合は更新
     if (this.previousDraft) {
-      const draft = new DraftModel();
-      draft._id = this.previousDraft._id;
-      draft.title = form.value['title'];
-      draft.isMarkdown = form.value['isMarkdown'];
-      draft.body = form.value['body'];
 
-      this.draftService
-        .update(draft)
-        .subscribe((res: any) => {
-          this.snackBar.open('下書きを更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-          this.goToDraft(res.obj._id);
-        }, this.onValidationError.bind(this));
+      this.store.dispatch(new UpdateDraft({
+        draft: {
+          id: this.previousDraft._id,
+          changes: {
+            title: form.value['title'],
+            isMarkdown: form.value['isMarkdown'],
+            body: form.value['body'],
+          }
+        }
+      }));
+
     } else {
       // それ以外の場合は新規登録
       const draft = new DraftModel();

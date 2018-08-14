@@ -18,9 +18,13 @@ import {
   AddDraft,
   AddDraftSuccess,
   AddDraftFail,
+  UpdateDraft,
+  UpdateDraftSuccess,
+  UpdateDraftFail,
 } from './draft.actions';
 import { DraftService } from '../shared';
 import { Constant } from '../../shared/constant';
+import { DraftModel } from './draft.model';
 
 
 @Injectable()
@@ -86,10 +90,49 @@ export class DraftEffects {
   );
 
   /**
+   * update draft
+   */
+  @Effect()
+  updateDraft$: Observable<Action> = this.actions$.pipe(
+    ofType<UpdateDraft>(DraftActionTypes.UpdateDraft),
+    switchMap(action => {
+      const target = {
+        ...action.payload.draft.changes,
+        _id: action.payload.draft.id.toString()
+      } as DraftModel;
+
+      return this.draftsService
+        .update(target)
+        .pipe(
+          map(data => new UpdateDraftSuccess({ draft: { id: data._id, changes: data }})),
+          catchError(error => of(new UpdateDraftFail({ error })))
+        );
+    })
+  );
+
+  /**
+   * update draft success
+   */
+  @Effect()
+  updateDraftSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<UpdateDraftSuccess>(DraftActionTypes.UpdateDraftSuccess),
+    switchMap(action => {
+      this.router.navigate(['drafts', action.payload.draft.id]);
+
+      return of(new ShowSnackbar({
+        message: `下書き「${action.payload.draft.changes.title}」を更新しました。`,
+        action: null,
+        config: this.Constant.SNACK_BAR_DEFAULT_OPTION
+      }));
+    })
+  );
+
+
+  /**
    * delete draft
    */
   @Effect()
-  deleteTodo$: Observable<Action> = this.actions$.pipe(
+  deleteDraft$: Observable<Action> = this.actions$.pipe(
     ofType<DeleteDraft>(DraftActionTypes.DeleteDraft),
     switchMap(action =>
       this.draftsService
@@ -105,7 +148,7 @@ export class DraftEffects {
    * delete draft success
    */
   @Effect()
-  deleteTodoSuccess$: Observable<Action> = this.actions$.pipe(
+  deleteDraftSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<DeleteDraftSuccess>(DraftActionTypes.DeleteDraftSuccess),
     switchMap(action => of(new ShowSnackbar({
       message: `下書き「${action.payload.draft.title}」を削除しました。`,

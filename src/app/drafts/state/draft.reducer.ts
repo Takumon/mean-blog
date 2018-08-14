@@ -19,8 +19,17 @@ export function reducer(
   action: DraftActions
 ): State {
   switch (action.type) {
+    // 一件登録
     case DraftActionTypes.AddDraft: {
-      return adapter.addOne(action.payload.draft, state);
+      return Object.assign({}, {...state, loading: true} );
+    }
+
+    case DraftActionTypes.AddDraftSuccess: {
+      return adapter.addOne(action.payload.draft, {...state, loading: false});
+    }
+
+    case DraftActionTypes.AddDraftFail: {
+      return Object.assign({}, {...state, loading: false} );
     }
 
     case DraftActionTypes.UpsertDraft: {
@@ -35,16 +44,21 @@ export function reducer(
       return adapter.upsertMany(action.payload.drafts, state);
     }
 
+    // 一件更新
     case DraftActionTypes.UpdateDraft: {
-      return adapter.updateOne(action.payload.draft, state);
+      return Object.assign({}, {...state, loading: true} );
+    }
+
+    case DraftActionTypes.UpdateDraftSuccess: {
+      return adapter.updateOne(action.payload.draft,  {...state, loading: false});
+    }
+
+    case DraftActionTypes.LoadDraftsFail: {
+      return Object.assign({}, {...state, loading: false} );
     }
 
     case DraftActionTypes.UpdateDrafts: {
       return adapter.updateMany(action.payload.drafts, state);
-    }
-
-    case DraftActionTypes.DeleteDraft: {
-      return adapter.removeOne(action.payload.id, state);
     }
 
     case DraftActionTypes.DeleteDrafts: {

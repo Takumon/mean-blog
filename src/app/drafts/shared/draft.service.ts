@@ -82,7 +82,8 @@ export class DraftService {
   update(model: DraftModel): Observable<DraftModel> {
     const URL = `${this.baseUrl}/${model._id}`;
 
-    return this.http.put<DraftModel>(URL, model, this.jwtService.getRequestOptions());
+    return this.http.put<Res>(URL, model, this.jwtService.getRequestOptions())
+                    .pipe(map(res => res.obj));
   }
 
   /**

@@ -104,6 +104,19 @@ export class UpdateDraft implements Action {
   constructor(public payload: { draft: Update<DraftModel> }) {}
 }
 
+export class UpdateDraftSuccess implements Action {
+  readonly type = DraftActionTypes.UpdateDraftSuccess;
+
+  constructor(public payload: { draft: Update<DraftModel> }) {}
+}
+
+export class UpdateDraftFail implements Action {
+  readonly type = DraftActionTypes.UpdateDraftFail;
+
+  constructor(public payload?: { error: any }) {}
+}
+
+
 export class UpdateDrafts implements Action {
   readonly type = DraftActionTypes.UpdateDrafts;
 
@@ -161,7 +174,10 @@ export type DraftActions =
   | UpsertDraft
   | AddDrafts
   | UpsertDrafts
+  // 一件更新
   | UpdateDraft
+  | UpdateDraftSuccess
+  | UpdateDraftFail
   | UpdateDrafts
   // 一件削除
   | DeleteDraft
