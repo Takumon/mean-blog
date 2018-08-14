@@ -9,7 +9,7 @@ import {
 
 
 import { DraftService } from './draft.service';
-import { DraftModel } from './draft.model';
+import { DraftModel } from '../state/draft.model';
 
 
 
