@@ -100,7 +100,7 @@ export class DraftListComponent implements OnInit {
           }
 
           // id未指定または、指定した下書きが見つからない場合
-          this.router.navigate(['drafts', groupedDrafts.getFirst()._id])
+          this.router.navigate(['drafts', groupedDrafts.getFirst()._id]);
         });
 
       })
