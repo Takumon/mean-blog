@@ -14,7 +14,6 @@ import {
   DeleteDraft,
   DeleteDraftSuccess,
   DeleteDraftFail,
-  ShowSnackbar,
   AddDraft,
   AddDraftSuccess,
   AddDraftFail,
@@ -22,9 +21,11 @@ import {
   UpdateDraftSuccess,
   UpdateDraftFail,
 } from './draft.actions';
+
 import { DraftService } from '../shared';
 import { Constant } from '../../shared/constant';
 import { DraftModel } from './draft.model';
+import { ShowSnackbar } from '../../state/app.actions';
 
 
 @Injectable()
@@ -156,22 +157,5 @@ export class DraftEffects {
       config: this.Constant.SNACK_BAR_DEFAULT_OPTION
     })))
   );
-
-  // TODO アプリ全体のStoreに移行
-  @Effect({dispatch: false})
-  shwoSnackbar = this.actions$.pipe(
-    ofType<ShowSnackbar>(DraftActionTypes.ShowSnackbar),
-    tap(a => {
-
-      const {
-        message,
-        action,
-        config
-      } = a.payload;
-
-      this.snackbar.open(message, action, config);
-    })
-  );
-
 
 }

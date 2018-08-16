@@ -40,6 +40,7 @@ import { UserService } from './shared/services/user.service';
 import { UsersModule } from './users/users.module';
 
 import { environment } from '../environments/environment';
+import { AppEffects } from './state/app.effects';
 
 
 @NgModule({
@@ -55,7 +56,7 @@ import { environment } from '../environments/environment';
     SharedModule,
     UsersModule,
     StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AppEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
 
