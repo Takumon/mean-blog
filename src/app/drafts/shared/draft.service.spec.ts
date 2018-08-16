@@ -114,14 +114,17 @@ describe('DraftService', () => {
 
 
   it('register', () => {
-    const mockResponse: DraftModel =  {
-      _id: '123456789011',
-      title: '下書きタイトル',
-      isMarkdown: false,
-      body: '下書き本文',
-      author: '123456789044',
-      created: '20150101 12:34:30',
-      updated: '20150101 12:34:30'
+    const mockResponse =  {
+      message: '下書きを登録しました。',
+      obj: {
+        _id: '123456789011',
+        title: '下書きタイトル',
+        isMarkdown: false,
+        body: '下書き本文',
+        author: '123456789044',
+        created: '20150101 12:34:30',
+        updated: '20150101 12:34:30'
+      }
     };
 
     const arg_draft = new DraftModel();
@@ -153,14 +156,17 @@ describe('DraftService', () => {
 
 
   it('update', () => {
-    const mockResponse: DraftModel =  {
-      _id: '123456789011',
-      title: '下書きタイトル更新後',
-      isMarkdown: false,
-      body: '下書き本文更新後',
-      author: '123456789044',
-      created: '20150101 12:34:30',
-      updated: '20150102 12:34:30'
+    const mockResponse =  {
+      message: '下書きを更新しました。',
+      obj: {
+        _id: '123456789011',
+        title: '下書きタイトル更新後',
+        isMarkdown: false,
+        body: '下書き本文更新後',
+        author: '123456789044',
+        created: '20150101 12:34:30',
+        updated: '20150102 12:34:30'
+      }
     };
 
     const arg_draft = new DraftModel();
@@ -191,14 +197,17 @@ describe('DraftService', () => {
 
 
   it('delete', () => {
-    const mockResponse: DraftModel =  {
-      _id: '123456789011',
-      title: '下書きタイトル',
-      isMarkdown: false,
-      body: '下書き本文',
-      author: '123456789044',
-      created: '20150101 12:34:30',
-      updated: '20150101 12:34:30'
+    const mockResponse =  {
+      message: '下書きを削除しました。',
+      obj: {
+        _id: '123456789011',
+        title: '下書きタイトル',
+        isMarkdown: false,
+        body: '下書き本文',
+        author: '123456789044',
+        created: '20150101 12:34:30',
+        updated: '20150101 12:34:30'
+      }
     };
 
 
