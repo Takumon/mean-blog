@@ -8,7 +8,13 @@ import { Constant } from '../../shared/constant';
 import { JwtService } from '../../shared/services';
 
 
-import { DraftModel } from './draft.model';
+import { DraftModel } from '../state/draft.model';
+
+
+interface Res {
+  message: string;
+  obj: DraftModel;
+}
 
 /**
  * 下書き記事情報のサービスクラス
@@ -33,7 +39,7 @@ export class DraftService {
    * @param condition 検索条件
    * @return 指定した検索条件に一致するモデルのリスト
    */
-  get(condition): Observable<Array<DraftModel>> {
+  get(condition: {userId?: string, articleId?: string, author?: string}): Observable<Array<DraftModel>> {
     const URL = this.baseUrl;
     const headers = this.jwtService.getHeaders();
     const params = new HttpParams()
@@ -63,7 +69,8 @@ export class DraftService {
   register(model: DraftModel): Observable<DraftModel> {
     const URL = this.baseUrl;
 
-    return this.http.post<DraftModel>(URL, model, this.jwtService.getRequestOptions());
+    return this.http.post<Res>(URL, model, this.jwtService.getRequestOptions())
+                    .pipe(map(res => res.obj));
   }
 
   /**
@@ -75,7 +82,8 @@ export class DraftService {
   update(model: DraftModel): Observable<DraftModel> {
     const URL = `${this.baseUrl}/${model._id}`;
 
-    return this.http.put<DraftModel>(URL, model, this.jwtService.getRequestOptions());
+    return this.http.put<Res>(URL, model, this.jwtService.getRequestOptions())
+                    .pipe(map(res => res.obj));
   }
 
   /**
@@ -87,7 +95,9 @@ export class DraftService {
   delete(_id: string): Observable<DraftModel>  {
     const URL = `${this.baseUrl}/${_id}`;
 
-    return this.http.delete<DraftModel>(URL, this.jwtService.getRequestOptions());
+    return this.http
+        .delete<Res>(URL, this.jwtService.getRequestOptions())
+        .pipe(map(res => res.obj));
   }
 
 

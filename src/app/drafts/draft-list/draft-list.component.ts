@@ -1,102 +1,139 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import * as fromDraft from '../state';
 
 import {
   AuthenticationService,
   RouteNamesService,
 } from '../../shared/services';
 
-import { DraftService } from '../shared/draft.service';
-import { DraftModel } from '../shared/draft.model';
-import { DraftSharedService } from '../shared/draft-shared.service';
+import { DraftModel } from '../state/draft.model';
+import { LoadDrafts } from '../state/draft.actions';
+import { OrderByPipe } from '../../shared/pipes';
 
-interface GroupedDrafts {
-  notPosted: Array<DraftModel>;
-  posted: Array<DraftModel>;
+
+
+/**
+ * 下書きを投稿済みと未投稿に分類した結果
+ */
+class GroupedDrafts {
+  notPosted: Array<DraftModel> = [];
+  posted: Array<DraftModel> = [];
+
+
+  /**
+   * 一件検索. 見つからない場合nullを返す.
+   */
+  findById(_id: string): DraftModel {
+    return [...this.notPosted, ...this.posted].find(p => p._id === _id);
+  }
+
+  /**
+   * 下書きが１件も存在しないか.
+   */
+  isEmpty(): boolean {
+    return (!this.notPosted || this.notPosted.length === 0) && (!this.posted || this.posted.length === 0);
+  }
+
+  /**
+   * 最初の下書きを取得、空の場合はnullを返す.
+   */
+  getFirst(): DraftModel {
+    if (this.isEmpty()) {
+      return null;
+    }
+
+    if (this.notPosted && this.notPosted.length > 0) {
+      return this.notPosted[0];
+    }
+
+    if (this.posted && this.posted.length > 0) {
+      return this.posted[0];
+    }
+  }
 }
 
 @Component({
   selector: 'app-draft-list',
   templateUrl: './draft-list.component.html',
   styleUrls: ['./draft-list.component.scss'],
+  providers: [OrderByPipe]
 })
-export class DraftListComponent implements OnInit, OnDestroy {
+export class DraftListComponent implements OnInit {
   public groupedDrafts: GroupedDrafts;
-  public notFound: boolean;
 
-  private onDestroy = new Subject();
+  loading$: Observable<boolean>;
+  groupedDrafts$: Observable<GroupedDrafts>;
+  selectedDraft: DraftModel;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-
+    private router: Router,
+    private oderByPipe: OrderByPipe,
     private auth: AuthenticationService,
+    private store: Store<fromDraft.State>,
     private routeNamesService: RouteNamesService,
-    private draftSharedService: DraftSharedService,
-    private draftService: DraftService,
   ) {
+    this.loading$ = this.store.select(fromDraft.getLoading);
+    this.groupedDrafts$ = this.store.select(fromDraft.getDrafts).pipe(
+      tap(drafts => this.routeNamesService.name.next(`下書き一覧 ( ${drafts ? drafts.length : 0} / 10件 )`)),
+      map(drafts => this.convertToGroupedDrafts(drafts)),
+      tap(groupedDrafts => {
+        if (groupedDrafts.isEmpty()) {
+          return;
+        }
+
+        // URLで指定したIDのドラフトを取得する
+        // 未指定の場合は最初のドラストを指定する
+        this.route.params.subscribe(params => {
+          if (params['_id']) {
+
+            const draft = groupedDrafts.findById(params['_id']);
+
+            if (draft) {
+              this.selectedDraft = draft;
+              return;
+            }
+          }
+
+          // id未指定または、指定した下書きが見つからない場合
+          this.router.navigate(['drafts', groupedDrafts.getFirst()._id]);
+        });
+
+      })
+    );
   }
 
   ngOnInit() {
-    this.draftSharedService.changeEmitted$
-    .pipe(takeUntil(this.onDestroy))
-    .subscribe(text => {
-      const isRefresh = true;
-      this.getDrafts(isRefresh);
-    });
-    this.getDrafts();
-  }
-
-  ngOnDestroy() {
-    this.onDestroy.next();
-  }
-
-
-  // TODO 0件時の処理
-  getDrafts(isRefresh: boolean = false): void {
     const condition = { userId: this.auth.loginUser._id };
-    this.draftService.get(condition)
-    .subscribe(drafts => {
-      const count = drafts ? drafts.length : 0;
-      this.routeNamesService.name.next(`下書き一覧 ( ${count} / 10件 )`);
-
-      if (!drafts || drafts.length === 0) {
-        this.notFound = true;
-        this.groupedDrafts = null;
-        this.router.navigate(['drafts']);
-        return;
-      }
-
-      this.groupedDrafts = this.grouping(drafts);
-      if (!this.route.firstChild || isRefresh) {
-        // 決め打ちで一番最初の下書きを選択する
-        const _id = this.groupedDrafts.notPosted.length > 0
-          ? this.groupedDrafts.notPosted[0]._id
-          : this.groupedDrafts.posted[0]._id;
-        this.router.navigate(['drafts', _id]);
-      }
-    });
+    this.store.dispatch(new LoadDrafts( { condition }));
   }
 
-  grouping(drafts: Array<DraftModel>): GroupedDrafts {
-    const result = {
-      notPosted: [],
-      posted: []
-    };
+
+  /**
+   * 指定した下書きを投稿済と未投稿に分類する
+   *
+   * @param drafts 下書きのリスト
+   * @returns 投稿済と未投稿に分類した結果
+   */
+  convertToGroupedDrafts(drafts: Array<DraftModel>): GroupedDrafts {
+    const result = new GroupedDrafts();
 
     if (!drafts || drafts.length === 0) {
       return result;
     }
 
-    drafts.forEach(d => {
-      if (d.articleId) {
-        result.posted.push(d);
-      } else {
-        result.notPosted.push(d);
-      }
-    });
+    drafts.forEach(d =>
+      d.articleId
+        ? result.posted.push(d)
+        : result.notPosted.push(d)
+    );
+
+    result.notPosted = this.oderByPipe.transform(result.notPosted, ['-created']);
+    result.posted = this.oderByPipe.transform(result.posted, ['-created']);
 
     return result;
   }

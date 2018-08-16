@@ -3,11 +3,16 @@ import 'rxjs';
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
+import { provideMockActions } from '@ngrx/effects/testing';
+import { StoreModule, Store, combineReducers } from '@ngrx/store';
 import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { ErrorStateMatcher } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
+
+import * as fromRoot from '../../state';
+import * as fromFeature from '../state';
+
 
 import { SharedModule } from '../../shared/shared.module';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
@@ -30,6 +35,7 @@ import {
 import { ArticleService } from '../../articles/shared/article.service';
 import { DraftService } from '../shared/draft.service';
 import { DraftEditComponent } from './draft-edit.component';
+import * as DraftActions from '../state/draft.actions';
 
 
 describe('DraftDetailComponent', () => {
@@ -135,6 +141,10 @@ describe('DraftDetailComponent', () => {
       imports: [
         RouterTestingModule,
         SharedModule,
+        StoreModule.forRoot({
+          ...fromRoot.reducers,
+          'feature': combineReducers(fromFeature.reducers)
+        }),
       ],
       providers: [
         ErrorStateMatcherContainParentGroup,
@@ -152,6 +162,7 @@ describe('DraftDetailComponent', () => {
         MessageBarService,
         MessageService,
         RouteNamesService,
+        provideMockActions(() => of()),
       ]
     }).compileComponents();
   });
