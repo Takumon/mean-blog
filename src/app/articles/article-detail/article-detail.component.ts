@@ -18,6 +18,7 @@ import { takeUntil, map } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import {
+  ArticleService,
   AuthenticationService,
   RouteNamesService,
   MarkdownParseService,
@@ -29,7 +30,6 @@ import {
   UserModel,
 } from '../../shared/models';
 
-import { ArticleService } from '../shared/article.service';
 import { CommentListComponent } from '../comment-list/comment-list.component';
 
 @Component({

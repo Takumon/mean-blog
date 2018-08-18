@@ -27,7 +27,7 @@ export interface VoteCudResponse {
 /**
  * 検索条件を複数件取得する際の検索条件
  */
-export interface Condition {
+export interface SearchArticlesCondition {
   author?: {
     _id?: string | string[];
     userId?: string | string[];
@@ -50,7 +50,7 @@ export interface PageAndSortOption {
  * Http通信用オプション
  */
 interface HttpOption {
-  condition?: Condition;
+  condition?: SearchArticlesCondition;
   withUser?: boolean;
 }
 
@@ -71,15 +71,15 @@ export class ArticleService {
    * @return 指定した検索条件とページング条件に一致するモデルのリスト
    */
   get(
-    condition: Condition,
+    condition: SearchArticlesCondition,
     paginAndSortOptions: PageAndSortOption,
-    withUser: boolean = false): Observable<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}> {
+    withUser: boolean = false): Observable<{count: number, articles: ArticleModel[] | ArticleWithUserModel[] }> {
     const URL = this.baseUrl;
 
     // 検索条件にページング条件をマージする
     const options = this.constructOptions({ condition: Object.assign({}, condition, paginAndSortOptions), withUser });
 
-    return this.http.get<{count: number, articles: Array<ArticleModel | ArticleWithUserModel>}>(URL, options);
+    return this.http.get<{count: number, articles: ArticleModel[] | ArticleWithUserModel[]}>(URL, options);
   }
 
 

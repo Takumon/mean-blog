@@ -28,13 +28,13 @@ import {
   MessageService,
   MessageBarService,
   ImageService,
+  ArticleService,
 } from '../../shared/services';
 
 import {
   ArticleModel,
   ArticleWithUserModel,
 } from '../../shared/models';
-import { ArticleService } from '../../articles/shared/article.service';
 
 import {
   DraftService,

@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 
 import { SharedModule } from '../shared/shared.module';
-import { ArticleService } from '../articles/shared/article.service';
+import { ArticleService } from '../shared/services';
 
 import {
   DraftSharedService,

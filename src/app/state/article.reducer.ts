@@ -1,15 +1,19 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { Article } from './article.model';
+import { ArticleModel, ArticleWithUserModel } from '../shared/models';
 import { ArticleActions, ArticleActionTypes } from './article.actions';
 
-export interface State extends EntityState<Article> {
-  // additional entities state properties
+export interface State extends EntityState<ArticleModel | ArticleWithUserModel> {
+  loading: boolean;
+  count: number;
 }
 
-export const adapter: EntityAdapter<Article> = createEntityAdapter<Article>();
+export const adapter: EntityAdapter<ArticleModel | ArticleWithUserModel> = createEntityAdapter<ArticleModel | ArticleWithUserModel>({
+  selectId: d => d._id,
+});
 
 export const initialState: State = adapter.getInitialState({
-  // additional entity state properties
+  loading: false,
+  count: 0
 });
 
 export function reducer(
@@ -49,8 +53,21 @@ export function reducer(
       return adapter.removeMany(action.payload.ids, state);
     }
 
+    // 複数件取得
     case ArticleActionTypes.LoadArticles: {
-      return adapter.addAll(action.payload.articles, state);
+      return Object.assign({}, {...state, loading: true} );
+    }
+
+    case ArticleActionTypes.LoadArticlesSuccess: {
+      return adapter.addAll(action.payload.articles, {
+        ...state,
+        count: action.payload.count,
+        loading: false
+      } );
+    }
+
+    case ArticleActionTypes.LoadArticlesFail: {
+      return Object.assign({}, {...state, loading: false} );
     }
 
     case ArticleActionTypes.ClearArticles: {
@@ -63,6 +80,8 @@ export function reducer(
   }
 }
 
+export const getLoading = (state: State) => state.loading;
+export const getCount = (state: State) => state.count;
 export const {
   selectIds,
   selectEntities,

@@ -18,7 +18,8 @@ import {
   AuthenticationService,
   MessageService,
   MessageBarService,
-
+  ArticleService,
+  VoteCudResponse
 } from '../../shared/services';
 import {
   ArticleWithUserModel,
@@ -27,7 +28,6 @@ import {
   UserModel
 } from '../../shared/models';
 
-import { ArticleService, VoteCudResponse } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 
 @Component({

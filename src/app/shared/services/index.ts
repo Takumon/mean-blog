@@ -9,3 +9,4 @@ export * from './message.service';
 export * from './paginator.service';
 export * from './route-names.service';
 export * from './user.service';
+export * from './article.service';

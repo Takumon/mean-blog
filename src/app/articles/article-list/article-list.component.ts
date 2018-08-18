@@ -6,20 +6,24 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
 import * as moment from 'moment';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { takeUntil, map, tap } from 'rxjs/operators';
 
+import * as fromArticle from '../../state';
 import { Constant } from '../../shared/constant';
 import {
   PaginatorService,
   AuthenticationService,
   UserService,
+  SearchArticlesCondition,
 } from '../../shared/services';
 import { ArticleWithUserModel } from '../../shared/models';
 
-import { ArticleService, Condition } from '../shared/article.service';
 import { ScrollService } from '../shared/scroll.service';
+import { LoadArticles, ArticleActionTypes, LoadArticlesSuccess } from '../../state/article.actions';
 
 export enum ArticleSearchMode {
   ALL = 100,
@@ -77,7 +81,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
 
 
   /** 検索条件（ソート、ページング用に保持しておく） */
-  private searchCondition: Condition;
+  private searchCondition: SearchArticlesCondition;
 
   /** 検索結果 */
   public articles: Array<ArticleWithUserModel>;
@@ -87,14 +91,40 @@ export class ArticleListComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject();
   private mode;
 
+  public articles$: Observable<ArticleWithUserModel[]>;
+  public count$: Observable<number>;
+  loading$: Observable<boolean>;
+
   constructor(
     private route: ActivatedRoute,
-    private articleService: ArticleService,
+    private actions$: Actions,
+    private store: Store<fromArticle.State>,
     public paginatorService: MatPaginatorIntl,
     public auth: AuthenticationService,
     private userService: UserService,
     private scrollService: ScrollService
   ) {
+    this.loading$ = this.store.select(fromArticle.getLoading);
+    this.articles$ = this.store.select(fromArticle.getArticles).pipe(
+      map(articles => articles as ArticleWithUserModel[])
+    );
+    this.count$ = this.store.select(fromArticle.getCount);
+
+    actions$.pipe(
+      takeUntil(this.destroyed$),
+      ofType<LoadArticlesSuccess>(ArticleActionTypes.LoadArticlesSuccess),
+      tap(action => {
+        this.showPrograssBar = false;
+
+        // 画面条文にスクロールする
+        setTimeout(function() {
+          this.scrollService.scrollToTop();
+        }.bind(this), 0);
+      })
+    ).subscribe();
+
+
+
   }
 
   ngOnInit() {
@@ -148,7 +178,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onChangeSearchCondition(searchCondition: Condition) {
+  onChangeSearchCondition(searchCondition: SearchArticlesCondition) {
 
     this.initPaging();
     this.initSort();
@@ -266,7 +296,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    *
    * @param cb 検索条件を引数に渡すコールバック関数
    */
-  private constructSearchCondition(cb: (searchCondition: Condition) => void ): void {
+  private constructSearchCondition(cb: (searchCondition: SearchArticlesCondition) => void ): void {
     switch (this.mode) {
       case ArticleSearchMode.ALL:
         cb({});
@@ -322,7 +352,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    *
    * @param searchCondition 記事検索条件
    */
-  private getArticles(searchCondition: Condition, pageingOption: {
+  private getArticles(searchCondition: SearchArticlesCondition, pageingOption: {
     pageIndex: number,
     pageSize: number,
     count: number
@@ -339,18 +369,11 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     };
 
     // withUserをtrueに設定しているので戻り値の型を絞ってかえす
-    this.articleService.get(searchCondition, pageingAndSortOption , true)
-    .subscribe(({count, articles}) => {
+    this.store.dispatch(new LoadArticles({
+      condition: searchCondition,
+      paginAndSortOptions: pageingAndSortOption,
+      withUser: true
+    }));
 
-      this.count = count;
-      this.articles = articles as ArticleWithUserModel[];
-      this.showPrograssBar = false;
-
-      // 画面条文にスクロールする
-      setTimeout(function() {
-        this.scrollService.scrollToTop();
-
-      }.bind(this), 0);
-    });
   }
 }
