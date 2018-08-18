@@ -16,6 +16,7 @@ import {
   MessageBarService,
   AuthenticationService,
   RouteNamesService,
+  ArticleService,
 } from '../../shared/services';
 import {
   UserModel,
@@ -25,7 +26,6 @@ import {
 
 
 import { ArticleDetailComponent } from './article-detail.component';
-import { ArticleService } from '../shared/article.service';
 
 describe('ArticleDetailComponent', () => {
 

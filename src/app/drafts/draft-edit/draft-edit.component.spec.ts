@@ -24,6 +24,7 @@ import {
   ImageService,
   MarkdownParseService,
   RouteNamesService,
+  ArticleService,
 } from '../../shared/services';
 import {
   UserModel,
@@ -32,7 +33,6 @@ import {
 } from '../../shared/models';
 
 
-import { ArticleService } from '../../articles/shared/article.service';
 import { DraftService } from '../shared/draft.service';
 import { DraftEditComponent } from './draft-edit.component';
 import * as DraftActions from '../state/draft.actions';

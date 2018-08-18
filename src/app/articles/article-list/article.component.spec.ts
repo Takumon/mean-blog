@@ -18,7 +18,9 @@ import {
   MarkdownParseService,
   MessageBarService,
   MessageService,
-  ErrorStateMatcherContainParentGroup
+  ErrorStateMatcherContainParentGroup,
+  VoteCudResponse,
+  ArticleService,
 } from '../../shared/services';
 import {
   ArticleWithUserModel,
@@ -28,7 +30,6 @@ import {
 } from '../../shared/models';
 
 import { ArticleComponent } from './article.component';
-import { VoteCudResponse, ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 
 describe('ArticleComponent', () => {

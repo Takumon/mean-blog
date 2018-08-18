@@ -11,7 +11,8 @@ import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { SharedModule } from '../../shared/shared.module';
 import {
-  AuthenticationService
+  AuthenticationService,
+  ArticleService,
 } from '../../shared/services';
 import {
   UserModel,
@@ -21,7 +22,6 @@ import {
 } from '../../shared/models';
 
 
-import { ArticleService } from '../shared/article.service';
 import { CommentService } from '../shared/comment.service';
 import { ReplyService } from '../shared/reply.service';
 

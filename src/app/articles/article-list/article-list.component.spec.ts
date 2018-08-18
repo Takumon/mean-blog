@@ -20,6 +20,7 @@ import {
   PaginatorService,
   UserService,
   LocalStorageService,
+  ArticleService,
 } from '../../shared/services';
 import {
   UserModel,
@@ -28,7 +29,6 @@ import {
 } from '../../shared/models';
 
 import { ArticleListComponent } from './article-list.component';
-import { ArticleService } from '../shared/article.service';
 
 import { SearchConditionComponent } from '../search-condition/search-condition.component';
 import { SearchConditionService } from '../shared/search-condition.service';
