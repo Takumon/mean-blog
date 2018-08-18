@@ -24,9 +24,7 @@ import { ArticleComponent } from './article-list/article.component';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
 import { UserIdSearchFilterPipe } from './search-condition/user-id-search-filter.pip';
 import { StoreModule } from '@ngrx/store';
-import * as fromArticle from './state';
 import { EffectsModule } from '@ngrx/effects';
-import { ArticleEffects } from './state/article.effects';
 
 
 
@@ -49,8 +47,6 @@ import { ArticleEffects } from './state/article.effects';
   imports: [
     ArticlesRoutingModule,
     SharedModule,
-    StoreModule.forFeature('article', fromArticle.reducers, { metaReducers: fromArticle.metaReducers }),
-    EffectsModule.forFeature([ArticleEffects]),
   ],
   providers: [
     ArticleService,
