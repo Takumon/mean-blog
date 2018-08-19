@@ -23,7 +23,11 @@ import {
 import { ArticleWithUserModel } from '../../shared/models';
 
 import { ScrollService } from '../shared/scroll.service';
-import { LoadArticles, ArticleActionTypes, LoadArticlesSuccess } from '../../state/article.actions';
+import {
+  LoadArticles,
+  ArticleActionTypes,
+  LoadArticlesSuccess
+} from '../../state/article.actions';
 
 export enum ArticleSearchMode {
   ALL = 100,
@@ -82,11 +86,6 @@ export class ArticleListComponent implements OnInit, OnDestroy {
 
   /** 検索条件（ソート、ページング用に保持しておく） */
   private searchCondition: SearchArticlesCondition;
-
-  /** 検索結果 */
-  public articles: Array<ArticleWithUserModel>;
-  /** 検索結果件数 */
-  public count: number;
 
   private destroyed$ = new Subject();
   private mode;
@@ -170,11 +169,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
 
     this.constructSearchCondition(searchCondition => {
       this.searchCondition = searchCondition;
-      this.getArticles(this.searchCondition, {
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize,
-        count: this.count
-      });
+      this.getArticles(this.searchCondition);
     });
   }
 
@@ -186,11 +181,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     this.showPrograssBar = true;
 
     this.searchCondition = searchCondition;
-    this.getArticles(this.searchCondition, {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      count: this.count
-    });
+    this.getArticles(this.searchCondition);
   }
 
   /**
@@ -212,21 +203,13 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     if (this.pageSize !== event.pageSize) {
       this.pageSize = event.pageSize;
       this.pageIndex = 0;
-      this.getArticles(this.searchCondition, {
-        pageIndex: this.pageIndex,
-        pageSize: this.pageSize,
-        count: this.count
-      });
+      this.getArticles(this.searchCondition);
       return;
     }
 
 　  this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
-    this.getArticles(this.searchCondition, {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      count: this.count
-    });
+    this.getArticles(this.searchCondition);
   }
 
   /**
@@ -261,11 +244,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.getArticles(this.searchCondition, {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
-      count: this.count
-    });
+    this.getArticles(this.searchCondition);
   }
 
   /**
@@ -352,28 +331,35 @@ export class ArticleListComponent implements OnInit, OnDestroy {
    *
    * @param searchCondition 記事検索条件
    */
-  private getArticles(searchCondition: SearchArticlesCondition, pageingOption: {
-    pageIndex: number,
-    pageSize: number,
-    count: number
-  }): void {
+  private getArticles(searchCondition: SearchArticlesCondition): void {
     const selectedSortFactor = this.getSelectedSortFactor();
-    const range = (this.paginatorService as PaginatorService).calcRange(pageingOption.pageIndex, pageingOption.pageSize, pageingOption.count);
 
-    const pageingAndSortOption = {
-      sort: {
-        [selectedSortFactor.value]: selectedSortFactor.direction === SortDirection.ASC ? 1 : -1
-      },
-      skip: range.startIndex,
-      limit: range.endIndex - range.startIndex
-    };
+    this.getPagingRang().subscribe(range => {
 
-    // withUserをtrueに設定しているので戻り値の型を絞ってかえす
-    this.store.dispatch(new LoadArticles({
-      condition: searchCondition,
-      paginAndSortOptions: pageingAndSortOption,
-      withUser: true
-    }));
+      const pageingAndSortOption = {
+        sort: {
+          [selectedSortFactor.value]: selectedSortFactor.direction === SortDirection.ASC ? 1 : -1
+        },
+        skip: range.startIndex,
+        limit: range.endIndex - range.startIndex
+      };
 
+      // withUserをtrueに設定しているので戻り値の型を絞ってかえす
+      this.store.dispatch(new LoadArticles({
+        condition: searchCondition,
+        paginAndSortOptions: pageingAndSortOption,
+        withUser: true
+      }));
+
+    });
+  }
+
+  /**
+   * 記事検索時に必要なページング情報を取得する.
+   */
+  private getPagingRang(): Observable<{ startIndex: number; endIndex: number; }> {
+    return this.count$.pipe(
+      map(count => (this.paginatorService as PaginatorService).calcRange(this.pageIndex, this.pageSize, count))
+    );
   }
 }
