@@ -5,13 +5,14 @@ import { takeUntil } from 'rxjs/operators';
 
 import { PageEvent, MatPaginatorIntl } from '@angular/material';
 
-
+import * as fromApp from '../../state';
 import {
   UserService,
-  RouteNamesService,
   PaginatorService,
 } from '../../shared/services';
 import { UserModel } from '../../shared/models/user.model';
+import { Store } from '@ngrx/store';
+import { SetTitle } from '../../state/app.actions';
 
 
 
@@ -145,13 +146,13 @@ export class UserListComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private routeNamesService: RouteNamesService,
+    private store: Store<fromApp.State>,
     private userService: UserService,
     public paginatorService: MatPaginatorIntl,
   ) {}
 
   ngOnInit(): void {
-    this.routeNamesService.name.next(`ユーザ一覧`);
+    this.store.dispatch(new SetTitle({title: 'ユーザ一覧'}));
     this.getUser();
   }
 

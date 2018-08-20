@@ -27,7 +27,7 @@
     </a>
   </nav>
 
-  <h1 *ngIf="!isActiveNavbar" class="toolbar__title">{{routerName}}</h1>
+  <h1 *ngIf="!isActiveNavbar" class="toolbar__title">{{routerName$ | async}}</h1>
   <span class="toolbar__spacer"></span>
 
   <ng-container *ngIf="auth.isFinishedCheckState">

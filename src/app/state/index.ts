@@ -26,6 +26,9 @@ export const metaReducers: MetaReducer<State>[] = !environment.production ? [] :
 /**
  * Selectors
  */
+export const getAppState = (state: State) => state.app;
+export const getTitle = createSelector(getAppState, fromApp.getTitle);
+
 export const getArticleEntitiyState = (state: State) => state.article;
 export const getArticles = createSelector(getArticleEntitiyState, fromArticle.selectAll);
 export const getLoading = createSelector(getArticleEntitiyState, fromArticle.getLoading);

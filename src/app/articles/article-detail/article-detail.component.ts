@@ -20,7 +20,6 @@ import { Constant } from '../../shared/constant';
 import {
   ArticleService,
   AuthenticationService,
-  RouteNamesService,
   MarkdownParseService,
   MessageBarService,
 } from '../../shared/services';
@@ -29,8 +28,11 @@ import {
   ArticleWithUserModel,
   UserModel,
 } from '../../shared/models';
+import * as fromApp from '../../state';
 
 import { CommentListComponent } from '../comment-list/comment-list.component';
+import { Store } from '@ngrx/store';
+import { SetTitle } from '../../state/app.actions';
 
 @Component({
   selector: 'app-article-detail',
@@ -54,6 +56,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   private activeIndex: number | null = null;
 
   constructor(
+    private store: Store<fromApp.State>,
     public auth: AuthenticationService,
 
     private snackBar: MatSnackBar,
@@ -61,14 +64,13 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     private router: Router,
     private route: ActivatedRoute,
     private messageBarService: MessageBarService,
-    private routeNamesService: RouteNamesService,
     private markdownParseService: MarkdownParseService,
     private articleService: ArticleService,
   ) {
   }
 
   ngOnInit(): void {
-    this.routeNamesService.name.next(`記事詳細`);
+    this.store.dispatch(new SetTitle({title: '記事詳細'}));
     this.getArticle();
   }
 

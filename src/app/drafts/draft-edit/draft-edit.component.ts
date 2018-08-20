@@ -24,7 +24,6 @@ import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components';
 import {
   AuthenticationService,
-  RouteNamesService,
   MessageService,
   MessageBarService,
   ImageService,
@@ -56,6 +55,7 @@ import {
   UpdateDraft,
   UpdateDraftFail,
 } from '../state/draft.actions';
+import { SetTitle } from '../../state/app.actions';
 
 
 const IS_RESUME = 'resume';
@@ -117,7 +117,6 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     private articleService: ArticleService,
     public draftService: DraftService,
     private auth: AuthenticationService,
-    private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     ) {
       // エラーメッセージ表示処理を登録
@@ -136,6 +135,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit(): void {
+
     this.createForm();
     this.route.queryParams
     .subscribe(queryParams => {
@@ -181,7 +181,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
   init(isResume: boolean, _id: string): void {
     if (isResume) {
       this.action = '更新';
-      this.routeNamesService.name.next(`下書きを${this.action}する`);
+      this.store.dispatch(new SetTitle({title: `下書きを${this.action}する`}));
 
       this.draftService
       .getById(_id)
@@ -238,12 +238,13 @@ export class DraftEditComponent implements OnInit, OnDestroy {
             // 下書き保存ボタンの設定を戻す
             this.canRegisterDraft = true;
             this.snackBar.open('編集中の下書きがあるのでそれを編集します。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.routeNamesService.name.next(`下書きを${this.action}する`);
+            this.store.dispatch(new SetTitle({title: `下書きを${this.action}する`}));
+
             return;
           }
 
           // まだ下書きがない場合は記事がインプット
-          this.routeNamesService.name.next(`記事を${this.action}する`);
+          this.store.dispatch(new SetTitle({title: `記事を${this.action}する`}));
 
           this.articleService
           .getById(_id, true)
@@ -265,7 +266,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
 
       } else {
         this.action = '投稿';
-        this.routeNamesService.name.next(`記事を${this.action}する`);
+        this.store.dispatch(new SetTitle({title: `記事を${this.action}する`}));
         this.form.patchValue({
           isMarkdown: true,
         });
