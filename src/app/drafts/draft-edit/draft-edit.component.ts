@@ -56,6 +56,7 @@ import {
   UpdateDraftFail,
 } from '../state/draft.actions';
 import { SetTitle } from '../../state/app.actions';
+import { AddArticle, AddArticleFail, ArticleActionTypes } from '../../state/article.actions';
 
 
 const IS_RESUME = 'resume';
@@ -131,6 +132,13 @@ export class DraftEditComponent implements OnInit, OnDestroy {
         ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
         tap(action => this.onValidationError(action.payload.error))
       ).subscribe();
+
+      actions$.pipe(
+        takeUntil(this.onDestroy),
+        ofType<AddArticleFail>(ArticleActionTypes.AddArticleFail),
+        tap(action => this.onValidationError(action.payload.error))
+      ).subscribe();
+
 
     }
 
@@ -328,17 +336,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
       } else {
         // 未公開の場合は記事を登録
         article.author = this.previousDraft.author;
-        this.articleService
-        .register(article)
-        .subscribe((resOfModifiedArticle: any) => {
-          // 記事を登録したら下書きは削除する
-          this.draftService
-          .delete(this.previousDraft._id)
-          .subscribe(r => {
-            this.snackBar.open('記事を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.goToArticle(resOfModifiedArticle.obj._id);
-          }, this.messageBarService.showValidationError.bind(this.messageBarService));
-        }, this.onValidationError.bind(this));
+        this.store.dispatch(new AddArticle({ article }));
       }
 
     } else {
@@ -355,13 +353,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
       } else {
         // 記事登録
         article.author = this.auth.loginUser._id;
-
-        this.articleService
-          .register(article)
-          .subscribe((res: any) => {
-            this.snackBar.open('記事を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.goToArticle(res.obj._id);
-          }, this.onValidationError.bind(this));
+        this.store.dispatch(new AddArticle({ article }));
       }
     }
   }

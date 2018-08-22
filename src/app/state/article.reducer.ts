@@ -21,10 +21,6 @@ export function reducer(
   action: ArticleActions
 ): State {
   switch (action.type) {
-    case ArticleActionTypes.AddArticle: {
-      return adapter.addOne(action.payload.article, state);
-    }
-
     case ArticleActionTypes.UpsertArticle: {
       return adapter.upsertOne(action.payload.article, state);
     }
@@ -69,6 +65,21 @@ export function reducer(
     case ArticleActionTypes.LoadArticlesFail: {
       return Object.assign({}, {...state, loading: false} );
     }
+
+    // 一件登録
+    case ArticleActionTypes.AddArticle: {
+      return Object.assign({}, {...state, loading: true} );
+    }
+
+    case ArticleActionTypes.AddArticleSuccess: {
+      return adapter.addOne(action.payload.article, {
+        ...state,
+        loading: false
+      });
+    }
+
+
+
 
     case ArticleActionTypes.ClearArticles: {
       return adapter.removeAll(state);

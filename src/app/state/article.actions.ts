@@ -72,7 +72,19 @@ export class LoadArticlesFail implements Action {
 export class AddArticle implements Action {
   readonly type = ArticleActionTypes.AddArticle;
 
-  constructor(public payload: { article: ArticleModel | ArticleWithUserModel }) {}
+  constructor(public payload: { article: ArticleModel }) {}
+}
+
+export class AddArticleSuccess implements Action {
+  readonly type = ArticleActionTypes.AddArticleSuccess;
+
+  constructor(public payload: { article: ArticleModel }) {}
+}
+
+export class AddArticleFail implements Action {
+  readonly type = ArticleActionTypes.AddArticleFail;
+
+  constructor(public payload: { error: any }) {}
 }
 
 export class UpsertArticle implements Action {
@@ -126,6 +138,8 @@ export type ArticleActions =
  | LoadArticlesSuccess
  | LoadArticlesFail
  | AddArticle
+ | AddArticleSuccess
+ | AddArticleFail
  | UpsertArticle
  | AddArticles
  | UpsertArticles
