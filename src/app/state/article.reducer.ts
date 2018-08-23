@@ -33,9 +33,6 @@ export function reducer(
       return adapter.upsertMany(action.payload.articles, state);
     }
 
-    case ArticleActionTypes.UpdateArticle: {
-      return adapter.updateOne(action.payload.article, state);
-    }
 
     case ArticleActionTypes.UpdateArticles: {
       return adapter.updateMany(action.payload.articles, state);
@@ -78,6 +75,25 @@ export function reducer(
       });
     }
 
+    case ArticleActionTypes.AddArticleFail: {
+      return Object.assign({}, {...state, loading: false} );
+    }
+
+    // 一件更新
+    case ArticleActionTypes.UpdateArticle: {
+      return Object.assign({}, {...state, loading: true} );
+    }
+
+    case ArticleActionTypes.UpdateArticleSuccess: {
+      return adapter.updateOne(action.payload.article, {
+        ...state,
+        loading: false
+      });
+    }
+
+    case ArticleActionTypes.UpdateArticleFail: {
+      return Object.assign({}, {...state, loading: false} );
+    }
 
 
 

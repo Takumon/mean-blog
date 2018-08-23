@@ -108,8 +108,21 @@ export class UpsertArticles implements Action {
 export class UpdateArticle implements Action {
   readonly type = ArticleActionTypes.UpdateArticle;
 
-  constructor(public payload: { article: Update<ArticleModel | ArticleWithUserModel> }) {}
+  constructor(public payload: { article: Update<ArticleModel> }) {}
 }
+
+export class UpdateArticleSuccess implements Action {
+  readonly type = ArticleActionTypes.UpdateArticleSuccess;
+
+  constructor(public payload: { article: Update<ArticleModel> }) {}
+}
+
+export class UpdateArticleFail implements Action {
+  readonly type = ArticleActionTypes.UpdateArticleFail;
+
+  constructor(public payload: { error: any }) {}
+}
+
 
 export class UpdateArticles implements Action {
   readonly type = ArticleActionTypes.UpdateArticles;
@@ -144,6 +157,8 @@ export type ArticleActions =
  | AddArticles
  | UpsertArticles
  | UpdateArticle
+ | UpdateArticleSuccess
+ | UpdateArticleFail
  | UpdateArticles
  | DeleteArticle
  | DeleteArticles
