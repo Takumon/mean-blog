@@ -123,32 +123,32 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     public messageService: MessageService,
     ) {
       // エラーメッセージ表示処理を登録
-      actions$.pipe(
+      this.actions$.pipe(
         takeUntil(this.onDestroy),
         ofType<AddDraftFail>(DraftActionTypes.AddDraftFail),
         tap(action => this.onValidationError(action.payload.error))
       ).subscribe();
 
-      actions$.pipe(
+      this.actions$.pipe(
         takeUntil(this.onDestroy),
         ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
         tap(action => this.onValidationError(action.payload.error))
       ).subscribe();
 
-      actions$.pipe(
+      this.actions$.pipe(
         takeUntil(this.onDestroy),
         ofType<DeleteDraftFail>(DraftActionTypes.DeleteDraftFail),
         tap(action => this.onValidationError(action.payload.error))
       ).subscribe();
 
 
-      actions$.pipe(
+      this.actions$.pipe(
         takeUntil(this.onDestroy),
         ofType<AddArticleFail>(ArticleActionTypes.AddArticleFail),
         tap(action => this.onValidationError(action.payload.error))
       ).subscribe();
 
-      actions$.pipe(
+      this.actions$.pipe(
         takeUntil(this.onDestroy),
         ofType<UpdateArticleFail>(ArticleActionTypes.UpdateArticleFail),
         tap(action => this.onValidationError(action.payload.error))

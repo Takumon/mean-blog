@@ -136,6 +136,21 @@ export class DeleteArticle implements Action {
   constructor(public payload: { id: string }) {}
 }
 
+
+export class DeleteArticleSuccess implements Action {
+  readonly type = ArticleActionTypes.DeleteArticleSuccess;
+
+  constructor(public payload: { article: ArticleModel }) {}
+}
+
+export class DeleteArticleFail implements Action {
+  readonly type = ArticleActionTypes.DeleteArticleFail;
+
+  constructor(public payload: { error: any }) {}
+}
+
+
+
 export class DeleteArticles implements Action {
   readonly type = ArticleActionTypes.DeleteArticles;
 
@@ -161,5 +176,7 @@ export type ArticleActions =
  | UpdateArticleFail
  | UpdateArticles
  | DeleteArticle
+ | DeleteArticleSuccess
+ | DeleteArticleFail
  | DeleteArticles
  | ClearArticles;

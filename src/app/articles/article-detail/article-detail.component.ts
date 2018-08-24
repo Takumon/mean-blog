@@ -14,7 +14,7 @@ import {
   MatDialog,
 } from '@angular/material';
 import { Observable, Subject, of } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, tap } from 'rxjs/operators';
 
 import { Constant } from '../../shared/constant';
 import {
@@ -28,11 +28,14 @@ import {
   ArticleWithUserModel,
   UserModel,
 } from '../../shared/models';
-import * as fromApp from '../../state';
+import * as fromArticle from '../../state';
 
 import { CommentListComponent } from '../comment-list/comment-list.component';
 import { Store } from '@ngrx/store';
 import { SetTitle } from '../../state/app.actions';
+import { DeleteArticle, DeleteArticleFail } from '../../state/article.actions';
+import { Actions, ofType } from '@ngrx/effects';
+import { DraftActionTypes } from '../../drafts/state/draft.actions';
 
 @Component({
   selector: 'app-article-detail',
@@ -56,7 +59,8 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   private activeIndex: number | null = null;
 
   constructor(
-    private store: Store<fromApp.State>,
+    private store: Store<fromArticle.State>,
+    private actions$: Actions,
     public auth: AuthenticationService,
 
     private snackBar: MatSnackBar,
@@ -67,6 +71,12 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     private markdownParseService: MarkdownParseService,
     private articleService: ArticleService,
   ) {
+    // エラーメッセージ表示処理を登録
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteArticleFail>(DraftActionTypes.DeleteDraftFail),
+      tap(action => this.messageBarService.showValidationError(action.payload.error))
+    ).subscribe();
   }
 
   ngOnInit(): void {
@@ -130,11 +140,9 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
         return;
       }
 
-      this.articleService.delete(this.article._id)
-      .subscribe(article => {
-        this.snackBar.open('記事を削除しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-        this.router.navigate(['/']);
-      }, this.messageBarService.showValidationError.bind(this.messageBarService));
+      this.store.dispatch(new DeleteArticle({
+        id: this.article._id
+      }));
     });
 
   }

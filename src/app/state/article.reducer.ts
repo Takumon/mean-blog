@@ -38,10 +38,6 @@ export function reducer(
       return adapter.updateMany(action.payload.articles, state);
     }
 
-    case ArticleActionTypes.DeleteArticle: {
-      return adapter.removeOne(action.payload.id, state);
-    }
-
     case ArticleActionTypes.DeleteArticles: {
       return adapter.removeMany(action.payload.ids, state);
     }
@@ -95,6 +91,21 @@ export function reducer(
       return Object.assign({}, {...state, loading: false} );
     }
 
+    // 一件削除
+    case ArticleActionTypes.DeleteArticle: {
+      return Object.assign({}, {...state, loading: true });
+    }
+
+    case ArticleActionTypes.DeleteArticleSuccess: {
+      return adapter.removeOne(action.payload.article._id, {
+        ...state,
+        loading: false
+      });
+    }
+
+    case ArticleActionTypes.DeleteArticleFail: {
+      return Object.assign({}, {...state, loading: false });
+    }
 
 
     case ArticleActionTypes.ClearArticles: {

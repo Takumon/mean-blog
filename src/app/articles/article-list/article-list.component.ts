@@ -109,7 +109,7 @@ export class ArticleListComponent implements OnInit, OnDestroy {
     );
     this.count$ = this.store.select(fromArticle.getCount);
 
-    actions$.pipe(
+    this.actions$.pipe(
       takeUntil(this.destroyed$),
       ofType<LoadArticlesSuccess>(ArticleActionTypes.LoadArticlesSuccess),
       tap(action => {

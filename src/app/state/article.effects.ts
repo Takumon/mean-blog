@@ -3,7 +3,19 @@ import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ArticleService, AuthenticationService } from '../shared/services';
 import { Observable, of } from 'rxjs';
-import { ArticleActionTypes, LoadArticles, LoadArticlesSuccess, LoadArticlesFail, AddArticle, AddArticleSuccess, AddArticleFail, UpdateArticle, UpdateArticleSuccess } from './article.actions';
+import {
+  ArticleActionTypes,
+  LoadArticles,
+  LoadArticlesSuccess,
+  LoadArticlesFail,
+  AddArticle,
+  AddArticleSuccess,
+  AddArticleFail,
+  UpdateArticle,
+  UpdateArticleSuccess,
+  DeleteArticle,
+  DeleteArticleSuccess
+} from './article.actions';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { ShowSnackbar } from './app.actions';
 import { Constant } from '../shared/constant';
@@ -109,5 +121,38 @@ export class ArticleEffects {
       }));
     })
   );
+
+
+
+  @Effect()
+  deleteArticle$: Observable<Action> = this.actions$.pipe(
+    ofType<DeleteArticle>(ArticleActionTypes.DeleteArticle),
+    switchMap(action => {
+
+      return this.articleService
+        .delete(action.payload.id)
+        .pipe(
+          map(data => new DeleteArticleSuccess({ article: data.obj })),
+          catchError(error => of(new AddArticleFail({ error })))
+        );
+    })
+  );
+
+
+  @Effect()
+  deleteArticleSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<DeleteArticleSuccess>(ArticleActionTypes.DeleteArticleSuccess),
+    switchMap(action => {
+
+      this.router.navigate(['/']);
+
+      return of(new ShowSnackbar({
+        message: `記事「${action.payload.article.title}」を削除しました。`,
+        action: null,
+        config: this.Constant.SNACK_BAR_DEFAULT_OPTION
+      }));
+    })
+  );
+
 
 }
