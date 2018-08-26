@@ -10,12 +10,13 @@ import { APP_BASE_HREF } from '@angular/common';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
+import * as fromRoot from '../../state';
+
 import { SharedModule } from '../../shared/shared.module';
 import {
   MarkdownParseService,
   MessageBarService,
   AuthenticationService,
-  RouteNamesService,
   ArticleService,
 } from '../../shared/services';
 import {
@@ -26,6 +27,8 @@ import {
 
 
 import { ArticleDetailComponent } from './article-detail.component';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { StoreModule } from '@ngrx/store';
 
 describe('ArticleDetailComponent', () => {
 
@@ -122,6 +125,9 @@ describe('ArticleDetailComponent', () => {
       imports: [
         RouterTestingModule,
         SharedModule,
+        StoreModule.forRoot({
+          ...fromRoot.reducers,
+        })
       ],
       providers: [
         { provide: APP_BASE_HREF, useValue: '/' },
@@ -132,7 +138,7 @@ describe('ArticleDetailComponent', () => {
         MatSnackBar,
         MatDialog,
         MessageBarService,
-        RouteNamesService,
+        provideMockActions(() => of()),
       ],
     }).compileComponents();
   });

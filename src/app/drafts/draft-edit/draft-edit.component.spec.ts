@@ -23,7 +23,6 @@ import {
   ErrorStateMatcherContainParentGroup,
   ImageService,
   MarkdownParseService,
-  RouteNamesService,
   ArticleService,
 } from '../../shared/services';
 import {
@@ -161,7 +160,6 @@ describe('DraftDetailComponent', () => {
         { provide: ActivatedRoute, useClass: MockActivatedRoute },
         MessageBarService,
         MessageService,
-        RouteNamesService,
         provideMockActions(() => of()),
       ]
     }).compileComponents();

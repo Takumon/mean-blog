@@ -403,7 +403,13 @@ describe('ArticleComponent', () => {
         this.isRegistered = true;
         const article: VoteCudResponse = {
           message: '記事にいいねしました。',
-          obj: ['1234580000'],
+          obj: [{
+            _id: '1234580000',
+            userId: 'SampleUserId',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          }],
         };
         return of(article);
       }
@@ -414,7 +420,13 @@ describe('ArticleComponent', () => {
         this.isRegistered = false;
         const article: VoteCudResponse = {
           message: 'いいねを取り消しました。',
-          obj: ['1234580000'],
+          obj: [{
+            _id: '1234580000',
+            userId: 'SampleUserId',
+            isAdmin: false,
+            created: '2018-02-11T23:39:37.263Z',
+            updated: '2018-02-11T23:39:37.263Z'
+          }],
         };
         return of(article);
       }

@@ -435,8 +435,8 @@ describe('ArticleService', () => {
     service.registerVote(arg_idOfArticle, arg__idOfUser).subscribe(res => {
       expect(res.message).toEqual('記事にいいねしました。');
       expect(res.obj.length).toEqual(2);
-      expect(res.obj[0]).toEqual('123456789011');
-      expect(res.obj[1]).toEqual('123456789012');
+      expect(res.obj[0]._id).toEqual('123456789011');
+      expect(res.obj[1]._id).toEqual('123456789012');
     });
 
 
@@ -467,7 +467,7 @@ describe('ArticleService', () => {
     service.deleteVote(arg_idOfArticle, arg__idOfUser).subscribe(res => {
       expect(res.message).toEqual('いいねを取り消しました。');
       expect(res.obj.length).toEqual(1);
-      expect(res.obj[0]).toEqual('123456789012');
+      expect(res.obj[0]._id).toEqual('123456789012');
     });
 
     const req = httpMock.expectOne((request: HttpRequest<any>) => {
