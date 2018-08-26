@@ -13,12 +13,14 @@ import {
   MatSnackBar,
   MatDialog,
 } from '@angular/material';
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil, map, tap } from 'rxjs/operators';
 
+
 import { Constant } from '../../shared/constant';
 import {
-  ArticleService,
   AuthenticationService,
   MarkdownParseService,
   MessageBarService,
@@ -28,15 +30,22 @@ import {
   ArticleWithUserModel,
   UserModel,
 } from '../../shared/models';
+
 import * as fromArticle from '../../state';
+import { SetTitle } from '../../state/app.actions';
+import { DraftActionTypes } from '../../drafts/state/draft.actions';
+import {
+  DeleteArticle,
+  DeleteArticleFail,
+  LoadArticle,
+  ArticleActionTypes,
+  DeleteVote,
+  DeleteVoteFail,
+  AddVote,
+  AddVoteFail
+} from '../../state/article.actions';
 
 import { CommentListComponent } from '../comment-list/comment-list.component';
-import { Store } from '@ngrx/store';
-import { SetTitle } from '../../state/app.actions';
-import { DeleteArticle, DeleteArticleFail } from '../../state/article.actions';
-import { Actions, ofType } from '@ngrx/effects';
-import { DraftActionTypes } from '../../drafts/state/draft.actions';
-
 @Component({
   selector: 'app-article-detail',
   templateUrl: './article-detail.component.html',
@@ -46,7 +55,7 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
-  public article: ArticleWithUserModel;
+  public article$: Observable<ArticleWithUserModel>;
   public text: string;
   public showToc: Observable<Boolean> = of(false);
   public toc: string;
@@ -69,19 +78,53 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     private route: ActivatedRoute,
     private messageBarService: MessageBarService,
     private markdownParseService: MarkdownParseService,
-    private articleService: ArticleService,
   ) {
     // エラーメッセージ表示処理を登録
+    // 記事削除時
     this.actions$.pipe(
       takeUntil(this.onDestroy),
       ofType<DeleteArticleFail>(DraftActionTypes.DeleteDraftFail),
       tap(action => this.messageBarService.showValidationError(action.payload.error))
     ).subscribe();
+
+    // いいね追加時
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddVoteFail>(ArticleActionTypes.AddVoteFail),
+      tap(action => this.messageBarService.showValidationError(action.payload.error))
+    ).subscribe();
+
+    // いいね削除時
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteVoteFail>(ArticleActionTypes.DeleteVoteFail),
+      tap(action => this.messageBarService.showValidationError(action.payload.error))
+    ).subscribe();
+
+
   }
 
   ngOnInit(): void {
     this.store.dispatch(new SetTitle({title: '記事詳細'}));
     this.getArticle();
+
+    this.article$ = this.store.select(fromArticle.getArticle).pipe(
+      tap(article => {
+        if (!article) {
+          return;
+        }
+
+        if (article.isMarkdown) {
+          this.baseUrl = `/${article.author.userId}/articles/${article._id}`;
+          const parsed = this.markdownParseService.parse(article.body, this.baseUrl);
+          this.text = parsed.text;
+          this.toc = parsed.toc;
+        } else {
+          this.text = article.body;
+        }
+      })
+    );
+
   }
 
   // markdonwテキストが初期化時に
@@ -106,24 +149,10 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       const userId = params['userId'];
       const _idOfArticle = params['_id'];
       const withUser = true;
-      this.articleService.getById(_idOfArticle, withUser)
-      .subscribe( (article: ArticleWithUserModel) => {
-
-        if (userId !== article.author.userId) {
-          this.router.navigate(['/', article.author.userId, 'articles', article._id]);
-        }
-
-        this.article = article as ArticleWithUserModel;
-        if (this.article.isMarkdown) {
-          this.baseUrl = `/${article.author.userId}/articles/${article._id}`;
-          const parsed = this.markdownParseService.parse(this.article.body, this.baseUrl);
-          this.text = parsed.text;
-          this.toc = parsed.toc;
-        } else {
-          this.text = this.article.body;
-        }
-
-      });
+      this.store.dispatch(new LoadArticle({
+        id: _idOfArticle,
+        withUser
+      }));
     });
   }
 
@@ -140,25 +169,15 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
         return;
       }
 
-      this.store.dispatch(new DeleteArticle({
-        id: this.article._id
-      }));
+      this.store.dispatch(new DeleteArticle());
     });
 
   }
 
   private registerVote(): void {
-    this.articleService
-      .registerVote(this.article._id, this.auth.loginUser._id)
-      .subscribe(article => {
-        this.snackBar.open('いいねしました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-
-        const withUser = true;
-        this.articleService.getVote(this.article._id, withUser)
-          .subscribe((vote: UserModel[]) => {
-            this.article.vote = vote;
-          });
-      }, this.messageBarService.showValidationError.bind(this.messageBarService));
+    this.store.dispatch(new AddVote({
+      _idOfVoter: this.auth.loginUser._id
+    }));
   }
 
   private deleteVote(): void {
@@ -174,18 +193,9 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
         return;
       }
 
-
-      this.articleService
-      .deleteVote(this.article._id, this.auth.loginUser._id)
-      .subscribe(article => {
-        this.snackBar.open('いいねを取り消しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-
-        const withUser = true;
-        this.articleService.getVote(this.article._id, withUser)
-        .subscribe( (vote: UserModel[]) => {
-          this.article.vote = vote;
-        });
-      }, this.messageBarService.showValidationError.bind(this.messageBarService));
+      this.store.dispatch(new DeleteVote({
+        _idOfVoter: this.auth.loginUser._id
+      }));
     });
   }
 

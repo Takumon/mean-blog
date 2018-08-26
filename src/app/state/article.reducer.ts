@@ -3,7 +3,10 @@ import { ArticleModel, ArticleWithUserModel } from '../shared/models';
 import { ArticleActions, ArticleActionTypes } from './article.actions';
 
 export interface State extends EntityState<ArticleModel | ArticleWithUserModel> {
+  article: ArticleWithUserModel;
   loading: boolean;
+  loadingArticle: boolean;
+  loadingVote: boolean;
   count: number;
 }
 
@@ -12,7 +15,10 @@ export const adapter: EntityAdapter<ArticleModel | ArticleWithUserModel> = creat
 });
 
 export const initialState: State = adapter.getInitialState({
+  article: null,
   loading: false,
+  loadingArticle: false,
+  loadingVote: false,
   count: 0
 });
 
@@ -59,6 +65,7 @@ export function reducer(
       return Object.assign({}, {...state, loading: false} );
     }
 
+
     // 一件登録
     case ArticleActionTypes.AddArticle: {
       return Object.assign({}, {...state, loading: true} );
@@ -74,6 +81,7 @@ export function reducer(
     case ArticleActionTypes.AddArticleFail: {
       return Object.assign({}, {...state, loading: false} );
     }
+
 
     // 一件更新
     case ArticleActionTypes.UpdateArticle: {
@@ -91,6 +99,7 @@ export function reducer(
       return Object.assign({}, {...state, loading: false} );
     }
 
+
     // 一件削除
     case ArticleActionTypes.DeleteArticle: {
       return Object.assign({}, {...state, loading: true });
@@ -104,13 +113,98 @@ export function reducer(
     }
 
     case ArticleActionTypes.DeleteArticleFail: {
-      return Object.assign({}, {...state, loading: false });
+      return Object.assign({}, {
+        ...state,
+        loading: false,
+      });
     }
-
 
     case ArticleActionTypes.ClearArticles: {
       return adapter.removeAll(state);
     }
+
+
+    // TODO EntityStateと別にするかは検討
+    // 記事取得
+    case ArticleActionTypes.LoadArticle: {
+      return Object.assign({}, {...state, loadingArticle: true} );
+    }
+    case ArticleActionTypes.LoadArticleSuccess: {
+
+      return Object.assign({}, {
+        ...state,
+        article: action.payload.article,
+        loadingArticle: false,
+      });
+    }
+
+    case ArticleActionTypes.LoadArticleFail: {
+      return Object.assign({}, {...state, loadingArticle: false} );
+    }
+
+    // 記事削除
+    case ArticleActionTypes.DeleteArticle: {
+      return Object.assign({}, {...state, loading: true});
+    }
+
+    case ArticleActionTypes.DeleteArticleSuccess: {
+
+      return Object.assign({}, {
+        ...state,
+        article: null,
+        loadingArticle: false,
+      });
+    }
+
+    case ArticleActionTypes.DeleteArticleFail: {
+      return Object.assign({}, {...state, loadingArticle: false});
+    }
+
+
+    // いいね追加
+    case ArticleActionTypes.AddVote: {
+      return Object.assign({}, {...state, loadingVote: true});
+    }
+
+    case ArticleActionTypes.AddVoteSuccess: {
+      return Object.assign({}, {
+        ...state,
+        article: {
+          ...state.article,
+          vote: action.payload.vote
+        },
+        loadingVote: false,
+      });
+    }
+
+    case ArticleActionTypes.AddVoteFail: {
+      return Object.assign({}, {...state, loadingVote: false} );
+    }
+
+
+    // いいね削除
+    case ArticleActionTypes.DeleteVote: {
+      return Object.assign({}, {...state, loadingVote: true});
+    }
+
+    case ArticleActionTypes.DeleteVoteSuccess: {
+      return Object.assign({}, {
+        ...state,
+        article: {
+          ...state.article,
+          vote: action.payload.vote
+        },
+        loadingVote: false,
+      });
+    }
+
+    case ArticleActionTypes.DeleteVoteFail: {
+      return Object.assign({}, {...state, loadingVote: false} );
+    }
+
+
+
+
 
     default: {
       return state;
@@ -119,6 +213,7 @@ export function reducer(
 }
 
 export const getLoading = (state: State) => state.loading;
+export const getArticle = (state: State) => state.article;
 export const getCount = (state: State) => state.count;
 export const {
   selectIds,

@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { ArticleModel } from '../shared/models/article.model';
 import { SearchArticlesCondition, PageAndSortOption } from '../shared/services';
-import { ArticleWithUserModel } from '../shared/models';
+import { ArticleWithUserModel, UserModel } from '../shared/models';
 
 export enum ArticleActionTypes {
   LoadArticles = '[Article] Load Articles',
@@ -40,7 +40,35 @@ export enum ArticleActionTypes {
   DeleteArticlesFail = '[Article] Delete Articles Fail',
   ClearArticlesFail = '[Article] Clear Articles Fail',
 
+
+  // TODO EntityStateと分離するか検討
+  LoadArticle = '[Article] Load Article',
+  LoadArticleSuccess = '[Article] Load Article Success',
+  LoadArticleFail = '[Article] Load Article Fail',
+  AddVote = '[Article Vote] Add Vote',
+  AddVoteSuccess = '[Article Vote] Add Vote Success',
+  AddVoteFail = '[Article Vote] Add Vote Fail',
+  DeleteVote = '[Article Vote] Delete Vote',
+  DeleteVoteSuccess = '[Article Vote] Delete Vote Success',
+  DeleteVoteFail = '[Article Vote] Delete Vote Fail',
+
 }
+
+
+export class LoadArticleSuccess implements Action {
+  readonly type = ArticleActionTypes.LoadArticleSuccess;
+
+  constructor(public payload: {
+    article: ArticleWithUserModel
+  }) {}
+}
+
+export class LoadArticleFail implements Action {
+  readonly type = ArticleActionTypes.LoadArticleFail;
+
+  constructor(public payload?: { error: any }) {}
+}
+
 
 export class LoadArticles implements Action {
   readonly type = ArticleActionTypes.LoadArticles;
@@ -130,10 +158,37 @@ export class UpdateArticles implements Action {
   constructor(public payload: { articles: Update<ArticleModel | ArticleWithUserModel>[] }) {}
 }
 
+
+
+
+export class DeleteArticles implements Action {
+  readonly type = ArticleActionTypes.DeleteArticles;
+
+  constructor(public payload: { ids: string[] }) {}
+}
+
+export class ClearArticles implements Action {
+  readonly type = ArticleActionTypes.ClearArticles;
+}
+
+
+
+
+export class LoadArticle implements Action {
+  readonly type = ArticleActionTypes.LoadArticle;
+
+  constructor(public payload: {
+    id: string,
+    withUser: boolean
+  }) {}
+}
+
+// Storeのarticleから指定したいいねをい削除する
+// 記事削除
 export class DeleteArticle implements Action {
   readonly type = ArticleActionTypes.DeleteArticle;
 
-  constructor(public payload: { id: string }) {}
+  constructor() {}
 }
 
 
@@ -150,24 +205,64 @@ export class DeleteArticleFail implements Action {
 }
 
 
+// いいね追加
+export class AddVote implements Action {
+  readonly type = ArticleActionTypes.AddVote;
 
-export class DeleteArticles implements Action {
-  readonly type = ArticleActionTypes.DeleteArticles;
-
-  constructor(public payload: { ids: string[] }) {}
+  constructor(public payload: {
+    _idOfVoter: string
+  }) {}
 }
 
-export class ClearArticles implements Action {
-  readonly type = ArticleActionTypes.ClearArticles;
+
+export class AddVoteSuccess implements Action {
+  readonly type = ArticleActionTypes.AddVoteSuccess;
+
+  constructor(public payload: {
+    vote: UserModel[]
+  }) {}
 }
+
+export class AddVoteFail implements Action {
+  readonly type = ArticleActionTypes.AddVoteFail;
+
+  constructor(public payload: {error: any}) {}
+}
+
+
+// いいね削除
+export class DeleteVote implements Action {
+  readonly type = ArticleActionTypes.DeleteVote;
+
+  constructor(public payload: {
+    _idOfVoter: string
+  }) {}
+}
+
+
+export class DeleteVoteSuccess implements Action {
+  readonly type = ArticleActionTypes.DeleteVoteSuccess;
+
+  constructor(public payload: {
+    vote: UserModel[]
+  }) {}
+}
+
+export class DeleteVoteFail implements Action {
+  readonly type = ArticleActionTypes.DeleteVoteFail;
+
+  constructor(public payload: {error: any}) {}
+}
+
+
+
 
 export type ArticleActions =
- LoadArticles
+ LoadArticleSuccess
+ | LoadArticleFail
+ | LoadArticles
  | LoadArticlesSuccess
  | LoadArticlesFail
- | AddArticle
- | AddArticleSuccess
- | AddArticleFail
  | UpsertArticle
  | AddArticles
  | UpsertArticles
@@ -175,8 +270,25 @@ export type ArticleActions =
  | UpdateArticleSuccess
  | UpdateArticleFail
  | UpdateArticles
+ | DeleteArticles
+ | ClearArticles
+
+ | LoadArticle
+
+ | AddArticle
+ | AddArticleSuccess
+ | AddArticleFail
+
  | DeleteArticle
  | DeleteArticleSuccess
  | DeleteArticleFail
- | DeleteArticles
- | ClearArticles;
+
+ | AddVote
+ | AddVoteSuccess
+ | AddVoteFail
+
+ | DeleteVote
+ | DeleteVoteSuccess
+ | DeleteVoteFail
+
+ ;

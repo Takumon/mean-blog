@@ -11,6 +11,8 @@ import {
   MatSnackBar,
   MatDialog,
 } from '@angular/material';
+import { Store } from '@ngrx/store';
+
 
 import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components';
@@ -27,8 +29,8 @@ import {
   CommentWithUserModel,
   UserModel
 } from '../../shared/models';
-
 import { CommentService } from '../shared/comment.service';
+import * as fromArticle from '../../state';
 
 @Component({
   selector: 'app-article',
@@ -45,6 +47,7 @@ export class ArticleComponent {
 
   /** コンストラクタ */
   constructor(
+    private store: Store<fromArticle.State>,
     public auth: AuthenticationService,
     public messageService: MessageService,
 

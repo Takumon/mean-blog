@@ -32,4 +32,5 @@ export const getTitle = createSelector(getAppState, fromApp.getTitle);
 export const getArticleEntitiyState = (state: State) => state.article;
 export const getArticles = createSelector(getArticleEntitiyState, fromArticle.selectAll);
 export const getLoading = createSelector(getArticleEntitiyState, fromArticle.getLoading);
+export const getArticle = createSelector(getArticleEntitiyState, fromArticle.getArticle);
 export const getCount = createSelector(getArticleEntitiyState, fromArticle.getCount);

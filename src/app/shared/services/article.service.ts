@@ -16,11 +16,11 @@ interface CudResponse {
 }
 
 /**
- * いいねの登録(Create)、更新(Update)、削除時(delete)のレスポンス
+ * いいねの登録(Create)、削除時(delete)のレスポンス
  */
 export interface VoteCudResponse {
   message: string;
-  obj: string[];
+  obj: UserModel[];
 }
 
 
