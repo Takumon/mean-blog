@@ -1,18 +1,20 @@
 import {
   Component,
   Input,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  OnDestroy
 } from '@angular/core';
 import {
   FormGroup,
   FormControl,
 } from '@angular/forms';
 import {
-  MatSnackBar,
   MatDialog,
 } from '@angular/material';
 import { Store } from '@ngrx/store';
-
+import { Actions, ofType } from '@ngrx/effects';
+import { takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components';
@@ -20,17 +22,22 @@ import {
   AuthenticationService,
   MessageService,
   MessageBarService,
-  ArticleService,
-  VoteCudResponse
 } from '../../shared/services';
 import {
   ArticleWithUserModel,
   CommentModel,
   CommentWithUserModel,
-  UserModel
 } from '../../shared/models';
 import { CommentService } from '../shared/comment.service';
 import * as fromArticle from '../../state';
+import {
+  AddVoteOfArticles,
+  AddVoteOfArticlesFail,
+  ArticleActionTypes,
+  DeleteVoteOfArticles,
+  DeleteVoteOfArticlesFail
+} from '../../state/article.actions';
+
 
 @Component({
   selector: 'app-article',
@@ -38,7 +45,10 @@ import * as fromArticle from '../../state';
   styleUrls: ['./article.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class ArticleComponent {
+export class ArticleComponent implements OnDestroy {
+
+  private onDestroy = new Subject();
+
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
@@ -48,15 +58,34 @@ export class ArticleComponent {
   /** コンストラクタ */
   constructor(
     private store: Store<fromArticle.State>,
+    private actions$: Actions,
     public auth: AuthenticationService,
     public messageService: MessageService,
 
     private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private messageBarService: MessageBarService,
     public commentService: CommentService,
-    private articleService: ArticleService,
   ) {
+    // エラーメッセージ表示処理を登録
+    // いいね追加時
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddVoteOfArticlesFail>(ArticleActionTypes.AddVoteOfArticlesFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
+
+    // いいね削除時
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteVoteOfArticlesFail>(ArticleActionTypes.DeleteVoteOfArticlesFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
+
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy.next();
+    this.onDestroy.complete();
   }
 
   /**
@@ -102,31 +131,18 @@ export class ArticleComponent {
   }
 
   /**
-   * いいねを登録する.<br>
+   * いいねを登録する.
    */
   registerVote() {
-    this.articleService
-    .registerVote(this.item._id, this.auth.loginUser._id)
-    .subscribe( (res: VoteCudResponse) => {
-      this.snackBar.open(res.message, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      this.refreshVotes();
-    }, this.onValidationError.bind(this));
-  }
-
-  /**
-   * 記事に紐づくいいねを取得し画面を更新する.
-   */
-  private refreshVotes(): void {
-    const withUser = true;
-    this.articleService.getVote(this.item._id, withUser)
-    .subscribe( (vote: UserModel[]) => {
-      this.item.vote = vote;
-    });
+    this.store.dispatch(new AddVoteOfArticles({
+      _idOfArticle: this.item._id,
+      _idOfVoter: this.auth.loginUser._id
+    }));
   }
 
 
   /**
-   * いいねを削除するか確認ダイアログを表示する.
+   * いいねを削除する.
    */
   confirmeDeleteVote(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -141,21 +157,13 @@ export class ArticleComponent {
         return;
       }
 
-      this.deleteVote();
+      this.store.dispatch(new DeleteVoteOfArticles({
+        _idOfArticle: this.item._id,
+        _idOfVoter: this.auth.loginUser._id
+      }));
     });
   }
 
-  /**
-   * いいねを削除する
-   */
-  private deleteVote(): void {
-    this.articleService
-    .deleteVote(this.item._id, this.auth.loginUser._id)
-    .subscribe( (res: VoteCudResponse) => {
-      this.snackBar.open(res.message, null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-      this.refreshVotes();
-    }, this.onValidationError.bind(this));
-  }
 
   /**
    * 入力チェック時の共通エラーハンドリング用関数(<b>bindして使用する<b>)<br>

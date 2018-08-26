@@ -124,7 +124,45 @@ export function reducer(
     }
 
 
-    // TODO EntityStateと別にするかは検討
+
+    // TODO　記事一覧用。分離を検討
+    // いいね追加
+    case ArticleActionTypes.AddVoteOfArticles: {
+      return Object.assign({}, {...state });
+    }
+
+    case ArticleActionTypes.AddVoteOfArticlesSuccess: {
+      return adapter.updateOne({
+        id: action.payload._idOfArticle,
+        changes: {
+          vote: action.payload.vote
+        }
+      }, {
+        ...state,
+      });
+    }
+
+
+    // いいね削除
+    case ArticleActionTypes.DeleteVoteOfArticles: {
+      return Object.assign({}, {...state });
+    }
+
+    case ArticleActionTypes.DeleteVoteOfArticlesSuccess: {
+      return adapter.updateOne({
+        id: action.payload._idOfArticle,
+        changes: {
+          vote: action.payload.vote
+        }
+      }, {
+        ...state,
+      });
+    }
+
+
+
+
+    // TODO 記事詳細用。分離を検討
     // 記事取得
     case ArticleActionTypes.LoadArticle: {
       return Object.assign({}, {...state, loadingArticle: true} );

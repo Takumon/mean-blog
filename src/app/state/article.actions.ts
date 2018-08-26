@@ -6,7 +6,6 @@ import { ArticleWithUserModel, UserModel } from '../shared/models';
 
 export enum ArticleActionTypes {
   LoadArticles = '[Article] Load Articles',
-  AddArticle = '[Article] Add Article',
   UpsertArticle = '[Article] Upsert Article',
   AddArticles = '[Article] Add Articles',
   UpsertArticles = '[Article] Upsert Articles',
@@ -18,7 +17,6 @@ export enum ArticleActionTypes {
 
 
   LoadArticlesSuccess = '[Article] Load Articles Success',
-  AddArticleSuccess = '[Article] Add Article Success',
   UpsertArticleSuccess = '[Article] Upsert Article Success',
   AddArticlesSuccess = '[Article] Add Articles Success',
   UpsertArticlesSuccess = '[Article] Upsert Articles Success',
@@ -30,7 +28,6 @@ export enum ArticleActionTypes {
 
 
   LoadArticlesFail = '[Article] Load Articles Fail',
-  AddArticleFail = '[Article] Add Article Fail',
   UpsertArticleFail = '[Article] Upsert Article Fail',
   AddArticlesFail = '[Article] Add Articles Fail',
   UpsertArticlesFail = '[Article] Upsert Articles Fail',
@@ -40,11 +37,24 @@ export enum ArticleActionTypes {
   DeleteArticlesFail = '[Article] Delete Articles Fail',
   ClearArticlesFail = '[Article] Clear Articles Fail',
 
+  // TODO 記事一覧用、分離するか検討
+  AddVoteOfArticles = '[Article] Add Vote of Articles',
+  AddVoteOfArticlesSuccess = '[Article] Add Vote of Articles Success',
+  AddVoteOfArticlesFail = '[Article] Add Vote of Articles Fail',
+  DeleteVoteOfArticles = '[Article] Delete Vote of Articles',
+  DeleteVoteOfArticlesSuccess = '[Article] Delete Vote of Articles Success',
+  DeleteVoteOfArticlesFail = '[Article] Delete Vote of Articles Fail',
 
-  // TODO EntityStateと分離するか検討
+
+
+  // TODO 記事詳細用、分離するか検討
   LoadArticle = '[Article] Load Article',
   LoadArticleSuccess = '[Article] Load Article Success',
   LoadArticleFail = '[Article] Load Article Fail',
+  AddArticle = '[Article] Add Article',
+  AddArticleSuccess = '[Article] Add Article Success',
+  AddArticleFail = '[Article] Add Article Fail',
+
   AddVote = '[Article Vote] Add Vote',
   AddVoteSuccess = '[Article Vote] Add Vote Success',
   AddVoteFail = '[Article Vote] Add Vote Fail',
@@ -174,6 +184,66 @@ export class ClearArticles implements Action {
 
 
 
+
+// TODO 記事一覧用、分離を検討
+// いいね追加
+export class AddVoteOfArticles implements Action {
+  readonly type = ArticleActionTypes.AddVoteOfArticles;
+
+  constructor(public payload: {
+    _idOfArticle: string,
+    _idOfVoter: string
+  }) {}
+}
+
+export class AddVoteOfArticlesSuccess implements Action {
+  readonly type = ArticleActionTypes.AddVoteOfArticlesSuccess;
+
+  constructor(public payload: {
+    _idOfArticle: string,
+    vote: UserModel[]
+  }) {}
+}
+
+export class AddVoteOfArticlesFail implements Action {
+  readonly type = ArticleActionTypes.AddVoteOfArticlesFail;
+
+  constructor(public payload: {error: any}) {}
+}
+
+
+// いいね削除
+export class DeleteVoteOfArticles implements Action {
+  readonly type = ArticleActionTypes.DeleteVoteOfArticles;
+
+  constructor(public payload: {
+    _idOfArticle: string,
+    _idOfVoter: string
+  }) {}
+}
+
+
+export class DeleteVoteOfArticlesSuccess implements Action {
+  readonly type = ArticleActionTypes.DeleteVoteOfArticlesSuccess;
+
+  constructor(public payload: {
+    _idOfArticle: string,
+    vote: UserModel[]
+  }) {}
+}
+
+export class DeleteVoteOfArticlesFail implements Action {
+  readonly type = ArticleActionTypes.DeleteVoteOfArticlesFail;
+
+  constructor(public payload: {error: any}) {}
+}
+
+
+
+
+
+
+// TODO 記事詳細用、分離を検討
 export class LoadArticle implements Action {
   readonly type = ArticleActionTypes.LoadArticle;
 
@@ -258,37 +328,49 @@ export class DeleteVoteFail implements Action {
 
 
 export type ArticleActions =
- LoadArticleSuccess
- | LoadArticleFail
- | LoadArticles
- | LoadArticlesSuccess
- | LoadArticlesFail
- | UpsertArticle
- | AddArticles
- | UpsertArticles
- | UpdateArticle
- | UpdateArticleSuccess
- | UpdateArticleFail
- | UpdateArticles
- | DeleteArticles
- | ClearArticles
+  LoadArticleSuccess
+  | LoadArticleFail
+  | LoadArticles
+  | LoadArticlesSuccess
+  | LoadArticlesFail
+  | UpsertArticle
+  | AddArticles
+  | UpsertArticles
+  | UpdateArticle
+  | UpdateArticleSuccess
+  | UpdateArticleFail
+  | UpdateArticles
+  | DeleteArticles
+  | ClearArticles
 
- | LoadArticle
 
- | AddArticle
- | AddArticleSuccess
- | AddArticleFail
+  // 記事一覧用
+  | AddVoteOfArticles
+  | AddVoteOfArticlesSuccess
+  | AddVoteOfArticlesFail
 
- | DeleteArticle
- | DeleteArticleSuccess
- | DeleteArticleFail
+  | DeleteVoteOfArticles
+  | DeleteVoteOfArticlesSuccess
+  | DeleteVoteOfArticlesFail
 
- | AddVote
- | AddVoteSuccess
- | AddVoteFail
 
- | DeleteVote
- | DeleteVoteSuccess
- | DeleteVoteFail
+  // 記事詳細用
+  | LoadArticle
+
+  | AddArticle
+  | AddArticleSuccess
+  | AddArticleFail
+
+  | DeleteArticle
+  | DeleteArticleSuccess
+  | DeleteArticleFail
+
+  | AddVote
+  | AddVoteSuccess
+  | AddVoteFail
+
+  | DeleteVote
+  | DeleteVoteSuccess
+  | DeleteVoteFail
 
  ;

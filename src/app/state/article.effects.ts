@@ -23,7 +23,13 @@ import {
   DeleteVoteFail,
   AddVote,
   AddVoteSuccess,
-  AddVoteFail
+  AddVoteFail,
+  AddVoteOfArticles,
+  AddVoteOfArticlesSuccess,
+  AddVoteOfArticlesFail,
+  DeleteVoteOfArticles,
+  DeleteVoteOfArticlesSuccess,
+  DeleteVoteOfArticlesFail
 } from './article.actions';
 import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { ShowSnackbar } from './app.actions';
@@ -154,10 +160,69 @@ export class ArticleEffects {
   );
 
 
+  // TODO 記事一覧用、分離を検討
+   // いいね追加
+  @Effect()
+  addVoteOfArticles$: Observable<Action> = this.actions$.pipe(
+    ofType<AddVoteOfArticles>(ArticleActionTypes.AddVoteOfArticles),
+    switchMap(action =>
+      this.articleService
+        .registerVote(action.payload._idOfArticle, action.payload._idOfVoter)
+        .pipe(
+          map(data => new AddVoteOfArticlesSuccess({
+            _idOfArticle: action.payload._idOfArticle,
+            vote: data.obj
+          })),
+          catchError(error => of(new AddVoteOfArticlesFail({ error })))
+        )
+      )
+  );
+
+  @Effect()
+  addVoteOfArticlesSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<AddVoteSuccess>(ArticleActionTypes.AddVoteSuccess),
+    switchMap(action =>
+      of(new ShowSnackbar({
+        message: `いいねしました。`,
+        action: null,
+        config: this.Constant.SNACK_BAR_DEFAULT_OPTION
+      }))
+    )
+  );
+
+  // いいね削除
+  @Effect()
+  delteVoteOfArticles$: Observable<Action> = this.actions$.pipe(
+    ofType<DeleteVoteOfArticles>(ArticleActionTypes.DeleteVoteOfArticles),
+    switchMap(action =>
+      this.articleService
+        .deleteVote(action.payload._idOfArticle, action.payload._idOfVoter)
+        .pipe(
+          map(data => new DeleteVoteOfArticlesSuccess({
+            _idOfArticle: action.payload._idOfArticle,
+            vote: data.obj
+          })),
+          catchError(error => of(new DeleteVoteOfArticlesFail({ error })))
+        )
+    )
+  );
+
+  @Effect()
+  delteVoteOfArticlesSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<DeleteVoteOfArticlesSuccess>(ArticleActionTypes.DeleteVoteOfArticlesSuccess),
+    switchMap(action =>
+      of(new ShowSnackbar({
+        message: `いいねを削除しました。`,
+        action: null,
+        config: this.Constant.SNACK_BAR_DEFAULT_OPTION
+      }))
+    )
+  );
 
 
 
-  // EntityStateから除外するか検討
+
+  // TODO 記事詳細用、分離を検討
   // 一件取得
   @Effect()
   loadArticle$: Observable<Action> = this.actions$.pipe(
