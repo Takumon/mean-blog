@@ -1,6 +1,8 @@
-import { of, Subscriber, Subject } from 'rxjs';
+import { of, Subscriber, Subject, Observable } from 'rxjs';
 import 'rxjs';
 import marked from 'marked';
+import { StoreModule } from '@ngrx/store';
+
 
 import { APP_BASE_HREF } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,6 +13,7 @@ import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, inject } from '@
 import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
+import * as fromRoot from '../../state';
 import { SharedModule } from '../../shared/shared.module';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import {
@@ -31,6 +34,7 @@ import {
 
 import { ArticleComponent } from './article.component';
 import { CommentService } from '../shared/comment.service';
+import { provideMockActions } from '@ngrx/effects/testing';
 
 describe('ArticleComponent', () => {
 
@@ -458,6 +462,7 @@ describe('ArticleComponent', () => {
   let fixture: ComponentFixture<TestCmpWrapperComponent>;
   let de: DebugElement;
   let dialog: MokMatDialog;
+  let actions$: Observable<any>;
 
   describe('認証時', () => {
     beforeEach( () => {
@@ -472,7 +477,10 @@ describe('ArticleComponent', () => {
         imports: [
           BrowserAnimationsModule,
           RouterTestingModule,
-          SharedModule
+          SharedModule,
+          StoreModule.forRoot({
+            ...fromRoot.reducers
+          })
         ],
         providers: [
           MessageService,
@@ -489,6 +497,7 @@ describe('ArticleComponent', () => {
             provide: ErrorStateMatcher,
             useClass: CustomErrorStateMatcher
           },
+          provideMockActions(() => actions$),
         ]
       });
 
@@ -813,7 +822,11 @@ describe('ArticleComponent', () => {
         imports: [
           BrowserAnimationsModule,
           RouterTestingModule,
-          SharedModule
+          SharedModule,
+          StoreModule.forRoot({
+            ...fromRoot.reducers
+          })
+
         ],
         providers: [
           MessageService,
@@ -830,6 +843,7 @@ describe('ArticleComponent', () => {
             provide: ErrorStateMatcher,
             useClass: CustomErrorStateMatcher
           },
+          provideMockActions(() => actions$),
         ]
       });
 
@@ -855,7 +869,7 @@ describe('ArticleComponent', () => {
   });
 
 
-  describe('証済時 記事ねのいいねが0件', () => {
+  describe('証済時 記事のいいねが0件', () => {
     beforeEach( () => {
       TestBed.configureTestingModule({
         declarations: [
@@ -868,7 +882,10 @@ describe('ArticleComponent', () => {
         imports: [
           BrowserAnimationsModule,
           RouterTestingModule,
-          SharedModule
+          SharedModule,
+          StoreModule.forRoot({
+            ...fromRoot.reducers
+          })
         ],
         providers: [
           MessageService,
@@ -885,6 +902,7 @@ describe('ArticleComponent', () => {
             provide: ErrorStateMatcher,
             useClass: CustomErrorStateMatcher
           },
+          provideMockActions(() => actions$),
         ]
       });
 
