@@ -424,11 +424,14 @@ router.post('/:articleId/vote', [
 
   const voterId = req.body.voter;
 
-  Article.update({
+  Article.findOneAndUpdate({
     _id: req.params.articleId
   }, {$push: {
     vote: new mongoose.Types.ObjectId(voterId)
-  } }, (err, article) => {
+  }},
+  { new: true })
+  .populate('vote', '-password')
+  .exec((err, article) => {
 
     if (err) {
       return res.status(500).json({
@@ -458,11 +461,14 @@ router.delete('/:articleId/vote/:voterId', [
     return res.status(400).json({ errors: errors.array() });
   }
 
-  Article.update({
+  Article.findOneAndUpdate({
     _id: req.params.articleId
   }, {$pull: {
     vote: new mongoose.Types.ObjectId(req.params.voterId)
-  } }, (err, article) => {
+  }},
+  { new: true })
+  .populate('vote', '-password')
+  .exec((err, article) => {
 
     if (err) {
       return res.status(500).json({
