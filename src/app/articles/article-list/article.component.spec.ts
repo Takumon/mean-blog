@@ -1,7 +1,7 @@
 import { of, Subscriber, Subject, Observable } from 'rxjs';
 import 'rxjs';
 import marked from 'marked';
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, Store } from '@ngrx/store';
 
 
 import { APP_BASE_HREF } from '@angular/common';
@@ -14,6 +14,8 @@ import { ErrorStateMatcher, MatDialog } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 
 import * as fromRoot from '../../state';
+import * as fromArticle from '../../state';
+
 import { SharedModule } from '../../shared/shared.module';
 import { CustomErrorStateMatcher } from '../../shared/custom-error-state-matcher';
 import {
@@ -35,6 +37,7 @@ import {
 import { ArticleComponent } from './article.component';
 import { CommentService } from '../shared/comment.service';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { AddVoteOfArticles } from '../../state/article.actions';
 
 describe('ArticleComponent', () => {
 
@@ -463,6 +466,7 @@ describe('ArticleComponent', () => {
   let de: DebugElement;
   let dialog: MokMatDialog;
   let actions$: Observable<any>;
+  let store: Store<fromArticle.State>;
 
   describe('認証時', () => {
     beforeEach( () => {
@@ -507,6 +511,8 @@ describe('ArticleComponent', () => {
       de = fixture.debugElement;
       fixture.detectChanges();
       dialog = TestBed.get(MatDialog);
+      store = TestBed.get(Store);
+      spyOn(store, 'dispatch').and.callThrough();
     });
 
     it('ヘッダーバーにユーザ名が表示される', () => {
@@ -571,96 +577,13 @@ describe('ArticleComponent', () => {
         fixture.detectChanges();
       }));
 
-      it('いいねが登録される', () => {
-        expect(articleServiceSpy.registerVote.calls.count()).toBe(1);
-        expect(articleServiceSpy.registerVote.calls.mostRecent().args[0]).toEqual('12345678912');
-        expect(articleServiceSpy.registerVote.calls.mostRecent().args[1]).toEqual('123456789055');
-      });
-
-      it('スナックバーでメッセージが表示される', () => {
-        const containerElement = overlayContainerElement.querySelector('snack-bar-container');
-        const snackBarText = containerElement.innerHTML;
-        expect(snackBarText).toContain('記事にいいねしました。');
-      });
-
-      it('いいね数が増える', () => {
-        const countVote = de.query(By.css('.comments__count_vote'));
-        expect(countVote).not.toBeNull();
-        expect(countVote.nativeElement.textContent).toContain('2人');
-      });
-
-      it('いいねボタンがいいね済みになる', () => {
-        const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
-        expect(voteBtn).not.toBeNull();
-        expect(voteBtn.nativeElement.textContent).toContain('いいね済み');
-      });
-
-
-      describe('いいね済みクリック時', () => {
-
-        beforeEach(() => {
-          spyOn(dialog, 'open').and.callThrough();
-
-          articleServiceSpy = de.injector.get(ArticleService);
-
-          const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
-          voteBtn.triggerEventHandler('click', null);
-          fixture.detectChanges();
+      it('いいね登録用アクションがディスパッチされる', () => {
+        const action = new AddVoteOfArticles({
+          _idOfArticle: '12345678912',
+          _idOfVoter: '123456789055'
         });
 
-
-        it('確認ダイアログが表示される', () => {
-          expect(dialog.open).toHaveBeenCalled();
-        });
-
-        describe('いいえクリック時', () => {
-          beforeEach((done) => {
-            setTimeout(() => {
-              dialog.cansel();
-              fixture.detectChanges();
-              done();
-            }, 4000);
-          });
-
-          it('いいね削除処理は呼ばれない', () => {
-            expect(articleServiceSpy.deleteVote.calls.count()).toBe(0);
-          });
-        });
-
-        describe('はいクリック時', () => {
-          beforeEach((done) => {
-            setTimeout(() => {
-              dialog.ok();
-              fixture.detectChanges();
-              done();
-            }, 4000);
-          });
-
-          it('いいね削除処理がよばれる', () => {
-            expect(articleServiceSpy.deleteVote.calls.count()).toBe(1);
-            expect(articleServiceSpy.deleteVote.calls.mostRecent().args[0]).toBe('12345678912');
-            expect(articleServiceSpy.deleteVote.calls.mostRecent().args[1]).toBe('123456789055');
-          });
-
-          it('スナックバーでメッセージが表示される', () => {
-            const containerElement = overlayContainerElement.querySelector('snack-bar-container');
-            const snackBarText = containerElement.innerHTML;
-            expect(snackBarText).toContain('いいねを取り消しました。');
-          });
-
-          it('いいね数が減る', () => {
-            const countVote = de.query(By.css('.comments__count_vote'));
-            expect(countVote).not.toBeNull();
-            expect(countVote.nativeElement.textContent).toContain('1人');
-          });
-
-          it('いいねボタンがいいねなる', () => {
-            const voteBtn = de.queryAll(By.css('.article__operation-btn'))[0];
-            expect(voteBtn).not.toBeNull();
-            expect(voteBtn.nativeElement.textContent).toContain('いいね!');
-          });
-
-        });
+        expect(store.dispatch).toHaveBeenCalledWith(action);
       });
     });
 
