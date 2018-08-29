@@ -161,7 +161,7 @@ describe('ArticleListComponent', () => {
 
   let actions$: Observable<any>;
 
-  describe('モードがALLの場合 検索結果が0件の場合', () => {
+  xdescribe('モードがALLの場合 検索結果が0件の場合', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         declarations: [
