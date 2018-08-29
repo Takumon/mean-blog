@@ -422,8 +422,12 @@ describe('ArticleService', () => {
     const mockResponse: any = {
       message: '記事にいいねしました。',
       obj: [
-        '123456789011',
-        '123456789012'
+        {
+          _id: '123456789011'
+        },
+        {
+          _id: '123456789012'
+        }
       ]
     };
 
@@ -457,7 +461,9 @@ describe('ArticleService', () => {
     const mockResponse: any = {
       message: 'いいねを取り消しました。',
       obj: [
-        '123456789012'
+        {
+          _id: '123456789012'
+        }
       ]
     };
 
