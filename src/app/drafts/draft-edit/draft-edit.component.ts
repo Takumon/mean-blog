@@ -58,7 +58,17 @@ import {
   DeleteDraftFail,
 } from '../state/draft.actions';
 import { SetTitle } from '../../state/app.actions';
-import { AddArticle, AddArticleFail, ArticleActionTypes, UpdateArticle, UpdateArticleFail } from '../../state/article.actions';
+import {
+  AddArticle,
+  AddArticleFail,
+  ArticleActionTypes,
+  UpdateArticle,
+  UpdateArticleFail,
+  AddArticleSuccess,
+  UpdateArticleSuccess,
+  DeleteArticleSuccess,
+  LoadArticleSuccess
+} from '../../state/article.actions';
 
 
 const IS_RESUME = 'resume';
@@ -121,40 +131,75 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     public draftService: DraftService,
     private auth: AuthenticationService,
     public messageService: MessageService,
-    ) {
-      // エラーメッセージ表示処理を登録
-      this.actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<AddDraftFail>(DraftActionTypes.AddDraftFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+  ) {
+    // エラーメッセージ表示処理を登録
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddDraftFail>(DraftActionTypes.AddDraftFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
-      this.actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
-      this.actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<DeleteDraftFail>(DraftActionTypes.DeleteDraftFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteDraftFail>(DraftActionTypes.DeleteDraftFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
 
-      this.actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<AddArticleFail>(ArticleActionTypes.AddArticleFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddArticleFail>(ArticleActionTypes.AddArticleFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
-      this.actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<UpdateArticleFail>(ArticleActionTypes.UpdateArticleFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<UpdateArticleFail>(ArticleActionTypes.UpdateArticleFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
-    }
+
+    // URLのユーザー名と取得した記事のユーザ名が一致しない場合は
+    // 正しいURLにリダイレクトする
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<LoadArticleSuccess>(ArticleActionTypes.LoadArticleSuccess),
+      tap(action => {
+        const article = action.payload.article;
+
+        this.route.params.subscribe( params => {
+          if (params['userId'] !== article.author.userId) {
+            this.router.navigate(['/', article.author, 'articles', article._id]);
+          }
+        });
+      })
+    ).subscribe();
+
+    // 画面遷移処理
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddArticleSuccess>(ArticleActionTypes.AddArticleSuccess),
+      tap(action => this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', action.payload.article._id]))
+    ).subscribe();
+
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<UpdateArticleSuccess>(ArticleActionTypes.UpdateArticleSuccess),
+      tap(action => this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', action.payload.article.id]))
+    ).subscribe();
+
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteArticleSuccess>(ArticleActionTypes.DeleteArticleSuccess),
+      tap(action => this.router.navigate(['/']))
+    ).subscribe();
+  }
 
   ngOnInit(): void {
 

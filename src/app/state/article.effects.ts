@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 
-import { ArticleService, AuthenticationService } from '../shared/services';
+import { ArticleService } from '../shared/services';
 import { Observable, of } from 'rxjs';
 import {
   ArticleActionTypes,
@@ -34,7 +34,6 @@ import {
 import { switchMap, map, catchError, tap, withLatestFrom } from 'rxjs/operators';
 import { ShowSnackbar } from './app.actions';
 import { Constant } from '../shared/constant';
-import { Router, ActivatedRoute } from '@angular/router';
 import { ArticleModel, ArticleWithUserModel } from '../shared/models';
 import * as fromArticle from '.';
 
@@ -44,10 +43,7 @@ export class ArticleEffects {
   private Constant = Constant;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private actions$: Actions,
-    private auth: AuthenticationService,
     private articleService: ArticleService,
     private store$: Store<fromArticle.State>,
   ) {}
@@ -74,24 +70,6 @@ export class ArticleEffects {
   );
 
 
-  // URLのユーザー名と取得した記事のユーザ名が一致しない場合は
-  // 正しいURLにリダイレクトする
-  @Effect({ dispatch: false })
-  loadArticleSuccess$ = this.actions$.pipe(
-    ofType<LoadArticleSuccess>(ArticleActionTypes.LoadArticleSuccess),
-    tap(action => {
-      const article = action.payload.article;
-
-      this.route.params.subscribe( params => {
-        if (params['userId'] !== article.author.userId) {
-          this.router.navigate(['/', article.author, 'articles', article._id]);
-        }
-      });
-    })
-  );
-
-
-
   // 一件登録
   @Effect()
   addArticle$: Observable<Action> = this.actions$.pipe(
@@ -111,16 +89,12 @@ export class ArticleEffects {
   @Effect()
   addArticleSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<AddArticleSuccess>(ArticleActionTypes.AddArticleSuccess),
-    switchMap(action => {
-
-      this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', action.payload.article._id]);
-
-      return of(new ShowSnackbar({
+    switchMap(action => of(new ShowSnackbar({
         message: `記事「${action.payload.article.title}」を保存しました。`,
         action: null,
         config: this.Constant.SNACK_BAR_DEFAULT_OPTION
-      }));
-    })
+      }))
+    )
   );
 
 
@@ -147,16 +121,12 @@ export class ArticleEffects {
   @Effect()
   updateArticleSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<UpdateArticleSuccess>(ArticleActionTypes.UpdateArticleSuccess),
-    switchMap(action => {
-
-      this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', action.payload.article.id]);
-
-      return of(new ShowSnackbar({
+    switchMap(action => of(new ShowSnackbar({
         message: `記事「${action.payload.article.changes.title}」を更新しました。`,
         action: null,
         config: this.Constant.SNACK_BAR_DEFAULT_OPTION
-      }));
-    })
+      }))
+    )
   );
 
 
@@ -256,16 +226,12 @@ export class ArticleEffects {
   @Effect()
   deleteArticleSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<DeleteArticleSuccess>(ArticleActionTypes.DeleteArticleSuccess),
-    switchMap(action => {
-
-      this.router.navigate(['/']);
-
-      return of(new ShowSnackbar({
+    switchMap(action => of(new ShowSnackbar({
         message: `記事「${action.payload.article.title}」を削除しました。`,
         action: null,
         config: this.Constant.SNACK_BAR_DEFAULT_OPTION
-      }));
-    })
+      }))
+    )
   );
 
 
