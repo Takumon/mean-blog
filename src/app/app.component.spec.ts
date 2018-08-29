@@ -8,10 +8,12 @@ import { DebugElement } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { ErrorStateMatcher } from '@angular/material';
 
+import * as fromRoot from './state';
+
+
 import { SharedModule } from './shared/shared.module';
 import { CustomErrorStateMatcher } from './shared/custom-error-state-matcher';
 import {
-  RouteNamesService,
   AuthenticationService,
   ErrorStateMatcherContainParentGroup,
 } from './shared/services';
@@ -19,6 +21,8 @@ import { UserModel } from './shared/models';
 
 import { ScrollService } from './articles/shared/scroll.service';
 import { AppComponent } from './app.component';
+import { StoreModule } from '@ngrx/store';
+import { provideMockActions } from '@ngrx/effects/testing';
 
 describe('AppComponent', () => {
 
@@ -59,6 +63,9 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule,
         SharedModule,
+        StoreModule.forRoot({
+          ...fromRoot.reducers,
+        })
       ],
       providers: [
         ErrorStateMatcherContainParentGroup,
@@ -68,8 +75,8 @@ describe('AppComponent', () => {
         },
         { provide: APP_BASE_HREF, useValue: '/' },
         { provide: AuthenticationService, useClass: MockAuthenticationService },
-        RouteNamesService,
         ScrollService,
+        provideMockActions(() => of()),
       ]
     }).compileComponents();
   }));

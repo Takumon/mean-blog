@@ -7,12 +7,12 @@ import * as fromDraft from '../state';
 
 import {
   AuthenticationService,
-  RouteNamesService,
 } from '../../shared/services';
 
 import { DraftModel } from '../state/draft.model';
 import { LoadDrafts } from '../state/draft.actions';
 import { OrderByPipe } from '../../shared/pipes';
+import { SetTitle } from '../../state/app.actions';
 
 
 
@@ -75,11 +75,10 @@ export class DraftListComponent implements OnInit {
     private oderByPipe: OrderByPipe,
     private auth: AuthenticationService,
     private store: Store<fromDraft.State>,
-    private routeNamesService: RouteNamesService,
   ) {
     this.loading$ = this.store.select(fromDraft.getLoading);
     this.groupedDrafts$ = this.store.select(fromDraft.getDrafts).pipe(
-      tap(drafts => this.routeNamesService.name.next(`下書き一覧 ( ${drafts ? drafts.length : 0} / 10件 )`)),
+      tap(drafts => this.store.dispatch(new SetTitle({title: `下書き一覧 ( ${drafts ? drafts.length : 0} / 10件 )`}))),
       map(drafts => this.convertToGroupedDrafts(drafts)),
       tap(groupedDrafts => {
         if (groupedDrafts.isEmpty()) {

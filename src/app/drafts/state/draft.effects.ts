@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
@@ -36,7 +35,6 @@ export class DraftEffects {
     private router: Router,
     private actions$: Actions,
     private draftsService: DraftService,
-    public snackbar: MatSnackBar,
   ) {}
 
 
@@ -44,7 +42,7 @@ export class DraftEffects {
    * Load drafts
    */
   @Effect()
-  loadTodos$: Observable<Action> = this.actions$.pipe(
+  loadDrafts$: Observable<Action> = this.actions$.pipe(
     ofType<LoadDrafts>(DraftActionTypes.LoadDrafts),
     switchMap(action =>
       this.draftsService

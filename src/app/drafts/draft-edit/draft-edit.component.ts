@@ -24,17 +24,16 @@ import { Constant } from '../../shared/constant';
 import { ConfirmDialogComponent } from '../../shared/components';
 import {
   AuthenticationService,
-  RouteNamesService,
   MessageService,
   MessageBarService,
   ImageService,
+  ArticleService,
 } from '../../shared/services';
 
 import {
   ArticleModel,
   ArticleWithUserModel,
 } from '../../shared/models';
-import { ArticleService } from '../../articles/shared/article.service';
 
 import {
   DraftService,
@@ -55,7 +54,21 @@ import {
   AddDraft,
   UpdateDraft,
   UpdateDraftFail,
+  DeleteDraft,
+  DeleteDraftFail,
 } from '../state/draft.actions';
+import { SetTitle } from '../../state/app.actions';
+import {
+  AddArticle,
+  AddArticleFail,
+  ArticleActionTypes,
+  UpdateArticle,
+  UpdateArticleFail,
+  AddArticleSuccess,
+  UpdateArticleSuccess,
+  DeleteArticleSuccess,
+  LoadArticleSuccess
+} from '../../state/article.actions';
 
 
 const IS_RESUME = 'resume';
@@ -117,25 +130,79 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     private articleService: ArticleService,
     public draftService: DraftService,
     private auth: AuthenticationService,
-    private routeNamesService: RouteNamesService,
     public messageService: MessageService,
-    ) {
-      // エラーメッセージ表示処理を登録
-      actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<AddDraftFail>(DraftActionTypes.AddDraftFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+  ) {
+    // エラーメッセージ表示処理を登録
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddDraftFail>(DraftActionTypes.AddDraftFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
-      actions$.pipe(
-        takeUntil(this.onDestroy),
-        ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
-        tap(action => this.onValidationError(action.payload.error))
-      ).subscribe();
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<UpdateDraftFail>(DraftActionTypes.UpdateDraftFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
 
-    }
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteDraftFail>(DraftActionTypes.DeleteDraftFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
+
+
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddArticleFail>(ArticleActionTypes.AddArticleFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
+
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<UpdateArticleFail>(ArticleActionTypes.UpdateArticleFail),
+      tap(action => this.onValidationError(action.payload.error))
+    ).subscribe();
+
+
+    // URLのユーザー名と取得した記事のユーザ名が一致しない場合は
+    // 正しいURLにリダイレクトする
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<LoadArticleSuccess>(ArticleActionTypes.LoadArticleSuccess),
+      tap(action => {
+        const article = action.payload.article;
+
+        this.route.params.subscribe( params => {
+          if (params['userId'] !== article.author.userId) {
+            this.router.navigate(['/', article.author, 'articles', article._id]);
+          }
+        });
+      })
+    ).subscribe();
+
+    // 画面遷移処理
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<AddArticleSuccess>(ArticleActionTypes.AddArticleSuccess),
+      tap(action => this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', action.payload.article._id]))
+    ).subscribe();
+
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<UpdateArticleSuccess>(ArticleActionTypes.UpdateArticleSuccess),
+      tap(action => this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', action.payload.article.id]))
+    ).subscribe();
+
+    this.actions$.pipe(
+      takeUntil(this.onDestroy),
+      ofType<DeleteArticleSuccess>(ArticleActionTypes.DeleteArticleSuccess),
+      tap(action => this.router.navigate(['/']))
+    ).subscribe();
+  }
 
   ngOnInit(): void {
+
     this.createForm();
     this.route.queryParams
     .subscribe(queryParams => {
@@ -181,7 +248,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
   init(isResume: boolean, _id: string): void {
     if (isResume) {
       this.action = '更新';
-      this.routeNamesService.name.next(`下書きを${this.action}する`);
+      this.store.dispatch(new SetTitle({title: `下書きを${this.action}する`}));
 
       this.draftService
       .getById(_id)
@@ -238,12 +305,13 @@ export class DraftEditComponent implements OnInit, OnDestroy {
             // 下書き保存ボタンの設定を戻す
             this.canRegisterDraft = true;
             this.snackBar.open('編集中の下書きがあるのでそれを編集します。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.routeNamesService.name.next(`下書きを${this.action}する`);
+            this.store.dispatch(new SetTitle({title: `下書きを${this.action}する`}));
+
             return;
           }
 
           // まだ下書きがない場合は記事がインプット
-          this.routeNamesService.name.next(`記事を${this.action}する`);
+          this.store.dispatch(new SetTitle({title: `記事を${this.action}する`}));
 
           this.articleService
           .getById(_id, true)
@@ -265,7 +333,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
 
       } else {
         this.action = '投稿';
-        this.routeNamesService.name.next(`記事を${this.action}する`);
+        this.store.dispatch(new SetTitle({title: `記事を${this.action}する`}));
         this.form.patchValue({
           isMarkdown: true,
         });
@@ -313,31 +381,23 @@ export class DraftEditComponent implements OnInit, OnDestroy {
       // 公開した記事の下書きの場合は記事を更新
       if (this.previousDraft.articleId) {
         article._id = this.previousDraft.articleId;
-        this.articleService
-        .update(article)
-        .subscribe((resOfModifiedArticle: any) => {
-          // 記事を登録したら下書きは削除する
-          this.draftService
-          .delete(this.previousDraft._id)
-          .subscribe(r => {
-            this.snackBar.open('記事を更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.goToArticle(resOfModifiedArticle.obj._id);
-          }, this.messageBarService.showValidationError.bind(this.messageBarService));
-        }, this.onValidationError.bind(this));
+
+        // TODO 記事更新と下書き削除は１トランにまとめる
+        this.store.dispatch(new UpdateArticle({
+          article: {
+            id: article._id,
+            changes: article
+          }
+        }));
+
+        this.store.dispatch(new DeleteDraft({
+          id: this.previousDraft._id
+        }));
+
       } else {
         // 未公開の場合は記事を登録
         article.author = this.previousDraft.author;
-        this.articleService
-        .register(article)
-        .subscribe((resOfModifiedArticle: any) => {
-          // 記事を登録したら下書きは削除する
-          this.draftService
-          .delete(this.previousDraft._id)
-          .subscribe(r => {
-            this.snackBar.open('記事を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.goToArticle(resOfModifiedArticle.obj._id);
-          }, this.messageBarService.showValidationError.bind(this.messageBarService));
-        }, this.onValidationError.bind(this));
+        this.store.dispatch(new AddArticle({ article }));
       }
 
     } else {
@@ -345,22 +405,17 @@ export class DraftEditComponent implements OnInit, OnDestroy {
         // 記事　=> 記事　記事更新
         article._id = this.previousArticle._id;
 
-        this.articleService
-          .update(article)
-          .subscribe((res: any) => {
-            this.snackBar.open('記事を更新しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.goToArticle(res.obj._id);
-          }, this.onValidationError.bind(this));
+        this.store.dispatch(new UpdateArticle({
+          article: {
+            id: article._id,
+            changes: article
+          }
+        }));
+
       } else {
         // 記事登録
         article.author = this.auth.loginUser._id;
-
-        this.articleService
-          .register(article)
-          .subscribe((res: any) => {
-            this.snackBar.open('記事を登録しました。', null, this.Constant.SNACK_BAR_DEFAULT_OPTION);
-            this.goToArticle(res.obj._id);
-          }, this.onValidationError.bind(this));
+        this.store.dispatch(new AddArticle({ article }));
       }
     }
   }

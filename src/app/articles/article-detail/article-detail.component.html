@@ -1,10 +1,10 @@
-<div *ngIf="!article">
+<div *ngIf="!(article$ | async)">
     <mat-progress-bar class="content__progressbar" mode="indeterminate"></mat-progress-bar>
 </div>
-<div  *ngIf="article" class="article">
+<div  *ngIf="(article$ | async)" class="article">
   <div class="article__header header">
     <div class="header__title-wrapper">
-      <h1 class="header__title">{{article.title}}</h1>
+      <h1 class="header__title">{{(article$ | async).title}}</h1>
     </div>
     <div class="header__spacer"></div>
     <div class="header__info-summary info-summary">
@@ -12,7 +12,7 @@
         <div class="info-summary__factor_first">
           <div>
             <i class="info-summary__factor-icon fa fa-fw fa-thumbs-up"></i>
-            <span class="info-summary__factor-count">{{article.vote ? (article.vote | excludeDeletedVoter).length : 0}}</span>
+            <span class="info-summary__factor-count">{{(article$ | async).vote ? ((article$ | async).vote | excludeDeletedVoter).length : 0}}</span>
           </div>
           <div class="info-summary__factor-label">いいね</div>
         </div>
@@ -27,26 +27,28 @@
 
       <div class="info-summary__vote-button-wrapper">
         <ng-container *ngIf="auth.isLogin()">
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="registerVote()"
-            *ngIf="!containMineVote(article.vote)"
-            >
-            <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
-          </button>
-          <button
-            mat-raised-button
-            (click)="deleteVote()"
-            *ngIf="containMineVote(article.vote)"
-            >
-            <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
-          </button>
+          <ng-container *ngIf="!containMineVote((article$ | async)?.vote)">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="registerVote()"
+              >
+              <i class="fa fa-fw fa-thumbs-up"></i><span>  いいね</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="containMineVote((article$ | async)?.vote)">
+            <button
+              mat-raised-button
+              (click)="deleteVote()"
+              >
+              <i class="fa fa-fw fa-check"></i><span>  いいね済み</span>
+            </button>
+          </ng-container>
         </ng-container>
       </div>
-      <div *ngIf="article.vote" class="info-summary__voter-icons">
+      <div *ngIf="(article$ | async).vote" class="info-summary__voter-icons">
         <div
-          *ngFor="let voter of (article.vote | excludeDeletedVoter)"
+          *ngFor="let voter of ((article$ | async).vote | excludeDeletedVoter)"
           class="info-summary__voter-icon-wrapper"
           >
             <img
@@ -63,19 +65,19 @@
   <div class="article__metadata">
     <img
       class="article__author-icon"
-      [routerLink]="['/users', article.author.userId, 'articles']"
-      lazyLoad="/api/images/avator/{{article.author._id}}"
+      [routerLink]="['/users', (article$ | async).author.userId, 'articles']"
+      lazyLoad="/api/images/avator/{{(article$ | async).author._id}}"
       [offset]="this.Constant.LAZY_LOAD_OFFSET"
       >
     <div
       class="article__author"
-      [routerLink]="['/users', article.author.userId, 'articles']">{{article.author.userId}}</div>
-    <div class="article__updated">{{article.updated | date: 'yyyy/MM/dd HH:mm' }} に{{article.created == article.updated ? "投稿" : "更新" }}</div>
+      [routerLink]="['/users', (article$ | async).author.userId, 'articles']">{{(article$ | async).author.userId}}</div>
+    <div class="article__updated">{{(article$ | async).updated | date: 'yyyy/MM/dd HH:mm' }} に{{(article$ | async).created == (article$ | async).updated ? "投稿" : "更新" }}</div>
     <div class="article__operation">
-      <ng-container *ngIf="isMine(article)">
+      <ng-container *ngIf="isMine((article$ | async))">
         <button
           mat-button
-          [routerLink]="['/drafts', article._id, 'edit']"
+          [routerLink]="['/drafts', (article$ | async)._id, 'edit']"
           routerLinkActive="active">
           <i class="fa fa-fw fa-pencil-square"></i><span>  編集</span>
         </button>
@@ -97,7 +99,7 @@
   </div>
   <div class="article__main">
     <div class="article__main__content">
-      <div *ngIf="article.isMarkdown; then markdown else plainText"></div>
+      <div *ngIf="(article$ | async).isMarkdown; then markdown else plainText"></div>
       <ng-template #markdown>
         <p
           #markdownText
@@ -113,7 +115,7 @@
       <div class="article__main__toc">
         <app-article-toc
         [toc]="toc"
-        [title]="article.title"
+        [title]="(article$ | async).title"
         [baseUrl]="baseUrl"
         ></app-article-toc>
       </div>
@@ -122,8 +124,8 @@
   </div>
 </div>
 
-<div  *ngIf="article" class="comments">
+<div  *ngIf="(article$ | async)" class="comments">
   <app-comment-list
-    _idOfArticle="{{article._id}}"
+    _idOfArticle="{{(article$ | async)._id}}"
   ></app-comment-list>
 </div>

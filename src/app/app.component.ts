@@ -3,11 +3,14 @@ import { Router, NavigationEnd } from '@angular/router';
 
 import { Constant } from './shared/constant';
 import {
-  RouteNamesService,
   AuthenticationService,
 } from './shared/services';
 
+
+import * as fromApp from './state';
 import { ScrollService } from './articles/shared/scroll.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -20,16 +23,17 @@ export class AppComponent implements OnInit {
   public Constant = Constant;
 
   title: String = 'Material Blog';
-  routerName: String;
+  routerName$: Observable<string>;
 
   isActiveNavbar: boolean;
 
   constructor(
     private router: Router,
-    public routeNameService: RouteNamesService,
+    private store: Store<fromApp.State>,
     public auth: AuthenticationService,
     private scrollService: ScrollService,
   ) {
+    this.routerName$ = this.store.select(fromApp.getTitle);
   }
 
   ngOnInit(): void {
@@ -45,9 +49,6 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.routeNameService.name.subscribe(name => {
-      setTimeout(() => this.routerName = name);
-    });
 
     // auth.guardで認証していない場合のみ認証チェックを行う
     if (!this.auth.isFinishedCheckState) {

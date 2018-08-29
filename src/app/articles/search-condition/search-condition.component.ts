@@ -17,7 +17,7 @@ import { DATE_RANGE_PATTERN, DateRange } from '../../shared/enum/date-range-patt
 
 import { SearchConditionService } from '../shared/search-condition.service';
 import { SearchConditionModel } from '../shared/search-condition.model';
-import { Condition } from '../shared/article.service';
+import { SearchArticlesCondition } from '../../shared/services';
 import { SearchConditionDialogComponent } from './search-condition.dialog';
 
 @Component({
@@ -107,7 +107,7 @@ export class SearchConditionComponent implements OnInit {
   /**
    * お気に入り検索条件を元に記事検索時に使う検索条件を生成する
    */
-  createCondition(): Condition {
+  createCondition(): SearchArticlesCondition {
     const noCondition = {};
 
     if (!this.seaerchConditions

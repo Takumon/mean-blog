@@ -10,16 +10,17 @@ import {
   FormBuilder,
 } from '@angular/forms';
 
-
+import * as fromApp from '../state';
 import { Constant } from '../shared/constant';
 import {
   AuthenticationService,
-  RouteNamesService,
   MessageService,
   MessageBarService,
   UserService,
 } from '../shared/services';
 import { UserModel } from '../shared/models';
+import { Store } from '@ngrx/store';
+import { ClearTitle } from '../state/app.actions';
 
 
 @Component({
@@ -46,9 +47,9 @@ export class UserComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
+    private store: Store<fromApp.State>,
 
     private route: ActivatedRoute,
-    private routeNamesService: RouteNamesService,
     public messageService: MessageService,
     private messageBarService: MessageBarService,
     public auth: AuthenticationService,
@@ -57,7 +58,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.routeNamesService.name.next('');
+    this.store.dispatch(new ClearTitle());
     this.route.params
     .pipe(takeUntil(this.onDestroy))
     .subscribe( params => {

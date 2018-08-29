@@ -4,11 +4,11 @@ import { AppActions, AppActionTypes } from './app.actions';
 
 
 export interface State {
-  hoge: string;
+  title: string;
 }
 
 export const initialState: State = {
-  hoge: ''
+  title: ''
 };
 
 export function reducer(
@@ -20,9 +20,19 @@ export function reducer(
       return state;
     }
 
+    case AppActionTypes.SetTitle: {
+      return Object.assign({}, {...state, title: action.payload.title});
+    }
+
+    case AppActionTypes.ClearTitle: {
+      return Object.assign({}, {...state, title: ''});
+    }
+
     default: {
       return state;
     }
   }
+
 }
 
+export const getTitle = (state: State) => state.title;

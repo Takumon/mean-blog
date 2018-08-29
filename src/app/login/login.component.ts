@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { Store } from '@ngrx/store';
 
 
 import { Constant } from '../shared/constant';
 import {
   AuthenticationService,
-  RouteNamesService,
 } from '../shared/services';
-
+import * as fromApp from '../state';
+import { ClearTitle } from '../state/app.actions';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
     private snackBar: MatSnackBar,
 
     private authenticationService: AuthenticationService,
-    private routeNamesService: RouteNamesService,
+    private store: Store<fromApp.State>,
   ) {
     const url: String = this.router.url;
     // パスワード変更の場合はログインしたまま表示する
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.routeNamesService.name.next(``);
+    this.store.dispatch(new ClearTitle());
     const url: String = this.router.url;
 
     // パスワード変更
