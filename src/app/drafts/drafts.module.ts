@@ -17,6 +17,7 @@ import { DraftEditComponent } from './draft-edit/draft-edit.component';
 import { DraftsRoutingModule } from './drafts-routing.module';
 import { EffectsModule } from '@ngrx/effects';
 import { DraftEffects } from './state/draft.effects';
+import { DraftEditAreaComponent } from './draft-edit/draft-edit-area.component';
 
 
 
@@ -25,6 +26,7 @@ import { DraftEffects } from './state/draft.effects';
     DraftListComponent,
     DraftDetailComponent,
     DraftEditComponent,
+    DraftEditAreaComponent,
   ],
   imports: [
     DraftsRoutingModule,

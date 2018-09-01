@@ -105,10 +105,16 @@ export class MessageService {
   }
 
   hasError(control: FormControl, validationName: string): Boolean {
+    if (!control) {
+      return false;
+    }
     return control.hasError(validationName) && control.dirty;
   }
 
   hasErrorWithoutDirty(control: FormControl | FormGroup, validationName: string): Boolean {
+    if (!control) {
+      return false;
+    }
     return control.hasError(validationName);
   }
 }
