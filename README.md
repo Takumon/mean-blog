@@ -60,8 +60,8 @@ $ docker-compose up -d
 * ブラウザで`http://localhost:3000`にアクセス
 
 ## 構成
-* クライアント(フレームワーク) ・・・ Angular v5
-* クライアント(UIライブラリ) ・・・ Angular Material v2
+* クライアント(フレームワーク) ・・・ Angular v6
+* クライアント(UIライブラリ) ・・・ Angular Material v6
 * サーバ ・・・ Express v4
 * 実行環境 ・・・Node v8
 * DB ・・・ MongoDB v3
