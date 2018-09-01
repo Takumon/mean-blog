@@ -84,36 +84,24 @@ export class DraftEditComponent implements OnInit, OnDestroy {
 
   @ViewChild('mdTextArea') $mdTextArea;
 
+  @ViewChild('syncScrollTarget') scrollTarget: ElementRef;
+
+  @ViewChild(DraftEditAreaComponent) draftEditAreaComponent: DraftEditAreaComponent;
+
   action: String;
   // 更新前の状態を保持する
   previousArticle: ArticleWithUserModel;
   previousDraft: DraftModel;
   queryparam_isResume: boolean;
   param_id: string;
-
   canRegisterDraft: Boolean = true;
-
   imageForDisplayList: Array<any> = [];
-
-  /** キャレット開始位置（マークダウン入力補助のため）*/
-  caretPosStart = 0;
-  /** キャレット終了位置（マークダウン入力補助のため）*/
-  caretPosEnd = 0;
-
   /** 画像一覧領域を表示するか */
   isImageOperationShow = true;
-
   MarkdownEditMode = EditMode;
   markdonwEditMode: String = EditMode[EditMode.harfPreviewing];
   form: FormGroup;
-
   private onDestroy = new Subject();
-
-  @ViewChild('syncScrollTarget')
-  scrollTarget: ElementRef;
-
-  @ViewChild(DraftEditAreaComponent)
-  draftEditAreaComponent: DraftEditAreaComponent;
 
 
   constructor(
@@ -200,19 +188,15 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
+
   ngOnInit(): void {
-
     this.createForm();
-    this.route.queryParams
-    .subscribe(queryParams => {
-      this.queryparam_isResume = queryParams[IS_RESUME];
-
+    this.route.queryParams.subscribe(q => {
+      this.queryparam_isResume = q[IS_RESUME];
       this.route.params.subscribe( params => {
         this.param_id = params['_id'];
-
         this.init(this.queryparam_isResume, this.param_id);
       });
-
     });
   }
 
@@ -221,6 +205,9 @@ export class DraftEditComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * 入力フォームを生成する.
+   */
   createForm() {
     this.form = this.fb.group({
       title: ['', [
@@ -243,8 +230,9 @@ export class DraftEditComponent implements OnInit, OnDestroy {
   get image(): FormArray { return this.form.get('image') as FormArray; }
 
 
-
-  // URLの情報を元に画面初期化する
+  /**
+   * URLの情報を元に画面初期化する
+   */
   init(isResume: boolean, _id: string): void {
     if (isResume) {
       this.action = '更新';
@@ -345,19 +333,17 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     }
   }
 
+
   hasError(validationName: string, control: FormControl): Boolean {
     return control.hasError(validationName) && control.dirty;
   }
+
 
   errorStateMatcher(control: FormControl, form: FormGroupDirective | NgForm): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control.invalid && (control.dirty || isSubmitted));
   }
 
-
-  isNew(): boolean {
-    return !this.previousArticle;
-  }
 
   /**
    * テキストエリアスクロールにあわせて表示領域もスクロールさせる.
@@ -367,7 +353,12 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     target.scrollTop = (target.scrollHeight - target.clientHeight) * ratio;
   }
 
-  // 記事保存
+
+  /**
+   * 記事を保存する.
+   *
+   * @param 入力フォーム
+   */
   upsertArticle(form: FormGroup): void {
     if (!form.valid ) {
       return;
@@ -423,6 +414,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     }
   }
 
+
   /**
    * 入力チェック時の共通エラーハンドリング用関数(<b>bindして使用する<b>)<br>
    * bind先は入力チェックkeyと同名のコントローラのgetterを定義すること<br>
@@ -452,7 +444,12 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // 下書き保存
+
+  /**
+   * 下書きを保存する
+   *
+   * @param form 入力フォーム
+   */
   upsertDraft(form: FormGroup): void {
     // もともと下書きだった場合は更新
     if (this.previousDraft) {
@@ -485,6 +482,12 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  /**
+   * 編集を下記して元の画面に戻る
+   *
+   * @param isChanged 初期表示時から記事を変更したか
+   */
   cancel(isChanged: boolean): void {
     if (isChanged) {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -506,27 +509,6 @@ export class DraftEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  private goBack(): void {
-    // 下書きの場合
-    if (this.queryparam_isResume) {
-      this.goToDraft(this.previousDraft._id);
-    } else if (this.param_id) {
-      // 既存記事更新の場合
-      this.goToArticle(this.previousArticle._id);
-    } else {
-      // 記事新規登録の場合
-      this.router.navigate(['/']);
-    }
-  }
-
-
-  private goToDraft(_id: string) {
-    this.router.navigate(['drafts', _id]);
-  }
-
-  private goToArticle(_id: string) {
-    this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', _id]);
-  }
 
   /**
    * 画像を削除する
@@ -547,6 +529,7 @@ export class DraftEditComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 
   /**
    * 添付ファイル変更時.
@@ -573,5 +556,32 @@ export class DraftEditComponent implements OnInit, OnDestroy {
 
 
       }, this.onValidationError.bind(this));
+  }
+
+
+  /**
+   * 元の画面に戻る.
+   */
+  private goBack(): void {
+    // 下書きの場合
+    if (this.queryparam_isResume) {
+      this.goToDraft(this.previousDraft._id);
+    } else if (this.param_id) {
+      // 既存記事更新の場合
+      this.goToArticle(this.previousArticle._id);
+    } else {
+      // 記事新規登録の場合
+      this.router.navigate(['/']);
+    }
+  }
+
+
+  private goToDraft(_id: string) {
+    this.router.navigate(['drafts', _id]);
+  }
+
+
+  private goToArticle(_id: string) {
+    this.router.navigate([`${this.auth.loginUser.userId}`, 'articles', _id]);
   }
 }

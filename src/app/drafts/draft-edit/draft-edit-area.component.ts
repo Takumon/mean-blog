@@ -96,6 +96,7 @@ export class DraftEditAreaComponent {
                         + v.substring(positionForSuffix, v.length));
   }
 
+
   /**
    * 指定したテキストを現在キャレットがある行の冒頭に挿入する
    *
@@ -110,6 +111,7 @@ export class DraftEditAreaComponent {
     this.moveCaretPosition(previouseCaretPosStart + text.length, previouseCaretPosEnd + text.length);
   }
 
+
   /**
    * テキストエリアのキャレット位置を保存する
    *
@@ -121,6 +123,7 @@ export class DraftEditAreaComponent {
       this.caretPosEnd = textareaElement.selectionEnd;
     }
   }
+
 
   /**
    * タブやエンター押下時に必要に応じてインデント調整やリスト形式にフォーマットしたりする
@@ -171,7 +174,9 @@ export class DraftEditAreaComponent {
   }
 
 
-
+  /**
+   * 選択箇所をソースコードラッパーで囲む
+   */
   insertCodeWrapper() {
     // 挿入するとキャレット位置が変わってしまうので事前に保持しておく
     const preStart = this.caretPosStart;
@@ -214,6 +219,7 @@ export class DraftEditAreaComponent {
     }
     return 0;
   }
+
 
   /**
    * 指定したテキストを指定した位置に挿入する
@@ -263,7 +269,6 @@ export class DraftEditAreaComponent {
     }
     return result;
   }
-
 
 
   /**
@@ -319,8 +324,6 @@ export class DraftEditAreaComponent {
   }
 
 
-
-
   /**
    * 指定したtextをキャレットがある行冒頭に挿入する
    *
@@ -336,6 +339,4 @@ export class DraftEditAreaComponent {
     this.insertPreffixAndSuffix(value, lineStartIndex, '', lineStartIndex);
     this.moveCaretPosition(previouseCaretPosStart + value.length, previouseCaretPosEnd + value.length);
   }
-
-
 }
