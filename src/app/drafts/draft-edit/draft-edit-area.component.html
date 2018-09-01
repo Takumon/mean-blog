@@ -1,0 +1,10 @@
+<textarea
+id="register-article-body"
+formControlName="body"
+(scroll)="syncScroll($event)"
+placeholder="本文"
+#mdTextArea
+(click)="saveCaretPos(mdTextArea)"
+(keyup)="saveCaretPos(mdTextArea)"
+(keydown)="textFormat($event)"
+></textarea>

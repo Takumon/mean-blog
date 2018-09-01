@@ -1,0 +1,18 @@
+
+textarea {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 4px 0 0 4px;
+  border: 1px #afafaf solid;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 12px;
+
+  color: #4c4c4c;
+  -webkit-font-smoothing: antialiased;
+
+  &:focus {
+    outline: 0;
+  }
+}
