@@ -34,6 +34,7 @@ import {
 
 import { DraftService } from '../shared/draft.service';
 import { DraftEditComponent } from './draft-edit.component';
+import { DraftEditAreaComponent } from './draft-edit-area.component';
 import * as DraftActions from '../state/draft.actions';
 
 
@@ -136,6 +137,7 @@ describe('DraftDetailComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         DraftEditComponent,
+        DraftEditAreaComponent,
       ],
       imports: [
         RouterTestingModule,
