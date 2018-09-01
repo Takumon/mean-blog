@@ -12,7 +12,7 @@
   },
   "engines": {
     "node": "v8.9.X",
-    "npm": "5.5.X"
+    "npm": "6.2.X"
   },
   "scripts": {
     "ng": "ng",
