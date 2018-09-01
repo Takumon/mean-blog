@@ -1,8 +1,10 @@
+![アプリ画像](images/app-title.png)
+
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
-[![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master) 
+[![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c1ef7ae841d9c3d82a0c/maintainability)](https://codeclimate.com/github/Takumon/mean-blog/maintainability)
 
-## チームでナレッジ共有&蓄積するためのブログアプリ
+## <img src="src/assets/images/app-logo.png" width="20px" /> チームでナレッジ共有&蓄積するためのブログアプリ
 * イントラでの利用を想定
   * Dockerで簡単インストール
 * Markdown入力補助機能付き！プレーンテキスト形式でも書ける!
@@ -58,8 +60,8 @@ $ docker-compose up -d
 * ブラウザで`http://localhost:3000`にアクセス
 
 ## 構成
-* クライアント(フレームワーク) ・・・ Angular v5
-* クライアント(UIライブラリ) ・・・ Angular Material v2
+* クライアント(フレームワーク) ・・・ Angular v6
+* クライアント(UIライブラリ) ・・・ Angular Material v6
 * サーバ ・・・ Express v4
 * 実行環境 ・・・Node v8
 * DB ・・・ MongoDB v3

@@ -1,9 +1,10 @@
 <mat-toolbar class="toolbar" color="primary">
-  <button
-    mat-button
+  <img
     class="toolbar__app-logo"
     [routerLink]="auth.loginUser ? '': '/dashbord/articles'"
-    routerLinkActive="active">{{Constant.APP_TITLE}}</button>
+    routerLinkActive="active"
+    src="assets/images/app-logo.png"
+    >
 
   <nav *ngIf="isActiveNavbar" mat-tab-nav-bar class="toolbar__tab navbar ink-bar-white">
     <a mat-tab-link
