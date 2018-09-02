@@ -22,6 +22,7 @@ import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleComponent } from './article-list/article.component';
 import { SearchConditionComponent } from './search-condition/search-condition.component';
 import { UserIdSearchFilterPipe } from './search-condition/user-id-search-filter.pip';
+import { TocService } from './shared/toc.service';
 
 
 
@@ -50,6 +51,7 @@ import { UserIdSearchFilterPipe } from './search-condition/user-id-search-filter
     CommentService,
     ReplyService,
     SearchConditionService,
+    TocService,
     { provide: MatPaginatorIntl, useClass: PaginatorService},
   ],
   entryComponents: [

@@ -165,7 +165,7 @@ export function reducer(
     // TODO 記事詳細用。分離を検討
     // 記事取得
     case ArticleActionTypes.LoadArticle: {
-      return Object.assign({}, {...state, loadingArticle: true} );
+      return Object.assign({}, {...state, loadingArticle: true, article: null} );
     }
     case ArticleActionTypes.LoadArticleSuccess: {
 

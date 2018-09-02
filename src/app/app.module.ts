@@ -33,7 +33,6 @@ import { reducers, metaReducers } from './state';
 import { ArticlesModule } from './articles/articles.module';
 import { ScrollSpyService } from './articles/shared/scroll-spy.service';
 import { ScrollService } from './articles/shared/scroll.service';
-import { TocService } from './articles/shared/toc.service';
 
 import { UserService } from './shared/services/user.service';
 import { UsersModule } from './users/users.module';
@@ -63,7 +62,6 @@ import { ArticleEffects } from './state/article.effects';
   providers: [
     ScrollSpyService,
     ScrollService,
-    TocService,
     JwtService,
     AuthenticationService,
     LocalStorageService,

@@ -1,8 +1,8 @@
 import {
   Component,
-  OnInit,
   OnDestroy,
   Input,
+  OnInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -37,7 +37,8 @@ export class ArticleTocComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.init();
   }
 
@@ -46,56 +47,60 @@ export class ArticleTocComponent implements OnInit, OnDestroy {
     this.onDestroy.next();
   }
 
-  // markdonwテキストが初期化時に
-  // ハッシュタグで指定したhタグまでスクロールする
+
+  /**
+   * マークダウン初期化時にハッシュタグで指定したｈタグまでスクロールする.
+   * 目次のハイライトを設定する.
+   */
   private init(): void {
-    const _headings = document.querySelectorAll('.' + MARKDOWN_HEADER_CLASS);
-    const skipNoTocHeadings = (heading: HTMLHeadingElement) => !/(?:no-toc|notoc)/i.test(heading.className);
-    const headings = Array.prototype.filter.call(_headings, skipNoTocHeadings);
+        const _headings = document.querySelectorAll('.' + MARKDOWN_HEADER_CLASS);
+        const skipNoTocHeadings = (heading: HTMLHeadingElement) => !/(?:no-toc|notoc)/i.test(heading.className);
+        const headings = Array.prototype.filter.call(_headings, skipNoTocHeadings);
+        this.tocService.genToc(headings);
 
-    this.tocService.genToc(headings);
+        if (window.location.hash) {
+          // 一旦指定したタイトルにスクロールしてから
+          // スクロールイベントを開始する
+          let isFirst = true;
+          this.route.fragment
+            .pipe(takeUntil(this.onDestroy))
+            .subscribe((fragment: string) => {
+              this.scrollToAnchor(fragment);
+              if (isFirst) {
+                isFirst = false;
+                this.tocService.activeItemIndex
+                  .pipe(takeUntil(this.onDestroy))
+                  .subscribe(index => {
+                    this.activeIndex = index;
+                  });
+              }
+            });
+        } else {
+          // ハッシュタグがある場合は一度指定したタイトルにスクロールしてから
+          // スクロールの監視を開始する
 
-    if (window.location.hash) {
-      // 一旦指定したタイトルにスクロールしてから
-      // スクロールイベントを開始する
-      let isFirst = true;
-      this.route.fragment
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((fragment: string) => {
-        this.scrollToAnchor(fragment);
-        if (isFirst) {
-          isFirst = false;
+          // リロード前にスクロールしている場合
+          // 明示的に初期化する
+          this.scrollService.scrollToTop();
           this.tocService.activeItemIndex
-          .pipe(takeUntil(this.onDestroy))
-          .subscribe(index => {
-            this.activeIndex = index;
-          });
+            .pipe(takeUntil(this.onDestroy))
+            .subscribe(index => {
+              this.activeIndex = index;
+            });
+
+          this.route.fragment
+            .pipe(takeUntil(this.onDestroy))
+            .subscribe((fragment: string) => {
+              this.scrollToAnchor(fragment);
+            });
         }
-      });
-    } else {
-      // ハッシュタグがある場合は一度指定したタイトルにスクロールしてから
-      // スクロールの監視を開始する
-
-      // リロード前にスクロールしている場合
-      // 明示的に初期化する
-      this.scrollService.scrollToTop();
-      this.tocService.activeItemIndex
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe(index => {
-        this.activeIndex = index;
-      });
-
-      this.route.fragment
-      .pipe(takeUntil(this.onDestroy))
-      .subscribe((fragment: string) => {
-        this.scrollToAnchor(fragment);
-      });
-    }
   }
 
-  private calcMarginOfTitle(level: number): number {
+
+  calcMarginOfTitle(level: number): number {
     return level * this.Constant.TOC_INDENT_INTERVAL;
   }
+
 
   private scrollToAnchor(elementId: string): void {
     const element: any = document.querySelector('#' + elementId);

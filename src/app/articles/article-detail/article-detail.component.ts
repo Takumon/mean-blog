@@ -1,16 +1,15 @@
 import {
   Component,
-  OnInit,
   AfterViewInit,
   OnDestroy,
   ViewChild,
   ViewChildren,
   QueryList,
   ElementRef,
+  OnInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  MatSnackBar,
   MatDialog,
 } from '@angular/material';
 import { Store } from '@ngrx/store';
@@ -42,16 +41,18 @@ import {
   DeleteVote,
   DeleteVoteFail,
   AddVote,
-  AddVoteFail
+  AddVoteFail,
+  LoadArticleSuccess
 } from '../../state/article.actions';
 
 import { CommentListComponent } from '../comment-list/comment-list.component';
+import { ArticleTocComponent } from './article-toc.component';
 @Component({
   selector: 'app-article-detail',
   templateUrl: './article-detail.component.html',
   styleUrls: ['./article-detail.component.scss'],
 })
-export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ArticleDetailComponent implements AfterViewInit, OnInit, OnDestroy {
   /** 定数クラス、HTMLで使用するのでコンポーネントのメンバとしている */
   public Constant = Constant;
 
@@ -65,14 +66,12 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild(CommentListComponent) commentListComponent: CommentListComponent;
   @ViewChildren('markdownText') markdownTexts: QueryList<ElementRef>;
   private onDestroy = new Subject();
-  private activeIndex: number | null = null;
 
   constructor(
     private store: Store<fromArticle.State>,
     private actions$: Actions,
     public auth: AuthenticationService,
 
-    private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
@@ -100,13 +99,20 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       ofType<DeleteVoteFail>(ArticleActionTypes.DeleteVoteFail),
       tap(action => this.messageBarService.showValidationError(action.payload.error))
     ).subscribe();
-
-
   }
 
-  ngOnInit(): void {
+
+  ngOnInit() {
     this.store.dispatch(new SetTitle({title: '記事詳細'}));
-    this.getArticle();
+
+
+    this.route.params.subscribe( params =>
+      this.store.dispatch(new LoadArticle({
+        id: params['_id'],
+        withUser: true
+      }))
+    );
+
 
     this.article$ = this.store.select(fromArticle.getArticle).pipe(
       tap(article => {
@@ -124,7 +130,6 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       })
     );
-
   }
 
   // markdonwテキストが初期化時に
@@ -144,17 +149,6 @@ export class ArticleDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
 
-  private getArticle(): void {
-    this.route.params.subscribe( params => {
-      const userId = params['userId'];
-      const _idOfArticle = params['_id'];
-      const withUser = true;
-      this.store.dispatch(new LoadArticle({
-        id: _idOfArticle,
-        withUser
-      }));
-    });
-  }
 
   private deleteArticle(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

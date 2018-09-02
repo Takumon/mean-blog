@@ -1,5 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
-import { DOCUMENT, DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { ScrollSpyInfo, ScrollSpyService } from './scroll-spy.service';
 
@@ -19,8 +18,9 @@ export class TocService {
   private scrollSpyInfo: ScrollSpyInfo | null;
 
   constructor(
-      @Inject(DOCUMENT) private document: any,
-      private scrollSpyService: ScrollSpyService) { }
+      private scrollSpyService: ScrollSpyService
+  ) {
+  }
 
   genToc(headings: HTMLHeadingElement[], docId = '') {
     this.resetScrollSpyInfo();
