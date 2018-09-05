@@ -1,8 +1,10 @@
 import * as supertest from 'supertest';
 import * as moment from 'moment';
+import * as mongoose from 'mongoose';
+import { Query } from 'mongoose';
 
 import app from '../server/app';
-import { Article } from '../server/models/article';
+import { Article } from '../server/models/article.model';
 
 
 describe('/api/articles', () => {
@@ -24,12 +26,9 @@ describe('/api/articles', () => {
   };
 
   // テスト前にDBのmessagesを初期化する
-  beforeEach(() => {
-    Article.remove({}, () => {
-      Article.resetCount(function(err, nextCount) {
-      });
-    });
-  });
+  beforeEach(() =>
+    Article.remove({}, () => {})
+  );
 
 
   describe('Get', () => {
@@ -44,7 +43,8 @@ describe('/api/articles', () => {
     });
 
 
-    it('記事覧が取得できるか', (done) => {
+
+    it('記事一覧が取得できるか', (done) => {
 
       const testData = [
         {
@@ -55,12 +55,12 @@ describe('/api/articles', () => {
         {
           title: 'テスト用タイトル2',
           body: 'テスト用ボティ2',
-          date:  moment('20150101 12:34:30', 'YYYYMMDD hh:mm:ss').toDate()
+          date:  moment('20150101 12:40:30', 'YYYYMMDD hh:mm:ss').toDate()
         },
         {
           title: 'テスト用タイトル3',
           body: 'テスト用ボティ3',
-          date:  moment('20150101 12:31:30', 'YYYYMMDD hh:mm:ss').toDate()
+          date:  moment('20150101 12:50:30', 'YYYYMMDD hh:mm:ss').toDate()
         }
       ];
       // 複数同時登録した場合、登録順は保障されないためarticleIdは検証しない
@@ -70,9 +70,9 @@ describe('/api/articles', () => {
             const sorted = res.body.articles.sort(ascending('date'));
 
             expect(sorted.length).toEqual(3);
-            expect(sorted[0].title).toEqual('テスト用タイトル1');
+            expect(sorted[0].title).toEqual('テスト用タイトル2');
             expect(sorted[1].title).toEqual('テスト用タイトル3');
-            expect(sorted[2].title).toEqual('テスト用タイトル2');
+            expect(sorted[2].title).toEqual('テスト用タイトル1');
           })
           .end(done);
       });
@@ -80,10 +80,6 @@ describe('/api/articles', () => {
 
 
     it('異常時にエラーハンドリングされるか', (done) => {
-
-      spyOn(Article, 'find').and.callFake(function(callback) {
-        callback(new Error('エラー'), null);
-      });
 
       request.get(endpoint)
         .expect((res) => {

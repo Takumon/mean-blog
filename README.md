@@ -4,6 +4,8 @@
 [![CircleCI](https://circleci.com/gh/Takumon/mean-blog/tree/master.svg?style=svg)](https://circleci.com/gh/Takumon/mean-blog/tree/master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c1ef7ae841d9c3d82a0c/maintainability)](https://codeclimate.com/github/Takumon/mean-blog/maintainability)
 
+※ 開発者の方は[開発者向けREADME](./README.dev.md)を参照してください。本アプリのフォルダ構成やCIの方法を記載しています。
+
 ## <img src="src/assets/images/app-logo.png" width="20px" /> チームでナレッジ共有&蓄積するためのブログアプリ
 * イントラでの利用を想定
   * Dockerで簡単インストール
