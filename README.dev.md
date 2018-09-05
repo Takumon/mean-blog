@@ -242,7 +242,7 @@ Dockerイメージ作成時にテスト実行用に`docker-compose.test.yml`を�
 * docker-compose.dev.yml
   * 本リポジトリをクローンして、ローカルでアプリを起動する際に必要なDB環境を起動するための設定ファイルです。DB資産は`db`フォルダ配下に生成されるようにしています。
 * docker-compose.sample.yml
-  * DockerHubにあるイメージを使用して本アプリを起動する時の設定ファイルの例です。特に本リポジトリをクローンしなくても、ローカルにこのファイルを作成し`docker-compose up -d`を実行すればアプリを起動できます。
+  * DockerHubにあるイメージを使用して本アプリを起動する時の設定ファイルの例です。特に本リポジトリをクローンしなくても、ローカルにこのファイルを作成し`docker-compose up -d`を実行すればアプリを起動できます。
 * docker-compose.test.yml
   * Dockerイメージ作成時にテストを必ず実行するため本ファイルを定義しています。実質ビルドしかしていない仮のファイルです。
 
@@ -259,4 +259,4 @@ Dockerイメージ作成時にテスト実行用に`docker-compose.test.yml`を�
 * .circleci/config.yml
   * ビルド、クライアント側テスト、クライアント側テストカバレッジ測定　を実施するような定義にしています。
 * .codeclimate.yml
-  * CodeClimateが規定するTypeSciptのデフォルトの静的コード解析を実施するような定義にしています。
+  * CodeClimateが規定するTypeSciptのデフォルトの静的コード解析を実施するような定義にしています。
