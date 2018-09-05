@@ -1,5 +1,5 @@
 # 開発者向けREADME
-
+クライアント資産の格納場所やサーバのルーターはどこに格納すべきかなどを忘れないようにするため本ドキュメントにメモする。
 
 ## 全体フォルダ構成
 
@@ -197,3 +197,52 @@ e2e
   * Herokuアップ時にビルド後に実行するスクリプトです。ここでは、`npm run build`を実行しNode.jsアプリを起動するようにしています。
 * analyze
   * クライアント資産ビルド時に、ビルド資産のサイズをグラフィカルに示します。アプリの機能とは直接関係ありあせんが、アプリのサイズを小さくする時の分析のためのスクリプトです。
+
+
+
+## Herokuへのデプロイ
+本アプリはデモ環境をHerokuに用意しています。
+* デプロイ先
+  * https://material-blog-demo.herokuapp.com/
+* 管理用ダッシュボード
+  * https://dashboard.heroku.com/apps/material-blog-demo
+
+### デプロイ手順
+ローカルにHerokuCLIをインストール済みという前提です。
+
+* Herokuにログイン
+```
+$ heroku login
+```
+
+* Herokuにアップ
+  * herokuアップ用にherokuというリポジトリをローカルに作成しているので、そこに対してマスター資産をプッシュする
+  * プッシュすると後は自動でデプロイしてくれる
+```
+$ git push heroku master
+```
+
+## Heroku関連資産
+* Procfile
+  * Herokuアップ時に実行する処理を記述したファイル
+
+
+## Dockerイメージ
+本アプリは、GitHubとDockerHubを連携しているため
+GitHubにプッシュする毎にDockerHubにてイメージが更新されます。
+Dockerイメージ作成時にテスト実行用に`docker-compose.test.yml`を用意しています。
+
+* DockerHub
+  * https://hub.docker.com/r/takumon/mean-blog_auto/
+
+## Docker関連資産
+* Dockerfile
+  * Dockerイメージ作成用スクリプトです。
+* docker-compose.yml
+  * 本リポジトリをクローンして、ローカルでイメージを作成してアプリを起動する場合の設定ファイルです。
+* docker-compose.dev.yml
+  * 本リポジトリをクローンして、ローカルでアプリを起動する際に必要なDB環境を起動するための設定ファイルです。DB資産は`db`フォルダ配下に生成されるようにしています。
+* docker-compose.sample.yml
+  * DockerHubにあるイメージを使用して本アプリを起動する時の設定ファイルの例です。特に本リポジトリをクローンしなくても、ローカルにこのファイルを作成し`docker-compose up -d`を実行すればアプリを起動できます。
+* docker-compose.test.yml
+  * Dockerイメージ作成時にテストを必ず実行するため本ファイルを定義しています。実質ビルドしかしていない仮のファイルです。
