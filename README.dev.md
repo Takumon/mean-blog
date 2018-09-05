@@ -1,6 +1,5 @@
 # 開発者向けREADME
-クライアント資産の格納場所やサーバのルーターはどこに格納すべきかなどを忘れないようにするため本ドキュメントにメモする。
-
+クライアント資産の格納場所やサーバのルーターはどこに格納すべきかなどを忘れないようにするため本ドキュメントを示します。
 ## 全体フォルダ構成
 
 ```
@@ -246,3 +245,18 @@ Dockerイメージ作成時にテスト実行用に`docker-compose.test.yml`を�
   * DockerHubにあるイメージを使用して本アプリを起動する時の設定ファイルの例です。特に本リポジトリをクローンしなくても、ローカルにこのファイルを作成し`docker-compose up -d`を実行すればアプリを起動できます。
 * docker-compose.test.yml
   * Dockerイメージ作成時にテストを必ず実行するため本ファイルを定義しています。実質ビルドしかしていない仮のファイルです。
+
+
+## CI
+本リポジトリはGitHub上にプッシュされる毎にCircleCIにてビルドを実施しています。
+また、Codeclimateというツールで静的コード解析を実施しています。
+* CircleCI
+  * https://circleci.com/gh/Takumon/mean-blog/tree/master
+* Codeclimate
+  * https://codeclimate.com/github/Takumon/mean-blog
+
+## CI関連資産
+* .circleci/config.yml
+  * ビルド、クライアント側テスト、クライアント側テストカバレッジ測定　を実施するような定義にしています。
+* .codeclimate.yml
+  * CodeClimateが規定するTypeSciptのデフォルトの静的コード解析を実施するような定義にしています。
