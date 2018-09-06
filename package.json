@@ -21,7 +21,7 @@
     "start:server": "run-p watch:server boot:server",
     "watch:server": "tsc -w -p ./server/tsconfig.server.json",
     "watch:server_test": "tsc -w -p ./server_test/tsconfig.server_test.json",
-    "run:server": "NODE_CONFIG_DIR=./dist/server/config NODE_ENV=production node ./dist/server/bin/www.js",
+    "run:server": "NODE_CONFIG_DIR=./dist/server/config NODE_ENV=production node --optimize_for_size --max_old_space_size=460 --gc_interval=100 ./dist/server/bin/www.js",
     "boot:server": "NODE_CONFIG_DIR=./dist/server/config NODE_ENV=dev nodemon ./dist/server/bin/www.js",
     "boot:server_test": "MONGO_URL=mongodb://localhost:27018/test NODE_CONFIG_DIR=./dist/server/config NODE_ENV=dev nodemon ./dist/server_test/test.server.js",
     "build": "run-s build:server build:client",
